@@ -1,6 +1,41 @@
 const olemopUtils = require('@olemop/utils')
 const logger = require('pomelo-logger').getLogger('olemop-rpc', 'rpc-proxy')
 
+/**
+ * Generate prxoy for function type field
+ *
+ * @param namespace {String} current namespace
+ * @param serverType {String} server type string
+ * @param serviceName {String} delegated service name
+ * @param methodName {String} delegated method name
+ * @param origin {Object} origin object
+ * @param proxyCB {Functoin} proxy callback function
+ * @returns function proxy
+ */
+const genFunctionProxy = function (serviceName, methodName, origin, attach, proxyCB) {
+  return (function () {
+    const proxy = function () {
+      const len = arguments.length
+      const args = new Array(len)
+      for (let i = 0; i < len; i++) {
+        args[i] = arguments[i]
+      }
+      proxyCB(serviceName, methodName, args, attach)
+    }
+
+    proxy.toServer = function () {
+      const len = arguments.length
+      const args = new Array(len)
+      for (let i = 0; i < len; i++) {
+        args[i] = arguments[i]
+      }
+      proxyCB(serviceName, methodName, args, attach, true)
+    }
+
+    return proxy
+  })()
+}
+
 const genObjectProxy = function (serviceName, origin, attach, proxyCB) {
   //generate proxy for function field
   const res = {}
@@ -35,41 +70,3 @@ exports.create = function (opts) {
 
   return genObjectProxy(opts.service, opts.origin, opts.attach, opts.proxyCB)
 }
-
-/**
- * Generate prxoy for function type field
- *
- * @param namespace {String} current namespace
- * @param serverType {String} server type string
- * @param serviceName {String} delegated service name
- * @param methodName {String} delegated method name
- * @param origin {Object} origin object
- * @param proxyCB {Functoin} proxy callback function
- * @returns function proxy
- */
-var genFunctionProxy = function(serviceName, methodName, origin, attach, proxyCB) {
-  return (function() {
-    var proxy = function() {
-      // var args = arguments;
-      var len = arguments.length;
-      var args = new Array(len);
-      for (var i = 0; i < len; i++) {
-        args[i] = arguments[i];
-      }
-      // var args = Array.prototype.slice.call(arguments, 0);
-      proxyCB(serviceName, methodName, args, attach);
-    };
-
-    proxy.toServer = function() {
-      // var args = arguments;
-      var len = arguments.length;
-      var args = new Array(len);
-      for (var i = 0; i < len; i++) {
-        args[i] = arguments[i];
-      }
-      proxyCB(serviceName, methodName, args, attach, true);
-    };
-
-    return proxy;
-  })();
-};
