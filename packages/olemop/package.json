@@ -1,6 +1,6 @@
 {
   "name": "@olemop/core",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "homepage": "https://github.com/NetEase/pomelo",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "server"
   ],
   "dependencies": {
-    "@olemop/rpc": "^0.0.1",
+    "@olemop/rpc": "^0.0.3",
     "async": "0.2.5",
     "cliff": "0.1.8",
     "commander": "2.0.0",
