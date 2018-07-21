@@ -1,0 +1,62 @@
+{
+  "name": "@olemop/core",
+  "version": "0.0.1",
+  "homepage": "https://github.com/NetEase/pomelo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NetEase/pomelo.git"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "bugs": {
+    "url": "https://github.com/NetEase/pomelo/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/NetEase/pomelo#license"
+    }
+  ],
+  "keywords": [
+    "pomelo",
+    "framework",
+    "game",
+    "web",
+    "realtime",
+    "server"
+  ],
+  "dependencies": {
+    "@olemop/rpc": "^0.0.1",
+    "async": "0.2.5",
+    "cliff": "0.1.8",
+    "commander": "2.0.0",
+    "crc": "0.2.0",
+    "mkdirp": "0.3.3",
+    "mqtt": "0.3.9",
+    "node-bignumber": "1.2.1",
+    "pomelo-admin": "1.0.0",
+    "pomelo-loader": "0.0.6",
+    "pomelo-logger": "0.1.7",
+    "pomelo-protobuf": "0.4.0",
+    "pomelo-protocol": "0.1.6",
+    "pomelo-scheduler": "0.3.9",
+    "seq-queue": "0.0.5",
+    "socket.io": "^2.1.1",
+    "ws": "1.1.1"
+  },
+  "bin": {
+    "pomelo": "./bin/pomelo"
+  },
+  "devDependencies": {
+    "blanket": "~1.1.6",
+    "grunt": "~0.4.2",
+    "grunt-contrib-clean": "0.5.x",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-mocha-test": "0.8.x",
+    "lerna": "^2.11.0",
+    "mocha": ">=0.0.1",
+    "muk": ">=0.0.1",
+    "should": "3.3.1"
+  }
+}

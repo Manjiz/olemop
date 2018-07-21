@@ -1,0 +1,14 @@
+{
+  "lerna": "2.11.0",
+  "packages": [
+    "packages/olemop",
+    "packages/olemop-rpc",
+    "packages/olemop-utils"
+  ],
+  "command": {
+    "publish": {
+      "message": "chore(release): publish %s"
+    }
+  },
+  "version": "0.0.2"
+}
