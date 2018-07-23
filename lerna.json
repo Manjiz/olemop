@@ -8,6 +8,7 @@
     "packages/olemop-utils",
     "packages/olemop-loader",
     "packages/olemop-logger",
+    "packages/olemop-protobuf",
     "packages/olemop-protocol",
     "packages/olemop-scheduler"
   ],
@@ -16,5 +17,5 @@
       "message": "chore(release): publish %s"
     }
   },
-  "version": "0.0.5"
+  "version": "0.0.6"
 }
