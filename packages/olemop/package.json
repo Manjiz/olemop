@@ -1,25 +1,25 @@
 {
   "name": "@olemop/core",
-  "version": "0.0.4",
-  "homepage": "https://github.com/NetEase/pomelo",
+  "version": "0.0.5",
+  "homepage": "https://github.com/Manjiz/olemop",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NetEase/pomelo.git"
+    "url": "https://github.com/Manjiz/olemop.git"
   },
   "scripts": {
     "test": "grunt"
   },
   "bugs": {
-    "url": "https://github.com/NetEase/pomelo/issues"
+    "url": "https://github.com/Manjiz/olemop/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/NetEase/pomelo#license"
+      "url": "https://github.com/Manjiz/olemop#license"
     }
   ],
   "keywords": [
-    "pomelo",
+    "olemop",
     "framework",
     "game",
     "web",
@@ -27,7 +27,12 @@
     "server"
   ],
   "dependencies": {
-    "@olemop/rpc": "^0.0.4",
+    "@olemop/admin": "^0.0.1",
+    "@olemop/loader": "^0.0.1",
+    "@olemop/logger": "^0.0.1",
+    "@olemop/protocol": "^0.0.1",
+    "@olemop/rpc": "^0.0.5",
+    "@olemop/scheduler": "^0.0.1",
     "async": "0.2.5",
     "cliff": "0.1.8",
     "commander": "2.0.0",
@@ -35,18 +40,13 @@
     "mkdirp": "0.3.3",
     "mqtt": "0.3.9",
     "node-bignumber": "1.2.1",
-    "pomelo-admin": "1.0.0",
-    "pomelo-loader": "0.0.6",
-    "pomelo-logger": "0.1.7",
     "pomelo-protobuf": "0.4.0",
-    "pomelo-protocol": "0.1.6",
-    "pomelo-scheduler": "0.3.9",
     "seq-queue": "0.0.5",
     "socket.io": "^2.1.1",
     "ws": "1.1.1"
   },
   "bin": {
-    "pomelo": "./bin/pomelo"
+    "olemop": "./bin/olemop"
   },
   "devDependencies": {
     "blanket": "~1.1.6",
