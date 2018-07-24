@@ -1,6 +1,6 @@
 {
 	"name": "@olemop/rpc",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"dependencies": {
 		"@olemop/loader": "^0.0.1",
 		"@olemop/logger": "^0.0.1",
