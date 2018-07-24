@@ -1,0 +1,8 @@
+{
+  "name": "@olemop/loader",
+  "version": "0.0.8",
+  "devDependencies": {
+    "mocha": ">=0.0.1",
+    "should": ">=0.0.1"
+  }
+}

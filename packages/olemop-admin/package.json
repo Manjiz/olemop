@@ -1,0 +1,16 @@
+{
+  "name": "@olemop/admin",
+  "version": "0.0.8",
+  "private": false,
+  "dependencies": {
+    "@olemop/logger": "0.0.8",
+    "@olemop/monitor": "0.0.8",
+    "@olemop/scheduler": "0.0.8",
+    "mqtt-connection": "3.0.0"
+  },
+  "devDependencies": {
+    "flow": ">=0.0.1",
+    "mocha": ">=0.0.1",
+    "should": ">=0.0.1"
+  }
+}

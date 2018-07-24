@@ -1,0 +1,13 @@
+{
+  "name": "@olemop/protobuf",
+  "version": "0.0.8",
+  "main": "./lib/protobuf",
+  "author": {
+    "name": "XiaogangZhang",
+    "email": "zhang0925@gmail.com"
+  },
+  "devDependencies": {
+    "mocha": ">=0.0.1",
+    "should": ">=0.0.1"
+  }
+}
