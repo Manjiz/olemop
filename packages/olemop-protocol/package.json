@@ -1,10 +1,13 @@
 {
   "name": "@olemop/protocol",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": false,
   "devDependencies": {
     "jscoverage": ">=0.0.1",
     "mocha": ">=0.0.1",
     "should": ">=0.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

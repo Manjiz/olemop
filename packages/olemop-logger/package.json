@@ -1,6 +1,6 @@
 {
   "name": "@olemop/logger",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": false,
   "dependencies": {
     "log4js": "0.6.21"
@@ -8,5 +8,8 @@
   "devDependencies": {
     "mocha": ">=0.0.1",
     "should": ">=0.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

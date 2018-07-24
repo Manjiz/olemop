@@ -1,6 +1,6 @@
 {
   "name": "@olemop/protobuf",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "./lib/protobuf",
   "author": {
     "name": "XiaogangZhang",
@@ -9,5 +9,8 @@
   "devDependencies": {
     "mocha": ">=0.0.1",
     "should": ">=0.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

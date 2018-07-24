@@ -1,10 +1,10 @@
 {
  "name": "@olemop/monitor",
  "description": "monitor the operating-system and process information",
- "version": "0.0.8",
+ "version": "0.0.9",
  "author": "halfblood369 <halfblood369@gmail.com>",
- "engines": {
-  "node": "*"
- },
- "main": "index"
+ "main": "index",
+ "publishConfig": {
+  "access": "public"
+ }
 }
