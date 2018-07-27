@@ -3,6 +3,7 @@
   "packages": [
     "packages/olemop",
     "packages/olemop-admin",
+    "packages/olemop-client-js",
     "packages/olemop-monitor",
     "packages/olemop-rpc",
     "packages/olemop-utils",
@@ -17,5 +18,5 @@
       "message": "chore(release): publish %s"
     }
   },
-  "version": "0.0.10"
+  "version": "0.0.11"
 }
