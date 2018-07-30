@@ -1,7 +1,7 @@
 {
  "name": "@olemop/monitor",
  "description": "monitor the operating-system and process information",
- "version": "0.0.9",
+ "version": "0.0.14",
  "author": "halfblood369 <halfblood369@gmail.com>",
  "main": "index",
  "publishConfig": {

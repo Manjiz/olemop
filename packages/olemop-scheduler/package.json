@@ -1,6 +1,6 @@
 {
 		"name": "@olemop/scheduler",
-		"version": "0.0.9",
+		"version": "0.0.14",
 		"main": "./lib/schedule",
 		"author": "XiaogangZhang <zhang0925@gmail.com>, fantasyni <fantasyni@163.com>",
 		"dependencies": {

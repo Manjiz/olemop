@@ -1,6 +1,6 @@
 {
   "name": "@olemop/protobuf",
-  "version": "0.0.9",
+  "version": "0.0.14",
   "main": "./lib/protobuf",
   "author": {
     "name": "XiaogangZhang",
