@@ -1,8 +1,8 @@
 var starter = require('./starter');
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
-var crashLogger = require('pomelo-logger').getLogger('crash-log', __filename);
-var adminLogger = require('pomelo-logger').getLogger('admin-log', __filename);
-var admin = require('pomelo-admin');
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
+var crashLogger = require('@olemop/logger').getLogger('crash-log', __filename);
+var adminLogger = require('@olemop/logger').getLogger('admin-log', __filename);
+var admin = require('@olemop/admin');
 var util = require('util');
 var utils = require('../util/utils');
 var moduleUtil = require('../util/moduleUtil');
@@ -14,7 +14,7 @@ var Server = function(app, opts) {
   this.registered = {};
   this.modules = [];
   opts = opts || {};
-  
+
   opts.port = this.masterInfo.port;
   opts.env = this.app.get(Constants.RESERVED.ENV);
   this.closeWatcher = opts.closeWatcher;
@@ -45,14 +45,14 @@ Server.prototype.start = function(cb) {
       utils.invokeCallback(cb);
     });
   });
-  
+
   this.masterConsole.on('error', function(err) {
     if(!!err) {
       logger.error('masterConsole encounters with error: ' + err.stack);
       return;
     }
   });
-  
+
   this.masterConsole.on('reconnect', function(info){
     self.app.addServers([info]);
   });

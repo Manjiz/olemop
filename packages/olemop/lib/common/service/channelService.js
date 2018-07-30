@@ -1,7 +1,7 @@
 var countDownLatch = require('../../util/countDownLatch');
 var utils = require('../../util/utils');
 var ChannelRemote = require('../remote/frontend/channelRemote');
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
 /**
  * constant

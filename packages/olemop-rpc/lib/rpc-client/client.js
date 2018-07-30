@@ -1,9 +1,9 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'rpc-client');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'rpc-client');
 var failureProcess = require('./failureProcess');
 var constants = require('../util/constants');
 var Station = require('./mailstation');
 var Tracer = require('../util/tracer');
-var Loader = require('pomelo-loader');
+var Loader = require('@olemop/loader');
 var utils = require('../util/utils');
 var Proxy = require('../util/proxy');
 var router = require('./router');

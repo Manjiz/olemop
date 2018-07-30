@@ -66,23 +66,23 @@
     },
     {
       "type": "file",
-      "filename": "${opts:base}/logs/pomelo-${opts:serverId}.log",
+      "filename": "${opts:base}/logs/olemop-${opts:serverId}.log",
       "maxLogSize": 1048576,
       "layout": {
         "type": "basic"
       },
       "backups": 5,
-      "category": "pomelo"
+      "category": "olemop"
     },
     {
       "type": "file",
-      "filename": "${opts:base}/logs/pomelo-admin.log",
+      "filename": "${opts:base}/logs/olemop-admin.log",
       "maxLogSize": 1048576,
       "layout": {
         "type": "basic"
       },
       "backups": 5,
-      "category": "pomelo-admin"
+      "category": "olemop-admin"
     },
     {
       "type": "file",

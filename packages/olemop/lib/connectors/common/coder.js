@@ -1,6 +1,6 @@
-var Message = require('pomelo-protocol').Message;
+var Message = require('@olemop/protocol').Message;
 var Constants = require('../../util/constants');
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
 var encode = function(reqId, route, msg) {
   if(!!reqId) {

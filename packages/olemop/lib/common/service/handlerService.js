@@ -1,9 +1,9 @@
 var fs = require('fs');
 var utils = require('../../util/utils');
-var Loader = require('pomelo-loader');
+var Loader = require('@olemop/loader');
 var pathUtil = require('../../util/pathUtil');
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
-var forwardLogger = require('pomelo-logger').getLogger('forward-log', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
+var forwardLogger = require('@olemop/logger').getLogger('forward-log', __filename);
 /**
  * Handler service.
  * Dispatch request to the relactive handler.

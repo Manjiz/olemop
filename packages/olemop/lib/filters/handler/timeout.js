@@ -2,7 +2,7 @@
  * Filter for timeout.
  * Print a warn information when request timeout.
  */
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 var utils = require('../../util/utils');
 
 var DEFAULT_TIMEOUT = 3000;

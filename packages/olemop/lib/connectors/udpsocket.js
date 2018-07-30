@@ -1,9 +1,9 @@
 var util = require('util');
 var handler = require('./common/handler');
-var protocol = require('pomelo-protocol');
+var protocol = require('@olemop/protocol');
 var Package = protocol.Package;
 var EventEmitter = require('events').EventEmitter;
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
 var ST_INITED = 0;
 var ST_WAIT_ACK = 1;

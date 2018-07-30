@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'ws-acceptor');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'ws-acceptor');
 var EventEmitter = require('events').EventEmitter;
 var Tracer = require('../../util/tracer');
 var utils = require('../../util/utils');

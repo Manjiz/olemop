@@ -2,8 +2,8 @@
  * Component for monitor.
  * Load and start monitor client.
  */
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
-var admin = require('pomelo-admin');
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
+var admin = require('@olemop/admin');
 var moduleUtil = require('../util/moduleUtil');
 var utils = require('../util/utils');
 var Constants = require('../util/constants');

@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'OutputBuffer');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'OutputBuffer');
 var Utils = require('../utils');
 var BUFFER_SIZE_DEFAULT = 32;
 

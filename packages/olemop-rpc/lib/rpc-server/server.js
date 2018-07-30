@@ -1,4 +1,4 @@
-var Loader = require('pomelo-loader');
+var Loader = require('@olemop/loader');
 var Gateway = require('./gateway');
 
 var loadRemoteServices = function(paths, context) {

@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'MailStation');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'MailStation');
 var EventEmitter = require('events').EventEmitter;
 var blackhole = require('./mailboxes/blackhole');
 var defaultMailboxFactory = require('./mailbox');

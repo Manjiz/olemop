@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var utils = require('../util/utils');
-var Loader = require('pomelo-loader');
+var Loader = require('@olemop/loader');
 var pathUtil = require('../util/pathUtil');
 var crypto = require('crypto');
 

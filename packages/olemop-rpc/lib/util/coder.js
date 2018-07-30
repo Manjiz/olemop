@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'Coder');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'Coder');
 // var OutBuffer = require('./buffer/outputBuffer');
 // var InBuffer = require('./buffer/inputBuffer');
 var bBuffer = require('bearcat-buffer');

@@ -3,7 +3,7 @@ var util = require('util');
 var utils = require('../../util/utils');
 var ws = require('ws').Server;
 var zlib = require('zlib');
-var logger = require('pomelo-logger').getLogger('olemop-rpc', __filename);
+var logger = require('@olemop/logger').getLogger('olemop-rpc', __filename);
 var Tracer = require('../../util/tracer');
 
 var DEFAULT_ZIP_LENGTH = 1024 * 10;

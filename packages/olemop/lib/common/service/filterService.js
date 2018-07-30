@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
 /**
  * Filter service.

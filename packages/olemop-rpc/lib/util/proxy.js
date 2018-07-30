@@ -1,5 +1,5 @@
 const olemopUtils = require('@olemop/utils')
-const logger = require('pomelo-logger').getLogger('olemop-rpc', 'rpc-proxy')
+const logger = require('@olemop/logger').getLogger('olemop-rpc', 'rpc-proxy')
 
 /**
  * Generate prxoy for function type field

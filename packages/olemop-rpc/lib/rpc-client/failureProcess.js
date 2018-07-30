@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'failprocess');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'failprocess');
 var constants = require('../util/constants');
 var utils = require('../util/utils');
 

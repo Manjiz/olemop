@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 var taskManager = require('../common/manager/taskManager');
 var pomelo = require('../pomelo');
 var rsa = require("node-bignumber");

@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'InputBuffer');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'InputBuffer');
 var Utils = require('../utils');
 
 var InputBuffer = function(buffer) {

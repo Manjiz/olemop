@@ -15,7 +15,7 @@ var fs = require('fs'),
   exec = require('child_process').exec,
   spawn = require('child_process').spawn,
   version = require('../package.json').version,
-  adminClient = require('pomelo-admin').adminClient,
+  adminClient = require('@olemop/admin').adminClient,
   constants = require('../lib/util/constants'),
   program = require('commander');
 
@@ -290,7 +290,7 @@ function createApplicationAt(ph, type) {
           for(var i = 0; i < unlinkFiles.length; ++i) {
             fs.unlinkSync(path.resolve(ph, unlinkFiles[i]));
           }
-          
+
           fs.renameSync(path.resolve(ph, 'game-server/app.js.udp'), path.resolve(ph, 'game-server/app.js'));
           rmdir(path.resolve(ph, 'web-server/public/js/lib/build'));
           rmdir(path.resolve(ph, 'web-server/public/js/lib/local'));
@@ -346,7 +346,7 @@ function start(opts) {
   if (!fs.existsSync(logDir)) {
     fs.mkdir(logDir);
   }
-  
+
   var ls;
   var type = opts.type || constants.RESERVED.ALL;
   var params = [absScript, 'env=' + opts.env, 'type=' + type];
@@ -630,7 +630,7 @@ function mkdir(path, fn) {
 
 /**
  * Get user's choice on connector selecting
- * 
+ *
  * @param {Function} cb
  */
 function connectorType(cb) {
@@ -657,7 +657,7 @@ function connectorType(cb) {
 
 /**
  * Run server.
- * 
+ *
  * @param {Object} server server information
  */
 function runServer(server) {

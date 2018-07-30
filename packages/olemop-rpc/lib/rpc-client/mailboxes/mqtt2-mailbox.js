@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'mqtt2-mailbox');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'mqtt2-mailbox');
 var EventEmitter = require('events').EventEmitter;
 var Constants = require('../../util/constants');
 var Tracer = require('../../util/tracer');

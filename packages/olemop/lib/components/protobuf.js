@@ -1,9 +1,9 @@
 var fs = require('fs');
 var path = require('path');
-var protobuf = require('pomelo-protobuf');
+var protobuf = require('@olemop/protobuf');
 var Constants = require('../util/constants');
 var crypto = require('crypto');
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
 module.exports = function(app, opts) {
   return new Component(app, opts);
@@ -16,7 +16,7 @@ var Component = function(app, opts) {
   this.serverProtos = {};
   this.clientProtos = {};
   this.version = "";
-  
+
   var env = app.get(Constants.RESERVED.ENV);
   var originServerPath = path.join(app.getBase(), Constants.FILEPATH.SERVER_PROTOS);
   var presentServerPath = path.join(Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.SERVER_PROTOS));

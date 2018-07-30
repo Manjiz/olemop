@@ -1,5 +1,5 @@
-var Package = require('pomelo-protocol').Package;
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var Package = require('@olemop/protocol').Package;
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
 /**
  * Process heartbeat request.

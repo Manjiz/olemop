@@ -1,8 +1,8 @@
 var Stream = require('stream');
 var util = require('util');
-var protocol = require('pomelo-protocol');
+var protocol = require('@olemop/protocol');
 var Package = protocol.Package;
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
 /**
  * Work states

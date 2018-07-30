@@ -2,7 +2,7 @@
  * Filter for statistics.
  * Record used time for each request.
  */
-var conLogger = require('pomelo-logger').getLogger('con-log', __filename);
+var conLogger = require('@olemop/logger').getLogger('con-log', __filename);
 var utils = require('../../util/utils');
 
 module.exports = function() {

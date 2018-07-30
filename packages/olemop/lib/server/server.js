@@ -2,13 +2,13 @@
  * Implementation of server component.
  * Init and start server instance.
  */
-var logger = require('pomelo-logger').getLogger('pomelo', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename);
 var fs = require('fs');
 var path = require('path');
 var pathUtil = require('../util/pathUtil');
-var Loader = require('pomelo-loader');
+var Loader = require('@olemop/loader');
 var utils = require('../util/utils');
-var schedule = require('pomelo-scheduler');
+var schedule = require('@olemop/scheduler');
 var events = require('../util/events');
 var Constants = require('../util/constants');
 var FilterService = require('../common/service/filterService');

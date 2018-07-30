@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger');
+var logger = require('@olemop/logger');
 
 /**
  * Configure pomelo logger

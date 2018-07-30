@@ -1,0 +1,14 @@
+{
+  "name": "olemop-protocol",
+  "description": "olemop-protocol",
+  "keywords": [
+    "olemop",
+    "protocol"
+  ],
+  "version": "0.1.3",
+  "main":"lib/protocol.js",
+  "scripts": [
+    "lib/protocol.js"
+  ],
+  "repo": "https://github.com/Manjiz/olemop"
+}

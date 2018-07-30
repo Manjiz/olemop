@@ -1,15 +1,15 @@
-const pomelo = require('@olemop/core')
+const olemop = require('@olemop/core')
 
 /**
  * Init app for client.
  */
-const app = pomelo.createApp()
+const app = olemop.createApp()
 app.set('name', '$')
 
 // app configuration
 app.configure('production|development', 'connector', function () {
   app.set('connectorConfig', {
-    connector: pomelo.connectors.sioconnector,
+    connector: olemop.connectors.sioconnector,
     // 'websocket', 'polling-xhr', 'polling-jsonp', 'polling'
     transports: ['websocket', 'polling'],
     heartbeats: true,

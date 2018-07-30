@@ -1,4 +1,4 @@
-var logger = require('pomelo-logger').getLogger('olemop-rpc', 'blackhole');
+var logger = require('@olemop/logger').getLogger('olemop-rpc', 'blackhole');
 var EventEmitter = require('events').EventEmitter;
 var utils = require('../../util/utils');
 
