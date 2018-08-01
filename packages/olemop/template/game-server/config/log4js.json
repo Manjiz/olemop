@@ -98,8 +98,5 @@
     "olemop-rpc": { "appenders": [ "console", "olemop-rpc" ], "level": "info" }
   },
 
-  "pm2": true,
-  "pm2InstanceVar": "INSTANCE_ID",
-
   "lineDebug": false
 }
