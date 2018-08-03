@@ -86,16 +86,16 @@
   },
 
   "categories": {
-    "default": { "appenders": [ "console" ], "level": "trace" },
-    "con-log": { "appenders": [ "console", "con-log" ], "level": "info" },
+    "default": { "appenders": [ "console" ], "level": "all" },
+    "con-log": { "appenders": [ "console", "con-log" ], "level": "all" },
     "rpc-log": { "appenders": [ "console", "rpc-log" ], "level": "error" },
     "forward-log": { "appenders": [ "console", "forward-log" ], "level": "error" },
-    "rpc-debug": { "appenders": [ "console", "rpc-debug" ], "level": "info" },
-    "crash-log": { "appenders": [ "console", "crash-log" ], "level": "info" },
-    "admin-log": { "appenders": [ "console", "admin-log" ], "level": "info" },
-    "olemop": { "appenders": [ "console", "olemop" ], "level": "info" },
-    "olemop-admin": { "appenders": [ "console", "olemop-admin" ], "level": "info" },
-    "olemop-rpc": { "appenders": [ "console", "olemop-rpc" ], "level": "info" }
+    "rpc-debug": { "appenders": [ "console", "rpc-debug" ], "level": "all" },
+    "crash-log": { "appenders": [ "console", "crash-log" ], "level": "all" },
+    "admin-log": { "appenders": [ "console", "admin-log" ], "level": "all" },
+    "olemop": { "appenders": [ "console", "olemop" ], "level": "all" },
+    "olemop-admin": { "appenders": [ "console", "olemop-admin" ], "level": "all" },
+    "olemop-rpc": { "appenders": [ "console", "olemop-rpc" ], "level": "all" }
   },
 
   "lineDebug": false

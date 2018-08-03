@@ -96,7 +96,6 @@ pro.addProxy = function(record) {
 
 /**
  * Batch version for addProxy.
- *
  * @param {Array} records list of proxy description record
  */
 pro.addProxies = function(records) {

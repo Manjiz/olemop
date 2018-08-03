@@ -99,7 +99,6 @@ var getRemotePaths = function(app) {
 
 /**
  * Generate remote server instance
- *
  * @param {Object} app current application context
  * @param {Object} opts contructor parameters for rpc Server
  * @return {Object} remote server instance

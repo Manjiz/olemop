@@ -44,7 +44,6 @@ function getLogger(categoryName) {
 			if (args.length) {
 				arguments[0] = p + arguments[0];
       }
-      logger.level = item === 'log' ? 'info' : item
 			logger[item].apply(logger, arguments);
 		}
 	});
