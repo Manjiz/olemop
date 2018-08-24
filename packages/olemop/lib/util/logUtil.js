@@ -6,5 +6,6 @@ const logger = require('@olemop/logger')
 module.exports.configure = (app, filename, paramLogger) => {
   const serverId = app.getServerId()
   const base = app.getBase()
-  (paramLogger || logger).configure(filename, { serverId: serverId, base: base })
+  const _logger = paramLogger || logger
+  _logger.configure(filename, { serverId: serverId, base: base })
 }

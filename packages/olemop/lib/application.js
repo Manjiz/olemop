@@ -11,7 +11,6 @@ var logger = require('@olemop/logger').getLogger('olemop', __filename);
 var EventEmitter = require('events').EventEmitter;
 var events = require('./util/events');
 var appUtil = require('./util/appUtil');
-const logUtil = require('./util/logUtil')
 var Constants = require('./util/constants');
 var appManager = require('./common/manager/appManager')
 
