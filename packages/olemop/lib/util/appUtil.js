@@ -1,5 +1,5 @@
 var async = require('async');
-var log = require('./log');
+const logUtil = require('./logUtil')
 var utils = require('./utils');
 var path = require('path');
 var fs = require('fs');
@@ -10,7 +10,7 @@ var logger = require('@olemop/logger').getLogger('olemop', __filename);
 /**
  * Initialize application configuration.
  */
-module.exports.defaultConfiguration = function(app) {
+exports.defaultConfiguration = function(app) {
   var args = parseArgs(process.argv);
   setupEnv(app, args);
   loadMaster(app);
@@ -23,7 +23,7 @@ module.exports.defaultConfiguration = function(app) {
 /**
  * Start servers by type.
  */
-module.exports.startByType = function(app, cb) {
+exports.startByType = function(app, cb) {
   if(!!app.startId) {
     if(app.startId === Constants.RESERVED.MASTER) {
       utils.invokeCallback(cb);
@@ -42,7 +42,7 @@ module.exports.startByType = function(app, cb) {
 /**
  * Load default components for application.
  */
-module.exports.loadDefaultComponents = function(app) {
+exports.loadDefaultComponents = function(app) {
   var pomelo = require('../pomelo');
   // load system default components
   if (app.serverType === Constants.RESERVED.MASTER) {
@@ -78,7 +78,7 @@ module.exports.loadDefaultComponents = function(app) {
  * @param  {Boolean}  force whether stop component immediately
  * @param  {Function} cb
  */
-module.exports.stopComps = function(comps, index, force, cb) {
+exports.stopComps = function(comps, index, force, cb) {
   if (index >= comps.length) {
     utils.invokeCallback(cb);
     return;
@@ -87,10 +87,10 @@ module.exports.stopComps = function(comps, index, force, cb) {
   if (typeof comp.stop === 'function') {
     comp.stop(force, function() {
       // ignore any error
-      module.exports.stopComps(comps, index + 1, force, cb);
+      exports.stopComps(comps, index + 1, force, cb);
     });
   } else {
-    module.exports.stopComps(comps, index + 1, force, cb);
+    exports.stopComps(comps, index + 1, force, cb);
   }
 };
 
@@ -103,7 +103,7 @@ module.exports.stopComps = function(comps, index, force, cb) {
  * @param {String} method component lifecycle method name, such as: start, stop
  * @param {Function} cb
  */
-module.exports.optComponents = function(comps, method, cb) {
+exports.optComponents = function(comps, method, cb) {
   var i = 0;
   async.forEachSeries(comps, function(comp, done) {
     i++;
@@ -197,20 +197,22 @@ var setupEnv = function(app, args) {
 /**
  * Configure custom logger.
  */
-var configLogger = function(app) {
+const configLogger = function(app, logger) {
   if (process.env.POMELO_LOGGER !== 'off') {
     var env = app.get(Constants.RESERVED.ENV);
     var originPath = path.join(app.getBase(), Constants.FILEPATH.LOG);
     var presentPath = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG));
-    if(fs.existsSync(originPath)) {
-      log.configure(app, originPath);
-    } else if(fs.existsSync(presentPath)) {
-      log.configure(app, presentPath);
+    if (fs.existsSync(originPath)) {
+      logUtil.configure(app, originPath, logger)
+    } else if (fs.existsSync(presentPath)) {
+      logUtil.configure(app, presentPath, logger)
     } else {
       logger.error('logger file path configuration is error.');
     }
   }
-};
+}
+
+exports.configLogger = configLogger
 
 /**
  * Parse command line arguments.

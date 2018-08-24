@@ -1,6 +1,6 @@
 # @olemop/behavior-tree - behavior tree for node.js
 
-`@olemop/behavior-tree` 是pomelo项目中AI模块所依赖的行为树模块，提供了基本的行为树实现。
+`@olemop/behavior-tree` 是 olemop 项目中AI模块所依赖的行为树模块，提供了基本的行为树实现。
 
 ## 安装
 

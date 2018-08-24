@@ -4,18 +4,16 @@
  * MIT Licensed
  */
 
-/**
- * Module dependencies.
- */
+const fs = require('fs')
+const path = require('path')
 var utils = require('./util/utils');
 var logger = require('@olemop/logger').getLogger('olemop', __filename);
 var EventEmitter = require('events').EventEmitter;
 var events = require('./util/events');
 var appUtil = require('./util/appUtil');
+const logUtil = require('./logUtil')
 var Constants = require('./util/constants');
-var appManager = require('./common/manager/appManager');
-var fs = require('fs');
-var path = require('path');
+var appManager = require('./common/manager/appManager')
 
 /**
  * Application prototype.
@@ -99,21 +97,25 @@ Application.require = function(ph) {
  *
  * @memberOf Application
  */
-Application.configureLogger = function(logger) {
-  if (process.env.POMELO_LOGGER !== 'off') {
-    var base = this.getBase();
-    var env = this.get(Constants.RESERVED.ENV);
-    var originPath = path.join(base, Constants.FILEPATH.LOG);
-    var presentPath = path.join(base, Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG));
-    if(fs.existsSync(originPath)) {
-      logger.configure(originPath, {serverId: this.serverId, base: base});
-    } else if(fs.existsSync(presentPath)) {
-      logger.configure(presentPath, {serverId: this.serverId, base: base});
-    } else {
-      logger.error('logger file path configuration is error.');
-    }
-  }
-};
+Application.configureLogger = (logger) => {
+  appUtil.configLogger(this, logger)
+}
+
+// Application.configureLogger = function(logger) {
+//   if (process.env.POMELO_LOGGER !== 'off') {
+//     var base = this.getBase();
+//     var env = this.get(Constants.RESERVED.ENV);
+//     var originPath = path.join(base, Constants.FILEPATH.LOG);
+//     var presentPath = path.join(base, Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG));
+//     if(fs.existsSync(originPath)) {
+//       logger.configure(originPath, {serverId: this.serverId, base: base});
+//     } else if(fs.existsSync(presentPath)) {
+//       logger.configure(presentPath, {serverId: this.serverId, base: base});
+//     } else {
+//       logger.error('logger file path configuration is error.');
+//     }
+//   }
+// };
 
 /**
  * add a filter to before and after filter

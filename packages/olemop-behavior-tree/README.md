@@ -2,7 +2,7 @@
 
 - [ ] 测试
 
-`@olemop/behavior-tree` is a Behavior-Tree module for pomelo project to implement AI. More information about Behavior-Tree please refer other articles from Internet, such as [Understanding Behavior Trees](http://aigamedev.com/open/article/bt-overview/).
+`@olemop/behavior-tree` is a Behavior-Tree module for olemop project to implement AI. More information about Behavior-Tree please refer other articles from Internet, such as [Understanding Behavior Trees](http://aigamedev.com/open/article/bt-overview/).
 
 ## Installation
 
