@@ -100,22 +100,6 @@ Application.configureLogger = (logger) => {
   appUtil.configLogger(this, logger)
 }
 
-// Application.configureLogger = function(logger) {
-//   if (process.env.POMELO_LOGGER !== 'off') {
-//     var base = this.getBase();
-//     var env = this.get(Constants.RESERVED.ENV);
-//     var originPath = path.join(base, Constants.FILEPATH.LOG);
-//     var presentPath = path.join(base, Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG));
-//     if(fs.existsSync(originPath)) {
-//       logger.configure(originPath, {serverId: this.serverId, base: base});
-//     } else if(fs.existsSync(presentPath)) {
-//       logger.configure(presentPath, {serverId: this.serverId, base: base});
-//     } else {
-//       logger.error('logger file path configuration is error.');
-//     }
-//   }
-// };
-
 /**
  * add a filter to before and after filter
  *

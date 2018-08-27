@@ -200,12 +200,15 @@ var setupEnv = function(app, args) {
 const configLogger = function(app, logger) {
   if (process.env.POMELO_LOGGER !== 'off') {
     var env = app.get(Constants.RESERVED.ENV);
-    var originPath = path.join(app.getBase(), Constants.FILEPATH.LOG);
-    var presentPath = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG));
+    var originPath = path.join(app.getBase(), Constants.FILEPATH.LOG)
+    var presentPath = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG))
+    var present2Path = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, `${path.basename(Constants.FILEPATH.LOG, '.json')}.${env}.json`)
     if (fs.existsSync(originPath)) {
       logUtil.configure(app, originPath, logger)
     } else if (fs.existsSync(presentPath)) {
       logUtil.configure(app, presentPath, logger)
+    } else if (fs.existsSync(present2Path)) {
+      logUtil.configure(app, present2Path, logger)
     } else {
       logger.error('logger file path configuration is error.');
     }
