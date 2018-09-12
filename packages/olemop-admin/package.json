@@ -1,9 +1,9 @@
 {
   "name": "@olemop/admin",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "private": false,
   "dependencies": {
-    "@olemop/logger": "^0.0.21",
+    "@olemop/logger": "^0.0.22",
     "@olemop/monitor": "^0.0.14",
     "@olemop/scheduler": "^0.0.14",
     "mqtt-connection": "3.0.0"

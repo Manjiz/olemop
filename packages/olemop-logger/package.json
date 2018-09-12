@@ -1,6 +1,6 @@
 {
   "name": "@olemop/logger",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "private": false,
   "dependencies": {
     "log4js": "^3.0.3"
