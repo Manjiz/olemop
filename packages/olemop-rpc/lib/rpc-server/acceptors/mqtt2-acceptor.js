@@ -51,7 +51,7 @@ pro.listen = function(port) {
     socket['id'] = curId++;
 
     socket.on('connect', function(pkg) {
-      console.log('connected');
+      // console.log('connected')
       sendHandshake(socket, self);
     });
 
