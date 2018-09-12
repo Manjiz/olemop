@@ -1,6 +1,6 @@
 {
   "name": "@olemop/core",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "homepage": "https://github.com/NetEase/pomelo",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
     "@olemop/logger": "^0.0.16",
     "@olemop/protobuf": "^0.0.14",
     "@olemop/protocol": "^0.0.14",
-    "@olemop/rpc": "^0.0.16",
+    "@olemop/rpc": "^0.0.20",
     "@olemop/scheduler": "^0.0.14",
     "async": "0.2.5",
     "cliff": "0.1.8",
