@@ -11,7 +11,8 @@
     "packages/olemop-logger",
     "packages/olemop-protobuf",
     "packages/olemop-protocol",
-    "packages/olemop-scheduler"
+    "packages/olemop-scheduler",
+    "packages/olemop-status-plugin"
   ],
   "command": {
     "publish": {
