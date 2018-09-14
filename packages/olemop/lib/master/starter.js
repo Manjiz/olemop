@@ -1,5 +1,6 @@
-var cp = require('child_process');
-var logger = require('@olemop/logger').getLogger('olemop', __filename);
+const cp = require('child_process')
+const olemopUtils = require('@olemop/utils')
+var logger = require('@olemop/logger').getLogger('olemop', __filename)
 var starter = module.exports;
 var util = require('util');
 var utils = require('../util/utils');
@@ -61,14 +62,14 @@ starter.run = function(app, server, cb) {
     }
     cmd = app.get(Constants.RESERVED.MAIN);
     options.push(cmd);
-    options.push(util.format('env=%s',  env));
+    options.push(`env=${env}`)
     for(key in server) {
       if(key === Constants.RESERVED.CPU) {
         cpus[server.id] = server[key];
       }
-      options.push(util.format('%s=%s', key, server[key]));
+      options.push(`${key}=${server[key]}`)
     }
-    starter.localrun(process.execPath, null, options, cb);
+    starter.localrun(process.execPath, null, options, cb)
   } else {
     cmd = util.format('cd "%s" && "%s"', app.getBase(), process.execPath);
     var arg = server.args;
@@ -172,9 +173,9 @@ starter.sshrun = function(cmd, host, cb) {
  * @param {Callback} callback
  *
  */
-starter.localrun = function (cmd, host, options, callback) {
-  logger.info('Executing ' + cmd + ' ' + options + ' locally');
-  spawnProcess(cmd, host, options, callback);
+starter.localrun = (cmd, host, options, callback) => {
+  logger.info(`Executing ${cmd} ${options} locally`)
+  spawnProcess(cmd, host, options, callback)
 };
 
 /**
@@ -185,36 +186,32 @@ starter.localrun = function (cmd, host, options, callback) {
  * @param {Callback} callback
  *
  */
-var spawnProcess = function(command, host, options, cb) {
-  var child = null;
+const spawnProcess = (command, host, options, cb) => {
+  let child = null
 
-  if(env === Constants.RESERVED.ENV_DEV) {
-    child = cp.spawn(command, options);
-    var prefix = command === Constants.COMMAND.SSH ? '[' + host + '] ' : '';
+  if (env === Constants.RESERVED.ENV_DEV) {
+    child = cp.spawn(command, options)
+    const prefix = command === Constants.COMMAND.SSH ? `[${host}] ` : ''
 
-    child.stderr.on('data', function (chunk) {
-      var msg = chunk.toString();
-      process.stderr.write(msg);
-      if(!!cb) {
-        cb(msg);
-      }
-    });
+    child.stderr.on('data', (chunk) => {
+      const msg = chunk.toString()
+      process.stderr.write(msg)
+      olemopUtils.invokeCallback(cb, msg)
+    })
 
-    child.stdout.on('data', function (chunk) {
-      var msg = prefix + chunk.toString();
-      process.stdout.write(msg);
-    });
+    child.stdout.on('data', (chunk) => {
+      const msg = `${prefix}${chunk.toString()}`
+      process.stdout.write(msg)
+    })
   } else {
-    child = cp.spawn(command, options, {detached: true, stdio: 'inherit'});
-    child.unref();
+    child = cp.spawn(command, options, { detached: true, stdio: 'inherit' })
+    child.unref()
   }
 
-  child.on('exit', function (code) {
-    if(code !== 0) {
-      logger.warn('child process exit with error, error code: %s, executed command: %s', code,  command);
+  child.on('exit', (code) => {
+    if (code !== 0) {
+      logger.warn(`child process exit with error, error code: ${code}, executed command: ${command}`)
     }
-    if (typeof cb === 'function') {
-      cb(code === 0 ? null : code);
-    }
-  });
-};
+    olemopUtils.invokeCallback(cb, code === 0 ? null : code)
+  })
+}
