@@ -1,0 +1,11 @@
+{
+  "name": "@olemop/plugin-sync",
+  "version": "0.0.2",
+  "private": false,
+  "dependencies": {
+    "@olemop/sync": "^0.0.24"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
