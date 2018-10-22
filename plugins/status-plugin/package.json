@@ -1,6 +1,6 @@
 {
   "name": "@olemop/status-plugin",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "dependencies": {
     "@olemop/logger": "^0.0.22",
     "redis": "^2.8.0"
