@@ -190,9 +190,9 @@ var processArgs = function(app, args) {
 /**
  * Setup enviroment.
  */
-var setupEnv = function(app, args) {
-  app.set(Constants.RESERVED.ENV, args.env || process.env.NODE_ENV || Constants.RESERVED.ENV_DEV, true);
-};
+const setupEnv = (app, args) => {
+  app.set(Constants.RESERVED.ENV, args.env || process.env.NODE_ENV || Constants.RESERVED.ENV_DEV, true)
+}
 
 /**
  * Configure custom logger.

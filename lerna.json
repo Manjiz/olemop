@@ -1,18 +1,8 @@
 {
   "lerna": "2.11.0",
   "packages": [
-    "packages/olemop",
-    "packages/olemop-admin",
-    "packages/olemop-client-js",
-    "packages/olemop-monitor",
-    "packages/olemop-rpc",
-    "packages/olemop-utils",
-    "packages/olemop-loader",
-    "packages/olemop-logger",
-    "packages/olemop-protobuf",
-    "packages/olemop-protocol",
-    "packages/olemop-scheduler",
-    "packages/olemop-status-plugin"
+    "packages/*",
+    "plugins/*"
   ],
   "command": {
     "publish": {
