@@ -1,0 +1,16 @@
+{
+  "name": "@olemop/sync",
+  "version": "0.0.4",
+  "main": "dist/dbsync.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^10.11.7",
+    "typescript": "^3.0.1"
+  }
+}
