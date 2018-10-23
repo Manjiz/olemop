@@ -1,7 +1,7 @@
 {
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "publish": "lerna publish",
+    "publish": "lerna run build && lerna publish",
     "release": "lerna publish --force-publish=* --exact --skip-temp-tag"
   },
 	"devDependencies": {
