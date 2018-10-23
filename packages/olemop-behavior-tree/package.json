@@ -1,11 +1,11 @@
 {
-	"name": "@olemop/behavior-tree",
-	"version": "0.0.1",
-	"devDependencies": {
-		"mocha": ">=0.0.1",
-		"should": ">=0.0.1"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+		"name": "@olemop/behavior-tree",
+		"version": "0.0.28",
+		"devDependencies": {
+				"mocha": ">=0.0.1",
+				"should": ">=0.0.1"
+		},
+		"publishConfig": {
+				"access": "public"
+		}
 }
