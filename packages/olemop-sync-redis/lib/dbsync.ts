@@ -9,7 +9,7 @@
 import fs from 'fs'
 import redis from 'redis'
 import Commands from './commands'
-import Rewriter from '../lib/rewriter/Rewriter'
+import Rewriter from './rewriter/Rewriter'
 import SyncTimer from './timer/SyncTimer'
 import utils from './utils/utils'
 
