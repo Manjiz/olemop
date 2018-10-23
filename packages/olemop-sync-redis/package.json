@@ -1,0 +1,22 @@
+{
+  "name": "@olemop/sync-redis",
+  "version": "0.0.24",
+  "main": "dist/dbsync.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/node": "^10.11.7",
+    "@types/redis": "^2.8.7",
+    "typescript": "^3.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "redis": "^2.8.0"
+  }
+}

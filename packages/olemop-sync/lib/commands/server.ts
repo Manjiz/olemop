@@ -1,9 +1,10 @@
 /**
  * Module dependencies.
  */
-var utils = require('../utils/utils');
-var invoke = utils.invoke;
-var clone = utils.clone;
+
+import utils from '../utils/utils'
+
+const clone = utils.clone
 
 /**
  * invoke tick instant
@@ -96,5 +97,3 @@ export const info = () => {
   })
   return buf
 }
-
-
