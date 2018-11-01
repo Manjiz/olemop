@@ -1,7 +1,3 @@
-/**
- * Module dependencies.
- */
-
 import utils from '../utils/utils'
 
 const clone = utils.clone

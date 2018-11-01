@@ -8,7 +8,7 @@
 
 import fs from 'fs'
 import redis from 'redis'
-import Commands from './commands'
+import commands from './commands'
 import Rewriter from './rewriter/Rewriter'
 import SyncTimer from './timer/SyncTimer'
 import utils from './utils/utils'
@@ -39,7 +39,7 @@ interface Options {
   filename?: string
 }
 
-export default class DataSync extends Commands {
+export default class DataSync {
   debug: boolean
   logger
   client
@@ -54,14 +54,16 @@ export default class DataSync extends Commands {
   filename: string
   stream
   mapping
-  rewriter: Rewriter
-  timer: SyncTimer
+  rewriter
+  timer
   redis
   // inherit method
   loadMapping
 
-  constructor (options: Options = {}) {
-    super()
+  constructor(options: Options = {}) {
+    // commands
+    Object.assign(this, commands)
+
     this.dbs = []
     this.selectDB(0)
     this.debug = !!options.debug

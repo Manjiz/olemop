@@ -3,8 +3,8 @@
     "outDir": "./dist",
     "declaration": true,
     "target": "es2015",
-    "sourceMap": true,
     "module": "commonjs",
+    "sourceMap": true,
     "esModuleInterop": true
   },
   "include": [
