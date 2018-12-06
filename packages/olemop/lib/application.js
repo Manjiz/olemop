@@ -6,6 +6,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const olemopUtils = require('@olemop/utils')
 var utils = require('./util/utils');
 var logger = require('@olemop/logger').getLogger('olemop', __filename);
 var EventEmitter = require('events').EventEmitter;
@@ -649,27 +650,22 @@ Application.use = function(plugin, opts) {
   });
 
   // load events
-  if(!plugin.events) {
-    return;
-  } else {
-    if(!fs.existsSync(plugin.events)) {
-      logger.error('fail to find events, find path: %s', plugin.events);
-      return;
-    }
-
-    fs.readdirSync(plugin.events).forEach(function (filename) {
-      if (!/\.js$/.test(filename)) {
-        return;
-      }
-      var absolutePath = path.join(dir, Constants.DIR.EVENT, filename);
-      if(!fs.existsSync(absolutePath)) {
-        logger.error('events %s not exist at %s', filename, absolutePath);
-      } else {
-        bindEvents(require(absolutePath), self);
-      }
-    });
+  if (!plugin.events) return
+  if (!fs.existsSync(plugin.events)) {
+    logger.error(`fail to find events, find path: ${plugin.events}`)
+    return
   }
-};
+
+  fs.readdirSync(plugin.events).forEach((filename) => {
+    if (!/\.js$/.test(filename)) return
+    const absolutePath = path.join(dir, Constants.DIR.EVENT, filename)
+    if (!fs.existsSync(absolutePath)) {
+      logger.error(`events ${filename} not exist at ${absolutePath}`)
+    } else {
+      bindEvents(require(absolutePath), self)
+    }
+  })
+}
 
 /**
  * Application transaction. Transcation includes conditions and handlers, if conditions are satisfied, handlers would be executed.
@@ -984,14 +980,12 @@ var contains = function(str, settings) {
   return false;
 };
 
-var bindEvents = function(Event, app) {
-  var emethods = new Event(app);
-  for(var m in emethods) {
-    if(typeof emethods[m] === 'function') {
-      app.event.on(m, emethods[m].bind(emethods));
-    }
-  }
-};
+const bindEvents = (Event, app) => {
+  const emethods = new Event(app)
+  olemopUtils.listES6ClassMethods(emethods).forEach((m) => {
+    app.event.on(m, emethods[m].bind(emethods))
+  })
+}
 
 var addFilter = function(app, type, filter) {
  var filters = app.get(type);
