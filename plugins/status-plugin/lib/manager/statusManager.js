@@ -14,18 +14,18 @@ const execMultiCommands = (redis, cmds, cb) => {
 }
 
 const genKey = (self, uid) => {
-  return `${self.prefix}:${uid}`
+  return `${self.statusKeyPrefix}:${uid}`
 }
 
 const genCleanKey = (self) => {
-  return `${self.prefix}*`
+  return `${self.statusKeyPrefix}*`
 }
 
 class StatusManager {
   constructor (app, opts) {
     this.app = app
     this.opts = opts || {}
-    this.prefix = opts.prefix || DEFAULT_PREFIX
+    this.statusKeyPrefix = opts.statusKeyPrefix || DEFAULT_PREFIX
     this.host = opts.host
     this.port = opts.port
     this.redis = null

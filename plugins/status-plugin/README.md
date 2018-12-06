@@ -15,7 +15,7 @@ const status = require('@olemop/status-plugin')
 
 app.use(status, {
   status: {
-    prefix: 'OLEMOP:STATUS',
+    statusKeyPrefix: 'OLEMOP:STATUS',
     host: '127.0.0.1',
     port: 6379,
     // ...options for module redis
