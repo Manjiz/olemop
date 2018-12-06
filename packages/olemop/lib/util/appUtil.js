@@ -104,25 +104,23 @@ exports.stopComps = function(comps, index, force, cb) {
  * @param {Function} cb
  */
 exports.optComponents = function(comps, method, cb) {
-  var i = 0;
-  async.forEachSeries(comps, function(comp, done) {
-    i++;
+  async.forEachSeries(comps, (comp, done) => {
     if (typeof comp[method] === 'function') {
-      comp[method](done);
+      comp[method](done)
     } else {
-      done();
+      done()
     }
-  }, function(err) {
+  }, (err) => {
     if (err) {
-      if(typeof err === 'string') {
-        logger.error('fail to operate component, method: %s, err: %j', method, err);
+      if (typeof err === 'string') {
+        logger.error('fail to operate component, method: %s, err: %j', method, err)
       } else {
-        logger.error('fail to operate component, method: %s, err: %j',  method, err.stack);
+        logger.error('fail to operate component, method: %s, err: %j',  method, err.stack)
       }
     }
-    utils.invokeCallback(cb, err);
-  });
-};
+    utils.invokeCallback(cb, err)
+  })
+}
 
 /**
  * Load server info from config/servers.json.

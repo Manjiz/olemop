@@ -206,37 +206,37 @@ Application.rpcFilter = function(filter) {
  * @memberOf Application
  */
 Application.load = function(name, component, opts) {
-  if(typeof name !== 'string') {
-    opts = component;
-    component = name;
-    name = null;
-    if(typeof component.name === 'string') {
-      name = component.name;
+  if (typeof name !== 'string') {
+    opts = component
+    component = name
+    name = null
+    if (typeof component.name === 'string') {
+      name = component.name
     }
   }
 
-  if(typeof component === 'function') {
-    component = component(this, opts);
+  if (typeof component === 'function') {
+    component = component(this, opts)
   }
 
-  if(!name && typeof component.name === 'string') {
-    name = component.name;
+  if (!name && typeof component.name === 'string') {
+    name = component.name
   }
 
-  if(name && this.components[name]) {
+  if (name && this.components[name]) {
     // ignore duplicat component
-    logger.warn('ignore duplicate component: %j', name);
-    return;
+    logger.warn('ignore duplicate component: %j', name)
+    return
   }
 
-  this.loaded.push(component);
-  if(name) {
+  this.loaded.push(component)
+  if (name) {
     // components with a name would get by name throught app.components later.
-    this.components[name] = component;
+    this.components[name] = component
   }
 
-  return this;
-};
+  return this
+}
 
 /**
  * Load Configure json file to settings.(support different enviroment directory & compatible for old path)

@@ -30,7 +30,7 @@ exports.listES6ClassMethods = (objInstance) => {
  * Invoke callback with check
  * @param {Function} cb 准回调函数
  */
-exports.invokeCallback = (cb) => {
+exports.invokeCallback = function (cb) {
   cb && typeof cb === 'function' && cb.apply(null, Array.prototype.slice.call(arguments, 1))
 }
 
