@@ -18,22 +18,18 @@ export default class Rewriter {
    */
   sync = () => {
     const server = this.server
-    server.redis.hgetall(server.MERGER_MAP_KEY, (err, res) => {
-      for (let mergerKey in res) {
+    server.redis.hgetall(server.MERGER_MAP_KEY, (err, replies) => {
+      for (let mergerKey in replies) {
         const multi = server.redis.multi()
-        if (res[mergerKey]) {
-          const mergerMapValue = JSON.parse(res[mergerKey])
-          // mergerMapValue.mergerKey = mergerKey
-          // res is mergerMapValue
-          // this.tick(mergerMapValue, (err, res) => {
-          this.tick(mergerKey, mergerMapValue, (err, res) => {
-            multi.hdel(server.MERGER_MAP_KEY, res.mergerKey)
-            if (res.uid) {
-              multi.srem(`${server.USER_SET_KEY} ${res.uid}`, res.mergerKey)
-            }
-            multi.exec((err, res) => { })
-          })
-        }
+        if (!replies[mergerKey]) continue
+        const mergerMapValue = JSON.parse(replies[mergerKey])
+        this.tick(mergerKey, mergerMapValue, (err, key, val) => {
+          multi.hdel(server.MERGER_MAP_KEY, key)
+          if (val) {
+            multi.srem(`${server.USER_SET_KEY} ${val}`, key)
+          }
+          multi.exec((err, res) => { })
+        })
       }
     })
     return true
@@ -46,12 +42,15 @@ export default class Rewriter {
     this.tick(key, val, cb)
   }
 
-  /*
-   * judge task is done
+  /**
+   * 执行数据库更新
+   * @param key mapping 键
+   * @param val 调用 mapping[key] 的第二个入参
+   * @param cb
    */
-  tick (key, val, cb?: (err: Error, key, val) => any) {
+  tick (key: string, val: any, cb?: (err: Error, key: string, val: any) => any) {
     const server = this.server
-    if (!server.client){
+    if (!server.client) {
       server.log.error('db sync client is null')
       return
     }
@@ -62,10 +61,10 @@ export default class Rewriter {
     }
     if (!cb) {
       this.count += 1
-      invoke(syncb, server.client, val, () => { this.count -= 1 })
+      invoke(syncb, server.client, val, (err) => { this.count -= 1 })
       return
     }
-    invoke(syncb, server.client, val, (err, res) => {
+    invoke(syncb, server.client, val, (err) => {
       cb(err, key, val)
     })
   }
