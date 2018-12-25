@@ -390,15 +390,15 @@ const sendMessageByGroup = (channelService, route, msg, groups, opts, cb) => {
   Promise.all(Object.keys(groups).map((sid) => new Promise((resolve) => {
     const group = groups[sid]
     const callback = (err, fails) => {
-      resolve()
       if (err) {
         logger.error(`[pushMessage] fail to dispatch msg to serverId: ${serverId}, err: ${err.stack}`)
-        return
+      } else {
+        if (fails) {
+          failIds = failIds.concat(fails)
+        }
+        successFlag = true
       }
-      if (fails) {
-        failIds = failIds.concat(fails)
-      }
-      successFlag = true
+      resolve()
     }
     if (!group || group.length === 0) {
       process.nextTick(callback)
