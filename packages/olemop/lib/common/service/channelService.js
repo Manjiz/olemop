@@ -1,4 +1,3 @@
-var countDownLatch = require('../../util/countDownLatch');
 var utils = require('../../util/utils');
 var ChannelRemote = require('../remote/frontend/channelRemote');
 var logger = require('@olemop/logger').getLogger('olemop', __filename);
@@ -90,7 +89,7 @@ ChannelService.prototype.destroyChannel = function(name) {
  * @param {String} route message route
  * @param {Object} msg message that would be sent to client
  * @param {Array} uids the receiver info list, [{uid: userId, sid: frontendServerId}]
- * @param {Object} opts user-defined push options, optional 
+ * @param {Object} opts user-defined push options, optional
  * @param {Function} cb cb(err)
  * @memberOf ChannelService
  */
@@ -133,67 +132,52 @@ ChannelService.prototype.pushMessageByUids = function(route, msg, uids, opts, cb
  * @param  {Function} cb         callback
  * @memberOf ChannelService
  */
-ChannelService.prototype.broadcast = function(stype, route, msg, opts, cb) {
-  var app = this.app;
-  var namespace = 'sys';
-  var service = 'channelRemote';
-  var method = 'broadcast';
-  var servers = app.getServersByType(stype);
+ChannelService.prototype.broadcast = (stype, route, msg, opts, cb) => {
+  const app = this.app
+  const namespace = 'sys'
+  const service = 'channelRemote'
+  const method = 'broadcast'
+  const servers = app.getServersByType(stype)
 
-  if(!servers || servers.length === 0) {
-    // server list is empty
-    utils.invokeCallback(cb);
-    return;
+  // server list is empty
+  if (!servers || servers.length === 0) {
+    utils.invokeCallback(cb)
+    return
   }
 
-  var count = servers.length;
-  var successFlag = false;
+  opts = { type: 'broadcast', userOptions: opts || {} }
+  // for compatiblity
+  opts.isBroadcast = true
+  if (opts.userOptions) {
+    opts.binded = opts.userOptions.binded
+    opts.filterParam = opts.userOptions.filterParam
+  }
 
-  var latch = countDownLatch.createCountDownLatch(count, function() {
-    if(!successFlag) {
-      utils.invokeCallback(cb, new Error('broadcast fails'));
-      return;
+  let successFlag = false
+
+  Promise.all(servers.map((server) => new Promise((resolve) => {
+    const serverId = server.id
+    const callback = (err) => {
+      resolve()
+      if (err) {
+        logger.error(`[broadcast] fail to push message to serverId: ${serverId}, err:${err.stack}`)
+        return
+      }
+      successFlag = true
     }
-    utils.invokeCallback(cb, null);
-  });
-
-  var genCB = function(serverId) {
-    return function(err) {
-      if(err) {
-        logger.error('[broadcast] fail to push message to serverId: ' + serverId + ', err:' + err.stack);
-        latch.done();
-        return;
-      }
-      successFlag = true;
-      latch.done();
-    };
-  };
-
-  var self = this;
-  var sendMessage = function(serverId) {
-    return (function() {
-      if(serverId === app.serverId) {
-        self.channelRemote[method](route, msg, opts, genCB());
-      } else {
-        app.rpcInvoke(serverId, {namespace: namespace, service: service,
-          method: method, args: [route, msg, opts]}, genCB(serverId));
-      }
-    }());
-  };
-
-  opts = {type: 'broadcast', userOptions: opts || {}};
-
-  // for compatiblity 
-  opts.isBroadcast = true;
-  if(opts.userOptions) {
-    opts.binded = opts.userOptions.binded;
-    opts.filterParam = opts.userOptions.filterParam;
-  }
-
-  for(var i=0, l=count; i<l; i++) {
-    sendMessage(servers[i].id);
-  }
-};
+    if (serverId === app.serverId) {
+      this.channelRemote[method](route, msg, opts, callback)
+    } else {
+      app.rpcInvoke(serverId, { namespace, service, method, args: [route, msg, opts] }, callback)
+    }
+  }))).then(() => {
+    if (successFlag) {
+      utils.invokeCallback(cb, null)
+    } else {
+      utils.invokeCallback(cb, new Error('broadcast fails'))
+    }
+  })
+}
 
 /**
  * Channel maintains the receiver collection for a subject. You can
@@ -382,76 +366,62 @@ var deleteFrom = function(uid, sid, group) {
  *
  * @api private
  */
-var sendMessageByGroup = function(channelService, route, msg, groups, opts, cb) {
-  var app = channelService.app;
-  var namespace = 'sys';
-  var service = 'channelRemote';
-  var method = 'pushMessage';
-  var count = utils.size(groups);
-  var successFlag = false;
-  var failIds = [];
+const sendMessageByGroup = (channelService, route, msg, groups, opts, cb) => {
+  const app = channelService.app
+  const namespace = 'sys'
+  const service = 'channelRemote'
+  const method = 'pushMessage'
 
-  logger.debug('[%s] channelService sendMessageByGroup route: %s, msg: %j, groups: %j, opts: %j', app.serverId, route, msg, groups, opts);
-  if(count === 0) {
-    // group is empty
-    utils.invokeCallback(cb);
-    return;
+  logger.debug(`[${app.serverId}] channelService sendMessageByGroup route: ${route}, msg: ${msg}, groups: ${groups}, opts: ${opts}`)
+
+  // group is empty
+  if (Object.keys(groups).length === 0) {
+    utils.invokeCallback(cb)
+    return
   }
 
-  var latch = countDownLatch.createCountDownLatch(count, function() {
-    if(!successFlag) {
-      utils.invokeCallback(cb, new Error('all uids push message fail'));
-      return;
-    }
-    utils.invokeCallback(cb, null, failIds);
-  });
-
-  var rpcCB = function(serverId) {
-    return function(err, fails) {
-      if(err) {
-        logger.error('[pushMessage] fail to dispatch msg to serverId: ' + serverId + ', err:' + err.stack);
-        latch.done();
-        return;
-      }
-      if(fails) {
-        failIds = failIds.concat(fails);
-      }
-      successFlag = true;
-      latch.done();
-    };
-  };
-
-  opts = {type: 'push', userOptions: opts || {}};
+  opts = { type: 'push', userOptions: opts || {} }
   // for compatiblity
-  opts.isPush = true;
-  
-  var sendMessage = function(sid) {
-    return (function() {
-      if(sid === app.serverId) {
-        channelService.channelRemote[method](route, msg, groups[sid], opts, rpcCB(sid));
-      } else {
-        app.rpcInvoke(sid, {namespace: namespace, service: service,
-          method: method, args: [route, msg, groups[sid], opts]}, rpcCB(sid));
-      }
-    })();
-  };
+  opts.isPush = true
 
-  var group;
-  for(var sid in groups) {
-    group = groups[sid];
-    if(group && group.length > 0) {
-      sendMessage(sid);
-    } else {
-      // empty group
-      process.nextTick(rpcCB(sid));
+  let successFlag = false
+  let failIds = []
+
+  Promise.all(Object.keys(groups).map((sid) => new Promise((resolve) => {
+    const group = groups[sid]
+    const callback = (err, fails) => {
+      resolve()
+      if (err) {
+        logger.error(`[pushMessage] fail to dispatch msg to serverId: ${serverId}, err: ${err.stack}`)
+        return
+      }
+      if (fails) {
+        failIds = failIds.concat(fails)
+      }
+      successFlag = true
     }
-  }
-};
+    if (!group || group.length === 0) {
+      process.nextTick(callback)
+      return
+    }
+    if (sid === app.serverId) {
+      channelService.channelRemote[method](route, msg, groups[sid], opts, callback)
+    } else {
+      app.rpcInvoke(sid, { namespace, service, method, args: [route, msg, groups[sid], opts] }, callback)
+    }
+  }))).then(() => {
+    if (successFlag) {
+      utils.invokeCallback(cb, null, failIds)
+    } else {
+      utils.invokeCallback(cb, new Error('all uids push message fail'))
+    }
+  })
+}
 
 var restoreChannel = function(self, cb) {
   if(!self.store) {
-    utils.invokeCallback(cb);
-    return;
+    utils.invokeCallback(cb)
+    return
   } else {
     loadAllFromStore(self, genKey(self), function(err, list) {
       if(!!err) {

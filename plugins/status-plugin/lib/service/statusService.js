@@ -129,12 +129,10 @@ class StatusService {
         olemoptUtils.invokeCallback(cb, new Error(`failed to get sids for uids: ${uids}`), null)
         return
       }
-      else {
-        if (records != null && records.length != 0){
-          channelService.pushMessageByUids(route, msg, records, cb)
-        }else{
-          olemoptUtils.invokeCallback(cb, null, null)
-        }
+      if (records !== null && records.length !== 0) {
+        channelService.pushMessageByUids(route, msg, records, cb)
+      } else {
+        olemoptUtils.invokeCallback(cb, null, null)
       }
     })
 
