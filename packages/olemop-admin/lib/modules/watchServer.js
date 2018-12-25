@@ -4,7 +4,6 @@
  * MIT Licensed
  */
 var logger = require('@olemop/logger').getLogger('olemop-admin', __filename);
-var countDownLatch = require('../util/countDownLatch');
 var monitor = require('@olemop/monitor');
 var utils = require('../util/utils');
 var util = require('util');
@@ -158,25 +157,21 @@ Module.prototype.clientHandler = function(agent, msg, cb) {
 
 function showServers(handle, agent, comd, context, cb) {
 	if (handle === 'client') {
-		var sid, record;
-		var serverInfo = {};
-		var count = utils.size(agent.idMap);
-		var latch = countDownLatch.createCountDownLatch(count, function() {
-			cb(null, {
-				msg: serverInfo
-			});
-		});
-
-		for (sid in agent.idMap) {
-			record = agent.idMap[sid];
-			agent.request(record.id, module.exports.moduleId, {
+		const serverInfo = {}
+    Promise.all(Object.keys(agent.idMap).map((sid) => new Promise((resolve) => {
+      const record = agent.idMap[sid]
+      agent.request(record.id, module.exports.moduleId, {
 				comd: comd,
 				context: context
-			}, function(msg) {
-				serverInfo[msg.serverId] = msg.body;
-				latch.done();
-			});
-		}
+			}, (msg) => {
+        serverInfo[msg.serverId] = msg.body
+        resolve()
+			})
+    }))).then(() => {
+      cb(null, {
+				msg: serverInfo
+			})
+    })
 	} else if (handle === 'monitor') {
 		var serverId = agent.id;
 		var serverType = agent.type;
@@ -203,32 +198,24 @@ function showServers(handle, agent, comd, context, cb) {
 function showConnections(handle, agent, app, comd, context, cb) {
 	if (handle === 'client') {
 		if (context === 'all') {
-			var sid, record;
-			var serverInfo = {};
-			var count = 0;
-			for (var key in agent.idMap) {
-				if (agent.idMap[key].info.frontend === 'true') {
-					count++;
-				}
-			}
-			var latch = countDownLatch.createCountDownLatch(count, function() {
-				cb(null, {
-					msg: serverInfo
-				});
-			});
+			const serverInfo = {}
 
-			for (sid in agent.idMap) {
-				record = agent.idMap[sid];
-				if (record.info.frontend === 'true') {
-					agent.request(record.id, module.exports.moduleId, {
-						comd: comd,
-						context: context
-					}, function(msg) {
-						serverInfo[msg.serverId] = msg.body;
-						latch.done();
-					});
-				}
-			}
+      Promise.all(Object.keys(agent.idMap).filter((sid) => {
+        return agent.idMap[sid].info.frontend === 'true'
+      }).map((sid) => new Promise((resolve) => {
+        const record = agent.idMap[sid]
+        agent.request(record.id, module.exports.moduleId, {
+          comd,
+          context
+        }, (msg) => {
+          serverInfo[msg.serverId] = msg.body
+          resolve()
+        })
+      }))).then(() => {
+        cb(null, {
+					msg: serverInfo
+				})
+      })
 		} else {
 			var record = agent.idMap[context];
 			if (!record) {
