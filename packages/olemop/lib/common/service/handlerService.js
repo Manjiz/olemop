@@ -27,43 +27,45 @@ Service.prototype.name = 'handler';
 /**
  * Handler the request.
  */
-Service.prototype.handle = function(routeRecord, msg, session, cb) {
+Service.prototype.handle = async function(routeRecord, msg, session, cb) {
   // the request should be processed by current server
-  var handler = this.getHandler(routeRecord);
-  if(!handler) {
-    logger.error('[handleManager]: fail to find handler for %j', msg.__route__);
-    utils.invokeCallback(cb, new Error('fail to find handler for ' + msg.__route__));
-    return;
+  const handler = this.getHandler(routeRecord)
+  if (!handler) {
+    logger.error(`[handleManager]: fail to find handler for ${msg.__route__}`)
+    utils.invokeCallback(cb, new Error('fail to find handler for ' + msg.__route__))
+    return
   }
-  var start = Date.now();
-  var self = this;
+  const start = Date.now()
+  const self = this
 
-  var callback = function(err, resp, opts) {
-    if(self.enableForwardLog) {
-      var log = {
-        route : msg.__route__,
-        args : msg,
-        time : utils.format(new Date(start)),
-        timeUsed : new Date() - start
-      };
-      forwardLogger.info(JSON.stringify(log));
+  const callback = function(err, resp, opts) {
+    if (self.enableForwardLog) {
+      forwardLogger.info(JSON.stringify({
+        route: msg.__route__,
+        args: msg,
+        time: utils.format(new Date(start)),
+        timeUsed: new Date() - start
+      }))
     }
 
-    // resp = getResp(arguments);
-    utils.invokeCallback(cb, err, resp, opts);
+    // resp = getResp(arguments)
+    utils.invokeCallback(cb, err, resp, opts)
   }
 
-  var method = routeRecord.method;
+  const method = routeRecord.method
 
-  if(!Array.isArray(msg)) {
-    handler[method](msg, session, callback);
+  if (!Array.isArray(msg)) {
+    try {
+      await handler[method](msg, session, callback)
+    } catch (err) {
+      utils.invokeCallback(cb, err, null, null)
+    }
   } else {
-    msg.push(session);
-    msg.push(callback);
-    handler[method].apply(handler, msg);
+    msg.push(session)
+    msg.push(callback)
+    handler[method].apply(handler, msg)
   }
-  return;
-};
+}
 
 /**
  * Get handler instance by routeRecord.

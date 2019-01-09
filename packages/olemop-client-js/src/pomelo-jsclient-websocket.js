@@ -31,8 +31,8 @@ if (typeof Object.create !== 'function') {
 }
 
 var root = window
-var pomelo = Object.create(EventEmitter.prototype); // object extend from object
-root.pomelo = pomelo
+var olemop = Object.create(EventEmitter.prototype); // object extend from object
+root.olemop = olemop
 var socket = null;
 var reqId = 0;
 var callbacks = {};
@@ -58,6 +58,7 @@ var encode = null;
 
 var useCrypto;
 
+var preventReconnect = false
 var reconnect = false;
 var reconncetTimer = null;
 var reconnectUrl = null;
@@ -77,7 +78,7 @@ var handshakeBuffer = {
 
 var initCallback = null;
 
-pomelo.init = function(params, cb) {
+olemop.init = function(params, cb) {
   initCallback = cb;
   var host = params.host;
   var port = params.port;
@@ -104,7 +105,7 @@ pomelo.init = function(params, cb) {
   connect(params, url, cb);
 };
 
-var defaultDecode = pomelo.decode = function(data) {
+var defaultDecode = olemop.decode = function(data) {
   //probuff decode
   var msg = Message.decode(data);
 
@@ -120,7 +121,7 @@ var defaultDecode = pomelo.decode = function(data) {
   return msg;
 };
 
-var defaultEncode = pomelo.encode = function(reqId, route, msg) {
+var defaultEncode = olemop.encode = function(reqId, route, msg) {
   var type = reqId ? Message.TYPE_REQUEST : Message.TYPE_NOTIFY;
 
   //compress message by protobuf
@@ -169,7 +170,7 @@ var connect = function(params, url, cb) {
 
   var onopen = function(event) {
     if(!!reconnect) {
-      pomelo.emit('reconnect');
+      olemop.emit('reconnect');
     }
     reset();
     var obj = Package.encode(Package.TYPE_HANDSHAKE, Protocol.strencode(JSON.stringify(handshakeBuffer)));
@@ -183,14 +184,14 @@ var connect = function(params, url, cb) {
     }
   };
   var onerror = function(event) {
-    pomelo.emit('io-error', event);
+    olemop.emit('io-error', event);
     console.error('socket error: ', event);
   };
   var onclose = function(event) {
-    pomelo.emit('close',event);
-    pomelo.emit('disconnect', event);
+    olemop.emit('close',event);
+    olemop.emit('disconnect', event);
     console.error('socket close: ', event);
-    if(!!params.reconnect && reconnectAttempts < maxReconnectAttempts) {
+    if(!preventReconnect && params.reconnect && reconnectAttempts < maxReconnectAttempts) {
       reconnect = true;
       reconnectAttempts++;
       reconncetTimer = setTimeout(function() {
@@ -214,9 +215,13 @@ var connect = function(params, url, cb) {
   // socket.onMessage = onmessage
   // socket.onError = onerror
   // socket.onClose = onclose
-};
+}
 
-pomelo.disconnect = function() {
+olemop.preventReconnect = () => {
+  preventReconnect = true
+}
+
+olemop.disconnect = function() {
   if(socket) {
     if(socket.disconnect) socket.disconnect();
     if(socket.close) socket.close();
@@ -235,13 +240,14 @@ pomelo.disconnect = function() {
 };
 
 var reset = function() {
+  preventReconnect = false
   reconnect = false;
   reconnectionDelay = 1000 * 5;
   reconnectAttempts = 0;
   clearTimeout(reconncetTimer);
 };
 
-pomelo.request = function(route, msg, cb) {
+olemop.request = function(route, msg, cb) {
   if(arguments.length === 2 && typeof msg === 'function') {
     cb = msg;
     msg = {};
@@ -260,7 +266,7 @@ pomelo.request = function(route, msg, cb) {
   routeMap[reqId] = route;
 };
 
-pomelo.notify = function(route, msg) {
+olemop.notify = function(route, msg) {
   msg = msg || {};
   sendMessage(0, route, msg);
 };
@@ -318,20 +324,20 @@ var heartbeatTimeoutCb = function() {
     heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, gap);
   } else {
     console.error('server heartbeat timeout');
-    pomelo.emit('heartbeat timeout');
-    pomelo.disconnect();
+    olemop.emit('heartbeat timeout');
+    olemop.disconnect();
   }
 };
 
 var handshake = function(data) {
   data = JSON.parse(Protocol.strdecode(data));
   if(data.code === RES_OLD_CLIENT) {
-    pomelo.emit('error', 'client version not fullfill');
+    olemop.emit('error', 'client version not fullfill');
     return;
   }
 
   if(data.code !== RES_OK) {
-    pomelo.emit('error', 'handshake fail');
+    olemop.emit('error', 'handshake fail');
     return;
   }
 
@@ -349,12 +355,12 @@ var onData = function(data) {
   if(decode) {
     msg = decode(msg);
   }
-  processMessage(pomelo, msg);
+  processMessage(olemop, msg);
 };
 
 var onKick = function(data) {
   data = JSON.parse(Protocol.strdecode(data));
-  pomelo.emit('onKick', data);
+  olemop.emit('onKick', data);
 };
 
 handlers[Package.TYPE_HANDSHAKE] = handshake;
@@ -373,10 +379,10 @@ var processPackage = function(msgs) {
   }
 };
 
-var processMessage = function(pomelo, msg) {
+var processMessage = function(olemop, msg) {
   if(!msg.id) {
     // server push message
-    pomelo.emit(msg.route, msg.body);
+    olemop.emit(msg.route, msg.body);
     return;
   }
 
@@ -392,9 +398,9 @@ var processMessage = function(pomelo, msg) {
   return;
 };
 
-var processMessageBatch = function(pomelo, msgs) {
+var processMessageBatch = function(olemop, msgs) {
   for(var i=0, l=msgs.length; i<l; i++) {
-    processMessage(pomelo, msgs[i]);
+    processMessage(olemop, msgs[i]);
   }
 };
 
@@ -436,7 +442,7 @@ var handshakeInit = function(data) {
   }
 };
 
-//Initilize data used in pomelo client
+//Initilize data used in olemop client
 var initData = function(data) {
   if(!data || !data.sys) {
     return;
@@ -473,4 +479,4 @@ var initData = function(data) {
   }
 };
 
-  module.exports = pomelo
+  module.exports = olemop

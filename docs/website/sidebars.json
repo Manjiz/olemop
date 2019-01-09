@@ -1,0 +1,24 @@
+{
+  "docs": {
+    "Startup": [
+      "startup/welcome",
+      "startup/installation",
+      "startup/helloworld"
+    ],
+    "Tutorial": [
+      "tutorial/introduction"
+    ],
+    "Guide": [
+      {
+        "type": "subcategory",
+        "label": "Tools & Libraries",
+        "ids": [
+          "guide/commandline"
+        ]
+      }
+    ]
+  },
+  "docs-other": {
+    "First Category": ["doc4", "doc5"]
+  }
+}

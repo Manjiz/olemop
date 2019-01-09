@@ -1,31 +1,30 @@
-var Encoder = module.exports;
+const Encoder = {}
 
 /**
  * [encode an uInt32, return a array of bytes]
- * @param  {[integer]} num
- * @return {[array]}
+ * @param  {number} num
+ * @returns {Array<bytes>}
  */
-Encoder.encodeUInt32 = function(num){
-	var n = parseInt(num);
-	if(isNaN(n) || n < 0){
-		console.log(n);
-		return null;
+Encoder.encodeUInt32 = function(num) {
+	var n = parseInt(num)
+	if (isNaN(n) || n < 0) {
+		return null
 	}
 
-	var result = [];
-	do{
-		var tmp = n % 128;
-		var next = Math.floor(n/128);
+	var result = []
+	do {
+		var tmp = n % 128
+		var next = Math.floor(n/128)
 
 		if(next !== 0){
-			tmp = tmp + 128;
+			tmp = tmp + 128
 		}
-		result.push(tmp);
-		n = next;
-	} while(n !== 0);
+		result.push(tmp)
+		n = next
+	} while(n !== 0)
 
-	return result;
-};
+	return result
+}
 
 /**
  * [encode a sInt32, return a byte array]
@@ -65,3 +64,5 @@ Encoder.decodeSInt32 = function(bytes){
 
 	return n;
 };
+
+module.exports = Encoder

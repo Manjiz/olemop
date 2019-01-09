@@ -372,33 +372,29 @@ var onSessionClose = function(app, session, reason) {
 };
 
 var handleMessage = function(self, session, msg) {
-  logger.debug('[%s] handleMessage session id: %s, msg: %j', self.app.serverId, session.id, msg);
-  var type = checkServerType(msg.route);
+  logger.debug(`[${self.app.serverId}] handleMessage session id: ${session.id}, msg:${msg}`)
+  var type = checkServerType(msg.route)
   if (!type) {
-    logger.error('invalid route string. route : %j', msg.route);
-    return;
+    logger.error(`invalid route string. route : ${msg.route}`)
+    return
   }
   self.server.globalHandle(msg, session.toFrontendSession(), function(err, resp, opts) {
     if (resp && !msg.id) {
-      logger.warn('try to response to a notify: %j', msg.route);
-      return;
+      logger.warn(`try to response to a notify: ${msg.route}`)
+      return
     }
-    if (!msg.id && !resp) return;
-    if (!resp) resp = {};
-    if (!!err && !resp.code) {
-      resp.code = 500;
+    if (!msg.id && !resp) return
+    if (!resp) resp = {}
+    if (err && !resp.code) {
+      resp.code = 500
     }
-    opts = {
-      type: 'response',
-      userOptions: opts || {}
-    };
+    opts = { type: 'response', userOptions: opts || {} }
     // for compatiablity
-    opts.isResponse = true;
+    opts.isResponse = true
 
-    self.send(msg.id, msg.route, resp, [session.id], opts,
-      function() {});
-  });
-};
+    self.send(msg.id, msg.route, resp, [session.id], opts, () => {})
+  })
+}
 
 /**
  * Get server type form request message.
