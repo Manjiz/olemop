@@ -1,31 +1,6 @@
 {
   "name": "@olemop/core",
   "version": "0.0.36",
-  "homepage": "https://github.com/NetEase/pomelo",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/NetEase/pomelo.git"
-  },
-  "scripts": {
-    "test": "grunt"
-  },
-  "bugs": {
-    "url": "https://github.com/NetEase/pomelo/issues"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/NetEase/pomelo#license"
-    }
-  ],
-  "keywords": [
-    "pomelo",
-    "framework",
-    "game",
-    "web",
-    "realtime",
-    "server"
-  ],
   "dependencies": {
     "@olemop/admin": "^0.0.34",
     "@olemop/loader": "^0.0.14",
@@ -38,7 +13,7 @@
     "cliff": "0.1.8",
     "commander": "2.0.0",
     "crc": "0.2.0",
-    "mkdirp": "0.3.3",
+    "fs-extra": "^7.0.1",
     "mqtt": "0.3.9",
     "node-bignumber": "1.2.1",
     "seq-queue": "0.0.5",
