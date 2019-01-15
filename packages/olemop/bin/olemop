@@ -173,10 +173,11 @@ function createApplicationAt(ph, type) {
   fse.ensureDir(path.join(ph, 'shared'), { mode: o755 })
 
   setTimeout(() => {
+    let unlinkFiles
     switch (type) {
       case '1':
         // use websocket
-        const unlinkFiles = [
+        unlinkFiles = [
           'game-server/app.js.sio',
           'game-server/app.js.wss',
           'game-server/app.js.mqtt',
@@ -195,7 +196,7 @@ function createApplicationAt(ph, type) {
         break
       case '2':
         // use socket.io
-        const unlinkFiles = [
+        unlinkFiles = [
           'game-server/app.js',
           'game-server/app.js.wss',
           'game-server/app.js.udp',
@@ -218,7 +219,7 @@ function createApplicationAt(ph, type) {
         break
       case '3':
         // use websocket wss
-        const unlinkFiles = [
+        unlinkFiles = [
           'game-server/app.js.sio',
           'game-server/app.js',
           'game-server/app.js.udp',
@@ -241,7 +242,7 @@ function createApplicationAt(ph, type) {
         break
       case '4':
         // use socket.io wss
-        const unlinkFiles = [
+        unlinkFiles = [
           'game-server/app.js.sio',
           'game-server/app.js',
           'game-server/app.js.udp',
@@ -266,7 +267,7 @@ function createApplicationAt(ph, type) {
         break
       case '5':
         // use socket.io wss
-        const unlinkFiles = [
+        unlinkFiles = [
           'game-server/app.js.sio',
           'game-server/app.js',
           'game-server/app.js.wss',
@@ -287,7 +288,7 @@ function createApplicationAt(ph, type) {
         break
       case '6':
         // use socket.io
-        const unlinkFiles = [
+        unlinkFiles = [
           'game-server/app.js',
           'game-server/app.js.wss',
           'game-server/app.js.udp',
