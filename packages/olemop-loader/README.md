@@ -24,7 +24,7 @@ Module definiation
 If the module exported as a function, @olemop/loader would take it as a factory method and generate a new instance of module by calling the function. And it would return the module directly for other situation.
 
 ```javascript
-module.exports = function(context) {
+module.exports = function (context) {
 	return {};	// return some module instance
 };
 ```

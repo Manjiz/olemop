@@ -10,7 +10,7 @@ try {
 var fs = require('fs');
 var ProfileProxy = require('../util/profileProxy');
 
-module.exports = function(opts) {
+module.exports = function (opts) {
 	if (!profiler) {
 		return {};
 	} else {
@@ -24,13 +24,13 @@ if (!profiler) {
 
 module.exports.moduleId = 'profiler';
 
-var Module = function(opts) {
-	if(opts && opts.isMaster) {
+var Module = function (opts) {
+	if (opts && opts.isMaster) {
 		this.proxy = new ProfileProxy();
 	}
 };
 
-Module.prototype.monitorHandler = function(agent, msg, cb) {
+Module.prototype.monitorHandler = function (agent, msg, cb) {
 	var type = msg.type, action = msg.action, uid = msg.uid, result = null;
 	if (type === 'CPU') {
 		if (action === 'start') {
@@ -70,21 +70,21 @@ Module.prototype.monitorHandler = function(agent, msg, cb) {
 	}
 };
 
-Module.prototype.masterHandler = function(agent, msg, cb) {
-	if(msg.type === 'CPU') {
+Module.prototype.masterHandler = function (agent, msg, cb) {
+	if (msg.type === 'CPU') {
 		this.proxy.stopCallBack(msg.body, msg.clientId, agent);
 	} else {
 		this.proxy.takeSnapCallBack(msg.body);
 	}
 };
 
-Module.prototype.clientHandler = function(agent, msg, cb) {
-	if(msg.action === 'list') {
+Module.prototype.clientHandler = function (agent, msg, cb) {
+	if (msg.action === 'list') {
 		list(agent, msg, cb);
 		return;
 	}
 
-	if(typeof msg === 'string') {
+	if (typeof msg === 'string') {
 		msg = JSON.parse(msg);
 	}
 	var id = msg.id;
@@ -100,11 +100,11 @@ Module.prototype.clientHandler = function(agent, msg, cb) {
 	this.proxy[method](id, params, clientId, agent);
 };
 
-var list = function(agent, msg, cb) {
+var list = function (agent, msg, cb) {
 	var servers = [];
 	var idMap = agent.idMap;
 
-	for(var sid in idMap){
+	for (var sid in idMap){
 		servers.push(sid);
 	}
 	cb(null, servers);

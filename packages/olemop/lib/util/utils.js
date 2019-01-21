@@ -10,22 +10,22 @@ var utils = module.exports;
 /**
  * Invoke callback with check
  */
-utils.invokeCallback = function(cb) {
+utils.invokeCallback = function (cb) {
   if (typeof cb === 'function') {
     var len = arguments.length;
-    if(len == 1) {
+    if (len == 1) {
       return cb();
     }
 
-    if(len == 2) {
+    if (len == 2) {
       return cb(arguments[1]);
     }
 
-    if(len == 3) {
+    if (len == 3) {
       return cb(arguments[1], arguments[2]);
     }
 
-    if(len == 4) {
+    if (len == 4) {
       return cb(arguments[1], arguments[2], arguments[3]);
     }
 
@@ -40,7 +40,7 @@ utils.invokeCallback = function(cb) {
 /**
  * Get the count of elements of object
  */
-utils.size = function(obj) {
+utils.size = function (obj) {
   var count = 0;
   for (var i in obj) {
     if (obj.hasOwnProperty(i) && typeof obj[i] !== 'function') {
@@ -53,7 +53,7 @@ utils.size = function(obj) {
 /**
  * Check a string whether ends with another string
  */
-utils.endsWith = function(str, suffix) {
+utils.endsWith = function (str, suffix) {
   if (typeof str !== 'string' || typeof suffix !== 'string' ||
     suffix.length > str.length) {
     return false;
@@ -64,7 +64,7 @@ utils.endsWith = function(str, suffix) {
 /**
  * Check a string whether starts with another string
  */
-utils.startsWith = function(str, prefix) {
+utils.startsWith = function (str, prefix) {
   if (typeof str !== 'string' || typeof prefix !== 'string' ||
     prefix.length > str.length) {
     return false;
@@ -76,16 +76,16 @@ utils.startsWith = function(str, prefix) {
 /**
  * Compare the two arrays and return the difference.
  */
-utils.arrayDiff = function(array1, array2) {
+utils.arrayDiff = function (array1, array2) {
   var o = {};
-  for(var i = 0, len = array2.length; i < len; i++) {
+  for (var i = 0, len = array2.length; i < len; i++) {
     o[array2[i]] = true;
   }
 
   var result = [];
-  for(i = 0, len = array1.length; i < len; i++) {
+  for (i = 0, len = array1.length; i < len; i++) {
     var v = array1[i];
-    if(o[v]) continue;
+    if (o[v]) continue;
     result.push(v);
   }
   return result;
@@ -94,7 +94,7 @@ utils.arrayDiff = function(array1, array2) {
 /*
  * Date format
  */
-utils.format = function(date, format) {
+utils.format = function (date, format) {
   format = format || 'MMddhhmm';
   var o = {
     "M+": date.getMonth() + 1, //month
@@ -122,7 +122,7 @@ utils.format = function(date, format) {
 /**
  * check if has Chinese characters.
  */
-utils.hasChineseChar = function(str) {
+utils.hasChineseChar = function (str) {
   if (/.*[\u4e00-\u9fa5]+.*$/.test(str)) {
     return true;
   } else {
@@ -133,7 +133,7 @@ utils.hasChineseChar = function(str) {
 /**
  * transform unicode to utf8
  */
-utils.unicodeToUtf8 = function(str) {
+utils.unicodeToUtf8 = function (str) {
   var i, len, ch;
   var utf8Str = "";
   len = str.length;
@@ -183,11 +183,11 @@ utils.unicodeToUtf8 = function(str) {
  * Ping server to check if network is available
  *
  */
-utils.ping = function(host, cb) {
-  if(!module.exports.isLocal(host)) {
+utils.ping = function (host, cb) {
+  if (!module.exports.isLocal(host)) {
     var cmd = 'ping -w 15 ' + host;
-    exec(cmd, function(err, stdout, stderr) {
-      if(!!err) {
+    exec(cmd, function (err, stdout, stderr) {
+      if (!!err) {
         cb(false);
         return;
       }
@@ -199,10 +199,10 @@ utils.ping = function(host, cb) {
 };
 
 /**
- * Check if server is exsit. 
+ * Check if server is exsit.
  *
  */
-utils.checkPort = function(server, cb) {
+utils.checkPort = function (server, cb) {
   if (!server.port && !server.clientPort) {
     this.invokeCallback(cb, 'leisure');
     return;
@@ -210,10 +210,10 @@ utils.checkPort = function(server, cb) {
   var self = this;
   var port = server.port || server.clientPort;
   var host = server.host;
-  var generateCommand = function(self, host, port) {
+  var generateCommand = function (self, host, port) {
     var cmd;
     var ssh_params = pomelo.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS);
-    if(!!ssh_params && Array.isArray(ssh_params)) {
+    if (!!ssh_params && Array.isArray(ssh_params)) {
       ssh_params = ssh_params.join(' ');
     }
     else {
@@ -227,17 +227,17 @@ utils.checkPort = function(server, cb) {
     return cmd;
   };
   var cmd1 = generateCommand(self, host, port);
-  var child = exec(cmd1, function(err, stdout, stderr) {
-    if(err) {
+  var child = exec(cmd1, function (err, stdout, stderr) {
+    if (err) {
       logger.error('command %s execute with error: %j', cmd1, err.stack);
       self.invokeCallback(cb, 'error');
-    } else if(stdout.trim() !== '0') {
+    } else if (stdout.trim() !== '0') {
       self.invokeCallback(cb, 'busy');
     } else {
       port = server.clientPort;
       var cmd2 = generateCommand(self, host, port);
-      exec(cmd2, function(err, stdout, stderr) {
-        if(err) {
+      exec(cmd2, function (err, stdout, stderr) {
+        if (err) {
           logger.error('command %s execute with error: %j', cmd2, err.stack);
           self.invokeCallback(cb, 'error');
         } else if (stdout.trim() !== '0') {
@@ -250,9 +250,9 @@ utils.checkPort = function(server, cb) {
   });
 };
 
-utils.isLocal = function(host) {
+utils.isLocal = function (host) {
   var app = require('../pomelo').app;
-  if(!app) {
+  if (!app) {
     return host === '127.0.0.1' || host === 'localhost' || host === '0.0.0.0' || inLocal(host);
   } else {
     return host === '127.0.0.1' || host === 'localhost' || host === '0.0.0.0' || inLocal(host) || host === app.master.host;
@@ -263,37 +263,37 @@ utils.isLocal = function(host) {
  * Load cluster server.
  *
  */
-utils.loadCluster = function(app, server, serverMap) {
+utils.loadCluster = function (app, server, serverMap) {
   var increaseFields = {};
   var host = server.host;
   var count = parseInt(server[Constants.RESERVED.CLUSTER_COUNT]);
   var seq = app.clusterSeq[server.serverType];
-  if(!seq) {
+  if (!seq) {
     seq = 0;
     app.clusterSeq[server.serverType] = count;
   } else {
     app.clusterSeq[server.serverType] = seq + count;
   }
 
-  for(var key in server) {
+  for (var key in server) {
     var value = server[key].toString();
-    if(value.indexOf(Constants.RESERVED.CLUSTER_SIGNAL) > 0) {
+    if (value.indexOf(Constants.RESERVED.CLUSTER_SIGNAL) > 0) {
       var base = server[key].slice(0, -2);
       increaseFields[key] = base;
     }
   }
 
-  var clone = function(src) {
+  var clone = function (src) {
     var rs = {};
-    for(var key in src) {
+    for (var key in src) {
       rs[key] = src[key];
     }
     return rs;
   };
-  for(var i=0, l=seq; i<count; i++,l++) {
+  for (var i=0, l=seq; i<count; i++,l++) {
     var cserver = clone(server);
     cserver.id = Constants.RESERVED.CLUSTER_PREFIX + server.serverType + '-' + l;
-    for(var k in increaseFields) {
+    for (var k in increaseFields) {
       var v = parseInt(increaseFields[k]);
       cserver[k] = v + i;
     }
@@ -301,7 +301,7 @@ utils.loadCluster = function(app, server, serverMap) {
   }
 };
 
-utils.extends = function(origin, add) {
+utils.extends = function (origin, add) {
   if (!add || !this.isObject(add)) return origin;
 
   var keys = Object.keys(add);
@@ -312,10 +312,10 @@ utils.extends = function(origin, add) {
   return origin;
 };
 
-utils.headHandler = function(headBuffer) {
+utils.headHandler = function (headBuffer) {
   var len = 0;
-  for(var i=1; i<4; i++) {
-    if(i > 1) {
+  for (var i=1; i<4; i++) {
+    if (i > 1) {
       len <<= 8;
     }
     len += headBuffer.readUInt8(i);
@@ -323,7 +323,7 @@ utils.headHandler = function(headBuffer) {
   return len;
 };
 
-var inLocal = function(host) {
+var inLocal = function (host) {
   for (var index in localIps) {
     if (host === localIps[index]) {
       return true;
@@ -332,10 +332,10 @@ var inLocal = function(host) {
   return false;
 };
 
-var localIps = function() {
+var localIps = function () {
   var ifaces = os.networkInterfaces();
   var ips = [];
-  var func = function(details) {
+  var func = function (details) {
     if (details.family === 'IPv4') {
       ips.push(details.address);
     }
@@ -346,6 +346,6 @@ var localIps = function() {
   return ips;
 }();
 
-utils.isObject = function(arg) {
+utils.isObject = function (arg) {
   return typeof arg === 'object' && arg !== null;
 };

@@ -6,7 +6,7 @@ var utils = require('../util/utils');
 var util = require('util');
 var fs = require('fs');
 
-var Gateway = function(opts) {
+var Gateway = function (opts) {
   EventEmitter.call(this);
   this.opts = opts || {};
   this.port = opts.port || 3050;
@@ -18,7 +18,7 @@ var Gateway = function(opts) {
   if (!!this.opts.reloadRemotes) {
     watchServices(this, dispatcher);
   }
-  this.acceptor = this.acceptorFactory.create(opts, function(tracer, msg, cb) {
+  this.acceptor = this.acceptorFactory.create(opts, function (tracer, msg, cb) {
     dispatcher.route(tracer, msg, cb);
   });
 };
@@ -27,7 +27,7 @@ util.inherits(Gateway, EventEmitter);
 
 var pro = Gateway.prototype;
 
-pro.stop = function() {
+pro.stop = function () {
   if (!this.started || this.stoped) {
     return;
   }
@@ -37,7 +37,7 @@ pro.stop = function() {
   } catch (err) {}
 };
 
-pro.start = function() {
+pro.start = function () {
   if (this.started) {
     throw new Error('gateway already start.');
   }
@@ -54,7 +54,7 @@ pro.start = function() {
  *
  * @param opts {services: {rpcServices}, connector:conFactory(optional), router:routeFunction(optional)}
  */
-module.exports.create = function(opts) {
+module.exports.create = function (opts) {
   if (!opts || !opts.services) {
     throw new Error('opts and opts.services should not be empty.');
   }
@@ -62,12 +62,12 @@ module.exports.create = function(opts) {
   return new Gateway(opts);
 };
 
-var watchServices = function(gateway, dispatcher) {
+var watchServices = function (gateway, dispatcher) {
   var paths = gateway.opts.paths;
   var app = gateway.opts.context;
   for (var i = 0; i < paths.length; i++) {
-    (function(index) {
-      fs.watch(paths[index].path, function(event, name) {
+    (function (index) {
+      fs.watch(paths[index].path, function (event, name) {
         if (event === 'change') {
           var res = {};
           var item = paths[index];
@@ -85,6 +85,6 @@ var watchServices = function(gateway, dispatcher) {
   }
 };
 
-var createNamespace = function(namespace, proxies) {
+var createNamespace = function (namespace, proxies) {
   proxies[namespace] = proxies[namespace] || {};
 };

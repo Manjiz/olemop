@@ -16,7 +16,7 @@ var curId = 1;
  * Connector that manager low level connection and protocol bewteen server and client.
  * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
  */
-var Connector = function(port, host, opts) {
+var Connector = function (port, host, opts) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts);
   }
@@ -43,11 +43,11 @@ module.exports = Connector;
 /**
  * Start connector to listen the specified port
  */
-Connector.prototype.start = function(cb) {
+Connector.prototype.start = function (cb) {
   var app = require('../pomelo').app;
   var self = this;
 
-  var gensocket = function(socket) {
+  var gensocket = function (socket) {
     var hybridsocket = new HybridSocket(curId++, socket);
     hybridsocket.on('handshake', self.handshake.handle.bind(self.handshake, hybridsocket));
     hybridsocket.on('heartbeat', self.heartbeat.handle.bind(self.heartbeat, hybridsocket));
@@ -61,18 +61,18 @@ Connector.prototype.start = function(cb) {
   this.protobuf = app.components.__protobuf__;
   this.decodeIO_protobuf = app.components.__decodeIO__protobuf__;
 
-  if(!this.ssl) {
+  if (!this.ssl) {
     this.listeningServer = net.createServer();
   } else {
     this.listeningServer = tls.createServer(this.ssl);
   }
   this.switcher = new Switcher(this.listeningServer, self.opts);
 
-  this.switcher.on('connection', function(socket) {
+  this.switcher.on('connection', function (socket) {
     gensocket(socket);
   });
 
-  if(!!this.distinctHost) {
+  if (!!this.distinctHost) {
     this.listeningServer.listen(this.port, this.host);
   } else {
     this.listeningServer.listen(this.port);
@@ -81,7 +81,7 @@ Connector.prototype.start = function(cb) {
   process.nextTick(cb);
 };
 
-Connector.prototype.stop = function(force, cb) {
+Connector.prototype.stop = function (force, cb) {
   this.switcher.close();
   this.listeningServer.close();
 

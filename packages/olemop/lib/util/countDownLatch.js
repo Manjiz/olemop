@@ -3,12 +3,12 @@ var exp = module.exports;
 /**
  * Count down to zero or timeout and invoke cb finally.
  */
-var CountDownLatch = function(count, opts, cb) {
+var CountDownLatch = function (count, opts, cb) {
   this.count = count;
   this.cb = cb;
   var self = this;
   if (opts.timeout) {
-    this.timerId = setTimeout(function() {
+    this.timerId = setTimeout(function () {
       self.cb(true);
     }, opts.timeout);
   }
@@ -19,8 +19,8 @@ var CountDownLatch = function(count, opts, cb) {
  *
  * @api public
  */
-CountDownLatch.prototype.done = function() {
-  if(this.count <= 0) {
+CountDownLatch.prototype.done = function () {
+  if (this.count <= 0) {
     throw new Error('illegal state.');
   }
 
@@ -42,8 +42,8 @@ CountDownLatch.prototype.done = function() {
  *
  * @api public
  */
-exp.createCountDownLatch = function(count, opts, cb) {
-  if(!count || count <= 0) {
+exp.createCountDownLatch = function (count, opts, cb) {
+  if (!count || count <= 0) {
     throw new Error('count should be positive.');
   }
 
@@ -52,7 +52,7 @@ exp.createCountDownLatch = function(count, opts, cb) {
     opts = {};
   }
 
-  if(typeof cb !== 'function') {
+  if (typeof cb !== 'function') {
     throw new Error('cb should be a function.');
   }
 

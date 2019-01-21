@@ -7,7 +7,7 @@ var ST_CLOSED = 2;
 /**
  * Socket class that wraps socket and websocket to provide unified interface for up level.
  */
-var Socket = function(id, socket, adaptor) {
+var Socket = function (id, socket, adaptor) {
   EventEmitter.call(this);
   this.id = id;
   this.socket = socket;
@@ -23,7 +23,7 @@ var Socket = function(id, socket, adaptor) {
   socket.on('error', this.emit.bind(this, 'disconnect'));
   socket.on('disconnect', this.emit.bind(this, 'disconnect'));
 
-  socket.on('pingreq', function(packet) {
+  socket.on('pingreq', function (packet) {
     socket.pingresp();
   });
 
@@ -40,11 +40,11 @@ util.inherits(Socket, EventEmitter);
 
 module.exports = Socket;
 
-Socket.prototype.send = function(msg) {
-  if(this.state !== ST_INITED) {
+Socket.prototype.send = function (msg) {
+  if (this.state !== ST_INITED) {
     return;
   }
-  if(msg instanceof Buffer) {
+  if (msg instanceof Buffer) {
     // if encoded, send directly
     this.socket.stream.write(msg);
   } else {
@@ -52,14 +52,14 @@ Socket.prototype.send = function(msg) {
   }
 };
 
-Socket.prototype.sendBatch = function(msgs) {
-  for(var i = 0, l = msgs.length; i<l; i++) {
+Socket.prototype.sendBatch = function (msgs) {
+  for (var i = 0, l = msgs.length; i<l; i++) {
     this.send(msgs[i]);
   }
 };
 
-Socket.prototype.disconnect = function() {
-  if(this.state === ST_CLOSED) {
+Socket.prototype.disconnect = function () {
+  if (this.state === ST_CLOSED) {
     return;
   }
 

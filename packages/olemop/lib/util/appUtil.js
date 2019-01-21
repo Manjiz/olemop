@@ -10,7 +10,7 @@ var logger = require('@olemop/logger').getLogger('olemop', __filename);
 /**
  * Initialize application configuration.
  */
-exports.defaultConfiguration = function(app) {
+exports.defaultConfiguration = function (app) {
   var args = parseArgs(process.argv);
   setupEnv(app, args);
   loadMaster(app);
@@ -23,15 +23,15 @@ exports.defaultConfiguration = function(app) {
 /**
  * Start servers by type.
  */
-exports.startByType = function(app, cb) {
-  if(!!app.startId) {
-    if(app.startId === Constants.RESERVED.MASTER) {
+exports.startByType = function (app, cb) {
+  if (!!app.startId) {
+    if (app.startId === Constants.RESERVED.MASTER) {
       utils.invokeCallback(cb);
     } else {
       starter.runServers(app);
     }
   } else {
-    if(!!app.type && app.type !== Constants.RESERVED.ALL && app.type !== Constants.RESERVED.MASTER) {
+    if (!!app.type && app.type !== Constants.RESERVED.ALL && app.type !== Constants.RESERVED.MASTER) {
       starter.runServers(app);
     } else {
       utils.invokeCallback(cb);
@@ -42,7 +42,7 @@ exports.startByType = function(app, cb) {
 /**
  * Load default components for application.
  */
-exports.loadDefaultComponents = function(app) {
+exports.loadDefaultComponents = function (app) {
   var pomelo = require('../pomelo');
   // load system default components
   if (app.serverType === Constants.RESERVED.MASTER) {
@@ -57,7 +57,7 @@ exports.loadDefaultComponents = function(app) {
       app.load(pomelo.connector, app.get('connectorConfig'));
       app.load(pomelo.session, app.get('sessionConfig'));
       // compatible for schedulerConfig
-      if(app.get('schedulerConfig')) {
+      if (app.get('schedulerConfig')) {
         app.load(pomelo.pushScheduler, app.get('schedulerConfig'));
       } else {
         app.load(pomelo.pushScheduler, app.get('pushSchedulerConfig'));
@@ -78,14 +78,14 @@ exports.loadDefaultComponents = function(app) {
  * @param  {Boolean}  force whether stop component immediately
  * @param  {Function} cb
  */
-exports.stopComps = function(comps, index, force, cb) {
+exports.stopComps = function (comps, index, force, cb) {
   if (index >= comps.length) {
     utils.invokeCallback(cb);
     return;
   }
   var comp = comps[index];
   if (typeof comp.stop === 'function') {
-    comp.stop(force, function() {
+    comp.stop(force, function () {
       // ignore any error
       exports.stopComps(comps, index + 1, force, cb);
     });
@@ -103,7 +103,7 @@ exports.stopComps = function(comps, index, force, cb) {
  * @param {String} method component lifecycle method name, such as: start, stop
  * @param {Function} cb
  */
-exports.optComponents = function(comps, method, cb) {
+exports.optComponents = function (comps, method, cb) {
   async.forEachSeries(comps, (comp, done) => {
     if (typeof comp[method] === 'function') {
       comp[method](done)
@@ -125,7 +125,7 @@ exports.optComponents = function(comps, method, cb) {
 /**
  * Load server info from config/servers.json.
  */
-var loadServers = function(app) {
+var loadServers = function (app) {
   app.loadConfigBaseApp(Constants.RESERVED.SERVERS, Constants.FILEPATH.SERVER);
   var servers = app.get(Constants.RESERVED.SERVERS);
   var serverMap = {}, slist, i, l, server;
@@ -134,7 +134,7 @@ var loadServers = function(app) {
     for (i = 0, l = slist.length; i < l; i++) {
       server = slist[i];
       server.serverType = serverType;
-      if(server[Constants.RESERVED.CLUSTER_COUNT]) {
+      if (server[Constants.RESERVED.CLUSTER_COUNT]) {
         utils.loadCluster(app, server, serverMap);
         continue;
       }
@@ -150,7 +150,7 @@ var loadServers = function(app) {
 /**
  * Load master info from config/master.json.
  */
-var loadMaster = function(app) {
+var loadMaster = function (app) {
   app.loadConfigBaseApp(Constants.RESERVED.MASTER, Constants.FILEPATH.MASTER);
   app.master = app.get(Constants.RESERVED.MASTER);
 };
@@ -158,7 +158,7 @@ var loadMaster = function(app) {
 /**
  * Process server start command
  */
-var processArgs = function(app, args) {
+var processArgs = function (app, args) {
   var serverType = args.serverType || Constants.RESERVED.MASTER;
   var serverId = args.id || app.getMaster().id;
   var mode = args.mode || Constants.RESERVED.CLUSTER;
@@ -171,7 +171,7 @@ var processArgs = function(app, args) {
   app.set(Constants.RESERVED.SERVER_ID, serverId, true);
   app.set(Constants.RESERVED.MODE, mode, true);
   app.set(Constants.RESERVED.TYPE, type, true);
-  if(!!startId) {
+  if (!!startId) {
     app.set(Constants.RESERVED.STARTID, startId, true);
   }
 
@@ -195,7 +195,7 @@ const setupEnv = (app, args) => {
 /**
  * Configure custom logger.
  */
-const configLogger = function(app, logger) {
+const configLogger = function (app, logger) {
   if (process.env.POMELO_LOGGER !== 'off') {
     var env = app.get(Constants.RESERVED.ENV);
     var originPath = path.join(app.getBase(), Constants.FILEPATH.LOG)
@@ -222,7 +222,7 @@ exports.configLogger = configLogger
  *
  * @return Object argsMap map of arguments
  */
-var parseArgs = function(args) {
+var parseArgs = function (args) {
   var argsMap = {};
   var mainPos = 1;
 
@@ -249,14 +249,14 @@ var parseArgs = function(args) {
  * Load lifecycle file.
  *
  */
-var loadLifecycle = function(app) {
+var loadLifecycle = function (app) {
   var filePath = path.join(app.getBase(), Constants.FILEPATH.SERVER_DIR, app.serverType, Constants.FILEPATH.LIFECYCLE);
-  if(!fs.existsSync(filePath)) {
+  if (!fs.existsSync(filePath)) {
     return;
   }
   var lifecycle = require(filePath);
-  for(var key in lifecycle) {
-    if(typeof lifecycle[key] === 'function') {
+  for (var key in lifecycle) {
+    if (typeof lifecycle[key] === 'function') {
       app.lifecycleCbs[key] = lifecycle[key];
     } else {
       logger.warn('lifecycle.js in %s is error format.', filePath);

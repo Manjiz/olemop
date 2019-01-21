@@ -7,7 +7,7 @@ var ST_CLOSED = 1;
 /**
  * Socket class that wraps socket.io socket to provide unified interface for up level.
  */
-var Socket = function(id, socket) {
+var Socket = function (id, socket) {
   EventEmitter.call(this);
   this.id = id;
   this.socket = socket;
@@ -22,7 +22,7 @@ var Socket = function(id, socket) {
 
   socket.on('error', this.emit.bind(this, 'error'));
 
-  socket.on('message', function(msg) {
+  socket.on('message', function (msg) {
     self.emit('message', msg);
   });
 
@@ -35,18 +35,18 @@ util.inherits(Socket, EventEmitter);
 
 module.exports = Socket;
 
-Socket.prototype.send = function(msg) {
-  if(this.state !== ST_INITED) {
+Socket.prototype.send = function (msg) {
+  if (this.state !== ST_INITED) {
     return;
   }
-  if(typeof msg !== 'string') {
+  if (typeof msg !== 'string') {
     msg = JSON.stringify(msg);
   }
   this.socket.send(msg);
 };
 
-Socket.prototype.disconnect = function() {
-  if(this.state === ST_CLOSED) {
+Socket.prototype.disconnect = function () {
+  if (this.state === ST_CLOSED) {
     return;
   }
 
@@ -54,21 +54,21 @@ Socket.prototype.disconnect = function() {
   this.socket.disconnect();
 };
 
-Socket.prototype.sendBatch = function(msgs) {
+Socket.prototype.sendBatch = function (msgs) {
   this.send(encodeBatch(msgs));
 };
 
 /**
  * Encode batch msg to client
  */
-var encodeBatch = function(msgs){
+var encodeBatch = function (msgs){
   var res = '[', msg;
-  for(var i=0, l=msgs.length; i<l; i++) {
-    if(i > 0) {
+  for (var i=0, l=msgs.length; i<l; i++) {
+    if (i > 0) {
       res += ',';
     }
     msg = msgs[i];
-    if(typeof msg === 'string') {
+    if (typeof msg === 'string') {
       res += msg;
     } else {
       res += JSON.stringify(msg);

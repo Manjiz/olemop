@@ -23,7 +23,7 @@ var STATUS_INTERVAL = 5 * 1000; // 60 seconds
  *                 opts.info           {Object} more server info for current server, {id, serverType, host, port}
  * @api public
  */
-var MonitorAgent = function(opts) {
+var MonitorAgent = function (opts) {
   EventEmitter.call(this);
   this.reqId = 1;
   this.opts = opts;
@@ -46,13 +46,13 @@ Util.inherits(MonitorAgent, EventEmitter);
  * @param {Function} cb callback function
  * @api public
  */
-MonitorAgent.prototype.connect = function(port, host, cb) {
+MonitorAgent.prototype.connect = function (port, host, cb) {
   if (this.state > ST_INITED) {
     logger.error('monitor client has connected or closed.');
     return;
   }
 
-  cb = cb || function() {}
+  cb = cb || function () {}
 
   this.socket = new MqttClient(this.opts);
   this.socket.connect(host, port);
@@ -63,7 +63,7 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
   //   'max reconnection attempts': 20
   // });
   var self = this;
-  this.socket.on('register', function(msg) {
+  this.socket.on('register', function (msg) {
     if (msg && msg.code === protocol.PRO_OK) {
       self.state = ST_REGISTERED;
       cb();
@@ -73,7 +73,7 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
     }
   });
 
-  this.socket.on('monitor', function(msg) {
+  this.socket.on('monitor', function (msg) {
     if (self.state !== ST_REGISTERED) {
       return;
     }
@@ -82,7 +82,7 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
 
     if (msg.command) {
       // a command from master
-      self.consoleService.command(msg.command, msg.moduleId, msg.body, function(err, res) {
+      self.consoleService.command(msg.command, msg.moduleId, msg.body, function (err, res) {
         //notify should not have a callback
       });
     } else {
@@ -100,7 +100,7 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
       }
 
       // request from master
-      self.consoleService.execute(msg.moduleId, 'monitorHandler', msg.body, function(err, res) {
+      self.consoleService.execute(msg.moduleId, 'monitorHandler', msg.body, function (err, res) {
         if (protocol.isRequest(msg)) {
           var resp = protocol.composeResponse(msg, err, res);
           if (resp) {
@@ -114,7 +114,7 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
     }
   });
 
-  this.socket.on('connect', function() {
+  this.socket.on('connect', function () {
     if (self.state > ST_INITED) {
       //ignore reconnect
       return;
@@ -129,13 +129,13 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
     };
     var authServer = self.consoleService.authServer;
     var env = self.consoleService.env;
-    authServer(req, env, function(token) {
+    authServer(req, env, function (token) {
       req['token'] = token;
       self.doSend('register', req);
     });
   });
 
-  this.socket.on('error', function(err) {
+  this.socket.on('error', function (err) {
     if (self.state < ST_CONNECTED) {
       // error occurs during connecting stage
       cb(err);
@@ -144,12 +144,12 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
     }
   });
 
-  this.socket.on('disconnect', function(reason) {
+  this.socket.on('disconnect', function (reason) {
     self.state = ST_CLOSED;
     self.emit('close');
   });
 
-  this.socket.on('reconnect', function() {
+  this.socket.on('reconnect', function () {
     self.state = ST_CONNECTED;
     var req = {
       id: self.id,
@@ -162,7 +162,7 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
     self.doSend('reconnect', req);
   });
 
-  this.socket.on('reconnect_ok', function(msg) {
+  this.socket.on('reconnect_ok', function (msg) {
     if (msg && msg.code === protocol.PRO_OK) {
       self.state = ST_REGISTERED;
     }
@@ -174,7 +174,7 @@ MonitorAgent.prototype.connect = function(port, host, cb) {
  *
  * @api public
  */
-MonitorAgent.prototype.close = function() {
+MonitorAgent.prototype.close = function () {
   if (this.state >= ST_CLOSED) {
     return;
   }
@@ -189,7 +189,7 @@ MonitorAgent.prototype.close = function() {
  * @param {Object} value module object
  * @api public
  */
-MonitorAgent.prototype.set = function(moduleId, value) {
+MonitorAgent.prototype.set = function (moduleId, value) {
   this.consoleService.set(moduleId, value);
 };
 
@@ -199,7 +199,7 @@ MonitorAgent.prototype.set = function(moduleId, value) {
  * @param {String} moduleId module id/name
  * @api public
  */
-MonitorAgent.prototype.get = function(moduleId) {
+MonitorAgent.prototype.get = function (moduleId) {
   return this.consoleService.get(moduleId);
 };
 
@@ -210,7 +210,7 @@ MonitorAgent.prototype.get = function(moduleId) {
  * @param {Object} msg message
  * @api public
  */
-MonitorAgent.prototype.notify = function(moduleId, msg) {
+MonitorAgent.prototype.notify = function (moduleId, msg) {
   if (this.state !== ST_REGISTERED) {
     logger.error('agent can not notify now, state:' + this.state);
     return;
@@ -219,7 +219,7 @@ MonitorAgent.prototype.notify = function(moduleId, msg) {
   // this.socket.emit('monitor', protocol.composeRequest(null, moduleId, msg));
 };
 
-MonitorAgent.prototype.request = function(moduleId, msg, cb) {
+MonitorAgent.prototype.request = function (moduleId, msg, cb) {
   if (this.state !== ST_REGISTERED) {
     logger.error('agent can not request now, state:' + this.state);
     return;
@@ -230,7 +230,7 @@ MonitorAgent.prototype.request = function(moduleId, msg, cb) {
   // this.socket.emit('monitor', protocol.composeRequest(reqId, moduleId, msg));
 };
 
-MonitorAgent.prototype.doSend = function(topic, msg) {
+MonitorAgent.prototype.doSend = function (topic, msg) {
   this.socket.send(topic, msg);
 }
 

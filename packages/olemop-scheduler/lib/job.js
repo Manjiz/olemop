@@ -18,14 +18,14 @@ var logger = require('log4js').getLogger(__filename);
 //For test
 var lateCount = 0;
 
-var Job = function(trigger, jobFunc, jobData){
+var Job = function (trigger, jobFunc, jobData){
   this.data = (!!jobData)?jobData:null;
   this.func = jobFunc;
 
-  if(typeof(trigger) == 'string'){
+  if (typeof(trigger) == 'string'){
     this.type = CRON_JOB;
     this.trigger = cronTrigger.createTrigger(trigger, this);
-  }else if(typeof(trigger) == 'object'){
+  }else if (typeof(trigger) == 'object'){
     this.type = SIMPLE_JOB;
     this.trigger = simpleTrigger.createTrigger(trigger, this);
   }
@@ -39,12 +39,12 @@ var pro = Job.prototype;
 /**
  * Run the job code
  */
-pro.run = function(){
+pro.run = function (){
   try{
     jobCount++;
     this.runTime++;
     var late = Date.now() - this.excuteTime();
-    if(late>warnLimit)
+    if (late>warnLimit)
       logger.warn('run Job count ' + jobCount + ' late :' + late + ' lateCount ' + (++lateCount));
     this.func(this.data);
   }catch(e){
@@ -55,11 +55,11 @@ pro.run = function(){
 /**
  * Compute the next excution time
  */
-pro.nextTime = function(){
+pro.nextTime = function (){
   return this.trigger.nextExcuteTime();
 };
 
-pro.excuteTime = function(){
+pro.excuteTime = function (){
     return this.trigger.excuteTime();
 };
 

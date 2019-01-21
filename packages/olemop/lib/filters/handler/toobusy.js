@@ -7,21 +7,21 @@ var toobusy = null;
 var DEFAULT_MAXLAG = 70;
 
 
-module.exports = function(maxLag) {
+module.exports = function (maxLag) {
   return new Filter(maxLag || DEFAULT_MAXLAG);
 };
 
-var Filter = function(maxLag) {
+var Filter = function (maxLag) {
   try {
     toobusy = require('toobusy');
   } catch(e) {
   }
-  if(!!toobusy) {
+  if (!!toobusy) {
     toobusy.maxLag(maxLag);
   }
 };
 
-Filter.prototype.before = function(msg, session, next) {
+Filter.prototype.before = function (msg, session, next) {
   if (!!toobusy && toobusy()) {
     conLogger.warn('[toobusy] reject request msg: ' + msg);
     var err = new Error('Server toobusy!');

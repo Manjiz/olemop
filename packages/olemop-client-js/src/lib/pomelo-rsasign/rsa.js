@@ -1,6 +1,6 @@
 /*
  * RSA Encryption / Decryption with PKCS1 v2 Padding.
- * 
+ *
  * Copyright (c) 2003-2005  Tom Wu
  * All Rights Reserved.
  *
@@ -15,9 +15,9 @@
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
  *
  * IN NO EVENT SHALL TOM WU BE LIABLE FOR ANY SPECIAL, INCIDENTAL,
  * INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES WHATSOEVER
@@ -31,7 +31,7 @@
  * and disclaimer.
  */
 
-(function(){
+(function (){
 
 var BigInteger = require("./jsbn.js");
 var SecureRandom = require("./rng.js");
@@ -143,7 +143,7 @@ function RSAEncrypt(text) {
 // Return the PKCS#1 RSA encryption of "text" as a Base64-encoded string
 // function RSAEncryptB64(text) {
 // var h = this.encrypt(text);
-// if(h) return hex2b64(h); else return null;
+// if (h) return hex2b64(h); else return null;
 // }
 
 // Undo PKCS#1 (type 2, random) padding and, if valid, return the plaintext
@@ -152,7 +152,7 @@ function pkcs1unpad2(d, n) {
   var i = 0;
 	while (i < b.length && b[i] == 0)
 		++i;
-    
+
 	if (b.length - i != n - 1 || b[i] != 2)
 		return null;
 	++i;
@@ -272,7 +272,7 @@ function RSADecrypt(ctext) {
 // "ctext" is a Base64-encoded string and the output is a plain string.
 // function RSAB64Decrypt(ctext) {
 // var h = b64tohex(ctext);
-// if(h) return this.decrypt(h); else return null;
+// if (h) return this.decrypt(h); else return null;
 // }
 
 // Added by @eschnou
@@ -306,7 +306,7 @@ function baToString(b) {
 // This software is licensed under the terms of the MIT License.
 // http://kjur.github.com/jsrsasign/license/
 //
-// The above copyright and license notice shall be 
+// The above copyright and license notice shall be
 // included in all copies or substantial portions of the Software.
 
 //
@@ -347,23 +347,23 @@ _RSASIGN_DIHEAD['ripemd160'] = "3021300906052b2403020105000414";
  */
 /*
 var _RSASIGN_HASHHEXFUNC = [];
-_RSASIGN_HASHHEXFUNC['sha1'] =      function(s){ var sha = crypto.createHash('sha1'); sha.update(s); var out = sha.digest('hex'); return out;};
-_RSASIGN_HASHHEXFUNC['sha256'] =    function(s){ var sha = crypto.createHash('sha256'); sha.update(s); var out = sha.digest('hex'); return out;};
-_RSASIGN_HASHHEXFUNC['sha512'] =    function(s){ var sha = crypto.createHash('sha512'); sha.update(s); var out = sha.digest('hex'); return out;};
-_RSASIGN_HASHHEXFUNC['md5'] =       function(s){ var sha = crypto.createHash('md5'); sha.update(s); var out = sha.digest('hex'); return out;};
-_RSASIGN_HASHHEXFUNC['ripemd160'] = function(s){return hex_rmd160(s);};   // http://pajhome.org.uk/crypt/md5/md5.html
+_RSASIGN_HASHHEXFUNC['sha1'] =      function (s){ var sha = crypto.createHash('sha1'); sha.update(s); var out = sha.digest('hex'); return out;};
+_RSASIGN_HASHHEXFUNC['sha256'] =    function (s){ var sha = crypto.createHash('sha256'); sha.update(s); var out = sha.digest('hex'); return out;};
+_RSASIGN_HASHHEXFUNC['sha512'] =    function (s){ var sha = crypto.createHash('sha512'); sha.update(s); var out = sha.digest('hex'); return out;};
+_RSASIGN_HASHHEXFUNC['md5'] =       function (s){ var sha = crypto.createHash('md5'); sha.update(s); var out = sha.digest('hex'); return out;};
+_RSASIGN_HASHHEXFUNC['ripemd160'] = function (s){return hex_rmd160(s);};   // http://pajhome.org.uk/crypt/md5/md5.html
 */
 
 
 var _RSASIGN_HASHHEXFUNC = [];
-_RSASIGN_HASHHEXFUNC['sha1'] =      function(s){return KJUR.crypto.Util.sha1(s);};
-_RSASIGN_HASHHEXFUNC['sha256'] =    function(s){return KJUR.crypto.Util.sha256(s);}
-_RSASIGN_HASHHEXFUNC['sha512'] =    function(s){return KJUR.crypto.Util.sha512(s);}
-_RSASIGN_HASHHEXFUNC['md5'] =       function(s){return KJUR.crypto.Util.md5(s);};
-_RSASIGN_HASHHEXFUNC['ripemd160'] = function(s){return KJUR.crypto.Util.ripemd160(s);};
+_RSASIGN_HASHHEXFUNC['sha1'] =      function (s){return KJUR.crypto.Util.sha1(s);};
+_RSASIGN_HASHHEXFUNC['sha256'] =    function (s){return KJUR.crypto.Util.sha256(s);}
+_RSASIGN_HASHHEXFUNC['sha512'] =    function (s){return KJUR.crypto.Util.sha512(s);}
+_RSASIGN_HASHHEXFUNC['md5'] =       function (s){return KJUR.crypto.Util.md5(s);};
+_RSASIGN_HASHHEXFUNC['ripemd160'] = function (s){return KJUR.crypto.Util.ripemd160(s);};
 
-//_RSASIGN_HASHHEXFUNC['sha1'] =   function(s){return sha1.hex(s);}   // http://user1.matsumoto.ne.jp/~goma/js/hash.html
-//_RSASIGN_HASHHEXFUNC['sha256'] = function(s){return sha256.hex;}    // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+//_RSASIGN_HASHHEXFUNC['sha1'] =   function (s){return sha1.hex(s);}   // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+//_RSASIGN_HASHHEXFUNC['sha256'] = function (s){return sha256.hex;}    // http://user1.matsumoto.ne.jp/~goma/js/hash.html
 
 var _RE_HEXDECONLY = new RegExp("");
 _RE_HEXDECONLY.compile("[^0-9a-f]", "gi");
@@ -491,7 +491,7 @@ function _rsasign_verifyString(sMsg, hSig) {
   var biDecryptedSig = this.doPublic(biSig);
   var hDigestInfo = biDecryptedSig.toString(16).replace(/^1f+00/, '');
   var digestInfoAry = _rsasign_getAlgNameAndHashFromHexDisgestInfo(hDigestInfo);
-  
+
   if (digestInfoAry.length == 0) return false;
   var algName = digestInfoAry[0];
   var diHashValue = digestInfoAry[1];
@@ -635,7 +635,7 @@ exports.batoString = baToString;
  * This software is licensed under the terms of the MIT License.
  * http://kjur.github.com/jsrsasign/license
  *
- * The above copyright and license notice shall be 
+ * The above copyright and license notice shall be
  * included in all copies or substantial portions of the Software.
  */
 
@@ -648,7 +648,7 @@ exports.batoString = baToString;
  * @license <a href="http://kjur.github.io/jsrsasign/license/">MIT License</a>
  */
 
-/** 
+/**
  * kjur's class library name space
  * @name KJUR
  * @namespace kjur's class library name space
@@ -677,7 +677,7 @@ if (typeof KJUR.crypto == "undefined" || !KJUR.crypto) KJUR.crypto = {};
  * @property {Array} DIGESTINFOHEAD PKCS#1 DigestInfo heading hexadecimal bytes for each hash algorithms
  * @description
  */
-KJUR.crypto.Util = new function() {
+KJUR.crypto.Util = new function () {
     this.DIGESTINFOHEAD = {
 	'sha1':      "3021300906052b0e03021a05000414",
         'sha224':    "302d300d06096086480165030402040500041c",
@@ -698,7 +698,7 @@ KJUR.crypto.Util = new function() {
      * @param {String} alg hash algorithm name (ex. 'sha1')
      * @return {String} hexadecimal string DigestInfo ASN.1 structure
      */
-    this.getDigestInfoHex = function(hHash, alg) {
+    this.getDigestInfoHex = function (hHash, alg) {
 	if (typeof this.DIGESTINFOHEAD[alg] == "undefined")
 	    throw "alg not supported in Util.DIGESTINFOHEAD: " + alg;
 	return this.DIGESTINFOHEAD[alg] + hHash;
@@ -714,7 +714,7 @@ KJUR.crypto.Util = new function() {
      * @param {Integer} keySize key bit length (ex. 1024)
      * @return {String} hexadecimal string of PKCS#1 padded DigestInfo
      */
-    this.getPaddedDigestInfoHex = function(hHash, alg, keySize) {
+    this.getPaddedDigestInfoHex = function (hHash, alg, keySize) {
 	var hDigestInfo = this.getDigestInfoHex(hHash, alg);
 	var pmStrLen = keySize / 4; // minimum PM length
 
@@ -741,7 +741,7 @@ KJUR.crypto.Util = new function() {
      * @return {String} hexadecimal string of hash value
      * @since 1.0.3
      */
-    this.sha1 = function(s) {
+    this.sha1 = function (s) {
         var md = new KJUR.crypto.MessageDigest({'alg':'sha1', 'prov':'cryptojs'});
         return md.digestString(s);
     };
@@ -755,7 +755,7 @@ KJUR.crypto.Util = new function() {
      * @return {String} hexadecimal string of hash value
      * @since 1.0.3
      */
-    this.sha256 = function(s) {
+    this.sha256 = function (s) {
         var md = new KJUR.crypto.MessageDigest({'alg':'sha256', 'prov':'cryptojs'});
         return md.digestString(s);
     };
@@ -769,7 +769,7 @@ KJUR.crypto.Util = new function() {
      * @return {String} hexadecimal string of hash value
      * @since 1.0.3
      */
-    this.sha512 = function(s) {
+    this.sha512 = function (s) {
         var md = new KJUR.crypto.MessageDigest({'alg':'sha512', 'prov':'cryptojs'});
         return md.digestString(s);
     };
@@ -783,7 +783,7 @@ KJUR.crypto.Util = new function() {
      * @return {String} hexadecimal string of hash value
      * @since 1.0.3
      */
-    this.md5 = function(s) {
+    this.md5 = function (s) {
         var md = new KJUR.crypto.MessageDigest({'alg':'md5', 'prov':'cryptojs'});
         return md.digestString(s);
     };
@@ -797,7 +797,7 @@ KJUR.crypto.Util = new function() {
      * @return {String} hexadecimal string of hash value
      * @since 1.0.3
      */
-    this.ripemd160 = function(s) {
+    this.ripemd160 = function (s) {
         var md = new KJUR.crypto.MessageDigest({'alg':'ripemd160', 'prov':'cryptojs'});
         return md.digestString(s);
     };
@@ -837,7 +837,7 @@ KJUR.crypto.Util = new function() {
  * md.updateString('aaa')
  * var mdHex = md.digest()
  */
-KJUR.crypto.MessageDigest = function(params) {
+KJUR.crypto.MessageDigest = function (params) {
     var md = null;
     var algName = null;
     var provName = null;
@@ -865,7 +865,7 @@ KJUR.crypto.MessageDigest = function(params) {
      * // for RIPEMD160
      * md.setAlgAndProvider('ripemd160', 'cryptojs');
      */
-    this.setAlgAndProvider = function(alg, prov) {
+    this.setAlgAndProvider = function (alg, prov) {
 	if (':md5:sha1:sha224:sha256:sha384:sha512:ripemd160:'.indexOf(alg) != -1 &&
 	    prov == 'cryptojs') {
 	    try {
@@ -873,22 +873,22 @@ KJUR.crypto.MessageDigest = function(params) {
 	    } catch (ex) {
 		throw "setAlgAndProvider hash alg set fail alg=" + alg + "/" + ex;
 	    }
-	    this.updateString = function(str) {
+	    this.updateString = function (str) {
 		this.md.update(str);
 	    };
-	    this.updateHex = function(hex) {
+	    this.updateHex = function (hex) {
 		var wHex = CryptoJS.enc.Hex.parse(hex);
 		this.md.update(wHex);
 	    };
-	    this.digest = function() {
+	    this.digest = function () {
 		var hash = this.md.finalize();
 		return hash.toString(CryptoJS.enc.Hex);
 	    };
-	    this.digestString = function(str) {
+	    this.digestString = function (str) {
 		this.updateString(str);
 		return this.digest();
 	    };
-	    this.digestHex = function(hex) {
+	    this.digestHex = function (hex) {
 		this.updateHex(hex);
 		return this.digest();
 	    };
@@ -900,22 +900,22 @@ KJUR.crypto.MessageDigest = function(params) {
 	    } catch (ex) {
 		throw "setAlgAndProvider hash alg set fail alg=" + alg + "/" + ex;
 	    }
-	    this.updateString = function(str) {
+	    this.updateString = function (str) {
 		this.md.update(str);
 	    };
-	    this.updateHex = function(hex) {
+	    this.updateHex = function (hex) {
 		var baHex = sjcl.codec.hex.toBits(hex);
 		this.md.update(baHex);
 	    };
-	    this.digest = function() {
+	    this.digest = function () {
 		var hash = this.md.finalize();
 		return sjcl.codec.hex.fromBits(hash);
 	    };
-	    this.digestString = function(str) {
+	    this.digestString = function (str) {
 		this.updateString(str);
 		return this.digest();
 	    };
-	    this.digestHex = function(hex) {
+	    this.digestHex = function (hex) {
 		this.updateHex(hex);
 		return this.digest();
 	    };
@@ -932,7 +932,7 @@ KJUR.crypto.MessageDigest = function(params) {
      * @example
      * md.updateString('New York');
      */
-    this.updateString = function(str) {
+    this.updateString = function (str) {
 	throw "updateString(str) not supported for this alg/prov: " + this.algName + "/" + this.provName;
     };
 
@@ -946,7 +946,7 @@ KJUR.crypto.MessageDigest = function(params) {
      * @example
      * md.updateHex('0afe36');
      */
-    this.updateHex = function(hex) {
+    this.updateHex = function (hex) {
 	throw "updateHex(hex) not supported for this alg/prov: " + this.algName + "/" + this.provName;
     };
 
@@ -959,7 +959,7 @@ KJUR.crypto.MessageDigest = function(params) {
      * @example
      * md.digest()
      */
-    this.digest = function() {
+    this.digest = function () {
 	throw "digest() not supported for this alg/prov: " + this.algName + "/" + this.provName;
     };
 
@@ -973,7 +973,7 @@ KJUR.crypto.MessageDigest = function(params) {
      * @example
      * md.digestString('aaa')
      */
-    this.digestString = function(str) {
+    this.digestString = function (str) {
 	throw "digestString(str) not supported for this alg/prov: " + this.algName + "/" + this.provName;
     };
 
@@ -987,7 +987,7 @@ KJUR.crypto.MessageDigest = function(params) {
      * @example
      * md.digestHex('0f2abd')
      */
-    this.digestHex = function(hex) {
+    this.digestHex = function (hex) {
 	throw "digestHex(hex) not supported for this alg/prov: " + this.algName + "/" + this.provName;
     };
 
@@ -1032,7 +1032,7 @@ KJUR.crypto.MessageDigest = function(params) {
  * sig.updateString('aaa');
  * var isValid = sig2.verify(hSigVal);
  */
-KJUR.crypto.Signature = function(params) {
+KJUR.crypto.Signature = function (params) {
     var prvKey = null; // RSAKey for signing
     var pubKey = null; // RSAKey for verifying
 
@@ -1050,14 +1050,14 @@ KJUR.crypto.Signature = function(params) {
     var hPaddedDigestInfo = null;
     var hSign = null;
 
-    this._setAlgNames = function() {
+    this._setAlgNames = function () {
 	if (this.algName.match(/^(.+)with(.+)$/)) {
 	    this.mdAlgName = RegExp.$1.toLowerCase();
 	    this.pubkeyAlgName = RegExp.$2.toLowerCase();
 	}
     };
 
-    this._zeroPaddingOfSignature = function(hex, bitLength) {
+    this._zeroPaddingOfSignature = function (hex, bitLength) {
 	var s = "";
 	var nZero = bitLength / 4 - hex.length;
 	for (var i = 0; i < nZero; i++) {
@@ -1077,7 +1077,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * md.setAlgAndProvider('SHA1withRSA', 'cryptojs/jsrsa');
      */
-    this.setAlgAndProvider = function(alg, prov) {
+    this.setAlgAndProvider = function (alg, prov) {
 	this._setAlgNames();
 	if (prov != 'cryptojs/jsrsa')
 	    throw "provider not supported: " + prov;
@@ -1089,35 +1089,35 @@ KJUR.crypto.Signature = function(params) {
 		throw "setAlgAndProvider hash alg set fail alg=" + this.mdAlgName + "/" + ex;
 	    }
 
-	    this.initSign = function(prvKey) {
+	    this.initSign = function (prvKey) {
 		this.prvKey = prvKey;
 		this.state = "SIGN";
 	    };
 
-	    this.initVerifyByPublicKey = function(rsaPubKey) {
+	    this.initVerifyByPublicKey = function (rsaPubKey) {
 		this.pubKey = rsaPubKey;
 		this.state = "VERIFY";
 	    };
 
-	    this.initVerifyByCertificatePEM = function(certPEM) {
+	    this.initVerifyByCertificatePEM = function (certPEM) {
 		var x509 = new X509();
 		x509.readCertPEM(certPEM);
 		this.pubKey = x509.subjectPublicKeyRSA;
 		this.state = "VERIFY";
 	    };
 
-	    this.updateString = function(str) {
+	    this.updateString = function (str) {
 		this.md.updateString(str);
 	    };
-	    this.updateHex = function(hex) {
+	    this.updateHex = function (hex) {
 		this.md.updateHex(hex);
 	    };
-	    this.sign = function() {
+	    this.sign = function () {
                 var util = KJUR.crypto.Util;
 		var keyLen = this.prvKey.n.bitLength();
 		this.sHashHex = this.md.digest();
 		this.hDigestInfo = util.getDigestInfoHex(this.sHashHex, this.mdAlgName);
-		this.hPaddedDigestInfo = 
+		this.hPaddedDigestInfo =
                     util.getPaddedDigestInfoHex(this.sHashHex, this.mdAlgName, keyLen);
 
 		var biPaddedDigestInfo = parseBigInt(this.hPaddedDigestInfo, 16);
@@ -1127,15 +1127,15 @@ KJUR.crypto.Signature = function(params) {
 		this.hSign = this._zeroPaddingOfSignature(biSign.toString(16), keyLen);
 		return this.hSign;
 	    };
-	    this.signString = function(str) {
+	    this.signString = function (str) {
 		this.updateString(str);
 		this.sign();
 	    };
-	    this.signHex = function(hex) {
+	    this.signHex = function (hex) {
 		this.updateHex(hex);
 		this.sign();
 	    };
-	    this.verify = function(hSigVal) {
+	    this.verify = function (hSigVal) {
                 var util = KJUR.crypto.Util;
 		var keyLen = this.pubKey.n.bitLength();
 		this.sHashHex = this.md.digest();
@@ -1168,7 +1168,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * sig.initVerifyByPublicKey(prvKey)
      */
-    this.initVerifyByPublicKey = function(rsaPubKey) {
+    this.initVerifyByPublicKey = function (rsaPubKey) {
 	throw "initVerifyByPublicKey(rsaPubKeyy) not supported for this alg:prov=" + this.algProvName;
     };
 
@@ -1183,7 +1183,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * sig.initVerifyByCertificatePEM(certPEM)
      */
-    this.initVerifyByCertificatePEM = function(certPEM) {
+    this.initVerifyByCertificatePEM = function (certPEM) {
 	throw "initVerifyByCertificatePEM(certPEM) not supported for this alg:prov=" + this.algProvName;
     };
 
@@ -1197,7 +1197,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * sig.initSign(prvKey)
      */
-    this.initSign = function(prvKey) {
+    this.initSign = function (prvKey) {
 	throw "initSign(prvKey) not supported for this alg:prov=" + this.algProvName;
     };
 
@@ -1211,7 +1211,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * sig.updateString('aaa')
      */
-    this.updateString = function(str) {
+    this.updateString = function (str) {
 	throw "updateString(str) not supported for this alg:prov=" + this.algProvName;
     };
 
@@ -1225,7 +1225,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * sig.updateHex('1f2f3f')
      */
-    this.updateHex = function(hex) {
+    this.updateHex = function (hex) {
 	throw "updateHex(hex) not supported for this alg:prov=" + this.algProvName;
     };
 
@@ -1239,7 +1239,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * var hSigValue = sig.sign()
      */
-    this.sign = function() {
+    this.sign = function () {
 	throw "sign() not supported for this alg:prov=" + this.algProvName;
     };
 
@@ -1254,7 +1254,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * var hSigValue = sig.signString('aaa')
      */
-    this.signString = function(str) {
+    this.signString = function (str) {
 	throw "digestString(str) not supported for this alg:prov=" + this.algProvName;
     };
 
@@ -1269,7 +1269,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * var hSigValue = sig.signHex('1fdc33')
      */
-    this.signHex = function(hex) {
+    this.signHex = function (hex) {
 	throw "digestHex(hex) not supported for this alg:prov=" + this.algProvName;
     };
 
@@ -1284,7 +1284,7 @@ KJUR.crypto.Signature = function(params) {
      * @example
      * var isValid = sig.verify('1fbcefdca4823a7(snip)')
      */
-    this.verify = function(hSigVal) {
+    this.verify = function (hSigVal) {
 	throw "verify(hSigVal) not supported for this alg:prov=" + this.algProvName;
     };
 

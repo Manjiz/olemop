@@ -5,12 +5,12 @@
 var rpcLogger = require('@olemop/logger').getLogger('rpc-log', __filename);
 var utils = require('../../util/utils');
 
-module.exports = function() {
+module.exports = function () {
   return new Filter();
 };
 
 var Filter = function () {
-}; 
+};
 
 Filter.prototype.name = 'rpcLog';
 
@@ -18,7 +18,7 @@ Filter.prototype.name = 'rpcLog';
  * Before filter for rpc
  */
 
-Filter.prototype.before = function(serverId, msg, opts, next) {
+Filter.prototype.before = function (serverId, msg, opts, next) {
   opts = opts||{};
   opts.__start_time__ = Date.now();
   next();
@@ -27,8 +27,8 @@ Filter.prototype.before = function(serverId, msg, opts, next) {
 /**
  * After filter for rpc
  */
-Filter.prototype.after = function(serverId, msg, opts, next) {
-  if(!!opts && !!opts.__start_time__) {
+Filter.prototype.after = function (serverId, msg, opts, next) {
+  if (!!opts && !!opts.__start_time__) {
     var start = opts.__start_time__;
     var end = Date.now();
     var timeUsed = end - start;

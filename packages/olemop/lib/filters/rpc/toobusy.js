@@ -7,16 +7,16 @@ var toobusy = null;
 
 var DEFAULT_MAXLAG = 70;
 
-module.exports = function(maxLag) {
+module.exports = function (maxLag) {
   return new Filter(maxLag || DEFAULT_MAXLAG);
 };
 
-var Filter = function(maxLag) {
+var Filter = function (maxLag) {
   try {
     toobusy = require('toobusy');
   } catch(e) {
   }
-  if(!!toobusy) {
+  if (!!toobusy) {
     toobusy.maxLag(maxLag);
   }
 };
@@ -26,7 +26,7 @@ Filter.prototype.name = 'toobusy';
 /**
  * Before filter for rpc
  */
- Filter.prototype.before = function(serverId, msg, opts, next) {
+ Filter.prototype.before = function (serverId, msg, opts, next) {
   opts = opts||{};
   if (!!toobusy && toobusy()) {
     rpcLogger.warn('Server too busy for rpc request, serverId:' + serverId + ' msg: ' + msg);

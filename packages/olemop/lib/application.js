@@ -35,7 +35,7 @@ var STATE_STOPED  = 4;  // app has stoped
  *
  *   - setup default configuration
  */
-Application.init = function(opts) {
+Application.init = function (opts) {
   opts = opts || {};
   this.loaded = [];       // loaded component list
   this.components = {};   // name -> component map
@@ -75,7 +75,7 @@ Application.init = function(opts) {
  *
  * @memberOf Application
  */
-Application.getBase = function() {
+Application.getBase = function () {
   return this.get(Constants.RESERVED.BASE);
 };
 
@@ -86,7 +86,7 @@ Application.getBase = function() {
  *
  * @memberOf Application
  */
-Application.require = function(ph) {
+Application.require = function (ph) {
   return require(path.join(Application.getBase(), ph));
 };
 
@@ -171,7 +171,7 @@ Application.globalAfter = function (af) {
  * @param {Object|Function} bf before fileter, bf(serverId, msg, opts, next)
  * @memberOf Application
  */
-Application.rpcBefore = function(bf) {
+Application.rpcBefore = function (bf) {
   addFilter(this, Constants.KEYWORDS.RPC_BEFORE_FILTER, bf);
 };
 
@@ -181,7 +181,7 @@ Application.rpcBefore = function(bf) {
  * @param {Object|Function} af after filter, `af(serverId, msg, opts, next)`
  * @memberOf Application
  */
-Application.rpcAfter = function(af) {
+Application.rpcAfter = function (af) {
   addFilter(this, Constants.KEYWORDS.RPC_AFTER_FILTER, af);
 };
 
@@ -192,7 +192,7 @@ Application.rpcAfter = function(af) {
  *                        A filter should have two methods: before and after.
  * @memberOf Application
  */
-Application.rpcFilter = function(filter) {
+Application.rpcFilter = function (filter) {
   this.rpcBefore(filter);
   this.rpcAfter(filter);
 };
@@ -206,7 +206,7 @@ Application.rpcFilter = function(filter) {
  * @return {Object}     app instance for chain invoke
  * @memberOf Application
  */
-Application.load = function(name, component, opts) {
+Application.load = function (name, component, opts) {
   if (typeof name !== 'string') {
     opts = component
     component = name
@@ -254,14 +254,14 @@ Application.loadConfigBaseApp = function (key, val, reload) {
   var originPath = path.join(Application.getBase(), val);
   var presentPath = path.join(Application.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(val));
   var realPath;
-  if(fs.existsSync(originPath)) {
+  if (fs.existsSync(originPath)) {
      realPath = originPath;
      var file = require(originPath);
      if (file[env]) {
        file = file[env];
      }
      this.set(key, file);
-  } else if(fs.existsSync(presentPath)) {
+  } else if (fs.existsSync(presentPath)) {
     realPath = presentPath;
     var pfile = require(presentPath);
     this.set(key, pfile);
@@ -269,9 +269,9 @@ Application.loadConfigBaseApp = function (key, val, reload) {
     logger.error('invalid configuration with file path: %s', key);
   }
 
-  if(!!realPath && !!reload) {
+  if (!!realPath && !!reload) {
     fs.watch(realPath, function (event, filename) {
-      if(event === 'change') {
+      if (event === 'change') {
         delete require.cache[require.resolve(realPath)];
         self.loadConfigBaseApp(key, val);
       }
@@ -287,7 +287,7 @@ Application.loadConfigBaseApp = function (key, val, reload) {
  * @return {Server|Mixed} for chaining, or the setting value
  * @memberOf Application
  */
-Application.loadConfig = function(key, val) {
+Application.loadConfig = function (key, val) {
   var env = this.get(Constants.RESERVED.ENV);
   val = require(val);
   if (val[env]) {
@@ -303,7 +303,7 @@ Application.loadConfig = function(key, val) {
  *
  *  app.route('area', routeFunc);
  *
- *  var routeFunc = function(session, msg, app, cb) {
+ *  var routeFunc = function (session, msg, app, cb) {
  *    // all request to area would be route to the first area server
  *    var areas = app.getServersByType('area');
  *    cb(null, areas[0].id);
@@ -314,9 +314,9 @@ Application.loadConfig = function(key, val) {
  * @return {Object}     current application instance for chain invoking
  * @memberOf Application
  */
-Application.route = function(serverType, routeFunc) {
+Application.route = function (serverType, routeFunc) {
   var routes = this.get(Constants.KEYWORDS.ROUTE);
-  if(!routes) {
+  if (!routes) {
     routes = {};
     this.set(Constants.KEYWORDS.ROUTE, routes);
   }
@@ -331,9 +331,9 @@ Application.route = function(serverType, routeFunc) {
  * @return {Void}
  * @memberOf Application
  */
-Application.beforeStopHook = function(fun) {
+Application.beforeStopHook = function (fun) {
   logger.warn('this method was deprecated in pomelo 0.8');
-  if(!!fun && typeof fun === 'function') {
+  if (!!fun && typeof fun === 'function') {
     this.set(Constants.KEYWORDS.BEFORE_STOP_HOOK, fun);
   }
 };
@@ -344,20 +344,20 @@ Application.beforeStopHook = function(fun) {
  * @param  {Function} cb callback function
  * @memberOf Application
  */
- Application.start = function(cb) {
+ Application.start = function (cb) {
   this.startTime = Date.now();
-  if(this.state > STATE_INITED) {
+  if (this.state > STATE_INITED) {
     utils.invokeCallback(cb, new Error('application has already start.'));
     return;
   }
 
   var self = this;
-  appUtil.startByType(self, function() {
+  appUtil.startByType(self, function () {
     appUtil.loadDefaultComponents(self);
-    var startUp = function() {
-      appUtil.optComponents(self.loaded, Constants.RESERVED.START, function(err) {
+    var startUp = function () {
+      appUtil.optComponents(self.loaded, Constants.RESERVED.START, function (err) {
         self.state = STATE_START;
-        if(err) {
+        if (err) {
           utils.invokeCallback(cb, err);
         } else {
           logger.info('%j enter after start...', self.getServerId());
@@ -366,7 +366,7 @@ Application.beforeStopHook = function(fun) {
       });
     };
     var beforeFun = self.lifecycleCbs[Constants.LIFECYCLE.BEFORE_STARTUP];
-    if(!!beforeFun) {
+    if (!!beforeFun) {
       beforeFun.call(null, self, startUp);
     } else {
       startUp();
@@ -380,22 +380,22 @@ Application.beforeStopHook = function(fun) {
  * @param  {Function} cb callback function
  * @return {Void}
  */
-Application.afterStart = function(cb) {
-  if(this.state !== STATE_START) {
+Application.afterStart = function (cb) {
+  if (this.state !== STATE_START) {
     utils.invokeCallback(cb, new Error('application is not running now.'));
     return;
   }
 
   var afterFun = this.lifecycleCbs[Constants.LIFECYCLE.AFTER_STARTUP];
   var self = this;
-  appUtil.optComponents(this.loaded, Constants.RESERVED.AFTER_START, function(err) {
+  appUtil.optComponents(this.loaded, Constants.RESERVED.AFTER_START, function (err) {
     self.state = STATE_STARTED;
     var id = self.getServerId();
-    if(!err) {
+    if (!err) {
       logger.info('%j finish start', id);
     }
-    if(!!afterFun) {
-      afterFun.call(null, self, function() {
+    if (!!afterFun) {
+      afterFun.call(null, self, function () {
         utils.invokeCallback(cb, err);
       });
     } else {
@@ -412,36 +412,36 @@ Application.afterStart = function(cb) {
  *
  * @param  {Boolean} force whether stop the app immediately
  */
-Application.stop = function(force) {
-  if(this.state > STATE_STARTED) {
+Application.stop = function (force) {
+  if (this.state > STATE_STARTED) {
     logger.warn('[pomelo application] application is not running now.');
     return;
   }
   this.state = STATE_STOPED;
   var self = this;
 
-  this.stopTimer = setTimeout(function() {
+  this.stopTimer = setTimeout(function () {
     process.exit(0);
   }, Constants.TIME.TIME_WAIT_STOP);
 
-  var cancelShutDownTimer =function(){
-      if(!!self.stopTimer) {
+  var cancelShutDownTimer =function (){
+      if (!!self.stopTimer) {
         clearTimeout(self.stopTimer);
       }
   };
-  var shutDown = function() {
-    appUtil.stopComps(self.loaded, 0, force, function() {
+  var shutDown = function () {
+    appUtil.stopComps(self.loaded, 0, force, function () {
       cancelShutDownTimer();
-      if(force) {
+      if (force) {
         process.exit(0);
       }
     });
   };
   var fun = this.get(Constants.KEYWORDS.BEFORE_STOP_HOOK);
   var stopFun = this.lifecycleCbs[Constants.LIFECYCLE.BEFORE_SHUTDOWN];
-  if(!!stopFun) {
+  if (!!stopFun) {
     stopFun.call(null, this, shutDown, cancelShutDownTimer);
-  } else if(!!fun) {
+  } else if (!!fun) {
     utils.invokeCallback(fun, self, shutDown, cancelShutDownTimer);
   } else {
     shutDown();
@@ -472,7 +472,7 @@ Application.set = function (setting, val, attach) {
     return this.settings[setting];
   }
   this.settings[setting] = val;
-  if(attach) {
+  if (attach) {
     this[setting] = val;
   }
   return this;
@@ -541,15 +541,15 @@ Application.disable = function (setting) {
  *
  * Examples:
  *
- *  app.configure(function(){
+ *  app.configure(function (){
  *    // executed for all envs and server types
  *  });
  *
- *  app.configure('development', function(){
+ *  app.configure('development', function (){
  *    // executed development env
  *  });
  *
- *  app.configure('development', 'connector', function(){
+ *  app.configure('development', 'connector', function (){
  *    // executed for development env and connector server type
  *  });
  *
@@ -564,10 +564,10 @@ Application.configure = function (env, type, fn) {
   fn = args.pop();
   env = type = Constants.RESERVED.ALL;
 
-  if(args.length > 0) {
+  if (args.length > 0) {
     env = args[0];
   }
-  if(args.length > 1) {
+  if (args.length > 1) {
     type = args[1];
   }
 
@@ -587,22 +587,22 @@ Application.configure = function (env, type, fn) {
  * @param {Object} opts construct parameter for module
  * @memberOf Application
  */
-Application.registerAdmin = function(moduleId, module, opts) {
+Application.registerAdmin = function (moduleId, module, opts) {
   var modules = this.get(Constants.KEYWORDS.MODULE);
-  if(!modules) {
+  if (!modules) {
     modules = {};
     this.set(Constants.KEYWORDS.MODULE, modules);
   }
 
-  if(typeof moduleId !== 'string') {
+  if (typeof moduleId !== 'string') {
     opts = module;
     module = moduleId;
-    if(module) {
+    if (module) {
       moduleId = module.moduleId;
     }
   }
 
-  if(!moduleId){
+  if (!moduleId){
     return;
   }
 
@@ -620,8 +620,8 @@ Application.registerAdmin = function(moduleId, module, opts) {
  * @param  {[type]} opts    (optional) construct parameters for the factory function
  * @memberOf Application
  */
-Application.use = function(plugin, opts) {
-  if(!plugin.components) {
+Application.use = function (plugin, opts) {
+  if (!plugin.components) {
     logger.error('invalid components, no components exist');
     return;
   }
@@ -630,7 +630,7 @@ Application.use = function(plugin, opts) {
   opts = opts || {};
   var dir = path.dirname(plugin.components);
 
-  if(!fs.existsSync(plugin.components)) {
+  if (!fs.existsSync(plugin.components)) {
     logger.error('fail to find components, find path: %s', plugin.components);
     return;
   }
@@ -642,7 +642,7 @@ Application.use = function(plugin, opts) {
     var name = path.basename(filename, '.js');
     var param = opts[name] || {};
     var absolutePath = path.join(dir, Constants.DIR.COMPONENT, filename);
-    if(!fs.existsSync(absolutePath)) {
+    if (!fs.existsSync(absolutePath)) {
       logger.error('component %s not exist at %s', name, absolutePath);
     } else {
       self.load(require(absolutePath), param);
@@ -677,7 +677,7 @@ Application.use = function(plugin, opts) {
  * @param {Number} retry retry times to execute handlers if conditions are successfully executed
  * @memberOf Application
  */
-Application.transaction = function(name, conditions, handlers, retry) {
+Application.transaction = function (name, conditions, handlers, retry) {
   appManager.transaction(name, conditions, handlers, retry);
 };
 
@@ -687,7 +687,7 @@ Application.transaction = function(name, conditions, handlers, retry) {
  * @return {Object} master server info, {id, host, port}
  * @memberOf Application
  */
-Application.getMaster = function() {
+Application.getMaster = function () {
   return this.master;
 };
 
@@ -697,7 +697,7 @@ Application.getMaster = function() {
  * @return {Object} current server info, {id, serverType, host, port}
  * @memberOf Application
  */
-Application.getCurServer = function() {
+Application.getCurServer = function () {
   return this.curServer;
 };
 
@@ -707,7 +707,7 @@ Application.getCurServer = function() {
  * @return {String|Number} current server id from servers.json
  * @memberOf Application
  */
-Application.getServerId = function() {
+Application.getServerId = function () {
   return this.serverId;
 };
 
@@ -717,7 +717,7 @@ Application.getServerId = function() {
  * @return {String|Number} current server type from servers.json
  * @memberOf Application
  */
-Application.getServerType = function() {
+Application.getServerType = function () {
   return this.serverType;
 };
 
@@ -727,7 +727,7 @@ Application.getServerType = function() {
  * @return {Object} server info map, key: server id, value: server info
  * @memberOf Application
  */
-Application.getServers = function() {
+Application.getServers = function () {
   return this.servers;
 };
 
@@ -737,7 +737,7 @@ Application.getServers = function() {
  * @return {Object} server info map, key: server id, value: server info
  * @memberOf Application
  */
-Application.getServersFromConfig = function() {
+Application.getServersFromConfig = function () {
   return this.get(Constants.KEYWORDS.SERVER_MAP);
 };
 
@@ -747,7 +747,7 @@ Application.getServersFromConfig = function() {
  * @return {Array} server type list
  * @memberOf Application
  */
-Application.getServerTypes = function() {
+Application.getServerTypes = function () {
   return this.serverTypes;
 };
 
@@ -758,7 +758,7 @@ Application.getServerTypes = function() {
  * @return {Object} server info or undefined
  * @memberOf Application
  */
-Application.getServerById = function(serverId) {
+Application.getServerById = function (serverId) {
   return this.servers[serverId];
 };
 
@@ -770,7 +770,7 @@ Application.getServerById = function(serverId) {
  * @memberOf Application
  */
 
-Application.getServerFromConfig = function(serverId) {
+Application.getServerFromConfig = function (serverId) {
   return this.get(Constants.KEYWORDS.SERVER_MAP)[serverId];
 };
 
@@ -781,7 +781,7 @@ Application.getServerFromConfig = function(serverId) {
  * @return {Array}      server info list
  * @memberOf Application
  */
-Application.getServersByType = function(serverType) {
+Application.getServersByType = function (serverType) {
   return this.serverTypeMaps[serverType];
 };
 
@@ -794,10 +794,10 @@ Application.getServersByType = function(serverType) {
  *
  * @memberOf Application
  */
-Application.isFrontend = function(server) {
+Application.isFrontend = function (server) {
   server = server || this.getCurServer();
-  return !!server && server.frontend === 'true';
-};
+  return server && server.frontend === 'true';
+}
 
 /**
  * Check the server whether is a backend server
@@ -807,10 +807,10 @@ Application.isFrontend = function(server) {
  * @return {Boolean}
  * @memberOf Application
  */
-Application.isBackend = function(server) {
+Application.isBackend = function (server) {
   server = server || this.getCurServer();
-  return !!server && !server.frontend;
-};
+  return server && !server.frontend;
+}
 
 /**
  * Check whether current server is a master server
@@ -818,7 +818,7 @@ Application.isBackend = function(server) {
  * @return {Boolean}
  * @memberOf Application
  */
-Application.isMaster = function() {
+Application.isMaster = function () {
   return this.serverType === Constants.RESERVED.MASTER;
 };
 
@@ -828,26 +828,26 @@ Application.isMaster = function() {
  * @param {Array} servers new server info list
  * @memberOf Application
  */
-Application.addServers = function(servers) {
-  if(!servers || !servers.length) {
+Application.addServers = function (servers) {
+  if (!servers || !servers.length) {
     return;
   }
 
   var item, slist;
-  for(var i=0, l=servers.length; i<l; i++) {
+  for (var i=0, l=servers.length; i<l; i++) {
     item = servers[i];
     // update global server map
     this.servers[item.id] = item;
 
     // update global server type map
     slist = this.serverTypeMaps[item.serverType];
-    if(!slist) {
+    if (!slist) {
       this.serverTypeMaps[item.serverType] = slist = [];
     }
     replaceServer(slist, item);
 
     // update global server type list
-    if(this.serverTypes.indexOf(item.serverType) < 0) {
+    if (this.serverTypes.indexOf(item.serverType) < 0) {
       this.serverTypes.push(item.serverType);
     }
   }
@@ -860,16 +860,16 @@ Application.addServers = function(servers) {
  * @param  {Array} ids server id list
  * @memberOf Application
  */
-Application.removeServers = function(ids) {
-  if(!ids || !ids.length) {
+Application.removeServers = function (ids) {
+  if (!ids || !ids.length) {
     return;
   }
 
   var id, item, slist;
-  for(var i=0, l=ids.length; i<l; i++) {
+  for (var i=0, l=ids.length; i<l; i++) {
     id = ids[i];
     item = this.servers[id];
-    if(!item) {
+    if (!item) {
       continue;
     }
     // clean global server map
@@ -889,8 +889,8 @@ Application.removeServers = function(ids) {
  * @param  {Object} server id map
  * @memberOf Application
  */
-Application.replaceServers = function(servers) {
-  if(!servers){
+Application.replaceServers = function (servers) {
+  if (!servers){
     return;
   }
 
@@ -898,16 +898,16 @@ Application.replaceServers = function(servers) {
   this.serverTypeMaps = {};
   this.serverTypes = [];
   var serverArray = [];
-  for(var id in servers){
+  for (var id in servers){
     var server = servers[id];
     var serverType = server[Constants.RESERVED.SERVER_TYPE];
     var slist = this.serverTypeMaps[serverType];
-    if(!slist) {
+    if (!slist) {
       this.serverTypeMaps[serverType] = slist = [];
     }
     this.serverTypeMaps[serverType].push(server);
     // update global server type list
-    if(this.serverTypes.indexOf(serverType) < 0) {
+    if (this.serverTypes.indexOf(serverType) < 0) {
       this.serverTypes.push(serverType);
     }
     serverArray.push(server);
@@ -921,8 +921,8 @@ Application.replaceServers = function(servers) {
  * @param  {Array} crons new crons would be added in application
  * @memberOf Application
  */
-Application.addCrons = function(crons) {
-  if(!crons || !crons.length) {
+Application.addCrons = function (crons) {
+  if (!crons || !crons.length) {
     logger.warn('crons is not defined.');
     return;
   }
@@ -935,17 +935,17 @@ Application.addCrons = function(crons) {
  * @param  {Array} crons old crons would be removed in application
  * @memberOf Application
  */
-Application.removeCrons = function(crons) {
-  if(!crons || !crons.length) {
+Application.removeCrons = function (crons) {
+  if (!crons || !crons.length) {
     logger.warn('ids is not defined.');
     return;
   }
   this.event.emit(events.REMOVE_CRONS, crons);
 };
 
-var replaceServer = function(slist, serverInfo) {
-  for(var i=0, l=slist.length; i<l; i++) {
-    if(slist[i].id === serverInfo.id) {
+var replaceServer = function (slist, serverInfo) {
+  for (var i=0, l=slist.length; i<l; i++) {
+    if (slist[i].id === serverInfo.id) {
       slist[i] = serverInfo;
       return;
     }
@@ -953,27 +953,27 @@ var replaceServer = function(slist, serverInfo) {
   slist.push(serverInfo);
 };
 
-var removeServer = function(slist, id) {
-  if(!slist || !slist.length) {
+var removeServer = function (slist, id) {
+  if (!slist || !slist.length) {
     return;
   }
 
-  for(var i=0, l=slist.length; i<l; i++) {
-    if(slist[i].id === id) {
+  for (var i=0, l=slist.length; i<l; i++) {
+    if (slist[i].id === id) {
       slist.splice(i, 1);
       return;
     }
   }
 };
 
-var contains = function(str, settings) {
-  if(!settings) {
+var contains = function (str, settings) {
+  if (!settings) {
     return false;
   }
 
   var ts = settings.split("|");
-  for(var i=0, l=ts.length; i<l; i++) {
-    if(str === ts[i]) {
+  for (var i=0, l=ts.length; i<l; i++) {
+    if (str === ts[i]) {
       return true;
     }
   }
@@ -987,9 +987,9 @@ const bindEvents = (Event, app) => {
   })
 }
 
-var addFilter = function(app, type, filter) {
+var addFilter = function (app, type, filter) {
  var filters = app.get(type);
-  if(!filters) {
+  if (!filters) {
     filters = [];
     app.set(type, filters);
   }

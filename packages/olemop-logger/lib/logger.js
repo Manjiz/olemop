@@ -28,8 +28,8 @@ function getLogger(categoryName) {
 		pLogger[key] = logger[key];
 	}
 
-	['log', 'debug', 'info', 'warn', 'error', 'trace', 'fatal'].forEach(function(item) {
-		pLogger[item] = function() {
+	['log', 'debug', 'info', 'warn', 'error', 'trace', 'fatal'].forEach(function (item) {
+		pLogger[item] = function () {
 			var p = "";
 			if (!process.env.RAW_MESSAGE) {
 				if (args.length > 1) {
@@ -242,7 +242,7 @@ function doOpts(name, opts) {
 function getLine() {
 	var e = new Error();
 	// now magic will happen: get line number from callstack
-	if(process.platform === "win32") {
+	if (process.platform === "win32") {
 		return e.stack.split('\n')[3].split(':')[2];
 	}
 	return e.stack.split('\n')[3].split(':')[1];

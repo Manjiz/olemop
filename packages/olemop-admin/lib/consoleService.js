@@ -1,13 +1,13 @@
-var logger = require('@olemop/logger').getLogger('olemop-admin', 'ConsoleService');
-var MonitorAgent = require('./monitor/monitorAgent');
-var EventEmitter = require('events').EventEmitter;
-var MasterAgent = require('./master/masterAgent');
-var schedule = require('@olemop/scheduler');
-var protocol = require('./util/protocol');
-var utils = require('./util/utils');
-var util = require('util');
+var logger = require('@olemop/logger').getLogger('olemop-admin', 'ConsoleService')
+var MonitorAgent = require('./monitor/monitorAgent')
+var EventEmitter = require('events').EventEmitter
+var MasterAgent = require('./master/masterAgent')
+var schedule = require('@olemop/scheduler')
+var protocol = require('./util/protocol')
+var utils = require('./util/utils')
+var util = require('util')
 
-var MS_OF_SECOND = 1000;
+var MS_OF_SECOND = 1000
 
 /**
  * ConsoleService Constructor
@@ -23,7 +23,7 @@ var MS_OF_SECOND = 1000;
  *                 opts.info 	{Object} more server info for current server, {id, serverType, host, port}
  * @api public
  */
-var ConsoleService = function(opts) {
+var ConsoleService = function (opts) {
 	EventEmitter.call(this);
 	this.port = opts.port;
 	this.env = opts.env;
@@ -63,10 +63,10 @@ util.inherits(ConsoleService, EventEmitter);
  * @param {Function} cb callback function
  * @api public
  */
-ConsoleService.prototype.start = function(cb) {
+ConsoleService.prototype.start = function (cb) {
 	if (this.master) {
 		var self = this;
-		this.agent.listen(this.port, function(err) {
+		this.agent.listen(this.port, function (err) {
 			if (!!err) {
 				utils.invokeCallback(cb, err);
 				return;
@@ -75,7 +75,7 @@ ConsoleService.prototype.start = function(cb) {
 			exportEvent(self, self.agent, 'register');
 			exportEvent(self, self.agent, 'disconnect');
 			exportEvent(self, self.agent, 'reconnect');
-			process.nextTick(function() {
+			process.nextTick(function () {
 				utils.invokeCallback(cb);
 			});
 		});
@@ -97,7 +97,7 @@ ConsoleService.prototype.start = function(cb) {
  *
  * @api public
  */
-ConsoleService.prototype.stop = function() {
+ConsoleService.prototype.stop = function () {
 	for (var mid in this.modules) {
 		this.disable(mid);
 	}
@@ -111,7 +111,7 @@ ConsoleService.prototype.stop = function() {
  * @param {Object} module module object
  * @api public
  */
-ConsoleService.prototype.register = function(moduleId, module) {
+ConsoleService.prototype.register = function (moduleId, module) {
 	this.modules[moduleId] = registerRecord(this, moduleId, module);
 };
 
@@ -121,7 +121,7 @@ ConsoleService.prototype.register = function(moduleId, module) {
  * @param {String} moduleId adminConsole id/name
  * @api public
  */
-ConsoleService.prototype.enable = function(moduleId) {
+ConsoleService.prototype.enable = function (moduleId) {
 	var record = this.modules[moduleId];
 	if (record && !record.enable) {
 		record.enable = true;
@@ -137,7 +137,7 @@ ConsoleService.prototype.enable = function(moduleId) {
  * @param {String} moduleId adminConsole id/name
  * @api public
  */
-ConsoleService.prototype.disable = function(moduleId) {
+ConsoleService.prototype.disable = function (moduleId) {
 	var record = this.modules[moduleId];
 	if (record && record.enable) {
 		record.enable = false;
@@ -159,7 +159,7 @@ ConsoleService.prototype.disable = function(moduleId) {
  * @param {Function} cb callback function
  * @api public
  */
-ConsoleService.prototype.execute = function(moduleId, method, msg, cb) {
+ConsoleService.prototype.execute = function (moduleId, method, msg, cb) {
 	var self = this;
 	var m = this.modules[moduleId];
 	if (!m) {
@@ -203,7 +203,7 @@ ConsoleService.prototype.execute = function(moduleId, method, msg, cb) {
 	module[method](this.agent, msg, cb);
 };
 
-ConsoleService.prototype.command = function(command, moduleId, msg, cb) {
+ConsoleService.prototype.command = function (command, moduleId, msg, cb) {
 	var self = this;
 	var fun = this.commands[command];
 	if (!fun || typeof fun !== 'function') {
@@ -237,7 +237,7 @@ ConsoleService.prototype.command = function(command, moduleId, msg, cb) {
  * @api public
  */
 
-ConsoleService.prototype.set = function(moduleId, value) {
+ConsoleService.prototype.set = function (moduleId, value) {
 	this.values[moduleId] = value;
 };
 
@@ -247,7 +247,7 @@ ConsoleService.prototype.set = function(moduleId, value) {
  * @param {String} moduleId adminConsole id/name
  * @api public
  */
-ConsoleService.prototype.get = function(moduleId) {
+ConsoleService.prototype.get = function (moduleId) {
 	return this.values[moduleId];
 };
 
@@ -259,7 +259,7 @@ ConsoleService.prototype.get = function(moduleId) {
  * @param {Object} module module object
  * @api private
  */
-var registerRecord = function(service, moduleId, module) {
+var registerRecord = function (service, moduleId, module) {
 	var record = {
 		moduleId: moduleId,
 		module: module,
@@ -295,7 +295,7 @@ var registerRecord = function(service, moduleId, module) {
  * @param {Object} record  module object
  * @api private
  */
-var addToSchedule = function(service, record) {
+var addToSchedule = function (service, record) {
 	if (record && record.schedule) {
 		record.jobId = schedule.scheduleJob({
 				start: Date.now() + record.delay,
@@ -314,7 +314,7 @@ var addToSchedule = function(service, record) {
  * @param {Object} args argments
  * @api private
  */
-var doScheduleJob = function(args) {
+var doScheduleJob = function (args) {
 	var service = args.service;
 	var record = args.record;
 	if (!service || !record || !record.module || !record.enable) {
@@ -322,11 +322,11 @@ var doScheduleJob = function(args) {
 	}
 
 	if (service.master) {
-		record.module.masterHandler(service.agent, null, function(err) {
+		record.module.masterHandler(service.agent, null, function (err) {
 			logger.error('interval push should not have a callback.');
 		});
 	} else {
-		record.module.monitorHandler(service.agent, null, function(err) {
+		record.module.monitorHandler(service.agent, null, function (err) {
 			logger.error('interval push should not have a callback.');
 		});
 	}
@@ -340,8 +340,8 @@ var doScheduleJob = function(args) {
  * @param {object} event
  * @api private
  */
-var exportEvent = function(outer, inner, event) {
-	inner.on(event, function() {
+var exportEvent = function (outer, inner, event) {
+	inner.on(event, function () {
 		var args = Array.prototype.slice.call(arguments, 0);
 		args.unshift(event);
 		outer.emit.apply(outer, args);
@@ -351,7 +351,7 @@ var exportEvent = function(outer, inner, event) {
 /**
  * List current modules
  */
-var listCommand = function(consoleService, moduleId, msg, cb) {
+var listCommand = function (consoleService, moduleId, msg, cb) {
 	var modules = consoleService.modules;
 
 	var result = [];
@@ -371,7 +371,7 @@ var listCommand = function(consoleService, moduleId, msg, cb) {
 /**
  * enable module in current server
  */
-var enableCommand = function(consoleService, moduleId, msg, cb) {
+var enableCommand = function (consoleService, moduleId, msg, cb) {
 	if (!moduleId) {
 		logger.error('fail to enable admin module for ' + moduleId);
 		cb('empty moduleId');
@@ -397,7 +397,7 @@ var enableCommand = function(consoleService, moduleId, msg, cb) {
 /**
  * disable module in current server
  */
-var disableCommand = function(consoleService, moduleId, msg, cb) {
+var disableCommand = function (consoleService, moduleId, msg, cb) {
 	if (!moduleId) {
 		logger.error('fail to enable admin module for ' + moduleId);
 		cb('empty moduleId');
@@ -420,7 +420,7 @@ var disableCommand = function(consoleService, moduleId, msg, cb) {
 	}
 };
 
-var aclControl = function(agent, action, method, moduleId, msg) {
+var aclControl = function (agent, action, method, moduleId, msg) {
 	if (action === 'execute') {
 		if (method !== 'clientHandler' || moduleId !== '__console__') {
 			return 0;
@@ -455,7 +455,7 @@ var aclControl = function(agent, action, method, moduleId, msg) {
  * @param {Object} opts construct parameter
  *                      opts.port {String | Number} listen port for master console
  */
-module.exports.createMasterConsole = function(opts) {
+module.exports.createMasterConsole = function (opts) {
 	opts = opts || {};
 	opts.master = true;
 	return new ConsoleService(opts);
@@ -470,6 +470,6 @@ module.exports.createMasterConsole = function(opts) {
  *                      opts.host {String} master server host
  *                      opts.port {String | Number} master port
  */
-module.exports.createMonitorConsole = function(opts) {
+module.exports.createMonitorConsole = function (opts) {
 	return new ConsoleService(opts);
 };

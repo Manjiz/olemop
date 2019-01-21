@@ -2,7 +2,7 @@
  * connection statistics service
  * record connection, login count and list
  */
-var Service = function(app) {
+var Service = function (app) {
   this.serverId = app.getServerId();
   this.connCount = 0;
   this.loginedCount = 0;
@@ -20,8 +20,8 @@ var pro = Service.prototype;
  * @param uid {String} user id
  * @param info {Object} record for logined user
  */
-pro.addLoginedUser = function(uid, info) {
-  if(!this.logined[uid]) {
+pro.addLoginedUser = function (uid, info) {
+  if (!this.logined[uid]) {
     this.loginedCount++;
   }
   info.uid = uid;
@@ -33,7 +33,7 @@ pro.addLoginedUser = function(uid, info) {
  * @param uid {String} user id
  * @param info {Object} info for update.
  */
-pro.updateUserInfo = function(uid, info) {
+pro.updateUserInfo = function (uid, info) {
     var user = this.logined[uid];
     if (!user) {
         return;
@@ -49,7 +49,7 @@ pro.updateUserInfo = function(uid, info) {
 /**
  * Increase connection count
  */
-pro.increaseConnectionCount = function() {
+pro.increaseConnectionCount = function () {
   this.connCount++;
 };
 
@@ -58,8 +58,8 @@ pro.increaseConnectionCount = function() {
  *
  * @param uid {String} user id
  */
-pro.removeLoginedUser = function(uid) {
-  if(!!this.logined[uid]) {
+pro.removeLoginedUser = function (uid) {
+  if (!!this.logined[uid]) {
     this.loginedCount--;
   }
   delete this.logined[uid];
@@ -70,11 +70,11 @@ pro.removeLoginedUser = function(uid) {
  *
  * @param uid {String} uid
  */
-pro.decreaseConnectionCount = function(uid) {
-  if(this.connCount) {
+pro.decreaseConnectionCount = function (uid) {
+  if (this.connCount) {
     this.connCount--;
   }
-  if(!!uid) {
+  if (!!uid) {
     this.removeLoginedUser(uid);
   }
 };
@@ -84,9 +84,9 @@ pro.decreaseConnectionCount = function(uid) {
  *
  * @return {Object} statistics info
  */
-pro.getStatisticsInfo = function() {
+pro.getStatisticsInfo = function () {
   var list = [];
-  for(var uid in this.logined) {
+  for (var uid in this.logined) {
     list.push(this.logined[uid]);
   }
 

@@ -9,20 +9,20 @@ var logger = require('@olemop/logger').getLogger('olemop-admin', __filename);
 var DEFAULT_INTERVAL = 5 * 60;		// in second
 var DEFAULT_DELAY = 10;						// in second
 
-module.exports = function(opts) {
+module.exports = function (opts) {
 	return new Module(opts);
 };
 
 module.exports.moduleId = 'nodeInfo';
 
-var Module = function(opts) {
+var Module = function (opts) {
 	opts = opts || {};
 	this.type = opts.type || 'pull';
 	this.interval = opts.interval || DEFAULT_INTERVAL;
 	this.delay = opts.delay || DEFAULT_DELAY;
 };
 
-Module.prototype.monitorHandler = function(agent, msg, cb) {
+Module.prototype.monitorHandler = function (agent, msg, cb) {
 	var serverId = agent.id;
 	var pid = process.pid;
 	var params = {
@@ -35,15 +35,15 @@ Module.prototype.monitorHandler = function(agent, msg, cb) {
 
 };
 
-Module.prototype.masterHandler = function(agent, msg, cb) {
-	if(!msg) {
+Module.prototype.masterHandler = function (agent, msg, cb) {
+	if (!msg) {
 		agent.notifyAll(module.exports.moduleId);
 		return;
 	}
 
 	var body=msg.body;
 	var data = agent.get(module.exports.moduleId);
-	if(!data) {
+	if (!data) {
 		data = {};
 		agent.set(module.exports.moduleId, data);
 	}
@@ -51,6 +51,6 @@ Module.prototype.masterHandler = function(agent, msg, cb) {
 	data[msg.serverId] = body;
 };
 
-Module.prototype.clientHandler = function(agent, msg, cb) {
+Module.prototype.clientHandler = function (agent, msg, cb) {
 	cb(null, agent.get(module.exports.moduleId) || {});
 };

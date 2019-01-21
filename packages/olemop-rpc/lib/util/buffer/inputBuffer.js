@@ -1,17 +1,17 @@
 var logger = require('@olemop/logger').getLogger('olemop-rpc', 'InputBuffer');
 var Utils = require('../utils');
 
-var InputBuffer = function(buffer) {
+var InputBuffer = function (buffer) {
 	this.buf = buffer;
 	this.pos = 0;
 	this.count = buffer.length;
 }
 
-InputBuffer.prototype.read = function() {
+InputBuffer.prototype.read = function () {
 	return this.readByte();
 }
 
-InputBuffer.prototype.readBoolean = function() {
+InputBuffer.prototype.readBoolean = function () {
 	var r = this.read();
 	if (r < 0) {
 		throw new Error('EOFException');
@@ -20,12 +20,12 @@ InputBuffer.prototype.readBoolean = function() {
 	return (r != 0);
 }
 
-InputBuffer.prototype.readByte = function() {
+InputBuffer.prototype.readByte = function () {
 	this.check(1);
 	return this.buf.readUInt8(this.pos++);
 }
 
-InputBuffer.prototype.readBytes = function() {
+InputBuffer.prototype.readBytes = function () {
 	var len = this.readInt();
 	this.check(len);
 	var r = this.buf.slice(this.pos, this.pos + len);
@@ -33,53 +33,53 @@ InputBuffer.prototype.readBytes = function() {
 	return r;
 }
 
-InputBuffer.prototype.readChar = function() {
+InputBuffer.prototype.readChar = function () {
 	return this.readByte();
 }
 
-InputBuffer.prototype.readDouble = function() {
+InputBuffer.prototype.readDouble = function () {
 	this.check(8);
 	var r = this.buf.readDoubleLE(this.pos);
 	this.pos += 8;
 	return r;
 }
 
-InputBuffer.prototype.readFloat = function() {
+InputBuffer.prototype.readFloat = function () {
 	this.check(4);
 	var r = this.buf.readFloatLE(this.pos);
 	this.pos += 4;
 	return r;
 }
 
-InputBuffer.prototype.readInt = function() {
+InputBuffer.prototype.readInt = function () {
 	this.check(4);
 	var r = this.buf.readInt32LE(this.pos);
 	this.pos += 4;
 	return r;
 }
 
-InputBuffer.prototype.readShort = function() {
+InputBuffer.prototype.readShort = function () {
 	this.check(2);
 	var r = this.buf.readInt16LE(this.pos);
 	this.pos += 2;
 	return r;
 }
 
-InputBuffer.prototype.readUInt = function() {
+InputBuffer.prototype.readUInt = function () {
 	this.check(4);
 	var r = this.buf.readUInt32LE(this.pos);
 	this.pos += 4;
 	return r;
 }
 
-InputBuffer.prototype.readUShort = function() {
+InputBuffer.prototype.readUShort = function () {
 	this.check(2);
 	var r = this.buf.readUInt16LE(this.pos);
 	this.pos += 2;
 	return r;
 }
 
-InputBuffer.prototype.readString = function() {
+InputBuffer.prototype.readString = function () {
 	var len = this.readInt();
 	this.check(len);
 	var r = this.buf.toString('utf8', this.pos, this.pos + len);
@@ -87,7 +87,7 @@ InputBuffer.prototype.readString = function() {
 	return r;
 }
 
-InputBuffer.prototype.readObject = function() {
+InputBuffer.prototype.readObject = function () {
 	var type = this.readShort();
 	var instance = null;
 	// console.log('readObject %s', type)
@@ -108,11 +108,11 @@ InputBuffer.prototype.readObject = function() {
 	} else if (typeMap['object'] == type) {
 		var objStr = this.readString();
 		instance = JSON.parse(objStr);
-	} else if(typeMap['bean'] == type) {
+	} else if (typeMap['bean'] == type) {
 		var id = this.readString();
 		var bearcat = Utils.getBearcat();
 		var bean = bearcat.getBean(id);
-		if(!bean) {
+		if (!bean) {
 			logger.error('readBean bean not found %s', id);
 			return;
 		}
@@ -131,7 +131,7 @@ InputBuffer.prototype.readObject = function() {
 	return instance;
 }
 
-InputBuffer.prototype.check = function(len) {
+InputBuffer.prototype.check = function (len) {
 	if (this.pos + len > this.count) {
 		throw new Error('IndexOutOfBoundsException');
 	}

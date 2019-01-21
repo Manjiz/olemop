@@ -23,7 +23,7 @@ npm install @olemop/sync
 ``` javascript
 var opt = opt || {};
 
-var updateUser = function(dbclient,val) {
+var updateUser = function (dbclient,val) {
     console.log('mock save %j',val);
 }
 

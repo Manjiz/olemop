@@ -2,40 +2,40 @@ var logger = require('@olemop/logger').getLogger('olemop-rpc', 'OutputBuffer');
 var Utils = require('../utils');
 var BUFFER_SIZE_DEFAULT = 32;
 
-var OutputBuffer = function(size) {
+var OutputBuffer = function (size) {
 	this.count = 0;
 	this.size = size || BUFFER_SIZE_DEFAULT;
 	this.buf = new Buffer(this.size);
 }
 
-OutputBuffer.prototype.getData = function() {
+OutputBuffer.prototype.getData = function () {
 	return this.buf;
 }
 
-OutBuffer.prototype.getBuffer = function() {
+OutBuffer.prototype.getBuffer = function () {
 	return this.buf.slice(0, this.offset);
 }
 
-OutputBuffer.prototype.getLength = function() {
+OutputBuffer.prototype.getLength = function () {
 	return this.count;
 }
 
-OutputBuffer.prototype.write = function(data, offset, len) {
+OutputBuffer.prototype.write = function (data, offset, len) {
 	this.ensureCapacity(len);
 	this.buf.write(data, offset, len);
 	this.count += len;
 }
 
-OutputBuffer.prototype.writeBoolean = function(v) {
+OutputBuffer.prototype.writeBoolean = function (v) {
 	this.writeByte(v ? 1 : 0);
 }
 
-OutputBuffer.prototype.writeByte = function(v) {
+OutputBuffer.prototype.writeByte = function (v) {
 	this.ensureCapacity(1);
 	this.buf.writeUInt8(v, this.count++);
 }
 
-OutputBuffer.prototype.writeBytes = function(bytes) {
+OutputBuffer.prototype.writeBytes = function (bytes) {
 	var len = bytes.length;
 	this.ensureCapacity(len + 4);
 	this.writeInt(len);
@@ -44,51 +44,51 @@ OutputBuffer.prototype.writeBytes = function(bytes) {
 	}
 }
 
-OutputBuffer.prototype.writeChar = function(v) {
+OutputBuffer.prototype.writeChar = function (v) {
 	this.writeByte(v);
 }
 
-OutputBuffer.prototype.writeChars = function(bytes) {
+OutputBuffer.prototype.writeChars = function (bytes) {
 	this.writeBytes(bytes);
 }
 
-OutputBuffer.prototype.writeDouble = function(v) {
+OutputBuffer.prototype.writeDouble = function (v) {
 	this.ensureCapacity(8);
 	this.buf.writeDoubleLE(v, this.count);
 	this.count += 8;
 }
 
-OutputBuffer.prototype.writeFloat = function(v) {
+OutputBuffer.prototype.writeFloat = function (v) {
 	this.ensureCapacity(4);
 	this.buf.writeFloatLE(v, this.count);
 	this.count += 4;
 }
 
-OutputBuffer.prototype.writeInt = function(v) {
+OutputBuffer.prototype.writeInt = function (v) {
 	this.ensureCapacity(4);
 	this.buf.writeInt32LE(v, this.count);
 	this.count += 4;
 }
 
-OutputBuffer.prototype.writeShort = function(v) {
+OutputBuffer.prototype.writeShort = function (v) {
 	this.ensureCapacity(2);
 	this.buf.writeInt16LE(v, this.count);
 	this.count += 2;
 }
 
-OutputBuffer.prototype.writeUInt = function(v) {
+OutputBuffer.prototype.writeUInt = function (v) {
 	this.ensureCapacity(4);
 	this.buf.writeUInt32LE(v, this.count);
 	this.count += 4;
 }
 
-OutputBuffer.prototype.writeUShort = function(v) {
+OutputBuffer.prototype.writeUShort = function (v) {
 	this.ensureCapacity(2);
 	this.buf.writeUInt16LE(v, this.count);
 	this.count += 2;
 }
 
-OutputBuffer.prototype.writeString = function(str) {
+OutputBuffer.prototype.writeString = function (str) {
 	var len = Buffer.byteLength(str);
 	this.ensureCapacity(len + 4);
 	this.writeInt(len);
@@ -96,7 +96,7 @@ OutputBuffer.prototype.writeString = function(str) {
 	this.count += len;
 }
 
-OutputBuffer.prototype.writeObject = function(object) {
+OutputBuffer.prototype.writeObject = function (object) {
 	var type = Utils.getType(object);
 	// console.log('writeObject type %s', type);
 	// console.log(object)
@@ -160,14 +160,14 @@ OutputBuffer.prototype.writeObject = function(object) {
 	}
 }
 
-OutputBuffer.prototype.ensureCapacity = function(len) {
+OutputBuffer.prototype.ensureCapacity = function (len) {
 	var minCapacity = this.count + len;
 	if (minCapacity > this.buf.length) {
 		this.grow(minCapacity); // double grow
 	}
 }
 
-OutputBuffer.prototype.grow = function(minCapacity) {
+OutputBuffer.prototype.grow = function (minCapacity) {
 	var oldCapacity = this.buf.length;
 	var newCapacity = oldCapacity << 1;
 	if (newCapacity - minCapacity < 0) {

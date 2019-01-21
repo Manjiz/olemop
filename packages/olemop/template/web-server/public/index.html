@@ -15,7 +15,7 @@
     <script src="js/lib/build/build.js" type="text/javascript"></script>
     <script type="text/javascript">
       require('boot');
-    </script> 
+    </script>
     <script type="text/javascript">
       var pomelo = window.pomelo;
       var host = "127.0.0.1";
@@ -25,8 +25,8 @@
           host: host,
           port: port,
           log: true
-        }, function() {
-        pomelo.request("connector.entryHandler.entry", "hello pomelo", function(data) {
+        }, function () {
+        pomelo.request("connector.entryHandler.entry", "hello pomelo", function (data) {
             alert(data.msg);
           });
         });

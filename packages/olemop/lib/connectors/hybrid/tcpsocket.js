@@ -21,16 +21,16 @@ var ST_CLOSED = 3;    // closed
  *                        opts.headSize size of package head
  *                        opts.headHandler(headBuffer) handler for package head. caculate and return body size from head data.
  */
-var Socket = function(socket, opts) {
-  if(!(this instanceof Socket)) {
+var Socket = function (socket, opts) {
+  if (!(this instanceof Socket)) {
     return new Socket(socket, opts);
   }
 
-  if(!socket || !opts) {
+  if (!socket || !opts) {
     throw new Error('invalid socket or opts');
   }
 
-  if(!opts.headSize || typeof opts.headHandler !== 'function') {
+  if (!opts.headSize || typeof opts.headHandler !== 'function') {
     throw new Error('invalid opts.headSize or opts.headHandler');
   }
 
@@ -64,12 +64,12 @@ util.inherits(Socket, Stream);
 
 module.exports = Socket;
 
-Socket.prototype.send = function(msg, encode, cb) {
+Socket.prototype.send = function (msg, encode, cb) {
   this._socket.write(msg, encode, cb);
 };
 
-Socket.prototype.close = function() {
-  if(!!this.closeMethod && this.closeMethod === 'end') {
+Socket.prototype.close = function () {
+  if (!!this.closeMethod && this.closeMethod === 'end') {
     this._socket.end();
   } else {
     try {
@@ -80,27 +80,27 @@ Socket.prototype.close = function() {
   }
 };
 
-var ondata = function(socket, chunk) {
-  if(socket.state === ST_CLOSED) {
+var ondata = function (socket, chunk) {
+  if (socket.state === ST_CLOSED) {
     throw new Error('socket has closed');
   }
 
-  if(typeof chunk !== 'string' && !Buffer.isBuffer(chunk)) {
+  if (typeof chunk !== 'string' && !Buffer.isBuffer(chunk)) {
     throw new Error('invalid data');
   }
 
-  if(typeof chunk === 'string') {
+  if (typeof chunk === 'string') {
     chunk = new Buffer(chunk, 'utf8');
   }
 
   var offset = 0, end = chunk.length;
 
   while(offset < end && socket.state !== ST_CLOSED) {
-    if(socket.state === ST_HEAD) {
+    if (socket.state === ST_HEAD) {
       offset = readHead(socket, chunk, offset);
     }
 
-    if(socket.state === ST_BODY) {
+    if (socket.state === ST_BODY) {
       offset = readBody(socket, chunk, offset);
     }
   }
@@ -108,8 +108,8 @@ var ondata = function(socket, chunk) {
   return true;
 };
 
-var onend = function(socket, chunk) {
-  if(chunk) {
+var onend = function (socket, chunk) {
+  if (chunk) {
     socket._socket.write(chunk);
   }
 
@@ -126,7 +126,7 @@ var onend = function(socket, chunk) {
  * @param  {Number} offset offset read star from data
  * @return {Number}        new offset of data after read
  */
-var readHead = function(socket, data, offset) {
+var readHead = function (socket, data, offset) {
   var hlen = socket.headSize - socket.headOffset;
   var dlen = data.length - offset;
   var len = Math.min(hlen, dlen);
@@ -135,14 +135,14 @@ var readHead = function(socket, data, offset) {
   data.copy(socket.headBuffer, socket.headOffset, offset, dend);
   socket.headOffset += len;
 
-  if(socket.headOffset === socket.headSize) {
+  if (socket.headOffset === socket.headSize) {
     // if head segment finished
     var size = socket.headHandler(socket.headBuffer);
-    if(size < 0) {
+    if (size < 0) {
       throw new Error('invalid body size: ' + size);
     }
     // check if header contains a valid type
-    if(checkTypeData(socket.headBuffer[0])) {
+    if (checkTypeData(socket.headBuffer[0])) {
       socket.packageSize = size + socket.headSize;
       socket.packageBuffer = new Buffer(socket.packageSize);
       socket.headBuffer.copy(socket.packageBuffer, 0, 0, socket.headSize);
@@ -167,7 +167,7 @@ var readHead = function(socket, data, offset) {
  * @param  {Number} offset offset read star from data
  * @return {Number}        new offset of data after read
  */
-var readBody = function(socket, data, offset) {
+var readBody = function (socket, data, offset) {
   var blen = socket.packageSize - socket.packageOffset;
   var dlen = data.length - offset;
   var len = Math.min(blen, dlen);
@@ -177,7 +177,7 @@ var readBody = function(socket, data, offset) {
 
   socket.packageOffset += len;
 
-  if(socket.packageOffset === socket.packageSize) {
+  if (socket.packageOffset === socket.packageSize) {
     // if all the package finished
     var buffer = socket.packageBuffer;
     socket.emit('message', buffer);
@@ -187,7 +187,7 @@ var readBody = function(socket, data, offset) {
   return dend;
 };
 
-var reset = function(socket) {
+var reset = function (socket) {
   socket.headOffset = 0;
   socket.packageOffset = 0;
   socket.packageSize = 0;
@@ -195,6 +195,6 @@ var reset = function(socket) {
   socket.state = ST_HEAD;
 };
 
-var checkTypeData = function(data) {
+var checkTypeData = function (data) {
   return data === Package.TYPE_HANDSHAKE || data === Package.TYPE_HANDSHAKE_ACK || data === Package.TYPE_HEARTBEAT || data === Package.TYPE_DATA || data === Package.TYPE_KICK;
 };

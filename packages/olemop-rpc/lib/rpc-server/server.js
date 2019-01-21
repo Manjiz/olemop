@@ -1,7 +1,7 @@
 var Loader = require('@olemop/loader');
 var Gateway = require('./gateway');
 
-var loadRemoteServices = function(paths, context) {
+var loadRemoteServices = function (paths, context) {
   var res = {},
     item, m;
   for (var i = 0, l = paths.length; i < l; i++) {
@@ -19,7 +19,7 @@ var loadRemoteServices = function(paths, context) {
   return res;
 };
 
-var createNamespace = function(namespace, proxies) {
+var createNamespace = function (namespace, proxies) {
   proxies[namespace] = proxies[namespace] || {};
 };
 
@@ -33,7 +33,7 @@ var createNamespace = function(namespace, proxies) {
  *                       opts.acceptorFactory {Object} (optionals)acceptorFactory.create(opts, cb)
  * @return {Object}      rpc server instance
  */
-module.exports.create = function(opts) {
+module.exports.create = function (opts) {
   if (!opts || !opts.port || opts.port < 0 || !opts.paths) {
     throw new Error('opts.port or opts.paths invalid.');
   }

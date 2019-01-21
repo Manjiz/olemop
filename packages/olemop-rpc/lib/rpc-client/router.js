@@ -10,7 +10,7 @@ var crc = require('crc');
  * @param context {Object} context of client
  * @param cb(err, serverId)
  */
-var defRoute = function(session, msg, context, cb) {
+var defRoute = function (session, msg, context, cb) {
   var list = context.getServersByType(msg.serverType);
   if (!list || !list.length) {
     cb(new Error('can not find server info for type:' + msg.serverType));
@@ -29,7 +29,7 @@ var defRoute = function(session, msg, context, cb) {
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
-var rdRoute = function(client, serverType, msg, cb) {
+var rdRoute = function (client, serverType, msg, cb) {
   var servers = client._station.serversMap[serverType];
   if (!servers || !servers.length) {
     cb(new Error('rpc servers not exist with serverType: ' + serverType));
@@ -47,7 +47,7 @@ var rdRoute = function(client, serverType, msg, cb) {
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
-var rrRoute = function(client, serverType, msg, cb) {
+var rrRoute = function (client, serverType, msg, cb) {
   var servers = client._station.serversMap[serverType];
   if (!servers || !servers.length) {
     cb(new Error('rpc servers not exist with serverType: ' + serverType));
@@ -77,7 +77,7 @@ var rrRoute = function(client, serverType, msg, cb) {
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
-var wrrRoute = function(client, serverType, msg, cb) {
+var wrrRoute = function (client, serverType, msg, cb) {
   var servers = client._station.serversMap[serverType];
   if (!servers || !servers.length) {
     cb(new Error('rpc servers not exist with serverType: ' + serverType));
@@ -94,7 +94,7 @@ var wrrRoute = function(client, serverType, msg, cb) {
     index = -1;
     weight = 0;
   }
-  var getMaxWeight = function() {
+  var getMaxWeight = function () {
     var maxWeight = -1;
     for (var i = 0; i < servers.length; i++) {
       var server = client._station.servers[servers[i]];
@@ -136,7 +136,7 @@ var wrrRoute = function(client, serverType, msg, cb) {
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
-var laRoute = function(client, serverType, msg, cb) {
+var laRoute = function (client, serverType, msg, cb) {
   var servers = client._station.serversMap[serverType];
   if (!servers || !servers.length) {
     return cb(new Error('rpc servers not exist with serverType: ' + serverType));
@@ -185,7 +185,7 @@ var laRoute = function(client, serverType, msg, cb) {
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
-var chRoute = function(client, serverType, msg, cb) {
+var chRoute = function (client, serverType, msg, cb) {
   var servers = client._station.serversMap[serverType];
   if (!servers || !servers.length) {
     return cb(new Error('rpc servers not exist with serverType: ' + serverType));

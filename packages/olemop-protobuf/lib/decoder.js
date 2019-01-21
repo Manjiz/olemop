@@ -6,23 +6,23 @@ var Decoder = module.exports;
 var buffer;
 var offset = 0;
 
-Decoder.init = function(protos){
+Decoder.init = function (protos){
 	this.protos = protos || {};
 };
 
-Decoder.setProtos = function(protos){
-	if(!!protos){
+Decoder.setProtos = function (protos){
+	if (!!protos){
 		this.protos = protos;
 	}
 };
 
-Decoder.decode = function(route, buf){
+Decoder.decode = function (route, buf){
 	var protos = this.protos[route];
 
 	buffer = buf;
 	offset = 0;
 
-	if(!!protos){
+	if (!!protos){
 		return decodeMsg({}, protos, buffer.length);
 	}
 
@@ -42,7 +42,7 @@ function decodeMsg(msg, protos, length){
 				msg[name] = decodeProp(protos[name].type, protos);
 			break;
 			case 'repeated' :
-				if(!msg[name]){
+				if (!msg[name]){
 					msg[name] = [];
 				}
 				decodeArray(msg[name], protos[name].type, protos);
@@ -107,7 +107,7 @@ function decodeProp(type, protos){
 			return str;
 		default :
 			var message = protos && (protos.__messages[type] || Decoder.protos['message ' + type]);
-			if(message){
+			if (message){
 				var length = codec.decodeUInt32(getBytes());
 				var msg = {};
 				decodeMsg(msg, message, offset+length);
@@ -118,10 +118,10 @@ function decodeProp(type, protos){
 }
 
 function decodeArray(array, type, protos){
-	if(util.isSimpleType(type)){
+	if (util.isSimpleType(type)){
 		var length = codec.decodeUInt32(getBytes());
 
-		for(var i = 0; i < length; i++){
+		for (var i = 0; i < length; i++){
 			array.push(decodeProp(type));
 		}
 	}else{
@@ -141,7 +141,7 @@ function getBytes(flag){
 		pos++;
 	}while(b >= 128);
 
-	if(!flag){
+	if (!flag){
 		offset = pos;
 	}
 	return bytes;

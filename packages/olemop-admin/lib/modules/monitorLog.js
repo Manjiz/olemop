@@ -9,7 +9,7 @@ var path = require('path');
 
 var DEFAULT_INTERVAL = 5 * 60;		// in second
 
-module.exports = function(opts) {
+module.exports = function (opts) {
 	return new Module(opts);
 };
 
@@ -23,7 +23,7 @@ module.exports.moduleId = 'monitorLog';
  * @param {object} opts
  * @api public
  */
-var Module = function(opts) {
+var Module = function (opts) {
 	opts = opts || {};
 	this.root = opts.path;
 	this.interval = opts.interval || DEFAULT_INTERVAL;
@@ -37,17 +37,17 @@ var Module = function(opts) {
  * @param {Function} cb callback function
  * @api public
  */
-Module.prototype.monitorHandler = function(agent, msg, cb) {
-	if(!msg.logfile) {
-		cb(new Error('logfile should not be empty'));
-		return;
+Module.prototype.monitorHandler = function (agent, msg, cb) {
+	if (!msg.logfile) {
+		cb(new Error('logfile should not be empty'))
+		return
 	}
 
-	var serverId = agent.id;
+	var serverId = agent.id
 	fetchLogs(this.root, msg, function (data) {
-		cb(null, {serverId: serverId, body: data});
-	});
-};
+		cb(null, {serverId: serverId, body: data})
+	})
+}
 
 /**
  * Handle client request
@@ -57,34 +57,34 @@ Module.prototype.monitorHandler = function(agent, msg, cb) {
  * @param {Function} cb callback function
  * @api public
  */
-Module.prototype.clientHandler = function(agent, msg, cb) {
-	agent.request(msg.serverId, module.exports.moduleId, msg, function(err, res) {
-		if(err) {
-			logger.error('fail to run log for ' + err.stack);
-			return;
+Module.prototype.clientHandler = function (agent, msg, cb) {
+	agent.request(msg.serverId, module.exports.moduleId, msg, function (err, res) {
+		if (err) {
+			logger.error('fail to run log for ' + err.stack)
+			return
 		}
-		cb(null, res);
-	});
-};
+		cb(null, res)
+	})
+}
 
 //get the latest logs
-var fetchLogs = function(root, msg, callback) {
+var fetchLogs = function (root, msg, callback) {
 	var number = msg.number;
 	var logfile = msg.logfile;
 	var serverId = msg.serverId;
 	var filePath = path.join(root, getLogFileName(logfile, serverId));
 
 	var endLogs = [];
-	exec('tail -n ' + number + ' ' + filePath, function(error, output) {
+	exec('tail -n ' + number + ' ' + filePath, function (error, output) {
 		var endOut = [];
 		output = output.replace(/^\s+|\s+$/g, "").split(/\s+/);
 
-		for(var i=5; i<output.length; i+=6) {
+		for (var i=5; i<output.length; i+=6) {
 			endOut.push(output[i]);
 		}
 
 		var endLength=endOut.length;
-		for(var j=0; j<endLength; j++) {
+		for (var j=0; j<endLength; j++) {
 			var map = {};
 			var json;
 			try{
@@ -105,6 +105,6 @@ var fetchLogs = function(root, msg, callback) {
 	});
 };
 
-var getLogFileName = function(logfile, serverId) {
+var getLogFileName = function (logfile, serverId) {
 	return logfile + '-' + serverId + '.log';
 };

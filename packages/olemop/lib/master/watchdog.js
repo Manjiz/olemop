@@ -5,7 +5,7 @@ var countDownLatch = require('../util/countDownLatch');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var Watchdog = function(app, service) {
+var Watchdog = function (app, service) {
   EventEmitter.call(this);
 
   this.app = app;
@@ -20,16 +20,16 @@ util.inherits(Watchdog, EventEmitter);
 
 module.exports = Watchdog;
 
-Watchdog.prototype.addServer = function(server) {
-  if(!server) {
+Watchdog.prototype.addServer = function (server) {
+  if (!server) {
     return;
   }
   this.servers[server.id] = server;
   this.notify({action: 'addServer', server: server});
 };
 
-Watchdog.prototype.removeServer = function(id) {
-  if(!id) {
+Watchdog.prototype.removeServer = function (id) {
+  if (!id) {
     return;
   }
   this.unsubscribe(id);
@@ -37,12 +37,12 @@ Watchdog.prototype.removeServer = function(id) {
   this.notify({action: 'removeServer', id: id});
 };
 
-Watchdog.prototype.reconnectServer = function(server) {
+Watchdog.prototype.reconnectServer = function (server) {
   var self = this;
-  if(!server) {
+  if (!server) {
     return;
   }
-  if(!this.servers[server.id]) {
+  if (!this.servers[server.id]) {
     this.servers[server.id] = server;
   }
   //replace server in reconnect server
@@ -53,20 +53,20 @@ Watchdog.prototype.reconnectServer = function(server) {
   this.subscribe(server.id);
 };
 
-Watchdog.prototype.subscribe = function(id) {
+Watchdog.prototype.subscribe = function (id) {
   this.listeners[id] = 1;
 };
 
-Watchdog.prototype.unsubscribe = function(id) {
+Watchdog.prototype.unsubscribe = function (id) {
   delete this.listeners[id];
 };
 
-Watchdog.prototype.query = function() {
+Watchdog.prototype.query = function () {
   return this.servers;
 };
 
-Watchdog.prototype.record = function(id) {
-  if(!this.isStarted && --this.count < 0) {
+Watchdog.prototype.record = function (id) {
+  if (!this.isStarted && --this.count < 0) {
     var usedTime = Date.now() - this.app.startTime;
     logger.info('all servers startup in %s ms', usedTime);
     this.notify({action: 'startOver'});
@@ -74,9 +74,9 @@ Watchdog.prototype.record = function(id) {
   }
 };
 
-Watchdog.prototype.notifyById = function(id, msg) {
-  this.service.agent.request(id, Constants.KEYWORDS.MONITOR_WATCHER, msg, function(signal) {
-    if(signal !== Constants.SIGNAL.OK) {
+Watchdog.prototype.notifyById = function (id, msg) {
+  this.service.agent.request(id, Constants.KEYWORDS.MONITOR_WATCHER, msg, function (signal) {
+    if (signal !== Constants.SIGNAL.OK) {
       logger.error('master watchdog fail to notify to monitor, id: %s, msg: %j', id, msg);
     } else {
       logger.debug('master watchdog notify to monitor success, id: %s, msg: %j', id, msg);
@@ -84,35 +84,35 @@ Watchdog.prototype.notifyById = function(id, msg) {
   });
 };
 
-Watchdog.prototype.notify = function(msg) {
+Watchdog.prototype.notify = function (msg) {
   var listeners = this.listeners;
   var success = true;
   var fails = [];
   var timeouts = [];
   var requests = {};
   var count = utils.size(listeners);
-  if(count === 0) {
+  if (count === 0) {
     logger.warn('master watchdog listeners is none, msg: %j', msg);
     return;
   }
-  var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_COUNTDOWN}, function(isTimeout) {
-    if(!!isTimeout) {
-      for(var key in requests) {
-        if(!requests[key])  {
+  var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_COUNTDOWN}, function (isTimeout) {
+    if (!!isTimeout) {
+      for (var key in requests) {
+        if (!requests[key])  {
           timeouts.push(key);
         }
       }
       logger.error('master watchdog request timeout message: %j, timeouts: %j, fails: %j', msg, timeouts, fails);
     }
-    if(!success) {
+    if (!success) {
       logger.error('master watchdog request fail message: %j, fails: %j', msg, fails);
     }
   });
 
-  var moduleRequest = function(self, id) {
-    return (function() {
-      self.service.agent.request(id, Constants.KEYWORDS.MONITOR_WATCHER, msg, function(signal) {
-        if(signal !== Constants.SIGNAL.OK) {
+  var moduleRequest = function (self, id) {
+    return (function () {
+      self.service.agent.request(id, Constants.KEYWORDS.MONITOR_WATCHER, msg, function (signal) {
+        if (signal !== Constants.SIGNAL.OK) {
           fails.push(id);
           success = false;
         }
@@ -122,7 +122,7 @@ Watchdog.prototype.notify = function(msg) {
     })();
   };
 
-  for(var id in listeners) {
+  for (var id in listeners) {
     requests[id] = 0;
     moduleRequest(this, id);
   }

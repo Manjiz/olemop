@@ -9,8 +9,8 @@ var ST_WAIT_ACK = 1;
 var ST_WORKING = 2;
 var ST_CLOSED = 3;
 
-var handleHandshake = function(socket, pkg) {
-  if(socket.state !== ST_INITED) {
+var handleHandshake = function (socket, pkg) {
+  if (socket.state !== ST_INITED) {
     return;
   }
   try {
@@ -20,23 +20,23 @@ var handleHandshake = function(socket, pkg) {
   }
 };
 
-var handleHandshakeAck = function(socket, pkg) {
-  if(socket.state !== ST_WAIT_ACK) {
+var handleHandshakeAck = function (socket, pkg) {
+  if (socket.state !== ST_WAIT_ACK) {
     return;
   }
   socket.state = ST_WORKING;
   socket.emit('heartbeat');
 };
 
-var handleHeartbeat = function(socket, pkg) {
-  if(socket.state !== ST_WORKING) {
+var handleHeartbeat = function (socket, pkg) {
+  if (socket.state !== ST_WORKING) {
     return;
   }
   socket.emit('heartbeat');
 };
 
-var handleData = function(socket, pkg) {
-  if(socket.state !== ST_WORKING) {
+var handleData = function (socket, pkg) {
+  if (socket.state !== ST_WORKING) {
     return;
   }
   socket.emit('message', pkg);
@@ -47,9 +47,9 @@ handlers[Package.TYPE_HANDSHAKE_ACK] = handleHandshakeAck;
 handlers[Package.TYPE_HEARTBEAT] = handleHeartbeat;
 handlers[Package.TYPE_DATA] = handleData;
 
-var handle = function(socket, pkg) {
+var handle = function (socket, pkg) {
   var handler = handlers[pkg.type];
-  if(!!handler) {
+  if (!!handler) {
     handler(socket, pkg);
   } else {
     logger.error('could not find handle invalid data package.');

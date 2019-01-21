@@ -2,7 +2,7 @@ var logger = require('@olemop/logger').getLogger('olemop-admin', 'MasterSocket')
 var Constants = require('../util/constants');
 var protocol = require('../util/protocol');
 
-var MasterSocket = function() {
+var MasterSocket = function () {
 	this.id = null;
 	this.type = null;
 	this.info = null;
@@ -12,7 +12,7 @@ var MasterSocket = function() {
 	this.registered = false;
 }
 
-MasterSocket.prototype.onRegister = function(msg) {
+MasterSocket.prototype.onRegister = function (msg) {
 	if (!msg || !msg.type) {
 		return;
 	}
@@ -27,7 +27,7 @@ MasterSocket.prototype.onRegister = function(msg) {
 		this.id = serverId;
 		this.type = serverType;
 		this.info = 'client';
-		this.agent.doAuthUser(msg, socket, function(err) {
+		this.agent.doAuthUser(msg, socket, function (err) {
 			if (err) {
 				return socket.disconnect();
 			}
@@ -36,7 +36,7 @@ MasterSocket.prototype.onRegister = function(msg) {
 			self.registered = true;
 		});
 		return;
-	} // end of if(serverType === 'client')
+	} // end of if (serverType === 'client')
 
 	if (serverType == Constants.TYPE_MONITOR) {
 		if (!serverId) {
@@ -47,7 +47,7 @@ MasterSocket.prototype.onRegister = function(msg) {
 		this.id = serverId;
 		this.type = msg.serverType;
 		this.info = msg.info;
-		this.agent.doAuthServer(msg, socket, function(err) {
+		this.agent.doAuthServer(msg, socket, function (err) {
 			if (err) {
 				return socket.disconnect();
 			}
@@ -57,7 +57,7 @@ MasterSocket.prototype.onRegister = function(msg) {
 
 		this.repushQosMessage(serverId);
 		return;
-	} // end of if(serverType === 'monitor')
+	} // end of if (serverType === 'monitor')
 
 	this.agent.doSend(socket, 'register', {
 		code: protocol.PRO_FAIL,
@@ -67,7 +67,7 @@ MasterSocket.prototype.onRegister = function(msg) {
 	socket.disconnect();
 }
 
-MasterSocket.prototype.onMonitor = function(msg) {
+MasterSocket.prototype.onMonitor = function (msg) {
 	var socket = this.socket;
 	if (!this.registered) {
 		// not register yet, ignore any message
@@ -102,7 +102,7 @@ MasterSocket.prototype.onMonitor = function(msg) {
 	}
 
 	// a request or a notify from monitor
-	self.agent.consoleService.execute(msg.moduleId, 'masterHandler', msg.body, function(err, res) {
+	self.agent.consoleService.execute(msg.moduleId, 'masterHandler', msg.body, function (err, res) {
 		if (protocol.isRequest(msg)) {
 			var resp = protocol.composeResponse(msg, err, res);
 			if (resp) {
@@ -115,7 +115,7 @@ MasterSocket.prototype.onMonitor = function(msg) {
 	});
 }
 
-MasterSocket.prototype.onClient = function(msg) {
+MasterSocket.prototype.onClient = function (msg) {
 	var socket = this.socket;
 	if (!this.registered) {
 		// not register yet, ignore any message
@@ -139,7 +139,7 @@ MasterSocket.prototype.onClient = function(msg) {
 
 	if (msgCommand) {
 		// a command from client
-		self.agent.consoleService.command(msgCommand, msgModuleId, msgBody, function(err, res) {
+		self.agent.consoleService.command(msgCommand, msgModuleId, msgBody, function (err, res) {
 			if (protocol.isRequest(msg)) {
 				var resp = protocol.composeResponse(msg, err, res);
 				if (resp) {
@@ -153,7 +153,7 @@ MasterSocket.prototype.onClient = function(msg) {
 	} else {
 		// a request or a notify from client
 		// and client should not have any response to master for master would not request anything from client
-		self.agent.consoleService.execute(msgModuleId, 'clientHandler', msgBody, function(err, res) {
+		self.agent.consoleService.execute(msgModuleId, 'clientHandler', msgBody, function (err, res) {
 			if (protocol.isRequest(msg)) {
 				var resp = protocol.composeResponse(msg, err, res);
 				if (resp) {
@@ -167,7 +167,7 @@ MasterSocket.prototype.onClient = function(msg) {
 	}
 }
 
-MasterSocket.prototype.onReconnect = function(msg, pid) {
+MasterSocket.prototype.onReconnect = function (msg, pid) {
 	// reconnect a new connection
 	if (!msg || !msg.type) {
 		return;
@@ -208,7 +208,7 @@ MasterSocket.prototype.onReconnect = function(msg, pid) {
 	this.repushQosMessage(serverId);
 }
 
-MasterSocket.prototype.onDisconnect = function() {
+MasterSocket.prototype.onDisconnect = function () {
 	var socket = this.socket;
 	if (socket) {
 		delete this.agent.sockets[socket.id];
@@ -239,7 +239,7 @@ MasterSocket.prototype.onDisconnect = function() {
 	this.type = null;
 }
 
-MasterSocket.prototype.repushQosMessage = function(serverId) {
+MasterSocket.prototype.repushQosMessage = function (serverId) {
 	var socket = this.socket;
 	// repush qos message
 	var qosMsgs = this.agent.msgMap[serverId];
@@ -259,7 +259,7 @@ MasterSocket.prototype.repushQosMessage = function(serverId) {
 	}
 }
 
-MasterSocket.prototype.onError = function(err) {
+MasterSocket.prototype.onError = function (err) {
 	// logger.error('server %s error %s', this.id, err.stack);
 	// this.onDisconnect();
 }

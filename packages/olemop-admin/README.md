@@ -83,7 +83,7 @@ masterConsole.register(moduleId, module);
 Start masterConsole.
 
 ```javascript
-masterConsole.start(function(err) {  
+masterConsole.start(function (err) {  
   // start servers  
 });  
 ```
@@ -107,7 +107,7 @@ Developers can customize modules to collect and export additional status as they
 ###Simple example  
 
 ```javascript
-var Module = function(app, opts) {
+var Module = function (app, opts) {
   opts = opts || {};
   this.type = opts.type || 'pull';  // pull or push 
   this.interval = opts.interval || 5; // pull or push interval
@@ -117,21 +117,21 @@ Module.moduleId = 'helloPomelo';
 
 module.exports = Module;
 
-Module.prototype.monitorHandler = function(agent, msg) {
+Module.prototype.monitorHandler = function (agent, msg) {
   var word = agent.id + ' hello pomelo';
   // notify admin messages to master
   agent.notify(Module.moduleId, {serverId: agent.id, body: word});
 };
 
-Module.prototype.masterHandler = function(agent, msg) {
+Module.prototype.masterHandler = function (agent, msg) {
   // if no message, then notify all monitors to fetch datas
-  if(!msg) {
+  if (!msg) {
     agent.notifyAll(Module.moduleId);
     return;
   }
   // collect data from monitor
   var data = agent.get(Module.moduleId);
-  if(!data) {
+  if (!data) {
     data = {};
     agent.set(Module.moduleId, data);
   }
@@ -139,7 +139,7 @@ Module.prototype.masterHandler = function(agent, msg) {
   data[msg.serverId] = msg;
 };
 
-Module.prototype.clientHandler = function(agent, msg, cb) {
+Module.prototype.clientHandler = function (agent, msg, cb) {
   // deal with client request,directly return data cached in master
   cb(null, agent.get(Module.moduleId) || {});
 };
@@ -151,7 +151,7 @@ you must register your customized modules to pomelo to make it work.
 write in app.js which is in your project's root directory  
 
 ```javascript
-app.configure('production|development', function() {
+app.configure('production|development', function () {
   app.registerAdmin('helloPomelo',new helloPomelo());
 });
 ```
@@ -199,8 +199,8 @@ pomelo-admin provides a simple auth function in [pomelo-admin auth](https://gith
 developers can provide self-defined auth in pomelo by  
 in master server
 ```javascript
-app.set('adminAuthUser', function(msg, cb){
-  if(auth success) {
+app.set('adminAuthUser', function (msg, cb){
+  if (auth success) {
     cb(user);
   } else {
     cb(null);
@@ -214,8 +214,8 @@ pomelo-admin provides a simple auth function in [pomelo-admin auth](https://gith
 developers can provide self-defined auth in pomelo by  
 in master server
 ```javascript
-app.set('adminAuthServerMaster', function(msg, cb){
-  if(auth success) {
+app.set('adminAuthServerMaster', function (msg, cb){
+  if (auth success) {
     cb('ok');
   } else {
     cb('bad');
@@ -225,8 +225,8 @@ app.set('adminAuthServerMaster', function(msg, cb){
 
 in monitor server
 ```javascript
-app.set('adminAuthServerMonitor', function(msg, cb){
-  if(auth success) {
+app.set('adminAuthServerMonitor', function (msg, cb){
+  if (auth success) {
     cb('ok');
   } else {
     cb('bad');
@@ -258,7 +258,7 @@ when using in pomelo, you should fill all your servers with type:token
 `pomelo-admin` provides a series of useful system modules by default. But most of them are turned off by default. Add a simple line of code in `app.js` as below to enable them.
 
 ```javascript
-app.configure('development', function() {
+app.configure('development', function () {
   // enable the system monitor modules
   app.enable('systemMonitor');
 });

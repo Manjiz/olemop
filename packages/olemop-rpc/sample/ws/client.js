@@ -6,7 +6,7 @@ ws.on('open', function open() {
 	run();
 });
 
-ws.on('message', function(data, flags) {
+ws.on('message', function (data, flags) {
 	// flags.binary will be set if a binary data is received.
 	// flags.masked will be set if the data was masked.
 	run();

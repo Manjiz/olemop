@@ -1,4 +1,4 @@
-(function() {
+(function () {
   var isArray = Array.isArray;
 
   var root = this;
@@ -22,13 +22,13 @@
   // Obviously not all Emitters should be limited to 10. This function allows
   // that to be increased. Set to zero for unlimited.
   var defaultMaxListeners = 10;
-  EventEmitter.prototype.setMaxListeners = function(n) {
+  EventEmitter.prototype.setMaxListeners = function (n) {
     if (!this._events) this._events = {};
     this._maxListeners = n;
   };
 
 
-  EventEmitter.prototype.emit = function() {
+  EventEmitter.prototype.emit = function () {
     var type = arguments[0];
     // If there is no 'error' event listener then throw.
     if (type === 'error') {
@@ -106,7 +106,7 @@
     }
   };
 
-  EventEmitter.prototype.addListener = function(type, listener) {
+  EventEmitter.prototype.addListener = function (type, listener) {
     if ('function' !== typeof listener) {
       throw new Error('addListener only takes instances of Function');
     }
@@ -156,7 +156,7 @@
 
   EventEmitter.prototype.on = EventEmitter.prototype.addListener;
 
-  EventEmitter.prototype.once = function(type, listener) {
+  EventEmitter.prototype.once = function (type, listener) {
     if ('function' !== typeof listener) {
       throw new Error('.once only takes instances of Function');
     }
@@ -173,7 +173,7 @@
     return this;
   };
 
-  EventEmitter.prototype.removeListener = function(type, listener) {
+  EventEmitter.prototype.removeListener = function (type, listener) {
     if ('function' !== typeof listener) {
       throw new Error('removeListener only takes instances of Function');
     }
@@ -205,7 +205,7 @@
       return this;
   };
 
-  EventEmitter.prototype.removeAllListeners = function(type) {
+  EventEmitter.prototype.removeAllListeners = function (type) {
     if (arguments.length === 0) {
       this._events = {};
       return this;
@@ -223,7 +223,7 @@
     return this;
   };
 
-  EventEmitter.prototype.listeners = function(type) {
+  EventEmitter.prototype.listeners = function (type) {
     if (!this._events) this._events = {};
     if (!this._events[type]) this._events[type] = [];
     if (!isArray(this._events[type])) {
@@ -236,10 +236,10 @@
 (function (exports, global) {
 
   var Protocol = exports;
- 
+
   var HEADER = 5;
 
-  var Message = function(id,route,body){
+  var Message = function (id,route,body){
       this.id = id;
       this.route = route;
       this.body = body;
@@ -254,7 +254,7 @@
  * socketio current support string
  *
  */
-Protocol.encode = function(id,route,msg){
+Protocol.encode = function (id,route,msg){
     var msgStr = JSON.stringify(msg);
     if (route.length>255) { throw new Error('route maxlength is overflow'); }
     var byteArray = new Uint16Array(HEADER + route.length + msgStr.length);
@@ -264,7 +264,7 @@ Protocol.encode = function(id,route,msg){
     byteArray[index++] = (id>>8) & 0xFF;
     byteArray[index++] = id & 0xFF;
     byteArray[index++] = route.length & 0xFF;
-    for(var i = 0;i<route.length;i++){
+    for (var i = 0;i<route.length;i++){
         byteArray[index++] = route.charCodeAt(i);
     }
     for (var i = 0; i < msgStr.length; i++) {
@@ -282,23 +282,23 @@ Protocol.encode = function(id,route,msg){
  *msg String data
  *return Message Object
  */
-Protocol.decode = function(msg){
+Protocol.decode = function (msg){
     var idx, len = msg.length, arr = new Array( len );
     for ( idx = 0 ; idx < len ; ++idx ) {
         arr[idx] = msg.charCodeAt(idx);
     }
     var index = 0;
     var buf = new Uint16Array(arr);
-    var id = ((buf[index++] <<24) | (buf[index++])  << 16  |  (buf[index++]) << 8 | buf[index++]) >>>0; 
+    var id = ((buf[index++] <<24) | (buf[index++])  << 16  |  (buf[index++]) << 8 | buf[index++]) >>>0;
     var routeLen = buf[HEADER-1];
     var route = bt2Str(buf,HEADER, routeLen+HEADER);
-    var body = bt2Str(buf,routeLen+HEADER,buf.length);  
+    var body = bt2Str(buf,routeLen+HEADER,buf.length);
     return new Message(id,route,body);
 };
 
-var bt2Str = function(byteArray,start,end) {
+var bt2Str = function (byteArray,start,end) {
     var result = "";
-    for(var i = start; i < byteArray.length && i<end; i++) {
+    for (var i = start; i < byteArray.length && i<end; i++) {
         result = result + String.fromCharCode(byteArray[i]);
     };
     return result;
@@ -306,7 +306,7 @@ var bt2Str = function(byteArray,start,end) {
 
 })('object' === typeof module ? module.exports : (this.Protocol = {}), this);
 
-(function() {
+(function () {
   if (typeof Object.create !== 'function') {
     Object.create = function (o) {
       function F() {}
@@ -322,93 +322,93 @@ var bt2Str = function(byteArray,start,end) {
   var id = 1;
   var callbacks = {};
 
-  pomelo.init = function(params, cb){
+  pomelo.init = function (params, cb){
     pomelo.params = params;
     params.debug = true;
     var host = params.host;
     var port = params.port;
 
     var url = 'ws://' + host;
-    if(port) {
+    if (port) {
       url +=  ':' + port;
     }
 
     socket = io(url, {'force new connection': true, reconnect: false});
 
-    socket.on('connect', function(){
+    socket.on('connect', function (){
       console.log('[pomeloclient.init] websocket connected!');
       if (cb) {
         cb(socket);
       }
     });
 
-    socket.on('reconnect', function() {
+    socket.on('reconnect', function () {
       console.log('reconnect');
     });
 
-    socket.on('message', function(data){
-      if(typeof data === 'string') {
+    socket.on('message', function (data){
+      if (typeof data === 'string') {
         data = JSON.parse(data);
       }
-      if(data instanceof Array) {
+      if (data instanceof Array) {
         processMessageBatch(pomelo, data);
       } else {
         processMessage(pomelo, data);
       }
     });
 
-    socket.on('error', function(err) {
+    socket.on('error', function (err) {
       console.log(err);
     });
 
-    socket.on('disconnect', function(reason) {
+    socket.on('disconnect', function (reason) {
       pomelo.emit('disconnect', reason);
     });
   };
 
-  pomelo.disconnect = function() {
-    if(socket) {
+  pomelo.disconnect = function () {
+    if (socket) {
       socket.disconnect();
       socket = null;
     }
   };
 
-  pomelo.request = function(route) {
-    if(!route) {
+  pomelo.request = function (route) {
+    if (!route) {
       return;
     }
     var msg = {};
     var cb;
     arguments = Array.prototype.slice.apply(arguments);
-    if(arguments.length === 2){
-      if(typeof arguments[1] === 'function'){
+    if (arguments.length === 2){
+      if (typeof arguments[1] === 'function'){
         cb = arguments[1];
-      }else if(typeof arguments[1] === 'object'){
+      }else if (typeof arguments[1] === 'object'){
         msg = arguments[1];
       }
-    }else if(arguments.length === 3){
+    }else if (arguments.length === 3){
       msg = arguments[1];
       cb = arguments[2];
     }
     msg = filter(msg,route);
-  id++; 
+  id++;
   callbacks[id] = cb;
   var sg = Protocol.encode(id,route,msg);
     socket.send(sg);
   };
 
-  pomelo.notify = function(route,msg) {
+  pomelo.notify = function (route,msg) {
     this.request(route, msg);
   };
 
-  var processMessage = function(pomelo, msg) {
+  var processMessage = function (pomelo, msg) {
     var route;
-    if(msg.id) {
+    if (msg.id) {
       //if have a id then find the callback function with the request
       var cb = callbacks[msg.id];
-      
+
       delete callbacks[msg.id];
-      if(typeof cb !== 'function') {
+      if (typeof cb !== 'function') {
         console.log('[pomeloclient.processMessage] cb is not a function for request ' + msg.id);
         return;
       }
@@ -423,7 +423,7 @@ var bt2Str = function(byteArray,start,end) {
     //if no id then it should be a server push message
     function processCall(msg) {
       var route = msg.route;
-      if(!!route) {
+      if (!!route) {
         if (!!msg.body) {
           var body = msg.body.body;
           if (!body) {body = msg.body;}
@@ -437,14 +437,14 @@ var bt2Str = function(byteArray,start,end) {
     }
   };
 
-  var processMessageBatch = function(pomelo, msgs) {
-    for(var i=0, l=msgs.length; i<l; i++) {
+  var processMessageBatch = function (pomelo, msgs) {
+    for (var i=0, l=msgs.length; i<l; i++) {
       processMessage(pomelo, msgs[i]);
     }
   };
 
   function filter(msg,route){
-    if(route.indexOf('area.') === 0){
+    if (route.indexOf('area.') === 0){
       msg.areaId = pomelo.areaId;
     }
 
@@ -452,5 +452,5 @@ var bt2Str = function(byteArray,start,end) {
     return msg;
   }
 
-  
+
 })();

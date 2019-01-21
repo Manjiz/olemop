@@ -12,7 +12,7 @@ var Mailbox = require('./mailboxes/mqtt-mailbox');
  * @param {Object} opts construct parameters
  * @return {Object} mailbox instancef
  */
-module.exports.create = function(serverInfo, opts) {
+module.exports.create = function (serverInfo, opts) {
 	// var mailbox = opts.mailbox || 'mqtt';
 	// var Mailbox = null;
 	// if (mailbox == 'ws') {

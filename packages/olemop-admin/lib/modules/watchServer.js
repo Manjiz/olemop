@@ -10,18 +10,18 @@ var util = require('util');
 var fs = require('fs');
 var vm = require('vm');
 
-module.exports = function(opts) {
+module.exports = function (opts) {
 	return new Module(opts);
 };
 
 module.exports.moduleId = 'watchServer';
 
-var Module = function(opts) {
+var Module = function (opts) {
 	opts = opts || {};
 	this.app = opts.app;
 };
 
-Module.prototype.monitorHandler = function(agent, msg, cb) {
+Module.prototype.monitorHandler = function (agent, msg, cb) {
 	var comd = msg['comd'];
 	var context = msg['context'];
 	var param = msg['param'];
@@ -86,7 +86,7 @@ Module.prototype.monitorHandler = function(agent, msg, cb) {
 	}
 };
 
-Module.prototype.clientHandler = function(agent, msg, cb) {
+Module.prototype.clientHandler = function (agent, msg, cb) {
 	var comd = msg['comd'];
 	var context = msg['context'];
 	var param = msg['param'];
@@ -225,7 +225,7 @@ function showConnections(handle, agent, app, comd, context, cb) {
 				agent.request(record.id, module.exports.moduleId, {
 					comd: comd,
 					context: context
-				}, function(msg) {
+				}, function (msg) {
 					var serverInfo = {};
 					serverInfo[msg.serverId] = msg.body;
 					cb(null, {
@@ -274,7 +274,7 @@ function showStatus(handle, agent, comd, context, cb) {
 		agent.request(context, module.exports.moduleId, {
 			comd: comd,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, {
 				msg: msg
 			});
@@ -286,7 +286,7 @@ function showStatus(handle, agent, comd, context, cb) {
 			serverId: serverId,
 			pid: pid
 		};
-		monitor.psmonitor.getPsInfo(params, function(err, data) {
+		monitor.psmonitor.getPsInfo(params, function (err, data) {
 			cb(null, {
 				serverId: agent.id,
 				body: data
@@ -309,7 +309,7 @@ function showConfig(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -329,7 +329,7 @@ function showProxy(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -348,7 +348,7 @@ function showHandler(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -367,7 +367,7 @@ function showComponents(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -392,7 +392,7 @@ function showSettings(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -423,7 +423,7 @@ function dumpCPU(handle, agent, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(err, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -439,7 +439,7 @@ function dumpCPU(handle, agent, comd, context, param, cb) {
 			cb('no times or times invalid error');
 			return;
 		}
-		checkFilePath(filepath, force, function(err) {
+		checkFilePath(filepath, force, function (err) {
 			if (err) {
 				cb(err);
 				return;
@@ -463,7 +463,7 @@ function dumpMemory(handle, agent, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(err, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -472,7 +472,7 @@ function dumpMemory(handle, agent, comd, context, param, cb) {
 		if (!/\.heapsnapshot$/.test(filepath)) {
 			filepath = filepath + '.heapsnapshot';
 		}
-		checkFilePath(filepath, force, function(err) {
+		checkFilePath(filepath, force, function (err) {
 			if (err) {
 				cb(err);
 				return;
@@ -500,7 +500,7 @@ function getApp(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -523,7 +523,7 @@ function setApp(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -545,7 +545,7 @@ function enableApp(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -565,7 +565,7 @@ function disableApp(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -585,7 +585,7 @@ function runScript(handle, agent, app, comd, context, param, cb) {
 			comd: comd,
 			param: param,
 			context: context
-		}, function(err, msg) {
+		}, function (err, msg) {
 			cb(null, msg);
 		});
 	} else if (handle === 'monitor') {
@@ -627,7 +627,7 @@ function checkFilePath(filepath, force, cb) {
 		cb('filepath file exist');
 		return;
 	}
-	fs.writeFile(filepath, 'test', function(err) {
+	fs.writeFile(filepath, 'test', function (err) {
 		if (err) {
 			cb('filepath invalid error');
 			return;

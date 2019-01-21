@@ -5,7 +5,7 @@ var MqttCon = require('mqtt-connection');
 var Util = require('util');
 var net = require('net');
 
-var MqttClient = function(opts) {
+var MqttClient = function (opts) {
 	EventEmitter.call(this);
 	this.clientId = 'MQTT_ADMIN_' + Date.now();
 	this.id = opts.id;
@@ -30,8 +30,8 @@ var MqttClient = function(opts) {
 
 Util.inherits(MqttClient, EventEmitter);
 
-MqttClient.prototype.connect = function(host, port, cb) {
-	cb = cb || function() {}
+MqttClient.prototype.connect = function (host, port, cb) {
+	cb = cb || function () {}
 	if (this.connected) {
 		return cb(new Error('MqttClient has already connected.'));
 	}
@@ -61,7 +61,7 @@ MqttClient.prototype.connect = function(host, port, cb) {
 
 	this.addTimeout();
 
-	this.socket.on('connack', function() {
+	this.socket.on('connack', function () {
 		if (self.connected) {
 			return;
 		}
@@ -78,7 +78,7 @@ MqttClient.prototype.connect = function(host, port, cb) {
 		}
 	});
 
-	this.socket.on('publish', function(pkg) {
+	this.socket.on('publish', function (pkg) {
 		var topic = pkg.topic;
 		var msg = pkg.payload.toString();
 		msg = JSON.parse(msg);
@@ -87,28 +87,28 @@ MqttClient.prototype.connect = function(host, port, cb) {
 		self.emit(topic, msg);
 	});
 
-	this.socket.on('close', function() {
+	this.socket.on('close', function () {
 		logger.error('mqtt socket is close, remote server host: %s, port: %s', host, port);
 		self.onSocketClose();
 	});
 
-	this.socket.on('error', function(err) {
+	this.socket.on('error', function (err) {
 		logger.error('mqtt socket is error, remote server host: %s, port: %s', host, port);
 		// self.emit('error', new Error('[MqttClient] socket is error, remote server ' + host + ':' + port));
 		self.onSocketClose();
 	});
 
-	this.socket.on('pingresp', function() {
+	this.socket.on('pingresp', function () {
 		self.lastPong = Date.now();
 	});
 
-	this.socket.on('disconnect', function() {
+	this.socket.on('disconnect', function () {
 		logger.error('mqtt socket is disconnect, remote server host: %s, port: %s', host, port);
 		self.emit('disconnect', self.id);
 		self.onSocketClose();
 	});
 
-	this.socket.on('timeout', function(reconnectFlag) {
+	this.socket.on('timeout', function (reconnectFlag) {
 		if (reconnectFlag) {
 			self.reconnect();
 		} else {
@@ -117,7 +117,7 @@ MqttClient.prototype.connect = function(host, port, cb) {
 	})
 }
 
-MqttClient.prototype.send = function(topic, msg) {
+MqttClient.prototype.send = function (topic, msg) {
 	// console.log('MqttClient send %s %j ~~~', topic, msg);
 	this.socket.publish({
 		topic: topic,
@@ -125,7 +125,7 @@ MqttClient.prototype.send = function(topic, msg) {
 	})
 }
 
-MqttClient.prototype.onSocketClose = function() {
+MqttClient.prototype.onSocketClose = function () {
 	// console.log('onSocketClose ' + this.closed);
 	if (this.closed) {
 		return;
@@ -148,7 +148,7 @@ MqttClient.prototype.onSocketClose = function() {
 	}
 }
 
-MqttClient.prototype.addTimeout = function(reconnectFlag) {
+MqttClient.prototype.addTimeout = function (reconnectFlag) {
 	var self = this;
 	if (this.timeoutFlag) {
 		return;
@@ -156,14 +156,14 @@ MqttClient.prototype.addTimeout = function(reconnectFlag) {
 
 	this.timeoutFlag = true;
 
-	this.timeoutId = setTimeout(function() {
+	this.timeoutId = setTimeout(function () {
 		self.timeoutFlag = false;
 		logger.error('mqtt client connect %s:%d timeout %d s', self.host, self.port, self.timeout / 1000);
 		self.socket.emit('timeout', reconnectFlag);
 	}, self.timeout);
 }
 
-MqttClient.prototype.reconnect = function() {
+MqttClient.prototype.reconnect = function () {
 	var delay = this.reconnectDelay * 2 || constants.DEFAULT_PARAM.RECONNECT_DELAY;
 	if (delay > this.reconnectDelayMax) {
 		delay = this.reconnectDelayMax;
@@ -174,24 +174,24 @@ MqttClient.prototype.reconnect = function() {
 	var self = this;
 
 	// logger.debug('[MqttClient] reconnect %d ...', delay);
-	this.reconnectId = setTimeout(function() {
+	this.reconnectId = setTimeout(function () {
 		logger.info('reconnect delay %d s', delay / 1000);
 		self.addTimeout(true);
 		self.connect();
 	}, delay);
 }
 
-MqttClient.prototype.setupKeepAlive = function() {
+MqttClient.prototype.setupKeepAlive = function () {
 	clearTimeout(this.reconnectId);
 	clearTimeout(this.timeoutId);
 
 	var self = this;
-	this.keepaliveTimer = setInterval(function() {
+	this.keepaliveTimer = setInterval(function () {
 		self.checkKeepAlive();
 	}, this.keepalive);
 }
 
-MqttClient.prototype.checkKeepAlive = function() {
+MqttClient.prototype.checkKeepAlive = function () {
 	if (this.closed) {
 		return;
 	}
@@ -214,17 +214,17 @@ MqttClient.prototype.checkKeepAlive = function() {
 	}
 }
 
-MqttClient.prototype.disconnect = function() {
+MqttClient.prototype.disconnect = function () {
 	this.close();
 }
 
-MqttClient.prototype.close = function() {
+MqttClient.prototype.close = function () {
 	this.connected = false;
 	this.closed = true;
 	this.socket.disconnect();
 }
 
-MqttClient.prototype.exit = function() {
+MqttClient.prototype.exit = function () {
 	logger.info('exit ...');
 	process.exit(0);
 }

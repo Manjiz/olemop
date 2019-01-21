@@ -20,6 +20,6 @@ var monitorConsole = MonitorConsole.createMonitorConsole(opts);
 var module = TestModule();
 monitorConsole.register(TestModule.moduleId, module);
 
-monitorConsole.start(function() {
+monitorConsole.start(function () {
 
 })

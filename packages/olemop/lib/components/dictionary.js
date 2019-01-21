@@ -5,11 +5,11 @@ var Loader = require('@olemop/loader');
 var pathUtil = require('../util/pathUtil');
 var crypto = require('crypto');
 
-module.exports = function(app, opts) {
+module.exports = function (app, opts) {
   return new Component(app, opts);
 };
 
-var Component = function(app, opts) {
+var Component = function (app, opts) {
   this.app = app;
   this.dict = {};
   this.abbrs = {};
@@ -18,10 +18,10 @@ var Component = function(app, opts) {
 
   //Set user dictionary
   var p = path.join(app.getBase(), '/config/dictionary.json');
-  if(!!opts && !!opts.dict) {
+  if (!!opts && !!opts.dict) {
     p = opts.dict;
   }
-  if(fs.existsSync(p)) {
+  if (fs.existsSync(p)) {
     this.userDicPath = p;
   }
 };
@@ -30,23 +30,23 @@ var pro = Component.prototype;
 
 pro.name = '__dictionary__';
 
-pro.start = function(cb) {
+pro.start = function (cb) {
   var servers = this.app.get('servers');
   var routes = [];
 
   //Load all the handler files
-  for(var serverType in servers) {
+  for (var serverType in servers) {
     var p = pathUtil.getHandlerPath(this.app.getBase(), serverType);
-    if(!p) {
+    if (!p) {
       continue;
     }
 
     var handlers = Loader.load(p, this.app);
 
-    for(var name in handlers) {
+    for (var name in handlers) {
       var handler = handlers[name];
-      for(var key in handler) {
-        if(typeof(handler[key]) === 'function') {
+      for (var key in handler) {
+        if (typeof(handler[key]) === 'function') {
           routes.push(serverType + '.' + name + '.' + key);
         }
       }
@@ -57,18 +57,18 @@ pro.start = function(cb) {
   routes.sort();
   var abbr;
   var i;
-  for(i = 0; i < routes.length; i++) {
+  for (i = 0; i < routes.length; i++) {
     abbr = i + 1;
     this.abbrs[abbr] = routes[i];
     this.dict[routes[i]] = abbr;
   }
 
   //Load user dictionary
-  if(!!this.userDicPath) {
+  if (!!this.userDicPath) {
     var userDic = require(this.userDicPath);
 
     abbr = routes.length + 1;
-    for(i = 0; i < userDic.length; i++) {
+    for (i = 0; i < userDic.length; i++) {
       var route = userDic[i];
 
       this.abbrs[abbr] = route;
@@ -76,20 +76,20 @@ pro.start = function(cb) {
       abbr++;
     }
   }
-  
+
   this.version = crypto.createHash('md5').update(JSON.stringify(this.dict)).digest('base64');
 
   utils.invokeCallback(cb);
 };
 
-pro.getDict = function() {
+pro.getDict = function () {
   return this.dict;
 };
 
-pro.getAbbrs = function() {
+pro.getAbbrs = function () {
   return this.abbrs;
 };
 
-pro.getVersion = function() {
+pro.getVersion = function () {
   return this.version;
 };

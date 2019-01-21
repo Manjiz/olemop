@@ -51,20 +51,20 @@ var routeParam = null;
 var routeContext = servers;
 
 // route function to caculate the remote server id
-var routeFunc = function(routeParam, msg, routeContext, cb) {
+var routeFunc = function (routeParam, msg, routeContext, cb) {
   cb(null, routeContext[0].id);
 };
 
 var client = Client.create({routeContext: routeContext, router: routeFunc});
 
-client.start(function(err) {
+client.start(function (err) {
   console.log('rpc client start ok.');
 
   client.addProxies(records);
   client.addServers(servers);
 
-  client.proxies.user.test.service.echo(routeParam, 'hello', function(err, resp) {
-    if(err) {
+  client.proxies.user.test.service.echo(routeParam, 'hello', function (err, resp) {
+    if (err) {
       console.error(err.stack);
     }
     console.log(resp);

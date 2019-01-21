@@ -9,7 +9,7 @@ var Server = require('../server/server');
  * @param {Object} app  current application context
  * @return {Object}     component instance
  */
-module.exports = function(app, opts) {
+module.exports = function (app, opts) {
 	return new Component(app, opts);
 };
 
@@ -18,7 +18,7 @@ module.exports = function(app, opts) {
  *
  * @param {Object} app  current application context
  */
-var Component = function(app, opts) {
+var Component = function (app, opts) {
 	this.server = Server.create(app, opts);
 };
 
@@ -32,7 +32,7 @@ pro.name = '__server__';
  * @param {Function} cb
  * @return {Void}
  */
-pro.start = function(cb) {
+pro.start = function (cb) {
 	this.server.start();
 	process.nextTick(cb);
 };
@@ -43,7 +43,7 @@ pro.start = function(cb) {
  * @param {Function} cb
  * @return {Void}
  */
-pro.afterStart = function(cb) {
+pro.afterStart = function (cb) {
 	this.server.afterStart();
 	process.nextTick(cb);
 };
@@ -55,7 +55,7 @@ pro.afterStart = function(cb) {
  * @param {Function}  cb
  * @return {Void}
  */
-pro.stop = function(force, cb) {
+pro.stop = function (force, cb) {
 	this.server.stop();
 	process.nextTick(cb);
 };
@@ -63,13 +63,13 @@ pro.stop = function(force, cb) {
 /**
  * Proxy server handle
  */
-pro.handle = function(msg, session, cb) {
+pro.handle = function (msg, session, cb) {
 	this.server.handle(msg, session, cb);
 };
 
 /**
  * Proxy server global handle
  */
-pro.globalHandle = function(msg, session, cb) {
+pro.globalHandle = function (msg, session, cb) {
 	this.server.globalHandle(msg, session, cb);
 };

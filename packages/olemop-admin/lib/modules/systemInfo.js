@@ -9,28 +9,28 @@ var logger = require('@olemop/logger').getLogger('olemop-admin', __filename);
 var DEFAULT_INTERVAL = 5 * 60;		// in second
 var DEFAULT_DELAY = 10;						// in second
 
-module.exports = function(opts) {
+module.exports = function (opts) {
 	return new Module(opts);
 };
 
 module.exports.moduleId = 'systemInfo';
 
-var Module = function(opts) {
+var Module = function (opts) {
 	opts = opts || {};
 	this.type = opts.type || 'pull';
 	this.interval = opts.interval || DEFAULT_INTERVAL;
 	this.delay = opts.delay || DEFAULT_DELAY;
 };
 
-Module.prototype.monitorHandler = function(agent, msg, cb) {
+Module.prototype.monitorHandler = function (agent, msg, cb) {
 	//collect data
 	monitor.sysmonitor.getSysInfo(function (err, data) {
 		agent.notify(module.exports.moduleId, {serverId: agent.id, body: data});
 	});
 };
 
-Module.prototype.masterHandler = function(agent, msg) {
-	if(!msg) {
+Module.prototype.masterHandler = function (agent, msg) {
+	if (!msg) {
 		agent.notifyAll(module.exports.moduleId);
 		return;
 	}
@@ -47,7 +47,7 @@ Module.prototype.masterHandler = function(agent, msg) {
 	};
 
 	var data = agent.get(module.exports.moduleId);
-	if(!data) {
+	if (!data) {
 		data = {};
 		agent.set(module.exports.moduleId, data);
 	}
@@ -55,6 +55,6 @@ Module.prototype.masterHandler = function(agent, msg) {
 	data[msg.serverId] = oneData;
 };
 
-Module.prototype.clientHandler = function(agent, msg, cb) {
+Module.prototype.clientHandler = function (agent, msg, cb) {
 	cb(null, agent.get(module.exports.moduleId) || {});
 };

@@ -14,13 +14,13 @@ var RemoteServer = require('@olemop/rpc').server;
  *                       opts.acceptorFactory {Object}: acceptorFactory.create(opts, cb)
  * @return {Object}     remote component instances
  */
-module.exports = function(app, opts) {
+module.exports = function (app, opts) {
   opts = opts || {};
 
   // cacheMsg is deprecated, just for compatibility here.
   opts.bufferMsg = opts.bufferMsg || opts.cacheMsg || false;
   opts.interval = opts.interval || 30;
-  if(app.enabled('rpcDebugLog')) {
+  if (app.enabled('rpcDebugLog')) {
     opts.rpcDebugLog = true;
     opts.rpcLogger = require('@olemop/logger').getLogger('rpc-debug', __filename);
   }
@@ -33,7 +33,7 @@ module.exports = function(app, opts) {
  * @param {Object} app  current application context
  * @param {Object} opts construct parameters
  */
-var Component = function(app, opts) {
+var Component = function (app, opts) {
   this.app = app;
   this.opts = opts;
 };
@@ -48,7 +48,7 @@ pro.name = '__remote__';
  * @param {Function} cb
  * @return {Void}
  */
-pro.start = function(cb) {
+pro.start = function (cb) {
   this.opts.port = this.app.getCurServer().port;
   this.remote = genRemote(this.app, this.opts);
   this.remote.start();
@@ -62,7 +62,7 @@ pro.start = function(cb) {
  * @param {Function}  cb
  * @return {Void}
  */
-pro.stop = function(force, cb) {
+pro.stop = function (force, cb) {
   this.remote.stop(force);
   process.nextTick(cb);
 };
@@ -74,23 +74,23 @@ pro.stop = function(force, cb) {
  * @return {Array} paths
  *
  */
-var getRemotePaths = function(app) {
+var getRemotePaths = function (app) {
   var paths = [];
 
   var role;
   // master server should not come here
-  if(app.isFrontend()) {
+  if (app.isFrontend()) {
     role = 'frontend';
   } else {
     role = 'backend';
   }
 
   var sysPath = pathUtil.getSysRemotePath(role), serverType = app.getServerType();
-  if(fs.existsSync(sysPath)) {
+  if (fs.existsSync(sysPath)) {
     paths.push(pathUtil.remotePathRecord('sys', serverType, sysPath));
   }
   var userPath = pathUtil.getUserRemotePath(app.getBase(), serverType);
-  if(fs.existsSync(userPath)) {
+  if (fs.existsSync(userPath)) {
     paths.push(pathUtil.remotePathRecord('user', serverType, userPath));
   }
 
@@ -103,10 +103,10 @@ var getRemotePaths = function(app) {
  * @param {Object} opts contructor parameters for rpc Server
  * @return {Object} remote server instance
  */
-var genRemote = function(app, opts) {
+var genRemote = function (app, opts) {
   opts.paths = getRemotePaths(app);
   opts.context = app;
-  if(!!opts.rpcServer) {
+  if (!!opts.rpcServer) {
     return opts.rpcServer.create(opts);
   } else {
     return RemoteServer.create(opts);

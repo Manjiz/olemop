@@ -32,7 +32,7 @@ function scheduleJob(trigger, jobFunc, jobData){
   };
 
   var curJob = queue.peek();
-  if(!curJob || excuteTime < curJob.time){
+  if (!curJob || excuteTime < curJob.time){
     queue.offer(element);
     setTimer(job);
 
@@ -48,7 +48,7 @@ function scheduleJob(trigger, jobFunc, jobData){
  */
 function cancelJob(id){
   var curJob = queue.peek();
-  if(curJob && id === curJob.id){ // to avoid queue.peek() is null
+  if (curJob && id === curJob.id){ // to avoid queue.peek() is null
     queue.pop();
     delete map[id];
 
@@ -84,7 +84,7 @@ function excuteJob(){
 
     var nextTime = job.nextTime();
 
-    if(nextTime === null){
+    if (nextTime === null){
       delete map[job.id];
     }else{
       queue.offer({id:job.id, time: nextTime});
@@ -93,7 +93,7 @@ function excuteJob(){
   }
 
   //If all the job have been canceled
-  if(!job)
+  if (!job)
     return;
 
   //Run next schedule
@@ -105,14 +105,14 @@ function excuteJob(){
  * @return Next valid job
  */
 function peekNextJob(){
-  if(queue.size() <= 0)
+  if (queue.size() <= 0)
     return null;
 
   var job = null;
 
   do{
     job = map[queue.peek().id];
-    if(!job) queue.pop();
+    if (!job) queue.pop();
   }while(!job && queue.size() > 0);
 
   return (!!job)?job:null;

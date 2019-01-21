@@ -32,7 +32,7 @@ var connection = thrift.createConnection("localhost", 9090, {
   protocol : protocol
 });
 
-connection.on('error', function(err) {
+connection.on('error', function (err) {
   assert(false, err);
 });
 
@@ -43,8 +43,8 @@ var num_requests = 20000;
 var times = 0;
 var start = Date.now();
 
-var rpcRequest = function(msg, cb) {
-  client.ping(function(err, response) {
+var rpcRequest = function (msg, cb) {
+  client.ping(function (err, response) {
     cb()
   });
 }
@@ -65,7 +65,7 @@ function run() {
   }
 
   times++;
-  rpcRequest({}, function() {
+  rpcRequest({}, function () {
       run();
   });
 }
@@ -76,7 +76,7 @@ run()
 // work.num1 = 1;
 // work.num2 = 0;
 
-// client.calculate(1, work, function(err, message) {
+// client.calculate(1, work, function (err, message) {
 //   if (err) {
 //     console.log("InvalidOperation " + err);
 //   } else {
@@ -88,10 +88,10 @@ run()
 // work.num1 = 15;
 // work.num2 = 10;
 
-// client.calculate(1, work, function(err, message) {
+// client.calculate(1, work, function (err, message) {
 //   console.log('15-10=' + message);
 
-//   client.getStruct(1, function(err, message){
+//   client.getStruct(1, function (err, message){
 //     console.log('Check log: ' + message.value);
 
 //     //close the connection once we're done

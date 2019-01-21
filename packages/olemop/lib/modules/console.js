@@ -10,23 +10,23 @@ var Constants = require('../util/constants');
 var starter = require('../master/starter');
 var exec = require('child_process').exec;
 
-module.exports = function(opts) {
+module.exports = function (opts) {
   return new Module(opts);
 };
 
 module.exports.moduleId = '__console__';
 
-var Module = function(opts) {
+var Module = function (opts) {
   opts = opts || {};
   this.app = opts.app;
   this.starter = opts.starter;
 };
 
-Module.prototype.monitorHandler = function(agent, msg, cb) {
+Module.prototype.monitorHandler = function (agent, msg, cb) {
   var serverId = agent.id;
   switch(msg.signal) {
     case 'stop':
-      if(agent.type === Constants.RESERVED.MASTER) {
+      if (agent.type === Constants.RESERVED.MASTER) {
         return;
       }
       this.app.stop(true);
@@ -46,7 +46,7 @@ Module.prototype.monitorHandler = function(agent, msg, cb) {
     case 'kill':
       utils.invokeCallback(cb, serverId);
       if (agent.type !== 'master') {
-        setTimeout(function() {
+        setTimeout(function () {
           process.exit(-1);
         }, Constants.TIME.TIME_WAIT_MONITOR_KILL);
       }
@@ -58,19 +58,19 @@ Module.prototype.monitorHandler = function(agent, msg, cb) {
       this.app.removeCrons([msg.cron]);
       break;
     case 'blacklist':
-      if(this.app.isFrontend()) {
+      if (this.app.isFrontend()) {
         var connector = this.app.components.__connector__;
         connector.blacklist = connector.blacklist.concat(msg.blacklist);
       }
       break;
     case 'restart':
-      if(agent.type === Constants.RESERVED.MASTER) {
+      if (agent.type === Constants.RESERVED.MASTER) {
         return;
       }
       var self = this;
       var server = this.app.get(Constants.RESERVED.CURRENT_SERVER);
       utils.invokeCallback(cb, server);
-      process.nextTick(function() {
+      process.nextTick(function () {
         self.app.stop(true);
       });
       break;
@@ -80,7 +80,7 @@ Module.prototype.monitorHandler = function(agent, msg, cb) {
   }
 };
 
-Module.prototype.clientHandler = function(agent, msg, cb) {
+Module.prototype.clientHandler = function (agent, msg, cb) {
   var app = this.app;
   switch(msg.signal) {
     case 'kill':
@@ -113,22 +113,22 @@ Module.prototype.clientHandler = function(agent, msg, cb) {
   }
 };
 
-var kill = function(app, agent, msg, cb) {
+var kill = function (app, agent, msg, cb) {
   var sid, record;
   var serverIds = [];
   var count = utils.size(agent.idMap);
-  var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_MASTER_KILL}, function(isTimeout) {
+  var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_MASTER_KILL}, function (isTimeout) {
     if (!isTimeout) {
       utils.invokeCallback(cb, null, {code: 'ok'});
     } else {
       utils.invokeCallback(cb, null, {code: 'remained', serverIds: serverIds});
     }
-    setTimeout(function() {
+    setTimeout(function () {
       process.exit(-1);
     }, Constants.TIME.TIME_WAIT_MONITOR_KILL);
   });
 
-  var agentRequestCallback = function(msg) {
+  var agentRequestCallback = function (msg) {
       for (var i = 0; i < serverIds.length; ++i) {
         if (serverIds[i] === msg) {
           serverIds.splice(i,1);
@@ -138,21 +138,21 @@ var kill = function(app, agent, msg, cb) {
       }
   };
 
-  for(sid in agent.idMap) {
+  for (sid in agent.idMap) {
     record = agent.idMap[sid];
     serverIds.push(record.id);
     agent.request(record.id, module.exports.moduleId, { signal: msg.signal }, agentRequestCallback);
   }
 };
 
-var stop = function(app, agent, msg, cb) {
+var stop = function (app, agent, msg, cb) {
   var serverIds = msg.ids;
-  if(!!serverIds.length) {
+  if (!!serverIds.length) {
     var servers = app.getServers();
     app.set(Constants.RESERVED.STOP_SERVERS, serverIds);
-    for(var i=0; i<serverIds.length; i++) {
+    for (var i=0; i<serverIds.length; i++) {
       var serverId = serverIds[i];
-      if(!servers[serverId]) {
+      if (!servers[serverId]) {
         utils.invokeCallback(cb, new Error('Cannot find the server to stop.'), null);
       } else {
         agent.notifyById(serverId, module.exports.moduleId, { signal: msg.signal });
@@ -162,58 +162,58 @@ var stop = function(app, agent, msg, cb) {
   } else {
     var servers = app.getServers();
     var serverIds = [];
-    for(var i in servers){
+    for (var i in servers){
         serverIds.push(i)
     }
     app.set(Constants.RESERVED.STOP_SERVERS, serverIds);
     agent.notifyAll(module.exports.moduleId, { signal: msg.signal });
-    setTimeout(function() {
+    setTimeout(function () {
       app.stop(true);
       utils.invokeCallback(cb, null, { status: "all" });
     }, Constants.TIME.TIME_WAIT_STOP);
   }
 };
 
-var restart = function(app, agent, msg, cb) {
+var restart = function (app, agent, msg, cb) {
   var successFlag;
   var successIds = [];
   var serverIds = msg.ids;
   var type = msg.type;
   var servers;
-  if(!serverIds.length && !!type) {
+  if (!serverIds.length && !!type) {
     servers = app.getServersByType(type);
-    if(!servers) {
+    if (!servers) {
       utils.invokeCallback(cb, new Error('restart servers with unknown server type: ' + type));
       return;
     }
-    for(var i=0; i<servers.length; i++) {
+    for (var i=0; i<servers.length; i++) {
       serverIds.push(servers[i].id);
     }
-  } else if(!serverIds.length) {
+  } else if (!serverIds.length) {
     servers = app.getServers();
-    for(var key in servers) {
+    for (var key in servers) {
       serverIds.push(key);
     }
-  }  
+  }
   var count = serverIds.length;
-  var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_COUNTDOWN}, function() {
-    if(!successFlag) {
+  var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_COUNTDOWN}, function () {
+    if (!successFlag) {
       utils.invokeCallback(cb, new Error('all servers start failed.'));
       return;
     }
     utils.invokeCallback(cb, null, utils.arrayDiff(serverIds, successIds));
   });
 
-  var request = function(id) {
-    return (function() {
-      agent.request(id, module.exports.moduleId, { signal: msg.signal }, function(msg) {
-        if(!utils.size(msg)) {
+  var request = function (id) {
+    return (function () {
+      agent.request(id, module.exports.moduleId, { signal: msg.signal }, function (msg) {
+        if (!utils.size(msg)) {
           latch.done();
           return;
         }
-        setTimeout(function() {
-         runServer(app, msg, function(err, status) {
-          if(!!err) {
+        setTimeout(function () {
+         runServer(app, msg, function (err, status) {
+          if (!!err) {
             logger.error('restart ' + id + ' failed.');
           } else {
             successIds.push(id);
@@ -226,31 +226,31 @@ var restart = function(app, agent, msg, cb) {
     })();
   };
 
-  for(var j=0; j<serverIds.length; j++) {
+  for (var j=0; j<serverIds.length; j++) {
     request(serverIds[j]);
   }
 };
 
-var list = function(agent, msg, cb) {
+var list = function (agent, msg, cb) {
   var sid, record;
   var serverInfo = {};
   var count = utils.size(agent.idMap);
-  var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_COUNTDOWN}, function() {
+  var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_COUNTDOWN}, function () {
     utils.invokeCallback(cb, null, { msg: serverInfo });
   });
 
-  var callback = function(msg) {
+  var callback = function (msg) {
     serverInfo[msg.serverId] = msg.body;
     latch.done();
   };
-  for(sid in agent.idMap) {
+  for (sid in agent.idMap) {
     record = agent.idMap[sid];
     agent.request(record.id, module.exports.moduleId, { signal: msg.signal }, callback);
   }
 };
 
-var add = function(app, msg, cb) {
-  if(checkCluster(msg)) {
+var add = function (app, msg, cb) {
+  if (checkCluster(msg)) {
     startCluster(app, msg, cb);
   } else {
     startServer(app, msg, cb);
@@ -258,31 +258,31 @@ var add = function(app, msg, cb) {
   reset(ServerInfo);
 };
 
-var addCron = function(app, agent, msg, cb) {
+var addCron = function (app, agent, msg, cb) {
   var cron = parseArgs(msg, CronInfo, cb);
   sendCronInfo(cron, agent, msg, CronInfo, cb);
 };
 
-var removeCron = function(app, agent, msg, cb) {
+var removeCron = function (app, agent, msg, cb) {
   var cron = parseArgs(msg, RemoveCron, cb);
   sendCronInfo(cron, agent, msg, RemoveCron, cb);
 };
 
-var blacklist = function(agent, msg, cb) {
+var blacklist = function (agent, msg, cb) {
   var ips = msg.args;
-  for(var i=0; i<ips.length; i++) {
-    if(!(new RegExp(/(\d+)\.(\d+)\.(\d+)\.(\d+)/g).test(ips[i]))) {
+  for (var i=0; i<ips.length; i++) {
+    if (!(new RegExp(/(\d+)\.(\d+)\.(\d+)\.(\d+)/g).test(ips[i]))) {
       utils.invokeCallback(cb, new Error('blacklist ip: ' + ips[i] + ' is error format.'), null);
       return;
     }
   }
   agent.notifyAll(module.exports.moduleId, { signal: msg.signal, blacklist: msg.args });
-  process.nextTick(function() {
+  process.nextTick(function () {
     cb(null, { status: "ok" });
   });
 };
 
-var checkPort = function(server, cb) {
+var checkPort = function (server, cb) {
   if (!server.port && !server.clientPort) {
     utils.invokeCallback(cb, 'leisure');
     return;
@@ -295,12 +295,12 @@ var checkPort = function(server, cb) {
     cmd = 'ssh ' + host + ' ' + cmd;
   }
 
-  exec(cmd + p, function(err, stdout, stderr) {
+  exec(cmd + p, function (err, stdout, stderr) {
     if (stdout || stderr) {
       utils.invokeCallback(cb, 'busy');
     } else {
       p = server.clientPort;
-      exec(cmd + p, function(err, stdout, stderr) {
+      exec(cmd + p, function (err, stdout, stderr) {
         if (stdout || stderr) {
           utils.invokeCallback(cb, 'busy');
         } else {
@@ -311,17 +311,17 @@ var checkPort = function(server, cb) {
   });
 };
 
-var parseArgs = function(msg, info, cb) {
+var parseArgs = function (msg, info, cb) {
   var rs = {};
   var args = msg.args;
-  for(var i =0; i<args.length; i++) {
-    if(args[i].indexOf('=') < 0) {
+  for (var i =0; i<args.length; i++) {
+    if (args[i].indexOf('=') < 0) {
       cb(new Error('Error server parameters format.'), null);
       return;
     }
     var pairs = args[i].split('=');
     var key = pairs[0];
-    if(!!info[key]) {
+    if (!!info[key]) {
       info[key] = 1;
     }
     rs[pairs[0]] = pairs[1];
@@ -329,14 +329,14 @@ var parseArgs = function(msg, info, cb) {
   return rs;
 };
 
-var sendCronInfo = function(cron, agent, msg, info, cb) {
-  if(isReady(info) && (cron.serverId || cron.serverType)) {
-    if(!!cron.serverId) {
+var sendCronInfo = function (cron, agent, msg, info, cb) {
+  if (isReady(info) && (cron.serverId || cron.serverType)) {
+    if (!!cron.serverId) {
       agent.notifyById(cron.serverId, module.exports.moduleId, { signal: msg.signal, cron: cron });
     } else {
       agent.notifyByType(cron.serverType, module.exports.moduleId, { signal: msg.signal, cron: cron });
     }
-    process.nextTick(function() {
+    process.nextTick(function () {
       cb(null, { status: "ok" });
     });
   } else {
@@ -345,62 +345,62 @@ var sendCronInfo = function(cron, agent, msg, info, cb) {
   reset(info);
 };
 
-var startServer = function(app, msg, cb) {
+var startServer = function (app, msg, cb) {
   var server = parseArgs(msg, ServerInfo, cb);
-  if(isReady(ServerInfo)) {
+  if (isReady(ServerInfo)) {
     runServer(app, server, cb);
   } else {
     cb(new Error('Miss necessary server parameters.'), null);
   }
 };
 
-var runServer = function(app, server, cb) {
-  checkPort(server, function(status) {
-    if(status === 'busy') {
+var runServer = function (app, server, cb) {
+  checkPort(server, function (status) {
+    if (status === 'busy') {
       utils.invokeCallback(cb, new Error('Port occupied already, check your server to add.'));
     } else {
-      starter.run(app, server, function(err) {
-        if(err) {
+      starter.run(app, server, function (err) {
+        if (err) {
           utils.invokeCallback(cb, new Error(err), null);
           return;
         }
       });
-      process.nextTick(function() {
+      process.nextTick(function () {
         utils.invokeCallback(cb, null, { status: "ok" });
       });
     }
   });
 };
 
-var startCluster = function(app, msg, cb) {
+var startCluster = function (app, msg, cb) {
   var serverMap = {};
   var fails = [];
   var successFlag;
   var serverInfo = parseArgs(msg, ClusterInfo, cb);
   utils.loadCluster(app, serverInfo, serverMap);
   var count = utils.size(serverMap);
-  var latch = countDownLatch.createCountDownLatch(count, function() {
-    if(!successFlag) {
+  var latch = countDownLatch.createCountDownLatch(count, function () {
+    if (!successFlag) {
       utils.invokeCallback(cb, new Error('all servers start failed.'));
       return;
     }
     utils.invokeCallback(cb, null, fails);
   });
 
-  var start = function(server) {
-    return (function() {
-      checkPort(server, function(status) {
-        if(status === 'busy') {
+  var start = function (server) {
+    return (function () {
+      checkPort(server, function (status) {
+        if (status === 'busy') {
           fails.push(server);
           latch.done();
         } else {
-          starter.run(app, server, function(err) {
-            if(err) {
+          starter.run(app, server, function (err) {
+            if (err) {
               fails.push(server);
               latch.done();
             }
           });
-          process.nextTick(function() {
+          process.nextTick(function () {
             successFlag = true;
             latch.done();
           });
@@ -408,34 +408,34 @@ var startCluster = function(app, msg, cb) {
       });
     })();
   };
-  for(var key in serverMap) {
+  for (var key in serverMap) {
     var server = serverMap[key];
     start(server);
   }
 };
 
-var checkCluster = function(msg) {
+var checkCluster = function (msg) {
   var flag = false;
   var args = msg.args;
-  for(var i=0; i < args.length; i++) {
-    if(utils.startsWith(args[i], Constants.RESERVED.CLUSTER_COUNT)) {
+  for (var i=0; i < args.length; i++) {
+    if (utils.startsWith(args[i], Constants.RESERVED.CLUSTER_COUNT)) {
       flag = true;
     }
   }
   return flag;
 };
 
-var isReady = function(info) {
-  for(var key in info) {
-    if(info[key]) {
+var isReady = function (info) {
+  for (var key in info) {
+    if (info[key]) {
       return false;
     }
   }
   return true;
 };
 
-var reset = function(info) {
-  for(var key in info) {
+var reset = function (info) {
+  for (var key in info) {
     info[key] = 0;
   }
 };

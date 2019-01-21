@@ -19,14 +19,14 @@ var EXPORTED_FIELDS = ['id', 'frontendId', 'uid', 'settings'];
  * @class
  * @constructor
  */
-var BackendSessionService = function(app) {
+var BackendSessionService = function (app) {
   this.app = app;
 };
 
 module.exports = BackendSessionService;
 
-BackendSessionService.prototype.create = function(opts) {
-  if(!opts) {
+BackendSessionService.prototype.create = function (opts) {
+  if (!opts) {
     throw new Error('opts should not be empty.');
   }
   return new BackendSession(opts, this);
@@ -41,7 +41,7 @@ BackendSessionService.prototype.create = function(opts) {
  *
  * @memberOf BackendSessionService
  */
-BackendSessionService.prototype.get = function(frontendId, sid, cb) {
+BackendSessionService.prototype.get = function (frontendId, sid, cb) {
   var namespace = 'sys';
   var service = 'sessionRemote';
   var method = 'getBackendSessionBySid';
@@ -59,7 +59,7 @@ BackendSessionService.prototype.get = function(frontendId, sid, cb) {
  *
  * @memberOf BackendSessionService
  */
-BackendSessionService.prototype.getByUid = function(frontendId, uid, cb) {
+BackendSessionService.prototype.getByUid = function (frontendId, uid, cb) {
   var namespace = 'sys';
   var service = 'sessionRemote';
   var method = 'getBackendSessionsByUid';
@@ -77,12 +77,12 @@ BackendSessionService.prototype.getByUid = function(frontendId, uid, cb) {
  *
  * @memberOf BackendSessionService
  */
-BackendSessionService.prototype.kickBySid = function(frontendId, sid, reason, cb) {
+BackendSessionService.prototype.kickBySid = function (frontendId, sid, reason, cb) {
   var namespace = 'sys';
   var service = 'sessionRemote';
   var method = 'kickBySid';
   var args = [sid];
-  if(typeof reason === 'function') {
+  if (typeof reason === 'function') {
     cb = reason;
   }else{
     args.push(reason);
@@ -100,12 +100,12 @@ BackendSessionService.prototype.kickBySid = function(frontendId, sid, reason, cb
  *
  * @memberOf BackendSessionService
  */
-BackendSessionService.prototype.kickByUid = function(frontendId, uid, reason, cb) {
+BackendSessionService.prototype.kickByUid = function (frontendId, uid, reason, cb) {
   var namespace = 'sys';
   var service = 'sessionRemote';
   var method = 'kickByUid';
   var args = [uid];
-  if(typeof reason === 'function') {
+  if (typeof reason === 'function') {
     cb = reason;
   }else{
     args.push(reason);
@@ -125,7 +125,7 @@ BackendSessionService.prototype.kickByUid = function(frontendId, uid, reason, cb
  * @memberOf BackendSessionService
  * @api private
  */
-BackendSessionService.prototype.bind = function(frontendId, sid, uid, cb) {
+BackendSessionService.prototype.bind = function (frontendId, sid, uid, cb) {
   var namespace = 'sys';
   var service = 'sessionRemote';
   var method = 'bind';
@@ -145,7 +145,7 @@ BackendSessionService.prototype.bind = function(frontendId, sid, uid, cb) {
  * @memberOf BackendSessionService
  * @api private
  */
-BackendSessionService.prototype.unbind = function(frontendId, sid, uid, cb) {
+BackendSessionService.prototype.unbind = function (frontendId, sid, uid, cb) {
   var namespace = 'sys';
   var service = 'sessionRemote';
   var method = 'unbind';
@@ -165,7 +165,7 @@ BackendSessionService.prototype.unbind = function(frontendId, sid, uid, cb) {
  * @memberOf BackendSessionService
  * @api private
  */
-BackendSessionService.prototype.push = function(frontendId, sid, key, value, cb) {
+BackendSessionService.prototype.push = function (frontendId, sid, key, value, cb) {
   var namespace = 'sys';
   var service = 'sessionRemote';
   var method = 'push';
@@ -184,7 +184,7 @@ BackendSessionService.prototype.push = function(frontendId, sid, key, value, cb)
  * @memberOf BackendSessionService
  * @api private
  */
-BackendSessionService.prototype.pushAll = function(frontendId, sid, settings, cb) {
+BackendSessionService.prototype.pushAll = function (frontendId, sid, settings, cb) {
   var namespace = 'sys';
   var service = 'sessionRemote';
   var method = 'pushAll';
@@ -192,7 +192,7 @@ BackendSessionService.prototype.pushAll = function(frontendId, sid, settings, cb
   rpcInvoke(this.app, frontendId, namespace, service, method, args, cb);
 };
 
-var rpcInvoke = function(app, sid, namespace, service, method, args, cb) {
+var rpcInvoke = function (app, sid, namespace, service, method, args, cb) {
   app.rpcInvoke(sid, {namespace: namespace, service: service, method: method, args: args}, cb);
 };
 
@@ -213,8 +213,8 @@ var rpcInvoke = function(app, sid, namespace, service, method, args, cb) {
  * @class
  * @constructor
  */
-var BackendSession = function(opts, service) {
-  for(var f in opts) {
+var BackendSession = function (opts, service) {
+  for (var f in opts) {
     this[f] = opts[f];
   }
   this.__sessionService__ = service;
@@ -229,10 +229,10 @@ var BackendSession = function(opts, service) {
  *
  * @memberOf BackendSession
  */
-BackendSession.prototype.bind = function(uid, cb) {
+BackendSession.prototype.bind = function (uid, cb) {
   var self = this;
-  this.__sessionService__.bind(this.frontendId, this.id, uid, function(err) {
-    if(!err) {
+  this.__sessionService__.bind(this.frontendId, this.id, uid, function (err) {
+    if (!err) {
       self.uid = uid;
     }
     utils.invokeCallback(cb, err);
@@ -248,10 +248,10 @@ BackendSession.prototype.bind = function(uid, cb) {
  *
  * @memberOf BackendSession
  */
-BackendSession.prototype.unbind = function(uid, cb) {
+BackendSession.prototype.unbind = function (uid, cb) {
   var self = this;
-  this.__sessionService__.unbind(this.frontendId, this.id, uid, function(err) {
-    if(!err) {
+  this.__sessionService__.unbind(this.frontendId, this.id, uid, function (err) {
+    if (!err) {
       self.uid = null;
     }
     utils.invokeCallback(cb, err);
@@ -264,7 +264,7 @@ BackendSession.prototype.unbind = function(uid, cb) {
  * @param {String} key   key
  * @param {Object} value value
  */
-BackendSession.prototype.set = function(key, value) {
+BackendSession.prototype.set = function (key, value) {
   this.settings[key] = value;
 };
 
@@ -274,7 +274,7 @@ BackendSession.prototype.set = function(key, value) {
  * @param  {String} key key
  * @return {Object}     value
  */
-BackendSession.prototype.get = function(key) {
+BackendSession.prototype.get = function (key) {
   return this.settings[key];
 };
 
@@ -284,7 +284,7 @@ BackendSession.prototype.get = function(key) {
  * @param  {String}   key key
  * @param  {Function} cb  callback function
  */
-BackendSession.prototype.push = function(key, cb) {
+BackendSession.prototype.push = function (key, cb) {
   this.__sessionService__.push(this.frontendId, this.id, key, this.get(key), cb);
 };
 
@@ -293,7 +293,7 @@ BackendSession.prototype.push = function(key, cb) {
  *
  * @param  {Function} cb callback function
  */
-BackendSession.prototype.pushAll = function(cb) {
+BackendSession.prototype.pushAll = function (cb) {
   this.__sessionService__.pushAll(this.frontendId, this.id, this.settings, cb);
 };
 
@@ -302,28 +302,28 @@ BackendSession.prototype.pushAll = function(cb) {
  *
  * @api private
  */
-BackendSession.prototype.export = function() {
+BackendSession.prototype.export = function () {
   var res = {};
-  EXPORTED_FIELDS.forEach(function(field) {
+  EXPORTED_FIELDS.forEach(function (field) {
     res[field] = this[field];
   });
   return res;
 };
 
-var BackendSessionCB = function(service, cb, err, sinfo) {
-  if(err) {
+var BackendSessionCB = function (service, cb, err, sinfo) {
+  if (err) {
     utils.invokeCallback(cb, err);
     return;
   }
 
-  if(!sinfo) {
+  if (!sinfo) {
     utils.invokeCallback(cb);
     return;
   }
   var sessions = [];
-  if(Array.isArray(sinfo)){
+  if (Array.isArray(sinfo)){
       // #getByUid
-      for(var i = 0,k = sinfo.length;i<k;i++){
+      for (var i = 0,k = sinfo.length;i<k;i++){
           sessions.push(service.create(sinfo[i]));
       }
   }

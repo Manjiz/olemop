@@ -22,7 +22,7 @@ module.exports.types = {
 
 /* Mnemonic => Command code */
 module.exports.codes = {};
-for(var k in module.exports.types) {
+for (var k in module.exports.types) {
   var v = module.exports.types[k];
   module.exports.codes[v] = k;
 }

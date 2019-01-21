@@ -2,7 +2,7 @@ var logger = require('@olemop/logger').getLogger('olemop-rpc', 'failprocess');
 var constants = require('../util/constants');
 var utils = require('../util/utils');
 
-module.exports = function(code, tracer, serverId, msg, opts) {
+module.exports = function (code, tracer, serverId, msg, opts) {
 	var cb = tracer && tracer.cb;
 	var mode = opts.failMode;
 	var FAIL_MODE = constants.FAIL_MODE;
@@ -45,7 +45,7 @@ module.exports = function(code, tracer, serverId, msg, opts) {
  *
  * @api private
  */
-var failover = function(code, tracer, serverId, msg, opts, cb) {
+var failover = function (code, tracer, serverId, msg, opts, cb) {
 	var servers;
 	var self = this;
 	var counter = 0;
@@ -83,7 +83,7 @@ var failover = function(code, tracer, serverId, msg, opts, cb) {
  *
  * @api private
  */
-var failsafe = function(code, tracer, serverId, msg, opts, cb) {
+var failsafe = function (code, tracer, serverId, msg, opts, cb) {
 	var self = this;
 	var retryTimes = opts.retryTimes || constants.DEFAULT_PARAM.FAILSAFE_RETRIES;
 	var retryConnectTime = opts.retryConnectTime || constants.DEFAULT_PARAM.FAILSAFE_CONNECT_TIME;
@@ -100,7 +100,7 @@ var failsafe = function(code, tracer, serverId, msg, opts, cb) {
 			break;
 		case constants.RPC_ERROR.FAIL_CONNECT_SERVER:
 			if (tracer.retryTimes <= retryTimes) {
-				setTimeout(function() {
+				setTimeout(function () {
 					self.connect(tracer, serverId, cb);
 				}, retryConnectTime * tracer.retryTimes);
 			} else {
@@ -110,7 +110,7 @@ var failsafe = function(code, tracer, serverId, msg, opts, cb) {
 		case constants.RPC_ERROR.FAIL_FIND_MAILBOX:
 		case constants.RPC_ERROR.FAIL_SEND_MESSAGE:
 			if (tracer.retryTimes <= retryTimes) {
-				setTimeout(function() {
+				setTimeout(function () {
 					self.dispatch.call(self, tracer, serverId, msg, opts, cb);
 				}, retryConnectTime * tracer.retryTimes);
 			} else {
@@ -137,7 +137,7 @@ var failsafe = function(code, tracer, serverId, msg, opts, cb) {
  *
  * @api private
  */
-var failback = function(code, tracer, serverId, msg, opts, cb) {
+var failback = function (code, tracer, serverId, msg, opts, cb) {
 	// todo record message in background and send the message at timing
 };
 
@@ -153,7 +153,7 @@ var failback = function(code, tracer, serverId, msg, opts, cb) {
  *
  * @api private
  */
-var failfast = function(code, tracer, serverId, msg, opts, cb) {
+var failfast = function (code, tracer, serverId, msg, opts, cb) {
 	logger.error('rpc failed with error, remote server: %s, msg: %j, error code: %s', serverId, msg, code);
 	cb && cb(new Error('rpc failed with error code: ' + code));
 };

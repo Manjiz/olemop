@@ -9,14 +9,14 @@ var ST_CLOSED = 2;
 /**
  * websocket protocol processor
  */
-var Processor = function() {
+var Processor = function () {
   EventEmitter.call(this);
   this.httpServer = new HttpServer();
 
   var self = this;
   this.wsServer = new WebSocketServer({server: this.httpServer});
 
-  this.wsServer.on('connection', function(socket) {
+  this.wsServer.on('connection', function (socket) {
     // emit socket to outside
     self.emit('connection', socket);
   });
@@ -27,12 +27,12 @@ util.inherits(Processor, EventEmitter);
 
 module.exports = Processor;
 
-Processor.prototype.add = function(socket, data) {
-  if(this.state !== ST_STARTED) {
+Processor.prototype.add = function (socket, data) {
+  if (this.state !== ST_STARTED) {
     return;
   }
   this.httpServer.emit('connection', socket);
-  if(typeof socket.ondata === 'function') {
+  if (typeof socket.ondata === 'function') {
     // compatible with stream2
     socket.ondata(data, 0, data.length);
   } else {
@@ -41,8 +41,8 @@ Processor.prototype.add = function(socket, data) {
   }
 };
 
-Processor.prototype.close = function() {
-  if(this.state !== ST_STARTED) {
+Processor.prototype.close = function () {
+  if (this.state !== ST_STARTED) {
     return;
   }
   this.state = ST_CLOSED;

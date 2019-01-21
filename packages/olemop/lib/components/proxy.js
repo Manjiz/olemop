@@ -19,7 +19,7 @@ var logger = require('@olemop/logger').getLogger('olemop', __filename);
  *                      opts.mailBoxFactory: (optional) mail box factory instance.
  * @return {Object}     component instance
  */
-module.exports = function(app, opts) {
+module.exports = function (app, opts) {
   opts = opts || {};
   // proxy default config
   // cacheMsg is deprecated, just for compatibility here.
@@ -42,7 +42,7 @@ module.exports = function(app, opts) {
  * @param {Object} app  current application context
  * @param {Object} opts construct parameters
  */
-var Component = function(app, opts) {
+var Component = function (app, opts) {
   this.app = app;
   this.opts = opts;
   this.client = genRpcClient(this.app, opts);
@@ -61,21 +61,21 @@ pro.name = '__proxy__';
  * @param {Function} cb
  * @return {Void}
  */
-pro.start = function(cb) {
-  if(this.opts.enableRpcLog) {
+pro.start = function (cb) {
+  if (this.opts.enableRpcLog) {
     logger.warn('enableRpcLog is deprecated in 0.8.0, please use app.rpcFilter(pomelo.rpcFilters.rpcLog())');
   }
   var rpcBefores = this.app.get(Constants.KEYWORDS.RPC_BEFORE_FILTER);
   var rpcAfters = this.app.get(Constants.KEYWORDS.RPC_AFTER_FILTER);
   var rpcErrorHandler = this.app.get(Constants.RESERVED.RPC_ERROR_HANDLER);
 
-  if(!!rpcBefores) {
+  if (!!rpcBefores) {
     this.client.before(rpcBefores);
   }
-  if(!!rpcAfters) {
+  if (!!rpcAfters) {
     this.client.after(rpcAfters);
   }
-  if(!!rpcErrorHandler) {
+  if (!!rpcErrorHandler) {
     this.client.setErrorHandler(rpcErrorHandler);
   }
   process.nextTick(cb);
@@ -87,12 +87,12 @@ pro.start = function(cb) {
  * @param {Function} cb
  * @return {Void}
  */
-pro.afterStart = function(cb) {
+pro.afterStart = function (cb) {
   var self = this;
-  this.app.__defineGetter__('rpc', function() {
+  this.app.__defineGetter__('rpc', function () {
     return self.client.proxies.user;
   });
-  this.app.__defineGetter__('sysrpc', function() {
+  this.app.__defineGetter__('sysrpc', function () {
     return self.client.proxies.sys;
   });
   this.app.set('rpcInvoke', this.client.rpcInvoke.bind(this.client), true);
@@ -104,7 +104,7 @@ pro.afterStart = function(cb) {
  *
  * @param {Array} servers server info list, {id, serverType, host, port}
  */
-pro.addServers = function(servers) {
+pro.addServers = function (servers) {
   if (!servers || !servers.length) {
     return;
   }
@@ -118,7 +118,7 @@ pro.addServers = function(servers) {
  *
  * @param  {Array} ids server id list
  */
-pro.removeServers = function(ids) {
+pro.removeServers = function (ids) {
   this.client.removeServers(ids);
 };
 
@@ -127,7 +127,7 @@ pro.removeServers = function(ids) {
  *
  * @param  {Array} ids server id list
  */
-pro.replaceServers = function(servers) {
+pro.replaceServers = function (servers) {
   if (!servers || !servers.length) {
     return;
   }
@@ -146,7 +146,7 @@ pro.replaceServers = function(servers) {
  * @param {Object}   msg      rpc message: {serverType: serverType, service: serviceName, method: methodName, args: arguments}
  * @param {Function} cb      callback function
  */
-pro.rpcInvoke = function(serverId, msg, cb) {
+pro.rpcInvoke = function (serverId, msg, cb) {
   this.client.rpcInvoke(serverId, msg, cb);
 };
 
@@ -157,10 +157,10 @@ pro.rpcInvoke = function(serverId, msg, cb) {
  * @param {Object} opts contructor parameters for rpc client
  * @return {Object} rpc client
  */
-var genRpcClient = function(app, opts) {
+var genRpcClient = function (app, opts) {
   opts.context = app;
   opts.routeContext = app;
-  if(!!opts.rpcClient) {
+  if (!!opts.rpcClient) {
     return opts.rpcClient.create(opts);
   } else {
     return Client.create(opts);
@@ -174,7 +174,7 @@ var genRpcClient = function(app, opts) {
  * @param  {Object} app    application context
  * @param  {Array} sinfos server info list
  */
-var genProxies = function(client, app, sinfos) {
+var genProxies = function (client, app, sinfos) {
   var item;
   for (var i = 0, l = sinfos.length; i < l; i++) {
     item = sinfos[i];
@@ -192,7 +192,7 @@ var genProxies = function(client, app, sinfos) {
  * @param  {Object}  sinfo  server info
  * @return {Boolean}        true or false
  */
-var hasProxy = function(client, sinfo) {
+var hasProxy = function (client, sinfo) {
   var proxy = client.proxies;
   return !!proxy.sys && !! proxy.sys[sinfo.serverType];
 };
@@ -205,7 +205,7 @@ var hasProxy = function(client, sinfo) {
  * @param {Object} sinfo server info, format: {id, serverType, host, port}
  * @return {Array}     remote path record array
  */
-var getProxyRecords = function(app, sinfo) {
+var getProxyRecords = function (app, sinfo) {
   var records = [],
     appBase = app.getBase(),
     record;
@@ -228,8 +228,8 @@ var getProxyRecords = function(app, sinfo) {
   return records;
 };
 
-var genRouteFun = function() {
-  return function(session, msg, app, cb) {
+var genRouteFun = function () {
+  return function (session, msg, app, cb) {
     var routes = app.get('__routes__');
 
     if (!routes) {
@@ -248,7 +248,7 @@ var genRouteFun = function() {
   };
 };
 
-var defaultRoute = function(session, msg, app, cb) {
+var defaultRoute = function (session, msg, app, cb) {
   var list = app.getServersByType(msg.serverType);
   if (!list || !list.length) {
     cb(new Error('can not find server info for type:' + msg.serverType));

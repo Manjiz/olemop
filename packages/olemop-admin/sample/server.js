@@ -12,6 +12,6 @@ var masterConsole = MasterConsole.createMasterConsole(opts);
 var module = TestModule();
 masterConsole.register(TestModule.moduleId, module);
 
-masterConsole.start(function() {
+masterConsole.start(function () {
 
 })

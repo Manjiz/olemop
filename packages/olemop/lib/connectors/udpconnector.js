@@ -15,7 +15,7 @@ var EventEmitter = require('events').EventEmitter;
 
 var curId = 1;
 
-var Connector = function(port, host, opts) {
+var Connector = function (port, host, opts) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts);
   }
@@ -24,7 +24,7 @@ var Connector = function(port, host, opts) {
   this.opts = opts || {};
   this.type = opts.udpType || 'udp4';
   this.handshake = new Handshake(opts);
-  if(!opts.heartbeat) {
+  if (!opts.heartbeat) {
     opts.heartbeat = Constants.TIME.DEFAULT_UDP_HEARTBEAT_TIME;
     opts.timeout = Constants.TIME.DEFAULT_UDP_HEARTBEAT_TIMEOUT;
   }
@@ -38,12 +38,12 @@ util.inherits(Connector, EventEmitter);
 
 module.exports = Connector;
 
-Connector.prototype.start = function(cb) {
+Connector.prototype.start = function (cb) {
   var self = this;
   this.tcpServer = net.createServer();
-  this.socket = dgram.createSocket(this.type, function(msg, peer) {
+  this.socket = dgram.createSocket(this.type, function (msg, peer) {
     var key = genKey(peer);
-    if(!self.clients[key]) {
+    if (!self.clients[key]) {
       var udpsocket = new UdpSocket(curId++, self.socket, peer);
       self.clients[key] = udpsocket;
 
@@ -56,7 +56,7 @@ Connector.prototype.start = function(cb) {
       udpsocket.on('disconnect',
       self.heartbeat.clear.bind(self.heartbeat, udpsocket.id));
 
-      udpsocket.on('disconnect', function() {
+      udpsocket.on('disconnect', function () {
         delete self.clients[genKey(udpsocket.peer)];
       });
 
@@ -66,14 +66,14 @@ Connector.prototype.start = function(cb) {
     }
   });
 
-  this.socket.on('message', function(data, peer) {
+  this.socket.on('message', function (data, peer) {
     var socket = self.clients[genKey(peer)];
-    if(!!socket) {
+    if (!!socket) {
       socket.emit('package', data);
     }
   });
 
-  this.socket.on('error', function(err) {
+  this.socket.on('error', function (err) {
     logger.error('udp socket encounters with error: %j', err.stack);
     return;
   });
@@ -87,11 +87,11 @@ Connector.decode = Connector.prototype.decode = coder.decode;
 
 Connector.encode = Connector.prototype.encode = coder.encode;
 
-Connector.prototype.stop = function(force, cb) {
+Connector.prototype.stop = function (force, cb) {
   this.socket.close();
   process.nextTick(cb);
 };
 
-var genKey = function(peer) {
+var genKey = function (peer) {
   return peer.address + ":" + peer.port;
 };

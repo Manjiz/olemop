@@ -12,7 +12,7 @@ var curId = 1;
  * Connector that manager low level connection and protocol bewteen server and client.
  * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
  */
-var Connector = function(port, host, opts) {
+var Connector = function (port, host, opts) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts);
   }
@@ -30,30 +30,30 @@ module.exports = Connector;
 /**
  * Start connector to listen the specified port
  */
-Connector.prototype.start = function(cb) {
+Connector.prototype.start = function (cb) {
   var self = this;
   this.mqttServer = mqtt.createServer();
-  this.mqttServer.on('client', function(client) {
-		client.on('error', function(err) {
+  this.mqttServer.on('client', function (client) {
+		client.on('error', function (err) {
 			client.stream.destroy();
 		});
-		
-    client.on('close', function() {
+
+    client.on('close', function () {
 			client.stream.destroy();
 		});
-		
-    client.on('disconnect', function(packet) {
+
+    client.on('disconnect', function (packet) {
 			client.stream.destroy();
 		});
-    
-    if(self.opts.disconnectOnTimeout) {
+
+    if (self.opts.disconnectOnTimeout) {
       var timeout = self.opts.timeout * 1000 || constants.TIME.DEFAULT_MQTT_HEARTBEAT_TIMEOUT;
-      client.stream.setTimeout(timeout,function() {
+      client.stream.setTimeout(timeout,function () {
         client.emit('close');
       });
     }
-    
-    client.on('connect', function(packet) {
+
+    client.on('connect', function (packet) {
       client.connack({returnCode: 0});
       var mqttsocket = new MQTTSocket(curId++, client, self.adaptor);
       self.emit('connection', mqttsocket);
@@ -65,28 +65,28 @@ Connector.prototype.start = function(cb) {
   process.nextTick(cb);
 };
 
-Connector.prototype.stop = function() {
+Connector.prototype.stop = function () {
 	this.mqttServer.close();
 	process.exit(0);
 };
 
-var composeResponse = function(msgId, route, msgBody) {
+var composeResponse = function (msgId, route, msgBody) {
   return {
     id: msgId,
     body: msgBody
   };
 };
 
-var composePush = function(route, msgBody) {
+var composePush = function (route, msgBody) {
   var msg = generate.publish(msgBody);
-  if(!msg) {
+  if (!msg) {
     logger.error('invalid mqtt publish message: %j', msgBody);
   }
 
   return msg;
 };
 
-Connector.prototype.encode = function(reqId, route, msgBody) {
+Connector.prototype.encode = function (reqId, route, msgBody) {
 	if (!!reqId) {
 		return composeResponse(reqId, route, msgBody);
 	} else {
@@ -94,6 +94,6 @@ Connector.prototype.encode = function(reqId, route, msgBody) {
 	}
 };
 
-Connector.prototype.close = function() {
+Connector.prototype.close = function () {
   this.mqttServer.close();
 };

@@ -17,7 +17,7 @@ ttypes.Operation = {
   'MULTIPLY' : 3,
   'DIVIDE' : 4
 };
-Work = module.exports.Work = function(args) {
+Work = module.exports.Work = function (args) {
   this.num1 = 0;
   this.num2 = null;
   this.op = null;
@@ -38,7 +38,7 @@ Work = module.exports.Work = function(args) {
   }
 };
 Work.prototype = {};
-Work.prototype.read = function(input) {
+Work.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -88,7 +88,7 @@ Work.prototype.read = function(input) {
   return;
 };
 
-Work.prototype.write = function(output) {
+Work.prototype.write = function (output) {
   output.writeStructBegin('Work');
   if (this.num1 !== null && this.num1 !== undefined) {
     output.writeFieldBegin('num1', Thrift.Type.I32, 1);
@@ -115,7 +115,7 @@ Work.prototype.write = function(output) {
   return;
 };
 
-InvalidOperation = module.exports.InvalidOperation = function(args) {
+InvalidOperation = module.exports.InvalidOperation = function (args) {
   Thrift.TException.call(this, "InvalidOperation")
   this.name = "InvalidOperation"
   this.whatOp = null;
@@ -131,7 +131,7 @@ InvalidOperation = module.exports.InvalidOperation = function(args) {
 };
 Thrift.inherits(InvalidOperation, Thrift.TException);
 InvalidOperation.prototype.name = 'InvalidOperation';
-InvalidOperation.prototype.read = function(input) {
+InvalidOperation.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -167,7 +167,7 @@ InvalidOperation.prototype.read = function(input) {
   return;
 };
 
-InvalidOperation.prototype.write = function(output) {
+InvalidOperation.prototype.write = function (output) {
   output.writeStructBegin('InvalidOperation');
   if (this.whatOp !== null && this.whatOp !== undefined) {
     output.writeFieldBegin('whatOp', Thrift.Type.I32, 1);

@@ -2,10 +2,10 @@ var EventEmitter = require('events').EventEmitter;
 var utils = require('../util/utils');
 var util = require('util');
 
-var Dispatcher = function(services) {
+var Dispatcher = function (services) {
   EventEmitter.call(this);
   var self = this;
-  this.on('reload', function(services) {
+  this.on('reload', function (services) {
     self.services = services;
   });
   this.services = services;
@@ -24,7 +24,7 @@ var pro = Dispatcher.prototype;
  * @param services services object collection, such as {service1: serviceObj1, service2: serviceObj2}
  * @param cb(...) callback function that should be invoked as soon as the rpc finished
  */
-pro.route = function(tracer, msg, cb) {
+pro.route = function (tracer, msg, cb) {
   tracer && tracer.info('server', __filename, 'route', 'route messsage to appropriate service object');
   var namespace = this.services[msg.namespace];
   if (!namespace) {

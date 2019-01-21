@@ -13,12 +13,12 @@ var ST_CLOSED = 3;
 /**
  * Socket class that wraps socket and websocket to provide unified interface for up level.
  */
-var Socket = function(id, socket) {
+var Socket = function (id, socket) {
   EventEmitter.call(this);
   this.id = id;
   this.socket = socket;
 
-  if(!socket._socket) {
+  if (!socket._socket) {
     this.remoteAddress = {
       ip: socket.address().address,
       port: socket.address().port
@@ -35,8 +35,8 @@ var Socket = function(id, socket) {
   socket.once('close', this.emit.bind(this, 'disconnect'));
   socket.on('error', this.emit.bind(this, 'error'));
 
-  socket.on('message', function(msg) {
-    if(msg) {
+  socket.on('message', function (msg) {
+    if (msg) {
       msg = Package.decode(msg);
       handler(self, msg);
     }
@@ -56,14 +56,14 @@ module.exports = Socket;
  *
  * @api private
  */
-Socket.prototype.sendRaw = function(msg) {
-  if(this.state !== ST_WORKING) {
+Socket.prototype.sendRaw = function (msg) {
+  if (this.state !== ST_WORKING) {
     return;
   }
   var self = this;
 
-  this.socket.send(msg, {binary: true}, function(err) {
-    if(!!err) {
+  this.socket.send(msg, {binary: true}, function (err) {
+    if (!!err) {
       logger.error('websocket send binary data failed: %j', err.stack);
       return;
     }
@@ -75,10 +75,10 @@ Socket.prototype.sendRaw = function(msg) {
  *
  * @param  {Buffer} msg byte data
  */
-Socket.prototype.send = function(msg) {
-  if(msg instanceof String) {
+Socket.prototype.send = function (msg) {
+  if (msg instanceof String) {
     msg = new Buffer(msg);
-  } else if(!(msg instanceof Buffer)) {
+  } else if (!(msg instanceof Buffer)) {
     msg = new Buffer(JSON.stringify(msg));
   }
   this.sendRaw(Package.encode(Package.TYPE_DATA, msg));
@@ -89,9 +89,9 @@ Socket.prototype.send = function(msg) {
  *
  * @param  {Buffer} msgs byte data
  */
-Socket.prototype.sendBatch = function(msgs) {
+Socket.prototype.sendBatch = function (msgs) {
   var rs = [];
-  for(var i=0; i<msgs.length; i++) {
+  for (var i=0; i<msgs.length; i++) {
     var src = Package.encode(Package.TYPE_DATA, msgs[i]);
     rs.push(src);
   }
@@ -103,8 +103,8 @@ Socket.prototype.sendBatch = function(msgs) {
  *
  * @api private
  */
-Socket.prototype.sendForce = function(msg) {
-  if(this.state === ST_CLOSED) {
+Socket.prototype.sendForce = function (msg) {
+  if (this.state === ST_CLOSED) {
     return;
   }
   this.socket.send(msg, {binary: true});
@@ -115,8 +115,8 @@ Socket.prototype.sendForce = function(msg) {
  *
  * @api private
  */
-Socket.prototype.handshakeResponse = function(resp) {
-  if(this.state !== ST_INITED) {
+Socket.prototype.handshakeResponse = function (resp) {
+  if (this.state !== ST_INITED) {
     return;
   }
 
@@ -129,8 +129,8 @@ Socket.prototype.handshakeResponse = function(resp) {
  *
  * @api private
  */
-Socket.prototype.disconnect = function() {
-  if(this.state === ST_CLOSED) {
+Socket.prototype.disconnect = function () {
+  if (this.state === ST_CLOSED) {
     return;
   }
 

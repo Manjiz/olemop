@@ -11,13 +11,13 @@ var fs = require('fs');
 var util = require('util');
 var path = require('path');
 
-module.exports = function(opts) {
+module.exports = function (opts) {
     return new Module(opts);
 };
 
 module.exports.moduleId = "scripts";
 
-var Module = function(opts) {
+var Module = function (opts) {
     this.app = opts.app;
     this.root = opts.path;
     this.commands = {
@@ -28,7 +28,7 @@ var Module = function(opts) {
     };
 };
 
-Module.prototype.monitorHandler = function(agent, msg, cb) {
+Module.prototype.monitorHandler = function (agent, msg, cb) {
     var context = {
         app: this.app,
         require: require,
@@ -53,7 +53,7 @@ Module.prototype.monitorHandler = function(agent, msg, cb) {
     //cb(null, vm.runInContext(msg.script, context));
 };
 
-Module.prototype.clientHandler = function(agent, msg, cb) {
+Module.prototype.clientHandler = function (agent, msg, cb) {
     var fun = this.commands[msg.command];
     if (!fun || typeof fun !== 'function') {
         cb('unknown command:' + msg.command);
@@ -66,7 +66,7 @@ Module.prototype.clientHandler = function(agent, msg, cb) {
 /**
  * List server id and scripts file name
  */
-var list = function(scriptModule, agent, msg, cb) {
+var list = function (scriptModule, agent, msg, cb) {
     var servers = [];
     var scripts = [];
     var idMap = agent.idMap;
@@ -75,7 +75,7 @@ var list = function(scriptModule, agent, msg, cb) {
         servers.push(sid);
     }
 
-    fs.readdir(scriptModule.root, function(err, filenames) {
+    fs.readdir(scriptModule.root, function (err, filenames) {
         if (err) {
             filenames = [];
         }
@@ -93,14 +93,14 @@ var list = function(scriptModule, agent, msg, cb) {
 /**
  * Get the content of the script file
  */
-var get = function(scriptModule, agent, msg, cb) {
+var get = function (scriptModule, agent, msg, cb) {
     var filename = msg.filename;
     if (!filename) {
         cb('empty filename');
         return;
     }
 
-    fs.readFile(path.join(scriptModule.root, filename), 'utf-8', function(err, data) {
+    fs.readFile(path.join(scriptModule.root, filename), 'utf-8', function (err, data) {
         if (err) {
             logger.error('fail to read script file:' + filename + ', ' + err.stack);
             cb('fail to read script with name:' + filename);
@@ -113,10 +113,10 @@ var get = function(scriptModule, agent, msg, cb) {
 /**
  * Save a script file that posted from admin console
  */
-var save = function(scriptModule, agent, msg, cb) {
+var save = function (scriptModule, agent, msg, cb) {
     var filepath = path.join(scriptModule.root, msg.filename);
 
-    fs.writeFile(filepath, msg.body, function(err) {
+    fs.writeFile(filepath, msg.body, function (err) {
         if (err) {
             logger.error('fail to write script file:' + msg.filename + ', ' + err.stack);
             cb('fail to write script file:' + msg.filename);
@@ -130,8 +130,8 @@ var save = function(scriptModule, agent, msg, cb) {
 /**
  * Run the script on the specified server
  */
-var run = function(scriptModule, agent, msg, cb) {
-    agent.request(msg.serverId, module.exports.moduleId, msg, function(err, res) {
+var run = function (scriptModule, agent, msg, cb) {
+    agent.request(msg.serverId, module.exports.moduleId, msg, function (err, res) {
         if (err) {
             logger.error('fail to run script for ' + err.stack);
             return;

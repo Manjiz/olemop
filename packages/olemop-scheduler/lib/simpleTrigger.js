@@ -6,7 +6,7 @@ var SKIP_OLD_JOB = false;
 /**
  * The constructor of simple trigger
  */
-var SimpleTrigger = function(trigger, job){
+var SimpleTrigger = function (trigger, job){
   this.nextTime = (!!trigger.start)?trigger.start:Date.now();
 
   //The rec
@@ -23,7 +23,7 @@ var pro = SimpleTrigger.prototype;
 /**
  * Get the current excuteTime of rigger
  */
-pro.excuteTime = function(){
+pro.excuteTime = function (){
   return this.nextTime;
 };
 
@@ -31,15 +31,15 @@ pro.excuteTime = function(){
  * Get the next excuteTime of the trigger, and set the trigger's excuteTime
  * @return Next excute time
  */
-pro.nextExcuteTime = function(){
+pro.nextExcuteTime = function (){
   var period = this.period;
 
-  if((this.count > 0 && this.count <= this.job.runTime) || period <= 0)
+  if ((this.count > 0 && this.count <= this.job.runTime) || period <= 0)
     return null;
 
   this.nextTime += period;
 
-  if(SKIP_OLD_JOB && this.nextTime < Date.now()){
+  if (SKIP_OLD_JOB && this.nextTime < Date.now()){
     this.nextTime += Math.floor((Date.now()-this.nextTime)/period) * period;
   }
 

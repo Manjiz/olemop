@@ -7,7 +7,7 @@ var InBuffer = bBuffer.inBuffer;
 
 var Coder = {};
 
-Coder.encodeClient = function(id, msg, servicesMap) {
+Coder.encodeClient = function (id, msg, servicesMap) {
 	// logger.debug('[encodeClient] id %s msg %j', id, msg);
 	var outBuf = new OutBuffer();
 	outBuf.writeUInt(id);
@@ -28,7 +28,7 @@ Coder.encodeClient = function(id, msg, servicesMap) {
 	return outBuf.getBuffer();
 }
 
-Coder.encodeServer = function(id, args) {
+Coder.encodeServer = function (id, args) {
 	// logger.debug('[encodeServer] id %s args %j', id, args);
 	var outBuf = new OutBuffer();
 	outBuf.writeUInt(id);
@@ -36,7 +36,7 @@ Coder.encodeServer = function(id, args) {
 	return outBuf.getBuffer();
 }
 
-Coder.decodeServer = function(buf, servicesMap) {
+Coder.decodeServer = function (buf, servicesMap) {
 	var inBuf = new InBuffer(buf);
 	var id = inBuf.readUInt();
 	var namespace = servicesMap[3][inBuf.readShort()];
@@ -61,7 +61,7 @@ Coder.decodeServer = function(buf, servicesMap) {
 	}
 }
 
-Coder.decodeClient = function(buf) {
+Coder.decodeClient = function (buf) {
 	var inBuf = new InBuffer(buf);
 	var id = inBuf.readUInt();
 	var resp = inBuf.readObject();

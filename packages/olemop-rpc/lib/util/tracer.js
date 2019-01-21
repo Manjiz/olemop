@@ -1,6 +1,6 @@
 var uuid = require('node-uuid');
 
-var Tracer = function(logger, enabledRpcLog, source, remote, msg, id, seq) {
+var Tracer = function (logger, enabledRpcLog, source, remote, msg, id, seq) {
   this.isEnabled = enabledRpcLog;
   if (!enabledRpcLog) {
     return;
@@ -15,7 +15,7 @@ var Tracer = function(logger, enabledRpcLog, source, remote, msg, id, seq) {
 
 module.exports = Tracer;
 
-Tracer.prototype.getLogger = function(role, module, method, des) {
+Tracer.prototype.getLogger = function (role, module, method, des) {
   return {
     traceId: this.id,
     seq: this.seq++,
@@ -30,28 +30,28 @@ Tracer.prototype.getLogger = function(role, module, method, des) {
   };
 };
 
-Tracer.prototype.info = function(role, module, method, des) {
+Tracer.prototype.info = function (role, module, method, des) {
   if (this.isEnabled) {
     this.logger.info(JSON.stringify(this.getLogger(role, module, method, des)));
   }
   return;
 };
 
-Tracer.prototype.debug = function(role, module, method, des) {
+Tracer.prototype.debug = function (role, module, method, des) {
   if (this.isEnabled) {
     this.logger.debug(JSON.stringify(this.getLogger(role, module, method, des)));
   }
   return;
 };
 
-Tracer.prototype.error = function(role, module, method, des) {
+Tracer.prototype.error = function (role, module, method, des) {
   if (this.isEnabled) {
     this.logger.error(JSON.stringify(this.getLogger(role, module, method, des)));
   }
   return;
 };
 
-var getModule = function(module) {
+var getModule = function (module) {
   var rs = '';
   var strs = module.split('/');
   var lines = strs.slice(-3);

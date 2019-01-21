@@ -23,7 +23,7 @@ var Limit = [
  * The constructor of the CronTrigger
  * @param trigger The trigger str used to build the cronTrigger instance
  */
-var CronTrigger = function(trigger, job) {
+var CronTrigger = function (trigger, job) {
   this.trigger = this.decodeTrigger(trigger);
 
   this.nextTime = this.nextExcuteTime(Date.now());
@@ -36,7 +36,7 @@ var pro = CronTrigger.prototype;
 /**
  * Get the current excuteTime of trigger
  */
-pro.excuteTime = function() {
+pro.excuteTime = function () {
   return this.nextTime;
 };
 
@@ -45,7 +45,7 @@ pro.excuteTime = function() {
  * @param The given time point
  * @return The nearest valid time after the given time point
  */
-pro.nextExcuteTime = function(time) {
+pro.nextExcuteTime = function (time) {
   //add 1s to the time so it must be the next time
   time = !!time ? time : this.nextTime;
   time += 1000;
@@ -215,7 +215,7 @@ function timeMatch(value, cronTime) {
  * @param cronTimeStr The cronTimeStr need to decode, like "0 12 * * * 3"
  * @return The array to represent the cronTimer
  */
-pro.decodeTrigger = function(cronTimeStr) {
+pro.decodeTrigger = function (cronTimeStr) {
   cronTimeStr = cronTimeStr.trim();
   var cronTimes = cronTimeStr.split(/\s+/);
 
@@ -245,7 +245,7 @@ pro.decodeTrigger = function(cronTimeStr) {
  * @param timeStr The cron time string, like: 1,2 or 1-3
  * @return A sorted array, like [1,2,3]
  */
-pro.decodeTimeStr = function(timeStr, type) {
+pro.decodeTimeStr = function (timeStr, type) {
   var result = {};
   var arr = [];
 
@@ -280,7 +280,7 @@ pro.decodeTimeStr = function(timeStr, type) {
     arr.push(result[key]);
   }
 
-  arr.sort(function(a, b) {
+  arr.sort(function (a, b) {
     return a - b;
   });
 

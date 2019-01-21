@@ -16,7 +16,7 @@ var pomelo = require('../pomelo');
  * @param {Object} app current application  context
  * @return {Void}
  */
- starter.runServers = function(app) {
+starter.runServers = function (app) {
   var server, servers;
   var condition = app.startId || app.type;
   switch(condition) {
@@ -30,11 +30,11 @@ var pomelo = require('../pomelo');
     break;
     default:
     server = app.getServerFromConfig(condition);
-    if(!!server) {
+    if (!!server) {
       this.run(app, server);
     } else {
       servers = app.get(Constants.RESERVED.SERVERS)[condition];
-      for(var i=0; i<servers.length; i++) {
+      for (var i=0; i<servers.length; i++) {
         this.run(app, servers[i]);
       }
     }
@@ -48,13 +48,13 @@ var pomelo = require('../pomelo');
  * @param {Object} server
  * @return {Void}
  */
-starter.run = function(app, server, cb) {
+starter.run = function (app, server, cb) {
   env = app.get(Constants.RESERVED.ENV);
   var cmd, key;
   if (utils.isLocal(server.host)) {
     var options = [];
     if (!!server.args) {
-      if(typeof server.args === 'string') {
+      if (typeof server.args === 'string') {
         options.push(server.args.trim());
       } else {
         options = options.concat(server.args);
@@ -63,8 +63,8 @@ starter.run = function(app, server, cb) {
     cmd = app.get(Constants.RESERVED.MAIN);
     options.push(cmd);
     options.push(`env=${env}`)
-    for(key in server) {
-      if(key === Constants.RESERVED.CPU) {
+    for (key in server) {
+      if (key === Constants.RESERVED.CPU) {
         cpus[server.id] = server[key];
       }
       options.push(`${key}=${server[key]}`)
@@ -77,8 +77,8 @@ starter.run = function(app, server, cb) {
       cmd += arg;
     }
     cmd += util.format(' "%s" env=%s ', app.get(Constants.RESERVED.MAIN), env);
-    for(key in server) {
-      if(key === Constants.RESERVED.CPU) {
+    for (key in server) {
+      if (key === Constants.RESERVED.CPU) {
         cpus[server.id] = server[key];
       }
       cmd += util.format(' %s=%s ', key, server[key]);
@@ -95,8 +95,8 @@ starter.run = function(app, server, cb) {
  * @param {String} host server host
  * @return {Void}
  */
-starter.bindCpu = function(sid, pid, host) {
-  if(os.platform() === Constants.PLATFORM.LINUX && cpus[sid] !== undefined) {
+starter.bindCpu = function (sid, pid, host) {
+  if (os.platform() === Constants.PLATFORM.LINUX && cpus[sid] !== undefined) {
     if (utils.isLocal(host)) {
       var options = [];
       options.push('-pc');
@@ -117,13 +117,13 @@ starter.bindCpu = function(sid, pid, host) {
  * @param {String} pids  array of server's pid
  * @param {String} serverIds array of serverId
  */
-starter.kill = function(pids, servers) {
+starter.kill = function (pids, servers) {
   var cmd;
-  for(var i = 0; i < servers.length; i++) {
+  for (var i = 0; i < servers.length; i++) {
     var server = servers[i];
-    if(utils.isLocal(server.host)) {
+    if (utils.isLocal(server.host)) {
       var options = [];
-      if(os.platform() === Constants.PLATFORM.WIN) {
+      if (os.platform() === Constants.PLATFORM.WIN) {
         cmd = Constants.COMMAND.TASKKILL;
         options.push('/pid');
         options.push('/f');
@@ -134,7 +134,7 @@ starter.kill = function(pids, servers) {
       options.push(pids[i]);
       starter.localrun(cmd,null,options);
     } else {
-      if(os.platform() === Constants.PLATFORM.WIN) {
+      if (os.platform() === Constants.PLATFORM.WIN) {
         cmd = util.format('taskkill /pid %s /f', pids[i]);
       } else {
         cmd = util.format('kill -9 %s', pids[i]);
@@ -152,19 +152,19 @@ starter.kill = function(pids, servers) {
  * @param {Function} cb callback function
  *
  */
-starter.sshrun = function(cmd, host, cb) {
-  var args = [];
-  args.push(host);
-  var ssh_params = pomelo.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS);
-  if(!!ssh_params && Array.isArray(ssh_params)) {
-    args = args.concat(ssh_params);
+starter.sshrun = function (cmd, host, cb) {
+  var args = []
+  args.push(host)
+  var ssh_params = pomelo.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS)
+  if (ssh_params && Array.isArray(ssh_params)) {
+    args = args.concat(ssh_params)
   }
-  args.push(cmd);
+  args.push(cmd)
 
-  logger.info('Executing ' + cmd + ' on ' + host + ':22');
-  spawnProcess(Constants.COMMAND.SSH, host, args, cb);
-  return;
-};
+  logger.info(`Executing ${cmd} on ${host}:22`)
+  spawnProcess(Constants.COMMAND.SSH, host, args, cb)
+  return
+}
 
 /**
  * Run local command.
@@ -176,7 +176,7 @@ starter.sshrun = function(cmd, host, cb) {
 starter.localrun = (cmd, host, options, callback) => {
   logger.info(`Executing ${cmd} ${options} locally`)
   spawnProcess(cmd, host, options, callback)
-};
+}
 
 /**
  * Fork child process to run command.

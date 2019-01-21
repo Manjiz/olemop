@@ -8,7 +8,7 @@ var moduleUtil = require('../util/moduleUtil');
 var utils = require('../util/utils');
 var Constants = require('../util/constants');
 
-var Monitor = function(app, opts) {
+var Monitor = function (app, opts) {
   opts = opts || {};
   this.app = app;
   this.serverInfo = app.getCurServer();
@@ -29,46 +29,46 @@ var Monitor = function(app, opts) {
 
 module.exports = Monitor;
 
-Monitor.prototype.start = function(cb) {
+Monitor.prototype.start = function (cb) {
   moduleUtil.registerDefaultModules(false, this.app, this.closeWatcher);
   this.startConsole(cb);
 };
 
-Monitor.prototype.startConsole = function(cb) {
+Monitor.prototype.startConsole = function (cb) {
   moduleUtil.loadModules(this, this.monitorConsole);
 
   var self = this;
-  this.monitorConsole.start(function(err) {
+  this.monitorConsole.start(function (err) {
     if (err) {
       utils.invokeCallback(cb, err);
       return;
     }
-    moduleUtil.startModules(self.modules, function(err) {
+    moduleUtil.startModules(self.modules, function (err) {
       utils.invokeCallback(cb, err);
       return;
     });
   });
 
-  this.monitorConsole.on('error', function(err) {
-    if(!!err) {
+  this.monitorConsole.on('error', function (err) {
+    if (!!err) {
       logger.error('monitorConsole encounters with error: %j', err.stack);
       return;
     }
   });
 };
 
-Monitor.prototype.stop = function(cb) {
+Monitor.prototype.stop = function (cb) {
   this.monitorConsole.stop();
   this.modules = [];
-  process.nextTick(function() {
+  process.nextTick(function () {
     utils.invokeCallback(cb);
   });
 };
 
 // monitor reconnect to master
-Monitor.prototype.reconnect = function(masterInfo) {
+Monitor.prototype.reconnect = function (masterInfo) {
   var self = this;
-  this.stop(function() {
+  this.stop(function () {
     self.monitorConsole = admin.createMonitorConsole({
       id: self.serverInfo.id,
       type: self.app.getServerType(),
@@ -77,7 +77,7 @@ Monitor.prototype.reconnect = function(masterInfo) {
       info: self.serverInfo,
       env: self.app.get(Constants.RESERVED.ENV)
     });
-    self.startConsole(function() {
+    self.startConsole(function () {
       logger.info('restart modules for server : %j finish.', self.app.serverId);
     });
   });

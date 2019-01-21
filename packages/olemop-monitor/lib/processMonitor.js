@@ -20,12 +20,12 @@ module.exports.getPsInfo = getPsInfo;
  * @api public
  */
 
-function getPsInfo(param, callback) { 
+function getPsInfo(param, callback) {
 	if (process.platform === 'win32') return;
 	var pid = param.pid;
 	var cmd = "ps auxw | grep " + pid + " | grep -v 'grep'";
 	//var cmd = "ps auxw | grep -E '.+?\\s+" + pid + "\\s+'"  ;
-	exec(cmd, function(err, output) {
+	exec(cmd, function (err, output) {
 		if (!!err) {
 			if (err.code === 1) {
 				console.log('the content is null!');
@@ -34,13 +34,13 @@ function getPsInfo(param, callback) {
 			}
 			callback(err, null);
 			return;
-		} 
+		}
     format(param, output, callback);
 	});
 };
 
 /**
- * convert serverInfo to required format, and the callback will handle the serverInfo 
+ * convert serverInfo to required format, and the callback will handle the serverInfo
  *
  * @param {Object} param, contains serverId etc
  * @param {String} data, the output if the command 'ps'
@@ -74,7 +74,7 @@ function format(param, data, cb) {
 		cb(null, ps);
 		return;
 	}
-	exec('pidstat -p ' + pid, function(err, output) {
+	exec('pidstat -p ' + pid, function (err, output) {
 		if (!!err) {
 			console.error('the command pidstat failed! ', err.stack);
 			return;

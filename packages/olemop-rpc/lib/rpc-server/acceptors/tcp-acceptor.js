@@ -5,7 +5,7 @@ var Composer = require('stream-pkg');
 var util = require('util');
 var net = require('net');
 
-var Acceptor = function(opts, cb) {
+var Acceptor = function (opts, cb) {
   EventEmitter.call(this);
   opts = opts || {};
   this.bufferMsg = opts.bufferMsg;
@@ -22,7 +22,7 @@ util.inherits(Acceptor, EventEmitter);
 
 var pro = Acceptor.prototype;
 
-pro.listen = function(port) {
+pro.listen = function (port) {
   //check status
   if (!!this.inited) {
     utils.invokeCallback(this.cb, new Error('already inited.'));
@@ -35,21 +35,21 @@ pro.listen = function(port) {
   this.server = net.createServer();
   this.server.listen(port);
 
-  this.server.on('error', function(err) {
+  this.server.on('error', function (err) {
     self.emit('error', err, this);
   });
 
-  this.server.on('connection', function(socket) {
+  this.server.on('connection', function (socket) {
     self.sockets[socket.id] = socket;
     socket.composer = new Composer({
       maxLength: self.pkgSize
     });
 
-    socket.on('data', function(data) {
+    socket.on('data', function (data) {
       socket.composer.feed(data);
     });
 
-    socket.composer.on('data', function(data) {
+    socket.composer.on('data', function (data) {
       var pkg = JSON.parse(data.toString());
       if (pkg instanceof Array) {
         processMsgs(socket, self, pkg);
@@ -58,20 +58,20 @@ pro.listen = function(port) {
       }
     });
 
-    socket.on('close', function() {
+    socket.on('close', function () {
       delete self.sockets[socket.id];
       delete self.msgQueues[socket.id];
     });
   });
 
   if (this.bufferMsg) {
-    this._interval = setInterval(function() {
+    this._interval = setInterval(function () {
       flush(self);
     }, this.interval);
   }
 };
 
-pro.close = function() {
+pro.close = function () {
   if (!!this.closed) {
     return;
   }
@@ -88,7 +88,7 @@ pro.close = function() {
   this.emit('closed');
 };
 
-var cloneError = function(origin) {
+var cloneError = function (origin) {
   // copy the stack infos for Error instance json result is empty
   var res = {
     msg: origin.msg,
@@ -97,10 +97,10 @@ var cloneError = function(origin) {
   return res;
 };
 
-var processMsg = function(socket, acceptor, pkg) {
+var processMsg = function (socket, acceptor, pkg) {
   var tracer = new Tracer(acceptor.rpcLogger, acceptor.rpcDebugLog, pkg.remote, pkg.source, pkg.msg, pkg.traceId, pkg.seqId);
   tracer.info('server', __filename, 'processMsg', 'tcp-acceptor receive message and try to process message');
-  acceptor.cb(tracer, pkg.msg, function() {
+  acceptor.cb(tracer, pkg.msg, function () {
     var args = Array.prototype.slice.call(arguments, 0);
     for (var i = 0, l = args.length; i < l; i++) {
       if (args[i] instanceof Error) {
@@ -130,13 +130,13 @@ var processMsg = function(socket, acceptor, pkg) {
   });
 };
 
-var processMsgs = function(socket, acceptor, pkgs) {
+var processMsgs = function (socket, acceptor, pkgs) {
   for (var i = 0, l = pkgs.length; i < l; i++) {
     processMsg(socket, acceptor, pkgs[i]);
   }
 };
 
-var enqueue = function(socket, acceptor, msg) {
+var enqueue = function (socket, acceptor, msg) {
   var queue = acceptor.msgQueues[socket.id];
   if (!queue) {
     queue = acceptor.msgQueues[socket.id] = [];
@@ -144,7 +144,7 @@ var enqueue = function(socket, acceptor, msg) {
   queue.push(msg);
 };
 
-var flush = function(acceptor) {
+var flush = function (acceptor) {
   var sockets = acceptor.sockets,
     queues = acceptor.msgQueues,
     queue, socket;
@@ -170,10 +170,10 @@ var flush = function(acceptor) {
  * @param opts init params
  * @param cb(tracer, msg, cb) callback function that would be invoked when new message arrives
  */
-module.exports.create = function(opts, cb) {
+module.exports.create = function (opts, cb) {
   return new Acceptor(opts || {}, cb);
 };
 
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
   process.exit();
 });

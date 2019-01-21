@@ -1,7 +1,7 @@
 var utils = require('../util/utils');
 var DEFAULT_FLUSH_INTERVAL = 20;
 
-var Service = function(app, opts) {
+var Service = function (app, opts) {
   if (!(this instanceof Service)) {
     return new Service(app, opts);
   }
@@ -15,43 +15,43 @@ var Service = function(app, opts) {
 
 module.exports = Service;
 
-Service.prototype.start = function(cb) {
+Service.prototype.start = function (cb) {
   this.tid = setInterval(flush.bind(null, this), this.flushInterval);
-  process.nextTick(function() {
+  process.nextTick(function () {
     utils.invokeCallback(cb);
   });
 };
 
-Service.prototype.stop = function(force, cb) {
-  if(this.tid) {
+Service.prototype.stop = function (force, cb) {
+  if (this.tid) {
     clearInterval(this.tid);
     this.tid = null;
   }
-  process.nextTick(function() {
+  process.nextTick(function () {
     utils.invokeCallback(cb);
   });
 };
 
-Service.prototype.schedule = function(reqId, route, msg, recvs, opts, cb) {
+Service.prototype.schedule = function (reqId, route, msg, recvs, opts, cb) {
   opts = opts || {};
-  if(opts.type === 'broadcast') {
+  if (opts.type === 'broadcast') {
     doBroadcast(this, msg, opts.userOptions);
   } else {
     doBatchPush(this, msg, recvs);
   }
 
-  process.nextTick(function() {
+  process.nextTick(function () {
     utils.invokeCallback(cb);
   });
 };
 
-var doBroadcast = function(self, msg, opts) {
+var doBroadcast = function (self, msg, opts) {
   var channelService = self.app.get('channelService');
   var sessionService = self.app.get('sessionService');
 
-  if(opts.binded) {
-    sessionService.forEachBindedSession(function(session) {
-      if(channelService.broadcastFilter &&
+  if (opts.binded) {
+    sessionService.forEachBindedSession(function (session) {
+      if (channelService.broadcastFilter &&
          !channelService.broadcastFilter(session, msg, opts.filterParam)) {
         return;
       }
@@ -59,8 +59,8 @@ var doBroadcast = function(self, msg, opts) {
       enqueue(self, session, msg);
     });
   } else {
-    sessionService.forEachSession(function(session) {
-      if(channelService.broadcastFilter &&
+    sessionService.forEachSession(function (session) {
+      if (channelService.broadcastFilter &&
           !channelService.broadcastFilter(session, msg, opts.filterParam)) {
         return;
       }
@@ -70,20 +70,20 @@ var doBroadcast = function(self, msg, opts) {
   }
 };
 
-var doBatchPush = function(self, msg, recvs) {
+var doBatchPush = function (self, msg, recvs) {
   var sessionService = self.app.get('sessionService');
   var session;
-  for(var i=0, l=recvs.length; i<l; i++) {
+  for (var i=0, l=recvs.length; i<l; i++) {
     session = sessionService.get(recvs[i]);
-    if(session) {
+    if (session) {
       enqueue(self, session, msg);
     }
   }
 };
 
-var enqueue = function(self, session, msg) {
+var enqueue = function (self, session, msg) {
   var queue = self.sessions[session.id];
-  if(!queue) {
+  if (!queue) {
     queue = self.sessions[session.id] = [];
     session.once('closed', onClose.bind(null, self));
   }
@@ -91,21 +91,21 @@ var enqueue = function(self, session, msg) {
   queue.push(msg);
 };
 
-var onClose = function(self, session) {
+var onClose = function (self, session) {
   delete self.sessions[session.id];
 };
 
-var flush = function(self) {
+var flush = function (self) {
   var sessionService = self.app.get('sessionService');
   var queue, session;
-  for(var sid in self.sessions) {
+  for (var sid in self.sessions) {
     session = sessionService.get(sid);
-    if(!session) {
+    if (!session) {
       continue;
     }
 
     queue = self.sessions[sid];
-    if(!queue || queue.length === 0) {
+    if (!queue || queue.length === 0) {
       continue;
     }
 

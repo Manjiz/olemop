@@ -19,7 +19,7 @@ var STATE_CLOSED = 3; // client has closed
 /**
  * RPC Client Class
  */
-var Client = function(opts) {
+var Client = function (opts) {
   opts = opts || {};
   this._context = opts.context;
   this._routeContext = opts.routeContext;
@@ -43,14 +43,14 @@ var pro = Client.prototype;
  *
  * @param cb {Function} cb(err)
  */
-pro.start = function(cb) {
+pro.start = function (cb) {
   if (this.state > STATE_INITED) {
     cb(new Error('rpc client has started.'));
     return;
   }
 
   var self = this;
-  this._station.start(function(err) {
+  this._station.start(function (err) {
     if (err) {
       logger.error('[olemop-rpc] client start fail for ' + err.stack);
       return cb(err);
@@ -67,7 +67,7 @@ pro.start = function(cb) {
  * @param  {Boolean} force
  * @return {Void}
  */
-pro.stop = function(force) {
+pro.stop = function (force) {
   if (this.state !== STATE_STARTED) {
     logger.warn('[olemop-rpc] client is not running now.');
     return;
@@ -83,7 +83,7 @@ pro.stop = function(force) {
  * @param {Object} record proxy description record, format:
  *                        {namespace, serverType, path}
  */
-pro.addProxy = function(record) {
+pro.addProxy = function (record) {
   if (!record) {
     return;
   }
@@ -98,7 +98,7 @@ pro.addProxy = function(record) {
  * Batch version for addProxy.
  * @param {Array} records list of proxy description record
  */
-pro.addProxies = function(records) {
+pro.addProxies = function (records) {
   if (!records || !records.length) {
     return;
   }
@@ -112,7 +112,7 @@ pro.addProxies = function(records) {
  *
  * @param {Object} server new server information
  */
-pro.addServer = function(server) {
+pro.addServer = function (server) {
   this._station.addServer(server);
 };
 
@@ -121,7 +121,7 @@ pro.addServer = function(server) {
  *
  * @param {Array} servers server info list
  */
-pro.addServers = function(servers) {
+pro.addServers = function (servers) {
   this._station.addServers(servers);
 };
 
@@ -130,7 +130,7 @@ pro.addServers = function(servers) {
  *
  * @param  {String|Number} id server id
  */
-pro.removeServer = function(id) {
+pro.removeServer = function (id) {
   this._station.removeServer(id);
 };
 
@@ -139,7 +139,7 @@ pro.removeServer = function(id) {
  *
  * @param  {Array} ids remote server id list
  */
-pro.removeServers = function(ids) {
+pro.removeServers = function (ids) {
   this._station.removeServers(ids);
 };
 
@@ -148,7 +148,7 @@ pro.removeServers = function(ids) {
  *
  * @param {Array} servers server info list
  */
-pro.replaceServers = function(servers) {
+pro.replaceServers = function (servers) {
   this._station.replaceServers(servers);
 };
 
@@ -160,7 +160,7 @@ pro.replaceServers = function(servers) {
  *    {serverType: serverType, service: serviceName, method: methodName, args: arguments}
  * @param cb {Function} cb(err, ...)
  */
-pro.rpcInvoke = function(serverId, msg, cb) {
+pro.rpcInvoke = function (serverId, msg, cb) {
   var rpcDebugLog = this.rpcDebugLog;
   var tracer = null;
 
@@ -185,7 +185,7 @@ pro.rpcInvoke = function(serverId, msg, cb) {
  *
  * @api public
  */
-pro.before = function(filter) {
+pro.before = function (filter) {
   this._station.before(filter);
 };
 
@@ -196,7 +196,7 @@ pro.before = function(filter) {
  *
  * @api public
  */
-pro.after = function(filter) {
+pro.after = function (filter) {
   this._station.after(filter);
 };
 
@@ -207,7 +207,7 @@ pro.after = function(filter) {
  *
  * @api public
  */
-pro.filter = function(filter) {
+pro.filter = function (filter) {
   this._station.filter(filter);
 };
 
@@ -218,7 +218,7 @@ pro.filter = function(filter) {
  *
  * @api public
  */
-pro.setErrorHandler = function(handler) {
+pro.setErrorHandler = function (handler) {
   this._station.handleError = handler;
 };
 
@@ -229,7 +229,7 @@ pro.setErrorHandler = function(handler) {
  *
  * @api private
  */
-var createStation = function(opts) {
+var createStation = function (opts) {
   return Station.create(opts);
 };
 
@@ -242,7 +242,7 @@ var createStation = function(opts) {
  *
  * @api private
  */
-var generateProxy = function(client, record, context) {
+var generateProxy = function (client, record, context) {
   if (!record) {
     return;
   }
@@ -274,7 +274,7 @@ var generateProxy = function(client, record, context) {
  *
  * @api private
  */
-var proxyCB = function(client, serviceName, methodName, args, attach, isToSpecifiedServer) {
+var proxyCB = function (client, serviceName, methodName, args, attach, isToSpecifiedServer) {
   if (client.state !== STATE_STARTED) {
     logger.error('[olemop-rpc] fail to invoke rpc proxy for client is not running');
     return;
@@ -298,7 +298,7 @@ var proxyCB = function(client, serviceName, methodName, args, attach, isToSpecif
   if (isToSpecifiedServer) {
     rpcToSpecifiedServer(client, msg, serverType, routeParam, cb);
   } else {
-    getRouteTarget(client, serverType, msg, routeParam, function(err, serverId) {
+    getRouteTarget(client, serverType, msg, routeParam, function (err, serverId) {
       if (err) {
         return cb(err);
       }
@@ -318,7 +318,7 @@ var proxyCB = function(client, serviceName, methodName, args, attach, isToSpecif
  *
  * @api private
  */
-var getRouteTarget = function(client, serverType, msg, routeParam, cb) {
+var getRouteTarget = function (client, serverType, msg, routeParam, cb) {
   if (!!client.routerType) {
     var method;
     switch (client.routerType) {
@@ -338,7 +338,7 @@ var getRouteTarget = function(client, serverType, msg, routeParam, cb) {
         method = router.rd;
         break;
     }
-    method.call(null, client, serverType, msg, function(err, serverId) {
+    method.call(null, client, serverType, msg, function (err, serverId) {
       cb(err, serverId);
     });
   } else {
@@ -353,7 +353,7 @@ var getRouteTarget = function(client, serverType, msg, routeParam, cb) {
       logger.error('[olemop-rpc] invalid route function.');
       return;
     }
-    route.call(target, routeParam, msg, client._routeContext, function(err, serverId) {
+    route.call(target, routeParam, msg, client._routeContext, function (err, serverId) {
       cb(err, serverId);
     });
   }
@@ -369,7 +369,7 @@ var getRouteTarget = function(client, serverType, msg, routeParam, cb) {
  *
  * @api private
  */
-var rpcToSpecifiedServer = function(client, msg, serverType, serverId, cb) {
+var rpcToSpecifiedServer = function (client, msg, serverType, serverId, cb) {
   if (typeof serverId !== 'string') {
     logger.error('[olemop-rpc] serverId is not a string : %s', serverId);
     return;
@@ -381,9 +381,9 @@ var rpcToSpecifiedServer = function(client, msg, serverType, serverId, cb) {
       return;
     }
 
-    async.each(servers, function(server, next) {
+    async.each(servers, function (server, next) {
       var serverId = server['id'];
-      client.rpcInvoke(serverId, msg, function(err) {
+      client.rpcInvoke(serverId, msg, function (err) {
         next(err);
       });
     }, cb);
@@ -402,7 +402,7 @@ var rpcToSpecifiedServer = function(client, msg, serverType, serverId, cb) {
  *
  * @api private
  */
-var insertProxy = function(proxies, namespace, serverType, proxy) {
+var insertProxy = function (proxies, namespace, serverType, proxy) {
   proxies[namespace] = proxies[namespace] || {};
   if (proxies[namespace][serverType]) {
     for (var attr in proxy) {
@@ -422,7 +422,7 @@ var insertProxy = function(proxies, namespace, serverType, proxy) {
  *                       opts.mailBoxFactory: (optional) mail box factory instance.
  * @return {Object}      client instance.
  */
-module.exports.create = function(opts) {
+module.exports.create = function (opts) {
   return new Client(opts);
 };
 

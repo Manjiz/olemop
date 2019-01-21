@@ -6,7 +6,7 @@ var crypto = require('crypto');
  */
 
 /* Publish */
-module.exports.publish = function(opts) {
+module.exports.publish = function (opts) {
   opts = opts || {};
   var dup = opts.dup ? protocol.DUP_MASK : 0;
   var qos = opts.qos || 0;
@@ -19,7 +19,7 @@ module.exports.publish = function(opts) {
   /* Check required fields */
   if (typeof topic !== 'string' || topic.length <= 0) return null;
   /* if payload is a string, we'll convert it into a buffer */
-  if(typeof payload == 'string') {
+  if (typeof payload == 'string') {
     payload = new Buffer(payload);
   }
   /* accepting only a buffer for payload */
@@ -45,9 +45,9 @@ module.exports.publish = function(opts) {
 };
 
 /* Requires length be a number > 0 */
-var gen_length = function(length) {
-  if(typeof length !== "number") return null;
-  if(length < 0) return null;
+var gen_length = function (length) {
+  if (typeof length !== "number") return null;
+  if (length < 0) return null;
 
   var len = [];
   var digit = 0;
@@ -64,14 +64,14 @@ var gen_length = function(length) {
   return len;
 };
 
-var gen_string = function(str, without_length) { /* based on code in (from http://farhadi.ir/downloads/utf8.js) */
-  if(arguments.length < 2) without_length = false;
-  if(typeof str !== "string") return null;
-  if(typeof without_length !== "boolean") return null;
+var gen_string = function (str, without_length) { /* based on code in (from http://farhadi.ir/downloads/utf8.js) */
+  if (arguments.length < 2) without_length = false;
+  if (typeof str !== "string") return null;
+  if (typeof without_length !== "boolean") return null;
 
   var string = [];
   var length = 0;
-  for(var i = 0; i < str.length; i++) {
+  for (var i = 0; i < str.length; i++) {
     var code = str.charCodeAt(i);
     if (code < 128) {
       string.push(code);                      ++length;
@@ -95,9 +95,9 @@ var gen_string = function(str, without_length) { /* based on code in (from http:
   return without_length ? string : gen_number(length).concat(string);
 };
 
-var gen_number = function(num) {
+var gen_number = function (num) {
   var number = [num >> 8, num & 0x00FF];
   return number;
 };
 
-var randint = function() { return Math.floor(Math.random() * 0xFFFF); };
+var randint = function () { return Math.floor(Math.random() * 0xFFFF); };

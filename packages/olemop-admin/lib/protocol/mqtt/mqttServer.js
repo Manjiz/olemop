@@ -6,7 +6,7 @@ var net = require('net');
 
 var curId = 1;
 
-var MqttServer = function(opts, cb) {
+var MqttServer = function (opts, cb) {
 	EventEmitter.call(this);
 	this.inited = false;
 	this.closed = true;
@@ -14,7 +14,7 @@ var MqttServer = function(opts, cb) {
 
 Util.inherits(MqttServer, EventEmitter);
 
-MqttServer.prototype.listen = function(port) {
+MqttServer.prototype.listen = function (port) {
 	//check status
 	if (this.inited) {
 		this.cb(new Error('already inited.'));
@@ -32,22 +32,22 @@ MqttServer.prototype.listen = function(port) {
 
 	this.server.on('listening', this.emit.bind(this, 'listening'));
 
-	this.server.on('error', function(err) {
+	this.server.on('error', function (err) {
 		// logger.error('mqtt server is error: %j', err.stack);
 		self.emit('error', err);
 	});
 
-	this.server.on('connection', function(stream) {
+	this.server.on('connection', function (stream) {
 		var socket = MqttCon(stream);
 		socket['id'] = curId++;
 
-		socket.on('connect', function(pkg) {
+		socket.on('connect', function (pkg) {
 			socket.connack({
 				returnCode: 0
 			});
 		});
 
-		socket.on('publish', function(pkg) {
+		socket.on('publish', function (pkg) {
 			var topic = pkg.topic;
 			var msg = pkg.payload.toString();
 			msg = JSON.parse(msg);
@@ -56,11 +56,11 @@ MqttServer.prototype.listen = function(port) {
 			socket.emit(topic, msg);
 		});
 
-		socket.on('pingreq', function() {
+		socket.on('pingreq', function () {
 			socket.pingresp();
 		});
 
-		socket.send = function(topic, msg) {
+		socket.send = function (topic, msg) {
 			socket.publish({
 				topic: topic,
 				payload: JSON.stringify(msg)
@@ -71,14 +71,14 @@ MqttServer.prototype.listen = function(port) {
 	});
 };
 
-MqttServer.prototype.send = function(topic, msg) {
+MqttServer.prototype.send = function (topic, msg) {
 	this.socket.publish({
 		topic: topic,
 		payload: msg
 	});
 }
 
-MqttServer.prototype.close = function() {
+MqttServer.prototype.close = function () {
 	if (this.closed) {
 		return;
 	}

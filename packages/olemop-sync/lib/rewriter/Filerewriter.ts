@@ -33,7 +33,7 @@ export default class FileRewriter {
       const val = db[key]
       this.server.mapping ? this.server.mapping(key, val) : this.aof(key,val)
     }
-    //this.server.queue.shiftEach(function(key){})
+    //this.server.queue.shiftEach(function (key){})
     //this.end()
   }
 

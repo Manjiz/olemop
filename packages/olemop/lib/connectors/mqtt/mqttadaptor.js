@@ -1,4 +1,4 @@
-var Adaptor = function(opts) {
+var Adaptor = function (opts) {
   opts = opts || {};
   this.subReqs = {};
   this.publishRoute = opts.publishRoute;
@@ -7,15 +7,15 @@ var Adaptor = function(opts) {
 
 module.exports = Adaptor;
 
-Adaptor.prototype.onPublish = function(client, packet) {
+Adaptor.prototype.onPublish = function (client, packet) {
   var route = this.publishRoute;
 
-  if(!route) {
+  if (!route) {
     throw new Error('unspecified publish route.');
   }
 
   var payload = packet.payload;
-  if(payload instanceof Buffer) {
+  if (payload instanceof Buffer) {
     payload = payload.toString('utf8');
   }
 
@@ -27,15 +27,15 @@ Adaptor.prototype.onPublish = function(client, packet) {
 
   client.emit('message', req);
 
-  if(packet.qos === 1) {
+  if (packet.qos === 1) {
     client.socket.puback({messageId: packet.messageId});
   }
 };
 
-Adaptor.prototype.onSubscribe = function(client, packet) {
+Adaptor.prototype.onSubscribe = function (client, packet) {
   var route = this.subscribeRoute;
 
-  if(!route) {
+  if (!route) {
     throw new Error('unspecified subscribe route.');
   }
 
@@ -52,7 +52,7 @@ Adaptor.prototype.onSubscribe = function(client, packet) {
   client.emit('message', req);
 };
 
-Adaptor.prototype.onPubAck = function(client, packet) {
+Adaptor.prototype.onPubAck = function (client, packet) {
   var req = {
     id: packet.messageId,
     route: 'connector.mqttHandler.pubAck',
@@ -78,10 +78,10 @@ Adaptor.prototype.onPubAck = function(client, packet) {
  *
  * otherwise packet is a illegal packet.
  */
-Adaptor.prototype.publish = function(client, packet) {
+Adaptor.prototype.publish = function (client, packet) {
   var mid = packet.id;
   var subreq = this.subReqs[mid];
-  if(subreq) {
+  if (subreq) {
     // is suback
     client.socket.suback({messageId: mid, granted: packet.body});
     delete this.subReqs[mid];

@@ -5,11 +5,11 @@ var Constants = require('../util/constants');
 var crypto = require('crypto');
 var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
-module.exports = function(app, opts) {
+module.exports = function (app, opts) {
   return new Component(app, opts);
 };
 
-var Component = function(app, opts) {
+var Component = function (app, opts) {
   this.app = app;
   opts = opts || {};
   this.watchers = {};
@@ -36,19 +36,19 @@ var pro = Component.prototype;
 
 pro.name = '__protobuf__';
 
-pro.encode = function(key, msg) {
+pro.encode = function (key, msg) {
   return protobuf.encode(key, msg);
 };
 
-pro.encode2Bytes = function(key, msg) {
+pro.encode2Bytes = function (key, msg) {
   return protobuf.encode2Bytes(key, msg);
 };
 
-pro.decode = function(key, msg) {
+pro.decode = function (key, msg) {
   return protobuf.decode(key, msg);
 };
 
-pro.getProtos = function() {
+pro.getProtos = function () {
   return {
     server : this.serverProtos,
     client : this.clientProtos,
@@ -56,20 +56,20 @@ pro.getProtos = function() {
   };
 };
 
-pro.getVersion = function() {
+pro.getVersion = function () {
   return this.version;
 };
 
-pro.setProtos = function(type, path) {
-  if(!fs.existsSync(path)) {
+pro.setProtos = function (type, path) {
+  if (!fs.existsSync(path)) {
     return;
   }
 
-  if(type === Constants.RESERVED.SERVER) {
+  if (type === Constants.RESERVED.SERVER) {
     this.serverProtos = protobuf.parse(require(path));
   }
 
-  if(type === Constants.RESERVED.CLIENT) {
+  if (type === Constants.RESERVED.CLIENT) {
     this.clientProtos = protobuf.parse(require(path));
   }
 
@@ -84,16 +84,16 @@ pro.setProtos = function(type, path) {
   this.watchers[type] = watcher;
 };
 
-pro.onUpdate = function(type, path, event) {
-  if(event !== 'change') {
+pro.onUpdate = function (type, path, event) {
+  if (event !== 'change') {
     return;
   }
 
   var self = this;
-  fs.readFile(path, 'utf8' ,function(err, data) {
+  fs.readFile(path, 'utf8' ,function (err, data) {
     try {
       var protos = protobuf.parse(JSON.parse(data));
-      if(type === Constants.RESERVED.SERVER) {
+      if (type === Constants.RESERVED.SERVER) {
         protobuf.setEncoderProtos(protos);
         self.serverProtos = protos;
       } else {
@@ -111,7 +111,7 @@ pro.onUpdate = function(type, path, event) {
   });
 };
 
-pro.stop = function(force, cb) {
+pro.stop = function (force, cb) {
   for (var type in this.watchers) {
     this.watchers[type].close();
   }

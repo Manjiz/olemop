@@ -25,14 +25,14 @@
           host: host,
           port: port,
           log: true
-        }, function() {
-        pomelo.request("connector.entryHandler.entry", "hello pomelo", function(data) {
+        }, function () {
+        pomelo.request("connector.entryHandler.entry", "hello pomelo", function (data) {
             alert(data.msg);
           });
         });
       }
     </script>
- 
+
   </head>
   <body>
     <div class="g-doc">

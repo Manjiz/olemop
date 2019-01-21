@@ -15,7 +15,7 @@ var STATE_CLOSED = 3; // station has closed
  *
  * @param {Object} opts construct parameters
  */
-var MailStation = function(opts) {
+var MailStation = function (opts) {
   EventEmitter.call(this);
   this.opts = opts;
   this.servers = {}; // remote server info map, key: server id, value: info
@@ -50,14 +50,14 @@ var pro = MailStation.prototype;
  * @param  {Function} cb(err) callback function
  * @return {Void}
  */
-pro.start = function(cb) {
+pro.start = function (cb) {
   if (this.state > STATE_INITED) {
     cb(new Error('station has started.'));
     return;
   }
 
   var self = this;
-  process.nextTick(function() {
+  process.nextTick(function () {
     self.state = STATE_STARTED;
     cb();
   });
@@ -69,7 +69,7 @@ pro.start = function(cb) {
  * @param  {Boolean} force whether stop station forcely
  * @return {Void}
  */
-pro.stop = function(force) {
+pro.stop = function (force) {
   if (this.state !== STATE_STARTED) {
     logger.warn('[olemop-rpc] client is not running now.');
     return;
@@ -96,7 +96,7 @@ pro.stop = function(force) {
  *
  * @param {Object} serverInfo server info such as {id, host, port}
  */
-pro.addServer = function(serverInfo) {
+pro.addServer = function (serverInfo) {
   if (!serverInfo || !serverInfo.id) {
     return;
   }
@@ -121,7 +121,7 @@ pro.addServer = function(serverInfo) {
  *
  * @param {Array} serverInfos server info list
  */
-pro.addServers = function(serverInfos) {
+pro.addServers = function (serverInfos) {
   if (!serverInfos || !serverInfos.length) {
     return;
   }
@@ -137,7 +137,7 @@ pro.addServers = function(serverInfos) {
  *
  * @param  {String|Number} id server id
  */
-pro.removeServer = function(id) {
+pro.removeServer = function (id) {
   this.onlines[id] = 0;
   var mailbox = this.mailboxes[id];
   if (mailbox) {
@@ -152,7 +152,7 @@ pro.removeServer = function(id) {
  *
  * @param  {Array} ids server id list
  */
-pro.removeServers = function(ids) {
+pro.removeServers = function (ids) {
   if (!ids || !ids.length) {
     return;
   }
@@ -166,7 +166,7 @@ pro.removeServers = function(ids) {
  * Clear station infomation.
  *
  */
-pro.clearStation = function() {
+pro.clearStation = function () {
   this.onlines = {};
   this.serversMap = {};
 }
@@ -176,7 +176,7 @@ pro.clearStation = function() {
  *
  * @param {Array} serverInfos server info list
  */
-pro.replaceServers = function(serverInfos) {
+pro.replaceServers = function (serverInfos) {
   this.clearStation();
   if (!serverInfos || !serverInfos.length) {
     return;
@@ -206,7 +206,7 @@ pro.replaceServers = function(serverInfos) {
  * @param  {Function} cb       callback function
  * @return {Void}
  */
-pro.dispatch = function(tracer, serverId, msg, opts, cb) {
+pro.dispatch = function (tracer, serverId, msg, opts, cb) {
   tracer && tracer.info('client', __filename, 'dispatch', 'dispatch rpc message to the mailbox');
   tracer && (tracer.cb = cb);
   if (this.state !== STATE_STARTED) {
@@ -238,7 +238,7 @@ pro.dispatch = function(tracer, serverId, msg, opts, cb) {
     return;
   }
 
-  var send = function(tracer, err, serverId, msg, opts) {
+  var send = function (tracer, err, serverId, msg, opts) {
     tracer && tracer.info('client', __filename, 'send', 'get corresponding mailbox and try to send message');
     var mailbox = self.mailboxes[serverId];
     if (err) {
@@ -250,7 +250,7 @@ pro.dispatch = function(tracer, serverId, msg, opts, cb) {
       self.emit('error', constants.RPC_ERROR.FAIL_FIND_MAILBOX, tracer, serverId, msg, opts);
       return;
     }
-    mailbox.send(tracer, msg, opts, function(tracer_send, send_err, args) {
+    mailbox.send(tracer, msg, opts, function (tracer_send, send_err, args) {
       // var tracer_send = arguments[0];
       // var send_err = arguments[1];
       if (send_err) {
@@ -261,7 +261,7 @@ pro.dispatch = function(tracer, serverId, msg, opts, cb) {
         return;
       }
       // var args = arguments[2];
-      doFilter(tracer_send, null, serverId, msg, opts, self.afters, 0, 'after', function(tracer, err, serverId, msg, opts) {
+      doFilter(tracer_send, null, serverId, msg, opts, self.afters, 0, 'after', function (tracer, err, serverId, msg, opts) {
         if (err) {
           errorHandler(tracer, self, err, serverId, msg, opts, false, cb);
         }
@@ -279,7 +279,7 @@ pro.dispatch = function(tracer, serverId, msg, opts, cb) {
  * @param  {[type]} filter [description]
  * @return {[type]}        [description]
  */
-pro.before = function(filter) {
+pro.before = function (filter) {
   if (Array.isArray(filter)) {
     this.befores = this.befores.concat(filter);
     return;
@@ -293,7 +293,7 @@ pro.before = function(filter) {
  * @param  {[type]} filter [description]
  * @return {[type]}        [description]
  */
-pro.after = function(filter) {
+pro.after = function (filter) {
   if (Array.isArray(filter)) {
     this.afters = this.afters.concat(filter);
     return;
@@ -307,7 +307,7 @@ pro.after = function(filter) {
  * @param  {[type]} filter [description]
  * @return {[type]}        [description]
  */
-pro.filter = function(filter) {
+pro.filter = function (filter) {
   this.befores.push(filter);
   this.afters.push(filter);
 };
@@ -319,10 +319,10 @@ pro.filter = function(filter) {
  * @return {String}   serverId remote server id
  * @param  {Function}   cb     callback function
  */
-pro.connect = function(tracer, serverId, cb) {
+pro.connect = function (tracer, serverId, cb) {
   var self = this;
   var mailbox = self.mailboxes[serverId];
-  mailbox.connect(tracer, function(err) {
+  mailbox.connect(tracer, function (err) {
     if (!!err) {
       tracer && tracer.error('client', __filename, 'lazyConnect', 'fail to connect to remote server: ' + serverId);
       logger.error('[olemop-rpc] mailbox fail to connect to remote server: ' + serverId);
@@ -332,7 +332,7 @@ pro.connect = function(tracer, serverId, cb) {
       self.emit('error', constants.RPC_ERROR.FAIL_CONNECT_SERVER, tracer, serverId, null, self.opts);
       return;
     }
-    mailbox.on('close', function(id) {
+    mailbox.on('close', function (id) {
       var mbox = self.mailboxes[id];
       if (!!mbox) {
         mbox.close();
@@ -348,7 +348,7 @@ pro.connect = function(tracer, serverId, cb) {
 /**
  * Do before or after filter
  */
-var doFilter = function(tracer, err, serverId, msg, opts, filters, index, operate, cb) {
+var doFilter = function (tracer, err, serverId, msg, opts, filters, index, operate, cb) {
   if (index < filters.length) {
     tracer && tracer.info('client', __filename, 'doFilter', 'do ' + operate + ' filter ' + filters[index].name);
   }
@@ -359,7 +359,7 @@ var doFilter = function(tracer, err, serverId, msg, opts, filters, index, operat
   var self = this;
   var filter = filters[index];
   if (typeof filter === 'function') {
-    filter(serverId, msg, opts, function(target, message, options) {
+    filter(serverId, msg, opts, function (target, message, options) {
       index++;
       //compatible for pomelo filter next(err) method
       if (utils.getObjectClass(target) === 'Error') {
@@ -371,7 +371,7 @@ var doFilter = function(tracer, err, serverId, msg, opts, filters, index, operat
     return;
   }
   if (typeof filter[operate] === 'function') {
-    filter[operate](serverId, msg, opts, function(target, message, options) {
+    filter[operate](serverId, msg, opts, function (target, message, options) {
       index++;
       if (utils.getObjectClass(target) === 'Error') {
         doFilter(tracer, target, serverId, msg, opts, filters, index, operate, cb);
@@ -385,7 +385,7 @@ var doFilter = function(tracer, err, serverId, msg, opts, filters, index, operat
   doFilter(tracer, err, serverId, msg, opts, filters, index, operate, cb);
 };
 
-var lazyConnect = function(tracer, station, serverId, factory, cb) {
+var lazyConnect = function (tracer, station, serverId, factory, cb) {
   tracer && tracer.info('client', __filename, 'lazyConnect', 'create mailbox and try to connect to remote server');
   var server = station.servers[serverId];
   var online = station.onlines[serverId];
@@ -404,7 +404,7 @@ var lazyConnect = function(tracer, station, serverId, factory, cb) {
   return true;
 };
 
-var addToPending = function(tracer, station, serverId, args) {
+var addToPending = function (tracer, station, serverId, args) {
   tracer && tracer.info('client', __filename, 'addToPending', 'add pending requests to pending queue');
   var pending = station.pendings[serverId];
   if (!pending) {
@@ -418,7 +418,7 @@ var addToPending = function(tracer, station, serverId, args) {
   pending.push(args);
 };
 
-var flushPending = function(tracer, station, serverId, cb) {
+var flushPending = function (tracer, station, serverId, cb) {
   tracer && tracer.info('client', __filename, 'flushPending', 'flush pending requests to dispatch method');
   var pending = station.pendings[serverId];
   var mailbox = station.mailboxes[serverId];
@@ -435,7 +435,7 @@ var flushPending = function(tracer, station, serverId, cb) {
   delete station.pendings[serverId];
 };
 
-var errorHandler = function(tracer, station, err, serverId, msg, opts, flag, cb) {
+var errorHandler = function (tracer, station, err, serverId, msg, opts, flag, cb) {
   if (!!station.handleError) {
     station.handleError(err, serverId, msg, opts);
   } else {
@@ -452,6 +452,6 @@ var errorHandler = function(tracer, station, err, serverId, msg, opts, flag, cb)
  *           opts.mailboxFactory {Function} mailbox factory function
  * @return {Object}      mail station instance
  */
-module.exports.create = function(opts) {
+module.exports.create = function (opts) {
   return new MailStation(opts || {});
 };

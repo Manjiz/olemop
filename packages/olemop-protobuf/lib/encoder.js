@@ -4,12 +4,12 @@ var util = require('./util');
 
 var Encoder = module.exports;
 
-Encoder.init = function(protos){
+Encoder.init = function (protos){
 	this.protos = protos || {};
 };
 
-Encoder.encode = function(route, msg){
-	if(!route || !msg){
+Encoder.encode = function (route, msg){
+	if (!route || !msg){
 		console.warn('Route or msg can not be null! route : %j, msg %j', route, msg);
 		return null;
 	}
@@ -18,7 +18,7 @@ Encoder.encode = function(route, msg){
 	var protos = this.protos[route];
 
 	//Check msg
-	if(!checkMsg(msg, protos)){
+	if (!checkMsg(msg, protos)){
 		console.warn('check msg failed! msg : %j, proto : %j', msg, protos);
 		return null;
 	}
@@ -30,9 +30,9 @@ Encoder.encode = function(route, msg){
 	var buffer = new Buffer(length);
 	var offset = 0;
 
-	if(!!protos){
+	if (!!protos){
 		offset = encodeMsg(buffer, offset, protos, msg);
-		if(offset > 0){
+		if (offset > 0){
 			return buffer.slice(0, offset);
 		}
 	}
@@ -44,25 +44,25 @@ Encoder.encode = function(route, msg){
  * Check if the msg follow the defination in the protos
  */
 function checkMsg(msg, protos){
-	if(!protos || !msg){
+	if (!protos || !msg){
 		console.warn('no protos or msg exist! msg : %j, protos : %j', msg, protos);
 		return false;
 	}
 
-	for(var name in protos){
+	for (var name in protos){
 		var proto = protos[name];
 
 		//All required element must exist
 		switch(proto.option){
 			case 'required' :
-				if(typeof(msg[name]) === 'undefined'){
+				if (typeof(msg[name]) === 'undefined'){
 					console.warn('no property exist for required! name: %j, proto: %j, msg: %j', name, proto, msg);
 					return false;
 				}
 			case 'optional' :
-				if(typeof(msg[name]) !== 'undefined'){
+				if (typeof(msg[name]) !== 'undefined'){
 					var message = protos.__messages[proto.type] || Encoder.protos['message ' + proto.type];
-					if(!!message && !checkMsg(msg[name], message)){
+					if (!!message && !checkMsg(msg[name], message)){
 						console.warn('inner proto error! name: %j, proto: %j, msg: %j', name, proto, msg);
 						return false;
 					}
@@ -71,9 +71,9 @@ function checkMsg(msg, protos){
 			case 'repeated' :
 				//Check nest message in repeated elements
 				var message = protos.__messages[proto.type] || Encoder.protos['message ' + proto.type];
-				if(!!msg[name] && !!message){
-					for(var i = 0; i < msg[name].length; i++){
-						if(!checkMsg(msg[name][i], message)){
+				if (!!msg[name] && !!message){
+					for (var i = 0; i < msg[name].length; i++){
+						if (!checkMsg(msg[name][i], message)){
 							return false;
 						}
 					}
@@ -86,8 +86,8 @@ function checkMsg(msg, protos){
 }
 
 function encodeMsg(buffer, offset, protos, msg){
-	for(var name in msg){
-		if(!!protos[name]){
+	for (var name in msg){
+		if (!!protos[name]){
 			var proto = protos[name];
 
 			switch(proto.option){
@@ -97,7 +97,7 @@ function encodeMsg(buffer, offset, protos, msg){
 					offset = encodeProp(msg[name], proto.type, offset, buffer, protos);
 				break;
 				case 'repeated' :
-					if(!!msg[name] && msg[name].length > 0){
+					if (!!msg[name] && msg[name].length > 0){
 						offset = encodeArray(msg[name], proto, offset, buffer, protos);
 					}
 				break;
@@ -138,7 +138,7 @@ function encodeProp(value, type, offset, buffer, protos){
 		break;
 		default :
 			var message = protos.__messages[type] || Encoder.protos['message ' + type];
-			if(!!message){
+			if (!!message){
 				//Use a tmp buffer to build an internal msg
 				var tmpBuffer = new Buffer(Buffer.byteLength(JSON.stringify(value))*2);
 				length = 0;
@@ -162,14 +162,14 @@ function encodeProp(value, type, offset, buffer, protos){
  */
 function encodeArray(array, proto, offset, buffer, protos){
 	var i = 0;
-	if(util.isSimpleType(proto.type)){
+	if (util.isSimpleType(proto.type)){
 		offset = writeBytes(buffer, offset, encodeTag(proto.type, proto.tag));
 		offset = writeBytes(buffer, offset, codec.encodeUInt32(array.length));
-		for(i = 0; i < array.length; i++){
+		for (i = 0; i < array.length; i++){
 			offset = encodeProp(array[i], proto.type, offset, buffer);
 		}
 	}else{
-		for(i = 0; i < array.length; i++){
+		for (i = 0; i < array.length; i++){
 			offset = writeBytes(buffer, offset, encodeTag(proto.type, proto.tag));
 			offset = encodeProp(array[i], proto.type, offset, buffer, protos);
 		}
@@ -179,7 +179,7 @@ function encodeArray(array, proto, offset, buffer, protos){
 }
 
 function writeBytes(buffer, offset, bytes){
-	for(var i = 0; i < bytes.length; i++){
+	for (var i = 0; i < bytes.length; i++){
 		buffer.writeUInt8(bytes[i], offset);
 		offset++;
 	}
@@ -190,7 +190,7 @@ function writeBytes(buffer, offset, bytes){
 function encodeTag(type, tag){
 	var value = constant.TYPES[type];
 
-	if(value === undefined) value = 2;
+	if (value === undefined) value = 2;
 
 	return codec.encodeUInt32((tag<<3)|value);
 }

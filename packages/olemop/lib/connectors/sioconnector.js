@@ -13,7 +13,7 @@ var curId = 1;
  * Connector that manager low level connection and protocol bewteen server and client.
  * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
  */
-var Connector = function(port, host, opts) {
+var Connector = function (port, host, opts) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts);
   }
@@ -35,7 +35,7 @@ module.exports = Connector;
 /**
  * Start connector to listen the specified port
  */
-Connector.prototype.start = function(cb) {
+Connector.prototype.start = function (cb) {
   var self = this;
 
   var sio = require('socket.io')(httpServer, {
@@ -56,7 +56,7 @@ Connector.prototype.start = function(cb) {
   sio.on('connection', function (socket) {
     var siosocket = new SioSocket(curId++, socket);
     self.emit('connection', siosocket);
-    siosocket.on('closing', function(reason) {
+    siosocket.on('closing', function (reason) {
       siosocket.send({route: 'onKick', reason: reason});
     });
   });
@@ -67,13 +67,13 @@ Connector.prototype.start = function(cb) {
 /**
  * Stop connector
  */
-Connector.prototype.stop = function(force, cb) {
+Connector.prototype.stop = function (force, cb) {
   this.wsocket.server.close();
   process.nextTick(cb);
 };
 
-Connector.encode = Connector.prototype.encode = function(reqId, route, msg) {
-  if(reqId) {
+Connector.encode = Connector.prototype.encode = function (reqId, route, msg) {
+  if (reqId) {
     return composeResponse(reqId, route, msg);
   } else {
     return composePush(route, msg);
@@ -92,7 +92,7 @@ Connector.encode = Connector.prototype.encode = function(reqId, route, msg) {
  * @param  {String} data socket.io package from client
  * @return {Object}      message object
  */
-Connector.decode = Connector.prototype.decode = function(msg) {
+Connector.decode = Connector.prototype.decode = function (msg) {
   var index = 0;
 
   var id = parseIntField(msg, index, PKG_ID_BYTES);
@@ -110,21 +110,21 @@ Connector.decode = Connector.prototype.decode = function(msg) {
   };
 };
 
-var composeResponse = function(msgId, route, msgBody) {
+var composeResponse = function (msgId, route, msgBody) {
   return {
     id: msgId,
     body: msgBody
   };
 };
 
-var composePush = function(route, msgBody) {
+var composePush = function (route, msgBody) {
   return JSON.stringify({route: route, body: msgBody});
 };
 
-var parseIntField = function(str, offset, len) {
+var parseIntField = function (str, offset, len) {
   var res = 0;
-  for(var i=0; i<len; i++) {
-    if(i > 0) {
+  for (var i=0; i<len; i++) {
+    if (i > 0) {
       res <<= 8;
     }
     res |= str.charCodeAt(offset + i) & 0xff;

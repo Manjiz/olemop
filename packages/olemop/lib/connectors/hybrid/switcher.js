@@ -18,7 +18,7 @@ var DEFAULT_TIMEOUT = 90;
  *
  * @param {Object} server tcp server instance from node.js net module
  */
-var Switcher = function(server, opts) {
+var Switcher = function (server, opts) {
   EventEmitter.call(this);
   this.server = server;
   this.wsprocessor = new WSProcessor();
@@ -31,7 +31,7 @@ var Switcher = function(server, opts) {
     this.server.on('connection', this.newSocket.bind(this));
   } else {
     this.server.on('secureConnection', this.newSocket.bind(this));
-    this.server.on('clientError', function(e, tlsSo) {
+    this.server.on('clientError', function (e, tlsSo) {
       logger.warn('an ssl error occured before handshake established: ', e);
       tlsSo.destroy();
     });
@@ -46,12 +46,12 @@ util.inherits(Switcher, EventEmitter);
 
 module.exports = Switcher;
 
-Switcher.prototype.newSocket = function(socket) {
-  if(this.state !== ST_STARTED) {
+Switcher.prototype.newSocket = function (socket) {
+  if (this.state !== ST_STARTED) {
     return;
   }
 
-  socket.setTimeout(this.timeout, function() {
+  socket.setTimeout(this.timeout, function () {
      logger.warn('connection is timeout without communication, the remote ip is %s && port is %s',
        socket.remoteAddress, socket.remotePort);
      socket.destroy();
@@ -59,12 +59,12 @@ Switcher.prototype.newSocket = function(socket) {
 
   var self = this;
 
-  socket.once('data', function(data) {
+  socket.once('data', function (data) {
     // FIXME: handle incomplete HTTP method
-    if(isHttp(data)) {
+    if (isHttp(data)) {
       processHttp(self, self.wsprocessor, socket, data);
     } else {
-      if(!!self.setNoDelay) {
+      if (!!self.setNoDelay) {
         socket.setNoDelay(true);
       }
       processTcp(self, self.tcpprocessor, socket, data);
@@ -72,8 +72,8 @@ Switcher.prototype.newSocket = function(socket) {
   });
 };
 
-Switcher.prototype.close = function() {
-  if(this.state !== ST_STARTED) {
+Switcher.prototype.close = function () {
+  if (this.state !== ST_STARTED) {
     return;
   }
 
@@ -82,11 +82,11 @@ Switcher.prototype.close = function() {
   this.tcpprocessor.close();
 };
 
-var isHttp = function(data) {
+var isHttp = function (data) {
   var head = data.toString('utf8', 0, 4);
 
-  for(var i=0, l=HTTP_METHODS.length; i<l; i++) {
-    if(head.indexOf(HTTP_METHODS[i]) === 0) {
+  for (var i=0, l=HTTP_METHODS.length; i<l; i++) {
+    if (head.indexOf(HTTP_METHODS[i]) === 0) {
       return true;
     }
   }
@@ -94,10 +94,10 @@ var isHttp = function(data) {
   return false;
 };
 
-var processHttp = function(switcher, processor, socket, data) {
+var processHttp = function (switcher, processor, socket, data) {
   processor.add(socket, data);
 };
 
-var processTcp = function(switcher, processor, socket, data) {
+var processTcp = function (switcher, processor, socket, data) {
   processor.add(socket, data);
 };

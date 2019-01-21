@@ -6,17 +6,17 @@ var start = null;
 
 conn.connect({
 	clientId: "test"
-}, function() {
+}, function () {
 	console.log('client connected');
 	start = Date.now();
 	run();
 });
 
-conn.on('puback', function() {
+conn.on('puback', function () {
 	run();
 });
 
-conn.on('pingresp', function() {
+conn.on('pingresp', function () {
 	run();
 })
 
@@ -46,7 +46,7 @@ function run() {
 		payload: payload,
 		qos: 1,
 		messageId: times
-	}, function() {
+	}, function () {
 		// run();
 	})
 }

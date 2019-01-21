@@ -5,21 +5,21 @@
 var conLogger = require('@olemop/logger').getLogger('con-log', __filename);
 var utils = require('../../util/utils');
 
-module.exports = function() {
+module.exports = function () {
   return new Filter();
 };
 
-var Filter = function() {
+var Filter = function () {
 };
 
-Filter.prototype.before = function(msg, session, next) {
+Filter.prototype.before = function (msg, session, next) {
   session.__startTime__ = Date.now();
   next();
 };
 
-Filter.prototype.after = function(err, msg, session, resp, next) {
+Filter.prototype.after = function (err, msg, session, resp, next) {
   var start = session.__startTime__;
-  if(typeof start === 'number') {
+  if (typeof start === 'number') {
     var timeUsed = Date.now() - start;
     var log = {
       route : msg.__route__,

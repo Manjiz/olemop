@@ -13,7 +13,7 @@ var KEEP_ALIVE_INTERVAL = 30 * 1000;
 var DEFAULT_ZIP_LENGTH = 1024 * 10;
 var useZipCompress = false;
 
-var MailBox = function(server, opts) {
+var MailBox = function (server, opts) {
   EventEmitter.call(this);
   this.id = server.id;
   this.host = server.host;
@@ -38,7 +38,7 @@ util.inherits(MailBox, EventEmitter);
 
 var pro = MailBox.prototype;
 
-pro.connect = function(tracer, cb) {
+pro.connect = function (tracer, cb) {
   tracer && tracer.info('client', __filename, 'connect', 'ws-mailbox try to connect');
   if (this.connected) {
     tracer && tracer.error('client', __filename, 'connect', 'mailbox has already connected');
@@ -50,7 +50,7 @@ pro.connect = function(tracer, cb) {
   //this.socket = wsClient.connect(this.host + ':' + this.port, {'force new connection': true, 'reconnect': false});
 
   var self = this;
-  this.socket.on('message', function(data, flags) {
+  this.socket.on('message', function (data, flags) {
     try {
       // console.log("ws rpc client received message = " + data);
       var msg = data;
@@ -67,7 +67,7 @@ pro.connect = function(tracer, cb) {
     }
   });
 
-  this.socket.on('open', function() {
+  this.socket.on('open', function () {
     if (self.connected) {
       //ignore reconnect
       return;
@@ -76,22 +76,22 @@ pro.connect = function(tracer, cb) {
     self.connected = true;
     if (self.bufferMsg) {
       // start flush interval
-      self._interval = setInterval(function() {
+      self._interval = setInterval(function () {
         flush(self);
       }, self.interval);
     }
-    self._KPinterval = setInterval(function() {
+    self._KPinterval = setInterval(function () {
       checkKeepAlive(self);
     }, KEEP_ALIVE_INTERVAL);
     utils.invokeCallback(cb);
   });
 
-  this.socket.on('error', function(err) {
+  this.socket.on('error', function (err) {
     utils.invokeCallback(cb, err);
     self.close();
   });
 
-  this.socket.on('close', function(code, message) {
+  this.socket.on('close', function (code, message) {
     var reqs = self.requests,
       cb;
     for (var id in reqs) {
@@ -104,14 +104,14 @@ pro.connect = function(tracer, cb) {
 
   //  this.socket.on('ping', function (data, flags) {
   //  });
-  this.socket.on('pong', function(data, flags) {
+  this.socket.on('pong', function (data, flags) {
     ////console.log('ws received pong: %s', data);
     self._KP_last_pong_time = Date.now();
   });
 
 };
 
-var checkKeepAlive = function(mailbox) {
+var checkKeepAlive = function (mailbox) {
   if (mailbox.closed) {
     return;
   }
@@ -140,7 +140,7 @@ var checkKeepAlive = function(mailbox) {
 /**
  * close mailbox
  */
-pro.close = function() {
+pro.close = function () {
   if (this.closed) {
     return;
   }
@@ -166,7 +166,7 @@ pro.close = function() {
  * @param opts {} attach info to send method
  * @param cb declaration decided by remote interface
  */
-pro.send = function(tracer, msg, opts, cb) {
+pro.send = function (tracer, msg, opts, cb) {
   tracer && tracer.info('client', __filename, 'send', 'ws-mailbox try to send');
   if (!this.connected) {
     tracer && tracer.error('client', __filename, 'send', 'ws-mailbox not init');
@@ -208,11 +208,11 @@ pro.send = function(tracer, msg, opts, cb) {
   }
 };
 
-var enqueue = function(mailbox, msg) {
+var enqueue = function (mailbox, msg) {
   mailbox.queue.push(msg);
 };
 
-var flush = function(mailbox) {
+var flush = function (mailbox) {
   if (mailbox.closed || !mailbox.queue.length) {
     return;
   }
@@ -221,7 +221,7 @@ var flush = function(mailbox) {
   mailbox.queue = [];
 };
 
-var doSend = function(socket, dataObj) {
+var doSend = function (socket, dataObj) {
   var str = JSON.stringify({
     body: dataObj
   });
@@ -231,13 +231,13 @@ var doSend = function(socket, dataObj) {
   socket.send(str);
 };
 
-var processMsgs = function(mailbox, pkgs) {
+var processMsgs = function (mailbox, pkgs) {
   for (var i = 0, l = pkgs.length; i < l; i++) {
     processMsg(mailbox, pkgs[i]);
   }
 };
 
-var processMsg = function(mailbox, pkg) {
+var processMsg = function (mailbox, pkg) {
   clearCbTimeout(mailbox, pkg.id);
   var cb = mailbox.requests[pkg.id];
   if (!cb) {
@@ -253,15 +253,15 @@ var processMsg = function(mailbox, pkg) {
   var pkgResp = pkg.resp;
   // var args = [tracer, null];
 
-  // pkg.resp.forEach(function(arg){
+  // pkg.resp.forEach(function (arg){
   //   args.push(arg);
   // });
 
   cb(tracer, sendErr, pkgResp);
 };
 
-var setCbTimeout = function(mailbox, id) {
-  var timer = setTimeout(function() {
+var setCbTimeout = function (mailbox, id) {
+  var timer = setTimeout(function () {
     clearCbTimeout(mailbox, id);
     if (!!mailbox.requests[id]) {
       delete mailbox.requests[id];
@@ -270,7 +270,7 @@ var setCbTimeout = function(mailbox, id) {
   mailbox.timeout[id] = timer;
 };
 
-var clearCbTimeout = function(mailbox, id) {
+var clearCbTimeout = function (mailbox, id) {
   if (!mailbox.timeout[id]) {
     console.warn('timer is not exsits, id: %s', id);
     return;
@@ -287,6 +287,6 @@ var clearCbTimeout = function(mailbox, id) {
  *                      opts.bufferMsg {Boolean} msg should be buffered or send immediately.
  *                      opts.interval {Boolean} msg queue flush interval if bufferMsg is true. default is 50 ms
  */
-module.exports.create = function(server, opts) {
+module.exports.create = function (server, opts) {
   return new MailBox(server, opts || {});
 };

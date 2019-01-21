@@ -5,7 +5,7 @@ var rsa = require("node-bignumber");
 var events = require('../util/events');
 var utils = require('../util/utils');
 
-module.exports = function(app, opts) {
+module.exports = function (app, opts) {
   return new Component(app, opts);
 };
 
@@ -16,7 +16,7 @@ module.exports = function(app, opts) {
  * @param {Object} opts attach parameters
  *                      opts.connector {Object} provides low level network and protocol details implementation between server and clients.
  */
-var Component = function(app, opts) {
+var Component = function (app, opts) {
   opts = opts || {};
   this.app = app;
   this.connector = getConnector(app, opts);
@@ -47,21 +47,21 @@ var pro = Component.prototype;
 
 pro.name = '__connector__';
 
-pro.start = function(cb) {
+pro.start = function (cb) {
   this.server = this.app.components.__server__;
   this.session = this.app.components.__session__;
   this.connection = this.app.components.__connection__;
 
   // check component dependencies
   if (!this.server) {
-    process.nextTick(function() {
+    process.nextTick(function () {
       utils.invokeCallback(cb, new Error('fail to start connector component for no server component loaded'));
     });
     return;
   }
 
   if (!this.session) {
-    process.nextTick(function() {
+    process.nextTick(function () {
       utils.invokeCallback(cb, new Error('fail to start connector component for no session component loaded'));
     });
     return;
@@ -70,12 +70,12 @@ pro.start = function(cb) {
   process.nextTick(cb);
 };
 
-pro.afterStart = function(cb) {
+pro.afterStart = function (cb) {
   this.connector.start(cb);
   this.connector.on('connection', hostFilter.bind(this, bindEvents));
 };
 
-pro.stop = function(force, cb) {
+pro.stop = function (force, cb) {
   if (this.connector) {
     this.connector.stop(force, cb);
     this.connector = null;
@@ -85,7 +85,7 @@ pro.stop = function(force, cb) {
   }
 };
 
-pro.send = function(reqId, route, msg, recvs, opts, cb) {
+pro.send = function (reqId, route, msg, recvs, opts, cb) {
   logger.debug('[%s] send message reqId: %s, route: %s, msg: %j, receivers: %j, opts: %j', this.app.serverId, reqId, route, msg, recvs, opts);
   if (this.useAsyncCoder) {
     return this.sendAsync(reqId, route, msg, recvs, opts, cb);
@@ -103,13 +103,13 @@ pro.send = function(reqId, route, msg, recvs, opts, cb) {
   this.doSend(reqId, route, emsg, recvs, opts, cb);
 };
 
-pro.sendAsync = function(reqId, route, msg, recvs, opts, cb) {
+pro.sendAsync = function (reqId, route, msg, recvs, opts, cb) {
   var emsg = msg;
   var self = this;
 
   if (this.encode) {
     // use costumized encode
-    this.encode(reqId, route, msg, function(err, encodeMsg) {
+    this.encode(reqId, route, msg, function (err, encodeMsg) {
       if (err) {
         return cb(err);
       }
@@ -119,7 +119,7 @@ pro.sendAsync = function(reqId, route, msg, recvs, opts, cb) {
     });
   } else if (this.connector.encode) {
     // use connector default encode
-    this.connector.encode(reqId, route, msg, function(err, encodeMsg) {
+    this.connector.encode(reqId, route, msg, function (err, encodeMsg) {
       if (err) {
         return cb(err);
       }
@@ -130,9 +130,9 @@ pro.sendAsync = function(reqId, route, msg, recvs, opts, cb) {
   }
 }
 
-pro.doSend = function(reqId, route, emsg, recvs, opts, cb) {
+pro.doSend = function (reqId, route, emsg, recvs, opts, cb) {
   if (!emsg) {
-    process.nextTick(function() {
+    process.nextTick(function () {
       return cb && cb(new Error('fail to send message for encode result is empty.'));
     });
   }
@@ -141,18 +141,18 @@ pro.doSend = function(reqId, route, emsg, recvs, opts, cb) {
     recvs, opts, cb);
 }
 
-pro.setPubKey = function(id, key) {
+pro.setPubKey = function (id, key) {
   var pubKey = new rsa.Key();
   pubKey.n = new rsa.BigInteger(key.rsa_n, 16);
   pubKey.e = key.rsa_e;
   this.keys[id] = pubKey;
 };
 
-pro.getPubKey = function(id) {
+pro.getPubKey = function (id) {
   return this.keys[id];
 };
 
-var getConnector = function(app, opts) {
+var getConnector = function (app, opts) {
   var connector = opts.connector;
   if (!connector) {
     return getDefaultConnector(app, opts);
@@ -166,19 +166,19 @@ var getConnector = function(app, opts) {
   return connector(curServer.clientPort, curServer.host, opts);
 };
 
-var getDefaultConnector = function(app, opts) {
+var getDefaultConnector = function (app, opts) {
   var DefaultConnector = require('../connectors/sioconnector');
   var curServer = app.getCurServer();
   return new DefaultConnector(curServer.clientPort, curServer.host, opts);
 };
 
-var hostFilter = function(cb, socket) {
-  if(!this.useHostFilter) {
+var hostFilter = function (cb, socket) {
+  if (!this.useHostFilter) {
     return cb(this, socket);
   }
 
   var ip = socket.remoteAddress.ip;
-  var check = function(list) {
+  var check = function (list) {
     for (var address in list) {
       var exp = new RegExp(list[address]);
       if (exp.test(ip)) {
@@ -195,7 +195,7 @@ var hostFilter = function(cb, socket) {
   // static check
   if (!!this.blacklistFun && typeof this.blacklistFun === 'function') {
     var self = this;
-    self.blacklistFun(function(err, list) {
+    self.blacklistFun(function (err, list) {
       if (!!err) {
         logger.error('connector blacklist error: %j', err.stack);
         utils.invokeCallback(cb, self, socket);
@@ -218,7 +218,7 @@ var hostFilter = function(cb, socket) {
   }
 };
 
-var bindEvents = function(self, socket) {
+var bindEvents = function (self, socket) {
   var curServer = self.app.getCurServer();
   var maxConnections = curServer['max-connections'];
   if (self.connection && maxConnections) {
@@ -235,7 +235,7 @@ var bindEvents = function(self, socket) {
   var session = getSession(self, socket);
   var closed = false;
 
-  socket.on('disconnect', function() {
+  socket.on('disconnect', function () {
     if (closed) {
       return;
     }
@@ -245,7 +245,7 @@ var bindEvents = function(self, socket) {
     }
   });
 
-  socket.on('error', function() {
+  socket.on('error', function () {
     if (closed) {
       return;
     }
@@ -256,7 +256,7 @@ var bindEvents = function(self, socket) {
   });
 
   // new message
-  socket.on('message', function(msg) {
+  socket.on('message', function (msg) {
     var dmsg = msg;
     if (self.useAsyncCoder) {
       return handleMessageAsync(self, msg, session, socket);
@@ -285,9 +285,9 @@ var bindEvents = function(self, socket) {
   }); //on message end
 };
 
-var handleMessageAsync = function(self, msg, session, socket) {
+var handleMessageAsync = function (self, msg, session, socket) {
   if (self.decode) {
-    self.decode(msg, session, function(err, dmsg) {
+    self.decode(msg, session, function (err, dmsg) {
       if (err) {
         logger.error('fail to decode message from client %s .', err.stack);
         return;
@@ -296,7 +296,7 @@ var handleMessageAsync = function(self, msg, session, socket) {
       doHandleMessage(self, dmsg, session);
     });
   } else if (self.connector.decode) {
-    self.connector.decode(msg, socket, function(err, dmsg) {
+    self.connector.decode(msg, socket, function (err, dmsg) {
       if (err) {
         logger.error('fail to decode message from client %s .', err.stack);
         return;
@@ -307,7 +307,7 @@ var handleMessageAsync = function(self, msg, session, socket) {
   }
 }
 
-var doHandleMessage = function(self, dmsg, session) {
+var doHandleMessage = function (self, dmsg, session) {
   if (!dmsg) {
     // discard invalid message
     return;
@@ -328,7 +328,7 @@ var doHandleMessage = function(self, dmsg, session) {
 /**
  * get session for current connection
  */
-var getSession = function(self, socket) {
+var getSession = function (self, socket) {
   var app = self.app,
     sid = socket.id;
   var session = self.session.get(sid);
@@ -343,7 +343,7 @@ var getSession = function(self, socket) {
   socket.on('disconnect', session.closed.bind(session));
   socket.on('error', session.closed.bind(session));
   session.on('closed', onSessionClose.bind(null, app));
-  session.on('bind', function(uid) {
+  session.on('bind', function (uid) {
     logger.debug('session on [%s] bind with uid: %s', self.app.serverId, uid);
     // update connection statistics if necessary
     if (self.connection) {
@@ -356,7 +356,7 @@ var getSession = function(self, socket) {
     self.app.event.emit(events.BIND_SESSION, session);
   });
 
-  session.on('unbind', function(uid) {
+  session.on('unbind', function (uid) {
     if (self.connection) {
       self.connection.removeLoginedUser(uid);
     }
@@ -366,19 +366,19 @@ var getSession = function(self, socket) {
   return session;
 };
 
-var onSessionClose = function(app, session, reason) {
+var onSessionClose = function (app, session, reason) {
   taskManager.closeQueue(session.id, true);
   app.event.emit(events.CLOSE_SESSION, session);
 };
 
-var handleMessage = function(self, session, msg) {
+var handleMessage = function (self, session, msg) {
   logger.debug(`[${self.app.serverId}] handleMessage session id: ${session.id}, msg:${msg}`)
   var type = checkServerType(msg.route)
   if (!type) {
     logger.error(`invalid route string. route : ${msg.route}`)
     return
   }
-  self.server.globalHandle(msg, session.toFrontendSession(), function(err, resp, opts) {
+  self.server.globalHandle(msg, session.toFrontendSession(), function (err, resp, opts) {
     if (resp && !msg.id) {
       logger.warn(`try to response to a notify: ${msg.route}`)
       return
@@ -399,7 +399,7 @@ var handleMessage = function(self, session, msg) {
 /**
  * Get server type form request message.
  */
-var checkServerType = function(route) {
+var checkServerType = function (route) {
   if (!route) {
     return null;
   }
@@ -410,7 +410,7 @@ var checkServerType = function(route) {
   return route.substring(0, idx);
 };
 
-var verifyMessage = function(self, session, msg) {
+var verifyMessage = function (self, session, msg) {
   var sig = msg.body.__crypto__;
   if (!sig) {
     logger.error('receive data from client has no signature [%s]', self.app.serverId);

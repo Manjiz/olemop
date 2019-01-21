@@ -5,11 +5,11 @@
 var DefaultScheduler = require('../pushSchedulers/direct');
 var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
-module.exports = function(app, opts) {
+module.exports = function (app, opts) {
   return new PushScheduler(app, opts);
 };
 
-var PushScheduler = function(app, opts) {
+var PushScheduler = function (app, opts) {
   this.app = app;
   opts = opts || {};
   this.scheduler = getScheduler(this, app, opts);
@@ -23,16 +23,16 @@ PushScheduler.prototype.name = '__pushScheduler__';
  * @param {Function} cb
  * @return {Void}
  */
-PushScheduler.prototype.afterStart = function(cb) {
-  if(this.isSelectable) {
+PushScheduler.prototype.afterStart = function (cb) {
+  if (this.isSelectable) {
     for (var k in this.scheduler) {
       var sch = this.scheduler[k];
-      if(typeof sch.start === 'function') {
+      if (typeof sch.start === 'function') {
         sch.start();
       }
     }
     process.nextTick(cb);
-  } else if(typeof this.scheduler.start === 'function') {
+  } else if (typeof this.scheduler.start === 'function') {
     this.scheduler.start(cb);
   } else {
     process.nextTick(cb);
@@ -45,16 +45,16 @@ PushScheduler.prototype.afterStart = function(cb) {
  * @param {Function} cb
  * @return {Void}
  */
-PushScheduler.prototype.stop = function(force, cb) {
-  if(this.isSelectable) {
+PushScheduler.prototype.stop = function (force, cb) {
+  if (this.isSelectable) {
     for (var k in this.scheduler) {
       var sch = this.scheduler[k];
-      if(typeof sch.stop === 'function') {
+      if (typeof sch.stop === 'function') {
         sch.stop();
       }
     }
     process.nextTick(cb);
-  } else if(typeof this.scheduler.stop === 'function') {
+  } else if (typeof this.scheduler.stop === 'function') {
     this.scheduler.stop(cb);
   } else {
     process.nextTick(cb);
@@ -72,12 +72,12 @@ PushScheduler.prototype.stop = function(force, cb) {
  * @param  {Function} cb
  */
 
-PushScheduler.prototype.schedule = function(reqId, route, msg, recvs, opts, cb) {
+PushScheduler.prototype.schedule = function (reqId, route, msg, recvs, opts, cb) {
   var self = this;
-  if(self.isSelectable) {
-    if(typeof self.selector === 'function') {
-      self.selector(reqId, route, msg, recvs, opts, function(id) {
-        if(self.scheduler[id] && typeof self.scheduler[id].schedule === 'function') {
+  if (self.isSelectable) {
+    if (typeof self.selector === 'function') {
+      self.selector(reqId, route, msg, recvs, opts, function (id) {
+        if (self.scheduler[id] && typeof self.scheduler[id].schedule === 'function') {
           self.scheduler[id].schedule(reqId, route, msg, recvs, opts, cb);
         } else {
           logger.error('invalid pushScheduler id, id: %j', id);
@@ -95,16 +95,16 @@ PushScheduler.prototype.schedule = function(reqId, route, msg, recvs, opts, cb) 
   }
 };
 
-var getScheduler = function(pushSchedulerComp, app, opts) {
+var getScheduler = function (pushSchedulerComp, app, opts) {
   var scheduler = opts.scheduler || DefaultScheduler;
-  if(typeof scheduler === 'function') {
+  if (typeof scheduler === 'function') {
     return scheduler(app, opts);
   }
 
-  if(Array.isArray(scheduler)) {
+  if (Array.isArray(scheduler)) {
     var res = {};
-    scheduler.forEach(function(sch) {
-      if(typeof sch.scheduler === 'function') {
+    scheduler.forEach(function (sch) {
+      if (typeof sch.scheduler === 'function') {
         res[sch.id] = sch.scheduler(app, sch.options);
       } else {
         res[sch.id] = sch.scheduler;
@@ -112,7 +112,7 @@ var getScheduler = function(pushSchedulerComp, app, opts) {
     });
     pushSchedulerComp.isSelectable = true;
     pushSchedulerComp.selector = opts.selector;
-    return res; 
+    return res;
   }
 
   return scheduler;

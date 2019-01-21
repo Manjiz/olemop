@@ -8,7 +8,7 @@ var net = require('net');
 var DEFAULT_CALLBACK_TIMEOUT = 10 * 1000;
 var DEFAULT_INTERVAL = 50;
 
-var MailBox = function(server, opts) {
+var MailBox = function (server, opts) {
   EventEmitter.call(this);
   this.opts = opts || {};
   this.id = server.id;
@@ -32,7 +32,7 @@ util.inherits(MailBox, EventEmitter);
 
 var pro = MailBox.prototype;
 
-pro.connect = function(tracer, cb) {
+pro.connect = function (tracer, cb) {
   tracer.info('client', __filename, 'connect', 'tcp-mailbox try to connect');
   if (this.connected) {
     utils.invokeCallback(cb, new Error('mailbox has already connected.'));
@@ -42,12 +42,12 @@ pro.connect = function(tracer, cb) {
   this.socket = net.connect({
     port: this.port,
     host: this.host
-  }, function(err) {
+  }, function (err) {
     // success to connect
     self.connected = true;
     if (self.bufferMsg) {
       // start flush interval
-      self._interval = setInterval(function() {
+      self._interval = setInterval(function () {
         flush(self);
       }, self.interval);
     }
@@ -56,7 +56,7 @@ pro.connect = function(tracer, cb) {
 
   var self = this;
 
-  this.composer.on('data', function(data) {
+  this.composer.on('data', function (data) {
     var pkg = JSON.parse(data.toString());
     if (pkg instanceof Array) {
       processMsgs(self, pkg);
@@ -65,11 +65,11 @@ pro.connect = function(tracer, cb) {
     }
   });
 
-  this.socket.on('data', function(data) {
+  this.socket.on('data', function (data) {
     self.composer.feed(data);
   });
 
-  this.socket.on('error', function(err) {
+  this.socket.on('error', function (err) {
     if (!self.connected) {
       utils.invokeCallback(cb, err);
       return;
@@ -77,7 +77,7 @@ pro.connect = function(tracer, cb) {
     self.emit('error', err, self);
   });
 
-  this.socket.on('end', function() {
+  this.socket.on('end', function () {
     self.emit('close', self.id);
   });
 
@@ -87,7 +87,7 @@ pro.connect = function(tracer, cb) {
 /**
  * close mailbox
  */
-pro.close = function() {
+pro.close = function () {
   if (this.closed) {
     return;
   }
@@ -110,7 +110,7 @@ pro.close = function() {
  * @param opts {} attach info to send method
  * @param cb declaration decided by remote interface
  */
-pro.send = function(tracer, msg, opts, cb) {
+pro.send = function (tracer, msg, opts, cb) {
   tracer.info('client', __filename, 'send', 'tcp-mailbox try to send');
   if (!this.connected) {
     utils.invokeCallback(cb, tracer, new Error('not init.'));
@@ -150,11 +150,11 @@ pro.send = function(tracer, msg, opts, cb) {
   }
 };
 
-var enqueue = function(mailbox, msg) {
+var enqueue = function (mailbox, msg) {
   mailbox.queue.push(msg);
 };
 
-var flush = function(mailbox) {
+var flush = function (mailbox) {
   if (mailbox.closed || !mailbox.queue.length) {
     return;
   }
@@ -162,13 +162,13 @@ var flush = function(mailbox) {
   mailbox.queue = [];
 };
 
-var processMsgs = function(mailbox, pkgs) {
+var processMsgs = function (mailbox, pkgs) {
   for (var i = 0, l = pkgs.length; i < l; i++) {
     processMsg(mailbox, pkgs[i]);
   }
 };
 
-var processMsg = function(mailbox, pkg) {
+var processMsg = function (mailbox, pkg) {
   clearCbTimeout(mailbox, pkg.id);
   var cb = mailbox.requests[pkg.id];
   if (!cb) {
@@ -179,15 +179,15 @@ var processMsg = function(mailbox, pkg) {
   var tracer = new Tracer(mailbox.opts.rpcLogger, mailbox.opts.rpcDebugLog, mailbox.opts.clientId, pkg.source, pkg.resp, pkg.traceId, pkg.seqId);
   var args = [tracer, null];
 
-  pkg.resp.forEach(function(arg) {
+  pkg.resp.forEach(function (arg) {
     args.push(arg);
   });
 
   cb.apply(null, args);
 };
 
-var setCbTimeout = function(mailbox, id, tracer, cb) {
-  var timer = setTimeout(function() {
+var setCbTimeout = function (mailbox, id, tracer, cb) {
+  var timer = setTimeout(function () {
     clearCbTimeout(mailbox, id);
     if (!!mailbox.requests[id]) {
       delete mailbox.requests[id];
@@ -198,7 +198,7 @@ var setCbTimeout = function(mailbox, id, tracer, cb) {
   mailbox.timeout[id] = timer;
 };
 
-var clearCbTimeout = function(mailbox, id) {
+var clearCbTimeout = function (mailbox, id) {
   if (!mailbox.timeout[id]) {
     console.warn('timer not exists, id: %s', id);
     return;
@@ -215,6 +215,6 @@ var clearCbTimeout = function(mailbox, id) {
  *                      opts.bufferMsg {Boolean} msg should be buffered or send immediately.
  *                      opts.interval {Boolean} msg queue flush interval if bufferMsg is true. default is 50 ms
  */
-module.exports.create = function(server, opts) {
+module.exports.create = function (server, opts) {
   return new MailBox(server, opts || {});
 };

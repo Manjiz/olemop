@@ -10,7 +10,7 @@ var net = require('net');
 
 var curId = 1;
 
-var Acceptor = function(opts, cb) {
+var Acceptor = function (opts, cb) {
   EventEmitter.call(this);
   this.interval = opts.interval; // flush interval in ms
   this.bufferMsg = opts.bufferMsg;
@@ -28,7 +28,7 @@ util.inherits(Acceptor, EventEmitter);
 
 var pro = Acceptor.prototype;
 
-pro.listen = function(port) {
+pro.listen = function (port) {
   //check status
   if (!!this.inited) {
     this.cb(new Error('already inited.'));
@@ -41,21 +41,21 @@ pro.listen = function(port) {
   this.server = new net.Server();
   this.server.listen(port);
 
-  this.server.on('error', function(err) {
+  this.server.on('error', function (err) {
     logger.error('rpc server is error: %j', err.stack);
     self.emit('error', err);
   });
 
-  this.server.on('connection', function(stream) {
+  this.server.on('connection', function (stream) {
     var socket = MqttCon(stream);
     socket['id'] = curId++;
 
-    socket.on('connect', function(pkg) {
+    socket.on('connect', function (pkg) {
       // console.log('connected')
       sendHandshake(socket, self);
     });
 
-    socket.on('publish', function(pkg) {
+    socket.on('publish', function (pkg) {
       pkg = Coder.decodeServer(pkg.payload, self.servicesMap);
       try {
         processMsg(socket, self, pkg);
@@ -66,33 +66,33 @@ pro.listen = function(port) {
       }
     });
 
-    socket.on('pingreq', function() {
+    socket.on('pingreq', function () {
       socket.pingresp();
     });
 
-    socket.on('error', function() {
+    socket.on('error', function () {
       self.onSocketClose(socket);
     });
 
-    socket.on('close', function() {
+    socket.on('close', function () {
       self.onSocketClose(socket);
     });
 
     self.sockets[socket.id] = socket;
 
-    socket.on('disconnect', function(reason) {
+    socket.on('disconnect', function (reason) {
       self.onSocketClose(socket);
     });
   });
 
   if (this.bufferMsg) {
-    this._interval = setInterval(function() {
+    this._interval = setInterval(function () {
       flush(self);
     }, this.interval);
   }
 };
 
-pro.close = function() {
+pro.close = function () {
   if (this.closed) {
     return;
   }
@@ -105,7 +105,7 @@ pro.close = function() {
   this.emit('closed');
 };
 
-pro.onSocketClose = function(socket) {
+pro.onSocketClose = function (socket) {
   if (!socket['closed']) {
     var id = socket.id;
     socket['closed'] = true;
@@ -114,7 +114,7 @@ pro.onSocketClose = function(socket) {
   }
 }
 
-var cloneError = function(origin) {
+var cloneError = function (origin) {
   // copy the stack infos for Error instance json result is empty
   var res = {
     msg: origin.msg,
@@ -123,13 +123,13 @@ var cloneError = function(origin) {
   return res;
 };
 
-var processMsg = function(socket, acceptor, pkg) {
+var processMsg = function (socket, acceptor, pkg) {
   var tracer = null;
   if (this.rpcDebugLog) {
     tracer = new Tracer(acceptor.rpcLogger, acceptor.rpcDebugLog, pkg.remote, pkg.source, pkg.msg, pkg.traceId, pkg.seqId);
     tracer.info('server', __filename, 'processMsg', 'mqtt-acceptor receive message and try to process message');
   }
-  acceptor.cb(tracer, pkg.msg, function() {
+  acceptor.cb(tracer, pkg.msg, function () {
     // var args = Array.prototype.slice.call(arguments, 0);
     var len = arguments.length;
     var args = new Array(len);
@@ -166,13 +166,13 @@ var processMsg = function(socket, acceptor, pkg) {
   });
 };
 
-var processMsgs = function(socket, acceptor, pkgs) {
+var processMsgs = function (socket, acceptor, pkgs) {
   for (var i = 0, l = pkgs.length; i < l; i++) {
     processMsg(socket, acceptor, pkgs[i]);
   }
 };
 
-var enqueue = function(socket, acceptor, msg) {
+var enqueue = function (socket, acceptor, msg) {
   var id = socket.id;
   var queue = acceptor.msgQueues[id];
   if (!queue) {
@@ -181,7 +181,7 @@ var enqueue = function(socket, acceptor, msg) {
   queue.push(msg);
 };
 
-var flush = function(acceptor) {
+var flush = function (acceptor) {
   var sockets = acceptor.sockets,
     queues = acceptor.msgQueues,
     queue, socket;
@@ -201,7 +201,7 @@ var flush = function(acceptor) {
   }
 };
 
-var doSend = function(socket, msg) {
+var doSend = function (socket, msg) {
   socket.publish({
     topic: Constant['TOPIC_RPC'],
     payload: msg
@@ -209,7 +209,7 @@ var doSend = function(socket, msg) {
   });
 }
 
-var doSendHandshake = function(socket, msg) {
+var doSendHandshake = function (socket, msg) {
   socket.publish({
     topic: Constant['TOPIC_HANDSHAKE'],
     payload: msg
@@ -217,7 +217,7 @@ var doSendHandshake = function(socket, msg) {
   });
 }
 
-var sendHandshake = function(socket, acceptor) {
+var sendHandshake = function (socket, acceptor) {
   var servicesMap = utils.genServicesMap(acceptor.services);
   acceptor.servicesMap = servicesMap;
   doSendHandshake(socket, JSON.stringify(servicesMap));
@@ -229,6 +229,6 @@ var sendHandshake = function(socket, acceptor) {
  * @param opts init params
  * @param cb(tracer, msg, cb) callback function that would be invoked when new message arrives
  */
-module.exports.create = function(opts, cb) {
+module.exports.create = function (opts, cb) {
   return new Acceptor(opts || {}, cb);
 };

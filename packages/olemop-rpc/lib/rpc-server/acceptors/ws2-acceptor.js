@@ -9,7 +9,7 @@ var Tracer = require('../../util/tracer');
 var DEFAULT_ZIP_LENGTH = 1024 * 10;
 var useZipCompress = false;
 
-var Acceptor = function(opts, cb) {
+var Acceptor = function (opts, cb) {
   EventEmitter.call(this);
   this.bufferMsg = opts.bufferMsg;
   this.interval = opts.interval; // flush interval in ms
@@ -29,7 +29,7 @@ var pro = Acceptor.prototype;
 
 var gid = 1;
 
-pro.listen = function(port) {
+pro.listen = function (port) {
   //check status
   if (!!this.inited) {
     this.cb(new Error('already inited.'));
@@ -43,11 +43,11 @@ pro.listen = function(port) {
     port: port
   });
 
-  this.server.on('error', function(err) {
+  this.server.on('error', function (err) {
     self.emit('error', err);
   });
 
-  this.server.on('connection', function(socket) {
+  this.server.on('connection', function (socket) {
     var id = gid++;
     socket.id = id;
     self.sockets[id] = socket;
@@ -57,7 +57,7 @@ pro.listen = function(port) {
       ip: socket._socket.remoteAddress
     });
 
-    socket.on('message', function(data, flags) {
+    socket.on('message', function (data, flags) {
       try {
         // console.log("ws rpc server received message = " + data);
         var msg = data;
@@ -73,7 +73,7 @@ pro.listen = function(port) {
       }
     });
 
-    socket.on('close', function(code, message) {
+    socket.on('close', function (code, message) {
       delete self.sockets[id];
       delete self.msgQueues[id];
     });
@@ -82,16 +82,16 @@ pro.listen = function(port) {
   this.on('connection', ipFilter.bind(this));
 
   if (this.bufferMsg) {
-    this._interval = setInterval(function() {
+    this._interval = setInterval(function () {
       flush(self);
     }, this.interval);
   }
 };
 
-var ipFilter = function(obj) {
+var ipFilter = function (obj) {
   if (typeof this.whitelist === 'function') {
     var self = this;
-    self.whitelist(function(err, tmpList) {
+    self.whitelist(function (err, tmpList) {
       if (err) {
         logger.error('%j.(RPC whitelist).', err);
         return;
@@ -117,7 +117,7 @@ var ipFilter = function(obj) {
   }
 };
 
-pro.close = function() {
+pro.close = function () {
   if (!!this.closed) {
     return;
   }
@@ -134,7 +134,7 @@ pro.close = function() {
   this.emit('closed');
 };
 
-var cloneError = function(origin) {
+var cloneError = function (origin) {
   // copy the stack infos for Error instance json result is empty
   var res = {
     msg: origin.msg,
@@ -143,21 +143,21 @@ var cloneError = function(origin) {
   return res;
 };
 
-var processMsg = function(socket, acceptor, pkg) {
+var processMsg = function (socket, acceptor, pkg) {
   var tracer = null;
   if (this.rpcDebugLog) {
     tracer = new Tracer(acceptor.rpcLogger, acceptor.rpcDebugLog, pkg.remote, pkg.source, pkg.msg, pkg.traceId, pkg.seqId);
     tracer.info('server', __filename, 'processMsg', 'ws-acceptor receive message and try to process message');
   }
-  acceptor.cb(tracer, pkg.msg, function() {
+  acceptor.cb(tracer, pkg.msg, function () {
     // var args = arguments;
     var args = Array.prototype.slice.call(arguments, 0);
     var errorArg = args[0]; // first callback argument can be error object, the others are message
     if (errorArg instanceof Error) {
       args[0] = cloneError(errorArg);
     }
-    // for(var i=0, l=args.length; i<l; i++) {
-    //   if(args[i] instanceof Error) {
+    // for (var i=0, l=args.length; i<l; i++) {
+    //   if (args[i] instanceof Error) {
     //     args[i] = cloneError(args[i]);
     //   }
     // }
@@ -185,13 +185,13 @@ var processMsg = function(socket, acceptor, pkg) {
   });
 };
 
-var processMsgs = function(socket, acceptor, pkgs) {
+var processMsgs = function (socket, acceptor, pkgs) {
   for (var i = 0, l = pkgs.length; i < l; i++) {
     processMsg(socket, acceptor, pkgs[i]);
   }
 };
 
-var enqueue = function(socket, acceptor, msg) {
+var enqueue = function (socket, acceptor, msg) {
   var queue = acceptor.msgQueues[socket.id];
   if (!queue) {
     queue = acceptor.msgQueues[socket.id] = [];
@@ -199,7 +199,7 @@ var enqueue = function(socket, acceptor, msg) {
   queue.push(msg);
 };
 
-var flush = function(acceptor) {
+var flush = function (acceptor) {
   var sockets = acceptor.sockets,
     queues = acceptor.msgQueues,
     queue, socket;
@@ -220,7 +220,7 @@ var flush = function(acceptor) {
   }
 };
 
-var doSend = function(socket, dataObj) {
+var doSend = function (socket, dataObj) {
   var str = JSON.stringify({
     body: dataObj
   });
@@ -237,6 +237,6 @@ var doSend = function(socket, dataObj) {
  * @param opts init params
  * @param cb(tracer, msg, cb) callback function that would be invoked when new message arrives
  */
-module.exports.create = function(opts, cb) {
+module.exports.create = function (opts, cb) {
   return new Acceptor(opts || {}, cb);
 };

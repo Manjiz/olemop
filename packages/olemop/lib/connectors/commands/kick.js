@@ -1,8 +1,8 @@
 var Package = require('@olemop/protocol').Package;
 
-module.exports.handle = function(socket, reason) {
+module.exports.handle = function (socket, reason) {
 // websocket close code 1000 would emit when client close the connection
-  if(typeof reason === 'string') {
+  if (typeof reason === 'string') {
     var res = {
       reason: reason
     };

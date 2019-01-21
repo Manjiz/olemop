@@ -16,10 +16,10 @@ var SharedServiceProcessor = SharedService.Processor
 var ttypes = require('./tutorial_types');
 //HELPER FUNCTIONS AND STRUCTURES
 
-Calculator_ping_args = function(args) {
+Calculator_ping_args = function (args) {
 };
 Calculator_ping_args.prototype = {};
-Calculator_ping_args.prototype.read = function(input) {
+Calculator_ping_args.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -37,17 +37,17 @@ Calculator_ping_args.prototype.read = function(input) {
   return;
 };
 
-Calculator_ping_args.prototype.write = function(output) {
+Calculator_ping_args.prototype.write = function (output) {
   output.writeStructBegin('Calculator_ping_args');
   output.writeFieldStop();
   output.writeStructEnd();
   return;
 };
 
-Calculator_ping_result = function(args) {
+Calculator_ping_result = function (args) {
 };
 Calculator_ping_result.prototype = {};
-Calculator_ping_result.prototype.read = function(input) {
+Calculator_ping_result.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -65,14 +65,14 @@ Calculator_ping_result.prototype.read = function(input) {
   return;
 };
 
-Calculator_ping_result.prototype.write = function(output) {
+Calculator_ping_result.prototype.write = function (output) {
   output.writeStructBegin('Calculator_ping_result');
   output.writeFieldStop();
   output.writeStructEnd();
   return;
 };
 
-Calculator_add_args = function(args) {
+Calculator_add_args = function (args) {
   this.num1 = null;
   this.num2 = null;
   if (args) {
@@ -85,7 +85,7 @@ Calculator_add_args = function(args) {
   }
 };
 Calculator_add_args.prototype = {};
-Calculator_add_args.prototype.read = function(input) {
+Calculator_add_args.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -121,7 +121,7 @@ Calculator_add_args.prototype.read = function(input) {
   return;
 };
 
-Calculator_add_args.prototype.write = function(output) {
+Calculator_add_args.prototype.write = function (output) {
   output.writeStructBegin('Calculator_add_args');
   if (this.num1 !== null && this.num1 !== undefined) {
     output.writeFieldBegin('num1', Thrift.Type.I32, 1);
@@ -138,7 +138,7 @@ Calculator_add_args.prototype.write = function(output) {
   return;
 };
 
-Calculator_add_result = function(args) {
+Calculator_add_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -147,7 +147,7 @@ Calculator_add_result = function(args) {
   }
 };
 Calculator_add_result.prototype = {};
-Calculator_add_result.prototype.read = function(input) {
+Calculator_add_result.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -179,7 +179,7 @@ Calculator_add_result.prototype.read = function(input) {
   return;
 };
 
-Calculator_add_result.prototype.write = function(output) {
+Calculator_add_result.prototype.write = function (output) {
   output.writeStructBegin('Calculator_add_result');
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.I32, 0);
@@ -191,7 +191,7 @@ Calculator_add_result.prototype.write = function(output) {
   return;
 };
 
-Calculator_calculate_args = function(args) {
+Calculator_calculate_args = function (args) {
   this.logid = null;
   this.w = null;
   if (args) {
@@ -204,7 +204,7 @@ Calculator_calculate_args = function(args) {
   }
 };
 Calculator_calculate_args.prototype = {};
-Calculator_calculate_args.prototype.read = function(input) {
+Calculator_calculate_args.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -241,7 +241,7 @@ Calculator_calculate_args.prototype.read = function(input) {
   return;
 };
 
-Calculator_calculate_args.prototype.write = function(output) {
+Calculator_calculate_args.prototype.write = function (output) {
   output.writeStructBegin('Calculator_calculate_args');
   if (this.logid !== null && this.logid !== undefined) {
     output.writeFieldBegin('logid', Thrift.Type.I32, 1);
@@ -258,7 +258,7 @@ Calculator_calculate_args.prototype.write = function(output) {
   return;
 };
 
-Calculator_calculate_result = function(args) {
+Calculator_calculate_result = function (args) {
   this.success = null;
   this.ouch = null;
   if (args instanceof ttypes.InvalidOperation) {
@@ -275,7 +275,7 @@ Calculator_calculate_result = function(args) {
   }
 };
 Calculator_calculate_result.prototype = {};
-Calculator_calculate_result.prototype.read = function(input) {
+Calculator_calculate_result.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -312,7 +312,7 @@ Calculator_calculate_result.prototype.read = function(input) {
   return;
 };
 
-Calculator_calculate_result.prototype.write = function(output) {
+Calculator_calculate_result.prototype.write = function (output) {
   output.writeStructBegin('Calculator_calculate_result');
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.I32, 0);
@@ -329,10 +329,10 @@ Calculator_calculate_result.prototype.write = function(output) {
   return;
 };
 
-Calculator_zip_args = function(args) {
+Calculator_zip_args = function (args) {
 };
 Calculator_zip_args.prototype = {};
-Calculator_zip_args.prototype.read = function(input) {
+Calculator_zip_args.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -350,17 +350,17 @@ Calculator_zip_args.prototype.read = function(input) {
   return;
 };
 
-Calculator_zip_args.prototype.write = function(output) {
+Calculator_zip_args.prototype.write = function (output) {
   output.writeStructBegin('Calculator_zip_args');
   output.writeFieldStop();
   output.writeStructEnd();
   return;
 };
 
-Calculator_zip_result = function(args) {
+Calculator_zip_result = function (args) {
 };
 Calculator_zip_result.prototype = {};
-Calculator_zip_result.prototype.read = function(input) {
+Calculator_zip_result.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -378,27 +378,27 @@ Calculator_zip_result.prototype.read = function(input) {
   return;
 };
 
-Calculator_zip_result.prototype.write = function(output) {
+Calculator_zip_result.prototype.write = function (output) {
   output.writeStructBegin('Calculator_zip_result');
   output.writeFieldStop();
   output.writeStructEnd();
   return;
 };
 
-CalculatorClient = exports.Client = function(output, pClass) {
+CalculatorClient = exports.Client = function (output, pClass) {
     this.output = output;
     this.pClass = pClass;
     this._seqid = 0;
     this._reqs = {};
 };
 Thrift.inherits(CalculatorClient, SharedServiceClient);
-CalculatorClient.prototype.seqid = function() { return this._seqid; }
-CalculatorClient.prototype.new_seqid = function() { return this._seqid += 1; }
-CalculatorClient.prototype.ping = function(callback) {
+CalculatorClient.prototype.seqid = function () { return this._seqid; }
+CalculatorClient.prototype.new_seqid = function () { return this._seqid += 1; }
+CalculatorClient.prototype.ping = function (callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -413,7 +413,7 @@ CalculatorClient.prototype.ping = function(callback) {
   }
 };
 
-CalculatorClient.prototype.send_ping = function() {
+CalculatorClient.prototype.send_ping = function () {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('ping', Thrift.MessageType.CALL, this.seqid());
   var args = new Calculator_ping_args();
@@ -422,8 +422,8 @@ CalculatorClient.prototype.send_ping = function() {
   return this.output.flush();
 };
 
-CalculatorClient.prototype.recv_ping = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+CalculatorClient.prototype.recv_ping = function (input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -437,11 +437,11 @@ CalculatorClient.prototype.recv_ping = function(input,mtype,rseqid) {
 
   callback(null)
 };
-CalculatorClient.prototype.add = function(num1, num2, callback) {
+CalculatorClient.prototype.add = function (num1, num2, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -456,7 +456,7 @@ CalculatorClient.prototype.add = function(num1, num2, callback) {
   }
 };
 
-CalculatorClient.prototype.send_add = function(num1, num2) {
+CalculatorClient.prototype.send_add = function (num1, num2) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('add', Thrift.MessageType.CALL, this.seqid());
   var args = new Calculator_add_args();
@@ -467,8 +467,8 @@ CalculatorClient.prototype.send_add = function(num1, num2) {
   return this.output.flush();
 };
 
-CalculatorClient.prototype.recv_add = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+CalculatorClient.prototype.recv_add = function (input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -485,11 +485,11 @@ CalculatorClient.prototype.recv_add = function(input,mtype,rseqid) {
   }
   return callback('add failed: unknown result');
 };
-CalculatorClient.prototype.calculate = function(logid, w, callback) {
+CalculatorClient.prototype.calculate = function (logid, w, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -504,7 +504,7 @@ CalculatorClient.prototype.calculate = function(logid, w, callback) {
   }
 };
 
-CalculatorClient.prototype.send_calculate = function(logid, w) {
+CalculatorClient.prototype.send_calculate = function (logid, w) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('calculate', Thrift.MessageType.CALL, this.seqid());
   var args = new Calculator_calculate_args();
@@ -515,8 +515,8 @@ CalculatorClient.prototype.send_calculate = function(logid, w) {
   return this.output.flush();
 };
 
-CalculatorClient.prototype.recv_calculate = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+CalculatorClient.prototype.recv_calculate = function (input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -536,11 +536,11 @@ CalculatorClient.prototype.recv_calculate = function(input,mtype,rseqid) {
   }
   return callback('calculate failed: unknown result');
 };
-CalculatorClient.prototype.zip = function(callback) {
+CalculatorClient.prototype.zip = function (callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -555,7 +555,7 @@ CalculatorClient.prototype.zip = function(callback) {
   }
 };
 
-CalculatorClient.prototype.send_zip = function() {
+CalculatorClient.prototype.send_zip = function () {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('zip', Thrift.MessageType.ONEWAY, this.seqid());
   var args = new Calculator_zip_args();
@@ -563,11 +563,11 @@ CalculatorClient.prototype.send_zip = function() {
   output.writeMessageEnd();
   return this.output.flush();
 };
-CalculatorProcessor = exports.Processor = function(handler) {
+CalculatorProcessor = exports.Processor = function (handler) {
   this._handler = handler
 }
 Thrift.inherits(CalculatorProcessor, SharedServiceProcessor)
-CalculatorProcessor.prototype.process = function(input, output) {
+CalculatorProcessor.prototype.process = function (input, output) {
   var r = input.readMessageBegin();
   if (this['process_' + r.fname]) {
     return this['process_' + r.fname].call(this, r.rseqid, input, output);
@@ -582,13 +582,13 @@ CalculatorProcessor.prototype.process = function(input, output) {
   }
 }
 
-CalculatorProcessor.prototype.process_ping = function(seqid, input, output) {
+CalculatorProcessor.prototype.process_ping = function (seqid, input, output) {
   var args = new Calculator_ping_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.ping.length === 0) {
     Q.fcall(this._handler.ping)
-      .then(function(result) {
+      .then(function (result) {
         var result = new Calculator_ping_result({success: result});
         output.writeMessageBegin("ping", Thrift.MessageType.REPLY, seqid);
         result.write(output);
@@ -617,13 +617,13 @@ CalculatorProcessor.prototype.process_ping = function(seqid, input, output) {
   }
 }
 
-CalculatorProcessor.prototype.process_add = function(seqid, input, output) {
+CalculatorProcessor.prototype.process_add = function (seqid, input, output) {
   var args = new Calculator_add_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.add.length === 2) {
     Q.fcall(this._handler.add, args.num1, args.num2)
-      .then(function(result) {
+      .then(function (result) {
         var result = new Calculator_add_result({success: result});
         output.writeMessageBegin("add", Thrift.MessageType.REPLY, seqid);
         result.write(output);
@@ -652,13 +652,13 @@ CalculatorProcessor.prototype.process_add = function(seqid, input, output) {
   }
 }
 
-CalculatorProcessor.prototype.process_calculate = function(seqid, input, output) {
+CalculatorProcessor.prototype.process_calculate = function (seqid, input, output) {
   var args = new Calculator_calculate_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.calculate.length === 2) {
     Q.fcall(this._handler.calculate, args.logid, args.w)
-      .then(function(result) {
+      .then(function (result) {
         var result = new Calculator_calculate_result({success: result});
         output.writeMessageBegin("calculate", Thrift.MessageType.REPLY, seqid);
         result.write(output);
@@ -692,7 +692,7 @@ CalculatorProcessor.prototype.process_calculate = function(seqid, input, output)
   }
 }
 
-CalculatorProcessor.prototype.process_zip = function(seqid, input, output) {
+CalculatorProcessor.prototype.process_zip = function (seqid, input, output) {
   var args = new Calculator_zip_args();
   args.read(input);
   input.readMessageEnd();

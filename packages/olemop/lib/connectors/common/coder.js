@@ -2,23 +2,23 @@ var Message = require('@olemop/protocol').Message;
 var Constants = require('../../util/constants');
 var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
-var encode = function(reqId, route, msg) {
-  if(!!reqId) {
+var encode = function (reqId, route, msg) {
+  if (!!reqId) {
     return composeResponse(this, reqId, route, msg);
   } else {
     return composePush(this, route, msg);
   }
 };
 
-var decode = function(msg) {
+var decode = function (msg) {
   msg = Message.decode(msg.body);
   var route = msg.route;
 
   // decode use dictionary
-  if(!!msg.compressRoute) {
-    if(!!this.connector.useDict) {
+  if (!!msg.compressRoute) {
+    if (!!this.connector.useDict) {
       var abbrs = this.dictionary.getAbbrs();
-      if(!abbrs[route]) {
+      if (!abbrs[route]) {
         logger.error('dictionary error! no abbrs for route : %s', route);
         return null;
       }
@@ -30,9 +30,9 @@ var decode = function(msg) {
   }
 
   // decode use protobuf
-  if(!!this.protobuf && !!this.protobuf.getProtos().client[route]) {
+  if (!!this.protobuf && !!this.protobuf.getProtos().client[route]) {
     msg.body = this.protobuf.decode(route, msg.body);
-  } else if(!!this.decodeIO_protobuf && !!this.decodeIO_protobuf.check(Constants.RESERVED.CLIENT, route)) {
+  } else if (!!this.decodeIO_protobuf && !!this.decodeIO_protobuf.check(Constants.RESERVED.CLIENT, route)) {
     msg.body = this.decodeIO_protobuf.decode(route, msg.body);
   } else {
     try {
@@ -45,24 +45,24 @@ var decode = function(msg) {
   return msg;
 };
 
-var composeResponse = function(server, msgId, route, msgBody) {
-  if(!msgId || !route || !msgBody) {
+var composeResponse = function (server, msgId, route, msgBody) {
+  if (!msgId || !route || !msgBody) {
     return null;
   }
   msgBody = encodeBody(server, route, msgBody);
   return Message.encode(msgId, Message.TYPE_RESPONSE, 0, null, msgBody);
 };
 
-var composePush = function(server, route, msgBody) {
-  if(!route || !msgBody){
+var composePush = function (server, route, msgBody) {
+  if (!route || !msgBody){
     return null;
   }
   msgBody = encodeBody(server, route, msgBody);
   // encode use dictionary
   var compressRoute = 0;
-  if(!!server.dictionary) {
+  if (!!server.dictionary) {
     var dict = server.dictionary.getDict();
-    if(!!server.connector.useDict && !!dict[route]) {
+    if (!!server.connector.useDict && !!dict[route]) {
       route = dict[route];
       compressRoute = 1;
     }
@@ -70,11 +70,11 @@ var composePush = function(server, route, msgBody) {
   return Message.encode(0, Message.TYPE_PUSH, compressRoute, route, msgBody);
 };
 
-var encodeBody = function(server, route, msgBody) {
+var encodeBody = function (server, route, msgBody) {
     // encode use protobuf
-  if(!!server.protobuf && !!server.protobuf.getProtos().server[route]) {
+  if (!!server.protobuf && !!server.protobuf.getProtos().server[route]) {
     msgBody = server.protobuf.encode(route, msgBody);
-  } else if(!!server.decodeIO_protobuf && !!server.decodeIO_protobuf.check(Constants.RESERVED.SERVER, route)) {
+  } else if (!!server.decodeIO_protobuf && !!server.decodeIO_protobuf.check(Constants.RESERVED.SERVER, route)) {
      msgBody = server.decodeIO_protobuf.encode(route, msgBody);
   } else {
     msgBody = new Buffer(JSON.stringify(msgBody), 'utf8');

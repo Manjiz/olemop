@@ -21,13 +21,13 @@ var routeParam = null;
 var routeContext = servers;
 
 // route function to caculate the remote server id
-var routeFunc = function(routeParam, msg, routeContext, cb) {
+var routeFunc = function (routeParam, msg, routeContext, cb) {
   cb(null, routeContext[0].id);
 };
 
 var client = Client.create({routeContext: routeContext, router: routeFunc, context: context});
 
-client.start(function(err) {
+client.start(function (err) {
   console.log('rpc client start ok.');
 
   client.addProxies(records);
@@ -51,13 +51,13 @@ client.start(function(err) {
   // m = false;
   // m = '0';
 
-  client.proxies.user.test.service.echo.toServer('test-server-1', m, 'aaa', function(err, resp, data) {
-  // client.proxies.user.test.service.echo(routeParam, m, 'aaa', function(err, resp, data) {
-    if(err) {
+  client.proxies.user.test.service.echo.toServer('test-server-1', m, 'aaa', function (err, resp, data) {
+  // client.proxies.user.test.service.echo(routeParam, m, 'aaa', function (err, resp, data) {
+    if (err) {
       console.error(err.stack);
     }
 
-    // setTimeout(function() {
+    // setTimeout(function () {
       console.log(resp);
       console.log(data);
       // console.log(typeof resp)
@@ -66,6 +66,6 @@ client.start(function(err) {
   });
 });
 
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', function (err) {
   console.error(err);
 });

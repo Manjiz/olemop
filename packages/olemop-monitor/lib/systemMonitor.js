@@ -24,7 +24,7 @@ module.exports.getSysInfo = getSysInfo;
 function getSysInfo(callback) {
 	if (process.platform === 'win32') return;
   var reData = getBasicInfo();
-  exec('iostat ', function(err, output) {
+  exec('iostat ', function (err, output) {
 		if (!!err) {
 			console.error('getSysInfo failed! ' + err.stack);
 			callback(err, reData);
@@ -47,7 +47,7 @@ function format(data) {
   var output_array = data.toString().replace(/^\s+|\s+$/g,"").split(/\s+/);
   var output_values = [];
   for (var i = 0, counter = 0; i < output_array.length; i++) {
-    if(!isNaN(output_array[i])) {
+    if (!isNaN(output_array[i])) {
       output_values[counter] = parseFloat(output_array[i]);
       counter++;
     }
@@ -77,7 +77,7 @@ function format(data) {
 
 /**
  * get basic information of operating-system
- * 
+ *
  * @return {Object} result
  * @api private
  */
@@ -86,7 +86,7 @@ function getBasicInfo() {
 	var result = {};
   for (var key in info) {
     result[key] = info[key]();
-  }  
+  }
 	return result;
 };
 
@@ -112,11 +112,11 @@ info.cpus = os.cpus;
 
 info.networkInterfaces = os.networkInterfaces;
 
-info.versions = function(){return process.versions};
+info.versions = function (){return process.versions};
 
-info.arch = function(){return process.arch};
+info.arch = function (){return process.arch};
 
-info.platform = function(){return process.platform};
+info.platform = function (){return process.platform};
 
 info.memoryUsage = process.memoryUsage;
 

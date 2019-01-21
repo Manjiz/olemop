@@ -4,12 +4,12 @@
  * MIT Licensed
  */
 
-var MqttClient = require('../protocol/mqtt/mqttClient');
-var protocol = require('../util/protocol');
-// var io = require('socket.io-client');
-var utils = require('../util/utils');
+var MqttClient = require('../protocol/mqtt/mqttClient')
+var protocol = require('../util/protocol')
+// var io = require('socket.io-client')
+var utils = require('../util/utils')
 
-var Client = function(opt) {
+var Client = function (opt) {
 	this.id = "";
 	this.reqId = 1;
 	this.callbacks = {};
@@ -23,7 +23,7 @@ var Client = function(opt) {
 };
 
 Client.prototype = {
-	connect: function(id, host, port, cb) {
+	connect: function (id, host, port, cb) {
 		this.id = id;
 		var self = this;
 
@@ -39,7 +39,7 @@ Client.prototype = {
 		// 	'reconnect': false
 		// });
 
-		this.socket.on('connect', function() {
+		this.socket.on('connect', function () {
 			self.state = Client.ST_CONNECTED;
 			if (self.md5) {
 				self.password = utils.md5(self.password);
@@ -53,7 +53,7 @@ Client.prototype = {
 			});
 		});
 
-		this.socket.on('register', function(res) {
+		this.socket.on('register', function (res) {
 			if (res.code !== protocol.PRO_OK) {
 				cb(res.msg);
 				return;
@@ -63,7 +63,7 @@ Client.prototype = {
 			cb();
 		});
 
-		this.socket.on('client', function(msg) {
+		this.socket.on('client', function (msg) {
 			msg = protocol.parse(msg);
 			if (msg.respId) {
 				// response for request
@@ -78,7 +78,7 @@ Client.prototype = {
 			}
 		});
 
-		this.socket.on('error', function(err) {
+		this.socket.on('error', function (err) {
 			if (self.state < Client.ST_CONNECTED) {
 				cb(err);
 			}
@@ -86,13 +86,13 @@ Client.prototype = {
 			self.emit('error', err);
 		});
 
-		this.socket.on('disconnect', function(reason) {
+		this.socket.on('disconnect', function (reason) {
 			this.state = Client.ST_CLOSED;
 			self.emit('close');
 		});
 	},
 
-	request: function(moduleId, msg, cb) {
+	request: function (moduleId, msg, cb) {
 		var id = this.reqId++;
 		// something dirty: attach current client id into msg
 		msg = msg || {};
@@ -104,7 +104,7 @@ Client.prototype = {
 		// this.socket.emit('client', req);
 	},
 
-	notify: function(moduleId, msg) {
+	notify: function (moduleId, msg) {
 		// something dirty: attach current client id into msg
 		msg = msg || {};
 		msg.clientId = this.id;
@@ -114,7 +114,7 @@ Client.prototype = {
 		// this.socket.emit('client', req);
 	},
 
-	command: function(command, moduleId, msg, cb) {
+	command: function (command, moduleId, msg, cb) {
 		var id = this.reqId++;
 		msg = msg || {};
 		msg.clientId = this.id;
@@ -125,16 +125,16 @@ Client.prototype = {
 		// this.socket.emit('client', commandReq);
 	},
 
-	doSend: function(topic, msg) {
+	doSend: function (topic, msg) {
 		this.socket.send(topic, msg);
 	},
 
-	on: function(event, listener) {
+	on: function (event, listener) {
 		this.listeners[event] = this.listeners[event] || [];
 		this.listeners[event].push(listener);
 	},
 
-	emit: function(event) {
+	emit: function (event) {
 		var listeners = this.listeners[event];
 		if (!listeners || !listeners.length) {
 			return;

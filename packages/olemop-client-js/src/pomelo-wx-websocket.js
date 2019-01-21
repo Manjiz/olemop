@@ -14,7 +14,7 @@ var decodeIO_decoder = null;
 var Package = Protocol.Package;
 var Message = Protocol.Message;
 
-if(typeof(window) != "undefined" && typeof(sys) != 'undefined' && sys.localStorage) {
+if (typeof(window) != "undefined" && typeof(sys) != 'undefined' && sys.localStorage) {
   window.localStorage = sys.localStorage;
 }
 
@@ -77,7 +77,7 @@ var handshakeBuffer = {
 
 var initCallback = null;
 
-pomelo.init = function(params, cb) {
+pomelo.init = function (params, cb) {
   initCallback = cb;
   var host = params.host;
   var port = params.port;
@@ -86,13 +86,13 @@ pomelo.init = function(params, cb) {
   decode = params.decode || defaultDecode;
 
   var url = 'wss://' + host;
-  if(port) {
+  if (port) {
     // url +=  ':' + port;
     url += '/' + port
   }
 
   handshakeBuffer.user = params.user;
-  if(params.encrypt) {
+  if (params.encrypt) {
     useCrypto = true;
     rsa.generate(1024, "10001");
     var data = {
@@ -105,14 +105,14 @@ pomelo.init = function(params, cb) {
   connect(params, url, cb);
 };
 
-var defaultDecode = pomelo.decode = function(data) {
+var defaultDecode = pomelo.decode = function (data) {
   //probuff decode
   var msg = Message.decode(data);
 
-  if(msg.id > 0){
+  if (msg.id > 0){
     msg.route = routeMap[msg.id];
     delete routeMap[msg.id];
-    if(!msg.route){
+    if (!msg.route){
       return;
     }
   }
@@ -121,13 +121,13 @@ var defaultDecode = pomelo.decode = function(data) {
   return msg;
 };
 
-var defaultEncode = pomelo.encode = function(reqId, route, msg) {
+var defaultEncode = pomelo.encode = function (reqId, route, msg) {
   var type = reqId ? Message.TYPE_REQUEST : Message.TYPE_NOTIFY;
 
   //compress message by protobuf
-  if(protobuf && clientProtos[route]) {
+  if (protobuf && clientProtos[route]) {
     msg = protobuf.encode(route, msg);
-  } else if(decodeIO_encoder && decodeIO_encoder.lookup(route)) {
+  } else if (decodeIO_encoder && decodeIO_encoder.lookup(route)) {
     var Builder = decodeIO_encoder.build(route);
     msg = new Builder(msg).encodeNB();
   } else {
@@ -135,7 +135,7 @@ var defaultEncode = pomelo.encode = function(reqId, route, msg) {
   }
 
   var compressRoute = 0;
-  if(dict && dict[route]) {
+  if (dict && dict[route]) {
     route = dict[route];
     compressRoute = 1;
   }
@@ -143,14 +143,14 @@ var defaultEncode = pomelo.encode = function(reqId, route, msg) {
   return Message.encode(reqId, type, compressRoute, route, msg);
 };
 
-var connect = function(params, url, cb) {
+var connect = function (params, url, cb) {
   console.log('connect to ' + url);
 
   var params = params || {};
   var maxReconnectAttempts = params.maxReconnectAttempts || DEFAULT_MAX_RECONNECT_ATTEMPTS;
   reconnectUrl = url;
   //Add protobuf version
-  // if(window.localStorage && window.localStorage.getItem('protos') && protoVersion === 0) {
+  // if (window.localStorage && window.localStorage.getItem('protos') && protoVersion === 0) {
   wx.getStorage({
     key: 'protos',
     success: function (ret) {
@@ -161,10 +161,10 @@ var connect = function(params, url, cb) {
         serverProtos = protos.server || {};
         clientProtos = protos.client || {};
 
-        if(!!protobuf) {
+        if (!!protobuf) {
           protobuf.init({encoderProtos: clientProtos, decoderProtos: serverProtos});
         }
-        if(!!decodeIO_protobuf) {
+        if (!!decodeIO_protobuf) {
           decodeIO_encoder = decodeIO_protobuf.loadJson(clientProtos);
           decodeIO_decoder = decodeIO_protobuf.loadJson(serverProtos);
         }
@@ -174,33 +174,33 @@ var connect = function(params, url, cb) {
       //Set protoversion
       handshakeBuffer.sys.protoVersion = protoVersion;
 
-      var onopen = function(event) {
-        if(!!reconnect) {
+      var onopen = function (event) {
+        if (!!reconnect) {
           pomelo.emit('reconnect');
         }
         reset();
         var obj = Package.encode(Package.TYPE_HANDSHAKE, Protocol.strencode(JSON.stringify(handshakeBuffer)));
         send(obj);
       };
-      var onmessage = function(event) {
+      var onmessage = function (event) {
         processPackage(Package.decode(event.data), cb);
         // new package arrived, update the heartbeat timeout
-        if(heartbeatTimeout) {
+        if (heartbeatTimeout) {
           nextHeartbeatTimeout = Date.now() + heartbeatTimeout;
         }
       };
-      var onerror = function(event) {
+      var onerror = function (event) {
         pomelo.emit('io-error', event);
         console.error('socket error: ', event);
       };
-      var onclose = function(event) {
+      var onclose = function (event) {
         pomelo.emit('close',event);
         pomelo.emit('disconnect', event);
         // console.error('socket close: ', event);
-        if(!!params.reconnect && reconnectAttempts < maxReconnectAttempts) {
+        if (!!params.reconnect && reconnectAttempts < maxReconnectAttempts) {
           reconnect = true;
           reconnectAttempts++;
-          reconncetTimer = setTimeout(function() {
+          reconncetTimer = setTimeout(function () {
             connect(params, reconnectUrl, cb);
           }, reconnectionDelay);
           reconnectionDelay *= 2;
@@ -225,41 +225,41 @@ var connect = function(params, url, cb) {
   })
 };
 
-pomelo.disconnect = function() {
-  if(socket) {
-    // if(socket.disconnect) socket.disconnect();
-    // if(socket.close) socket.close();
+pomelo.disconnect = function () {
+  if (socket) {
+    // if (socket.disconnect) socket.disconnect();
+    // if (socket.close) socket.close();
     wx.closeSocket()
     console.log('disconnect');
     socket = null;
   }
 
-  if(heartbeatId) {
+  if (heartbeatId) {
     clearTimeout(heartbeatId);
     heartbeatId = null;
   }
-  if(heartbeatTimeoutId) {
+  if (heartbeatTimeoutId) {
     clearTimeout(heartbeatTimeoutId);
     heartbeatTimeoutId = null;
   }
 };
 
-var reset = function() {
+var reset = function () {
   reconnect = false;
   reconnectionDelay = 1000 * 5;
   reconnectAttempts = 0;
   clearTimeout(reconncetTimer);
 };
 
-pomelo.request = function(route, msg, cb) {
-  if(arguments.length === 2 && typeof msg === 'function') {
+pomelo.request = function (route, msg, cb) {
+  if (arguments.length === 2 && typeof msg === 'function') {
     cb = msg;
     msg = {};
   } else {
     msg = msg || {};
   }
   route = route || msg.route;
-  if(!route) {
+  if (!route) {
     return;
   }
 
@@ -270,19 +270,19 @@ pomelo.request = function(route, msg, cb) {
   routeMap[reqId] = route;
 };
 
-pomelo.notify = function(route, msg) {
+pomelo.notify = function (route, msg) {
   msg = msg || {};
   sendMessage(0, route, msg);
 };
 
-var sendMessage = function(reqId, route, msg) {
-  if(useCrypto) {
+var sendMessage = function (reqId, route, msg) {
+  if (useCrypto) {
     msg = JSON.stringify(msg);
     var sig = rsa.signString(msg, "sha256");
     msg = JSON.parse(msg);
     msg['__crypto__'] = sig;
   }
-  if(encode) {
+  if (encode) {
     msg = encode(reqId, route, msg);
   }
 
@@ -290,31 +290,31 @@ var sendMessage = function(reqId, route, msg) {
   send(packet);
 };
 
-var send = function(packet) {
-  if(socket)
+var send = function (packet) {
+  if (socket)
     // socket.send(packet.buffer);
     wx.sendSocketMessage({ data: packet.buffer })
 };
 
 var handler = {};
 
-var heartbeat = function(data) {
-  if(!heartbeatInterval) {
+var heartbeat = function (data) {
+  if (!heartbeatInterval) {
     // no heartbeat
     return;
   }
 
   var obj = Package.encode(Package.TYPE_HEARTBEAT);
-  if(heartbeatTimeoutId) {
+  if (heartbeatTimeoutId) {
     clearTimeout(heartbeatTimeoutId);
     heartbeatTimeoutId = null;
   }
 
-  if(heartbeatId) {
+  if (heartbeatId) {
     // already in a heartbeat interval
     return;
   }
-  heartbeatId = setTimeout(function() {
+  heartbeatId = setTimeout(function () {
     heartbeatId = null;
     send(obj);
 
@@ -323,9 +323,9 @@ var heartbeat = function(data) {
   }, heartbeatInterval);
 };
 
-var heartbeatTimeoutCb = function() {
+var heartbeatTimeoutCb = function () {
   var gap = nextHeartbeatTimeout - Date.now();
-  if(gap > gapThreshold) {
+  if (gap > gapThreshold) {
     heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, gap);
   } else {
     console.error('server heartbeat timeout');
@@ -334,14 +334,14 @@ var heartbeatTimeoutCb = function() {
   }
 };
 
-var handshake = function(data) {
+var handshake = function (data) {
   data = JSON.parse(Protocol.strdecode(data));
-  if(data.code === RES_OLD_CLIENT) {
+  if (data.code === RES_OLD_CLIENT) {
     pomelo.emit('error', 'client version not fullfill');
     return;
   }
 
-  if(data.code !== RES_OK) {
+  if (data.code !== RES_OK) {
     pomelo.emit('error', 'handshake fail');
     return;
   }
@@ -350,20 +350,20 @@ var handshake = function(data) {
 
   var obj = Package.encode(Package.TYPE_HANDSHAKE_ACK);
   send(obj);
-  if(initCallback) {
+  if (initCallback) {
     initCallback(socket);
   }
 };
 
-var onData = function(data) {
+var onData = function (data) {
   var msg = data;
-  if(decode) {
+  if (decode) {
     msg = decode(msg);
   }
   processMessage(pomelo, msg);
 };
 
-var onKick = function(data) {
+var onKick = function (data) {
   data = JSON.parse(Protocol.strdecode(data));
   pomelo.emit('onKick', data);
 };
@@ -373,9 +373,9 @@ handlers[Package.TYPE_HEARTBEAT] = heartbeat;
 handlers[Package.TYPE_DATA] = onData;
 handlers[Package.TYPE_KICK] = onKick;
 
-var processPackage = function(msgs) {
-  if(Array.isArray(msgs)) {
-    for(var i=0; i<msgs.length; i++) {
+var processPackage = function (msgs) {
+  if (Array.isArray(msgs)) {
+    for (var i=0; i<msgs.length; i++) {
       var msg = msgs[i];
       handlers[msg.type](msg.body);
     }
@@ -384,8 +384,8 @@ var processPackage = function(msgs) {
   }
 };
 
-var processMessage = function(pomelo, msg) {
-  if(!msg.id) {
+var processMessage = function (pomelo, msg) {
+  if (!msg.id) {
     // server push message
     pomelo.emit(msg.route, msg.body);
     return;
@@ -395,7 +395,7 @@ var processMessage = function(pomelo, msg) {
   var cb = callbacks[msg.id];
 
   delete callbacks[msg.id];
-  if(typeof cb !== 'function') {
+  if (typeof cb !== 'function') {
     return;
   }
 
@@ -403,26 +403,26 @@ var processMessage = function(pomelo, msg) {
   return;
 };
 
-var processMessageBatch = function(pomelo, msgs) {
-  for(var i=0, l=msgs.length; i<l; i++) {
+var processMessageBatch = function (pomelo, msgs) {
+  for (var i=0, l=msgs.length; i<l; i++) {
     processMessage(pomelo, msgs[i]);
   }
 };
 
-var deCompose = function(msg) {
+var deCompose = function (msg) {
   var route = msg.route;
 
   //Decompose route from dict
-  if(msg.compressRoute) {
-    if(!abbrs[route]){
+  if (msg.compressRoute) {
+    if (!abbrs[route]){
       return {};
     }
 
     route = msg.route = abbrs[route];
   }
-  if(protobuf && serverProtos[route]) {
+  if (protobuf && serverProtos[route]) {
     return protobuf.decodeStr(route, msg.body);
-  } else if(decodeIO_decoder && decodeIO_decoder.lookup(route)) {
+  } else if (decodeIO_decoder && decodeIO_decoder.lookup(route)) {
     return decodeIO_decoder.build(route).decode(msg.body);
   } else {
     return JSON.parse(Protocol.strdecode(msg.body));
@@ -431,8 +431,8 @@ var deCompose = function(msg) {
   return msg;
 };
 
-var handshakeInit = function(data) {
-  if(data.sys && data.sys.heartbeat) {
+var handshakeInit = function (data) {
+  if (data.sys && data.sys.heartbeat) {
     heartbeatInterval = data.sys.heartbeat * 1000;   // heartbeat interval
     heartbeatTimeout = heartbeatInterval * 2;        // max heartbeat timeout
   } else {
@@ -442,31 +442,31 @@ var handshakeInit = function(data) {
 
   initData(data);
 
-  if(typeof handshakeCallback === 'function') {
+  if (typeof handshakeCallback === 'function') {
     handshakeCallback(data.user);
   }
 };
 
 //Initilize data used in pomelo client
-var initData = function(data) {
-  if(!data || !data.sys) {
+var initData = function (data) {
+  if (!data || !data.sys) {
     return;
   }
   dict = data.sys.dict;
   var protos = data.sys.protos;
 
   //Init compress dict
-  if(dict) {
+  if (dict) {
     dict = dict;
     abbrs = {};
 
-    for(var route in dict) {
+    for (var route in dict) {
       abbrs[dict[route]] = route;
     }
   }
 
   //Init protobuf protos
-  if(protos) {
+  if (protos) {
     protoVersion = protos.version || 0;
     serverProtos = protos.server || {};
     clientProtos = protos.client || {};
@@ -475,10 +475,10 @@ var initData = function(data) {
     // window.localStorage.setItem('protos', JSON.stringify(protos));
     wx.setStorage({ key: 'protos', data: JSON.stringify(protos) })
 
-    if(!!protobuf) {
+    if (!!protobuf) {
       protobuf.init({encoderProtos: protos.client, decoderProtos: protos.server});
     }
-    if(!!decodeIO_protobuf) {
+    if (!!decodeIO_protobuf) {
       decodeIO_encoder = decodeIO_protobuf.loadJson(clientProtos);
       decodeIO_decoder = decodeIO_protobuf.loadJson(serverProtos);
     }

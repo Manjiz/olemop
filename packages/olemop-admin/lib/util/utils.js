@@ -8,7 +8,7 @@ var utils = module.exports;
 /**
  * Check and invoke callback
  */
-utils.invokeCallback = function(cb) {
+utils.invokeCallback = function (cb) {
     if (!!cb && typeof cb === 'function') {
         cb.apply(null, Array.prototype.slice.call(arguments, 1));
     }
@@ -17,7 +17,7 @@ utils.invokeCallback = function(cb) {
 /*
  * Date format
  */
-utils.format = function(date, format) {
+utils.format = function (date, format) {
     format = format || 'MM-dd-hhmm';
     var o = {
         "M+": date.getMonth() + 1, //month
@@ -43,7 +43,7 @@ utils.format = function(date, format) {
     return format;
 };
 
-utils.compareServer = function(server1, server2) {
+utils.compareServer = function (server1, server2) {
     return (server1['host'] === server2['host']) &&
         (server1['port'] === server2['port']);
 }
@@ -51,7 +51,7 @@ utils.compareServer = function(server1, server2) {
 /**
  * Get the count of elements of object
  */
-utils.size = function(obj, type) {
+utils.size = function (obj, type) {
     var count = 0;
     for (var i in obj) {
         if (obj.hasOwnProperty(i) && typeof obj[i] !== 'function') {
@@ -68,14 +68,14 @@ utils.size = function(obj, type) {
     return count;
 };
 
-utils.md5 = function(str) {
+utils.md5 = function (str) {
     var md5sum = crypto.createHash('md5');
     md5sum.update(str);
     str = md5sum.digest('hex');
     return str;
 }
 
-utils.defaultAuthUser = function(msg, env, cb) {
+utils.defaultAuthUser = function (msg, env, cb) {
     var adminUser = null;
     var appBase = path.dirname(require.main.filename);
     var adminUserPath = path.join(appBase, '/config/adminUser.json');
@@ -117,7 +117,7 @@ utils.defaultAuthUser = function(msg, env, cb) {
     cb(null);
 }
 
-utils.defaultAuthServerMaster = function(msg, env, cb) {
+utils.defaultAuthServerMaster = function (msg, env, cb) {
     var id = msg['id'];
     var type = msg['serverType'];
     var token = msg['token'];
@@ -155,7 +155,7 @@ utils.defaultAuthServerMaster = function(msg, env, cb) {
     return;
 }
 
-utils.defaultAuthServerMonitor = function(msg, env, cb) {
+utils.defaultAuthServerMonitor = function (msg, env, cb) {
     var id = msg['id'];
     var type = msg['serverType'];
 

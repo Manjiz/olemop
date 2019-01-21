@@ -9,7 +9,7 @@ var Q = thrift.Q;
 
 
 var ttypes = module.exports = {};
-SharedStruct = module.exports.SharedStruct = function(args) {
+SharedStruct = module.exports.SharedStruct = function (args) {
   this.key = null;
   this.value = null;
   if (args) {
@@ -22,7 +22,7 @@ SharedStruct = module.exports.SharedStruct = function(args) {
   }
 };
 SharedStruct.prototype = {};
-SharedStruct.prototype.read = function(input) {
+SharedStruct.prototype.read = function (input) {
   input.readStructBegin();
   while (true)
   {
@@ -58,7 +58,7 @@ SharedStruct.prototype.read = function(input) {
   return;
 };
 
-SharedStruct.prototype.write = function(output) {
+SharedStruct.prototype.write = function (output) {
   output.writeStructBegin('SharedStruct');
   if (this.key !== null && this.key !== undefined) {
     output.writeFieldBegin('key', Thrift.Type.I32, 1);

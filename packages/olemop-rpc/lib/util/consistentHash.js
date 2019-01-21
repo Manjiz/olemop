@@ -1,6 +1,6 @@
 var crypto = require('crypto');
 
-var ConsistentHash = function(nodes, opts) {
+var ConsistentHash = function (nodes, opts) {
   this.opts = opts || {};
   this.replicas = this.opts.replicas || 100;
   this.algorithm = this.opts.algorithm || 'md5';
@@ -19,7 +19,7 @@ var ConsistentHash = function(nodes, opts) {
 
 module.exports = ConsistentHash;
 
-ConsistentHash.prototype.addNode = function(node) {
+ConsistentHash.prototype.addNode = function (node) {
   this.nodes.push(node);
   for (var i = 0; i < this.replicas; i++) {
     var key = hash(this.algorithm, (node.id || node) + ':' + i);
@@ -29,7 +29,7 @@ ConsistentHash.prototype.addNode = function(node) {
   this.keys.sort();
 };
 
-ConsistentHash.prototype.removeNode = function(node) {
+ConsistentHash.prototype.removeNode = function (node) {
   for (var i = 0; i < this.nodes.length; i++) {
     if (this.nodes[i] === node) {
       this.nodes.splice(i, 1);
@@ -49,7 +49,7 @@ ConsistentHash.prototype.removeNode = function(node) {
   }
 };
 
-ConsistentHash.prototype.getNode = function(key) {
+ConsistentHash.prototype.getNode = function (key) {
   if (getKeysLength(this.ring) === 0) {
     return 0;
   }
@@ -58,7 +58,7 @@ ConsistentHash.prototype.getNode = function(key) {
   return this.ring[this.keys[pos]];
 };
 
-ConsistentHash.prototype.getNodePosition = function(result) {
+ConsistentHash.prototype.getNodePosition = function (result) {
   var upper = getKeysLength(this.ring) - 1;
   var lower = 0;
   var idx = 0;
@@ -89,14 +89,14 @@ ConsistentHash.prototype.getNodePosition = function(result) {
   return upper;
 };
 
-var getKeysLength = function(map) {
+var getKeysLength = function (map) {
   return Object.keys(map).length;
 };
 
-var hash = function(algorithm, str) {
+var hash = function (algorithm, str) {
   return crypto.createHash(algorithm).update(str).digest('hex');
 };
 
-var compare = function(v1, v2) {
+var compare = function (v1, v2) {
   return v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
 };

@@ -48,7 +48,7 @@ var trigger6 = {
 ``` javascript
 var schedule = require('../lib/schedule');
 
-var simpleJob = function(data){
+var simpleJob = function (data){
    console.log("run Job :" + data.name);
 }
 
@@ -61,7 +61,7 @@ Cron job is the job that use cron trigger, it is just like the simple job, only 
 ``` javascript
 var schedule = require('../lib/schedule');
 
-var cronJob = function(data){
+var cronJob = function (data){
    console.log("run Job :" + data.name);
 }
 
@@ -100,7 +100,7 @@ Cron trigger has 7 fiels, the format is very like the cronTab in linux, only add
 ``` javascript
 var schedule = require('../lib/schedule');
 
-var simpleJob = function(){
+var simpleJob = function (){
    console.log("run simple Job ");
 }
 

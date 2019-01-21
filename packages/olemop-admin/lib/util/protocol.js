@@ -1,4 +1,4 @@
-exports.composeRequest = function(id, moduleId, body) {
+exports.composeRequest = function (id, moduleId, body) {
 	if (id) {
 		// request message
 		return JSON.stringify({
@@ -15,7 +15,7 @@ exports.composeRequest = function(id, moduleId, body) {
 	}
 };
 
-exports.composeResponse = function(req, err, res) {
+exports.composeResponse = function (req, err, res) {
 	if (req.reqId) {
 		// request only
 		return JSON.stringify({
@@ -28,7 +28,7 @@ exports.composeResponse = function(req, err, res) {
 	return null;
 };
 
-exports.composeCommand = function(id, command, moduleId, body) {
+exports.composeCommand = function (id, command, moduleId, body) {
 	if (id) {
 		// command message
 		return JSON.stringify({
@@ -46,18 +46,18 @@ exports.composeCommand = function(id, command, moduleId, body) {
 	}
 }
 
-exports.parse = function(msg) {
+exports.parse = function (msg) {
 	if (typeof msg === 'string') {
 		return JSON.parse(msg);
 	}
 	return msg;
 };
 
-exports.isRequest = function(msg) {
+exports.isRequest = function (msg) {
 	return (msg && msg.reqId);
 };
 
-var cloneError = function(origin) {
+var cloneError = function (origin) {
 	// copy the stack infos for Error instance json result is empty
 	if (!(origin instanceof Error)) {
 		return origin;

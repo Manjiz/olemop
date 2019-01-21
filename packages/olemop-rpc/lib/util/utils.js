@@ -1,18 +1,18 @@
 var Utils = {};
 
-Utils.invokeCallback = function(cb) {
+Utils.invokeCallback = function (cb) {
 	if (typeof cb === 'function') {
 		cb.apply(null, Array.prototype.slice.call(arguments, 1));
 	}
 };
 
-Utils.applyCallback = function(cb, args) {
+Utils.applyCallback = function (cb, args) {
 	if (typeof cb === 'function') {
 		cb.apply(null, args);
 	}
 };
 
-Utils.getObjectClass = function(obj) {
+Utils.getObjectClass = function (obj) {
 	if (!obj) {
 		return;
 	}
@@ -50,7 +50,7 @@ Utils.getObjectClass = function(obj) {
  * @return {Boolean} true|false
  * @api public
  */
-Utils.checkFloat = function(v) {
+Utils.checkFloat = function (v) {
 	return v === Number(v) && v % 1 !== 0;
 	// return parseInt(v) !== v;
 }
@@ -62,8 +62,8 @@ Utils.checkFloat = function(v) {
  * @return {Function} high order function
  * @api public
  */
-Utils.isType = function(type) {
-	return function(obj) {
+Utils.isType = function (type) {
+	return function (obj) {
 		return {}.toString.call(obj) == "[object " + type + "]";
 	}
 }
@@ -128,13 +128,13 @@ Utils.checkBoolean = Utils.isType("Boolean");
  * @return {Boolean}  true|false
  * @api public
  */
-Utils.checkBean = function(obj) {
+Utils.checkBean = function (obj) {
 	return obj && obj['$id'] &&
 		Utils.checkFunction(obj['writeFields']) &&
 		Utils.checkFunction(obj['readFields']);
 }
 
-Utils.checkNull = function(obj) {
+Utils.checkNull = function (obj) {
 	return !Utils.isNotNull(obj);
 }
 
@@ -145,7 +145,7 @@ Utils.checkNull = function(obj) {
  * @return {Array}   array
  * @api public
  */
-Utils.to_array = function(args) {
+Utils.to_array = function (args) {
 	var len = args.length;
 	var arr = new Array(len);
 
@@ -163,13 +163,13 @@ Utils.to_array = function(args) {
  * @return {Boolean}  true|false
  * @api public
  */
-Utils.isNotNull = function(value) {
+Utils.isNotNull = function (value) {
 	if (value !== null && typeof value !== 'undefined')
 		return true;
 	return false;
 }
 
-Utils.getType = function(object) {
+Utils.getType = function (object) {
 	if (object == null || typeof object === 'undefined') {
 		return Utils.typeMap['null'];
 	}
@@ -221,11 +221,11 @@ Utils.typeArray = typeArray;
 
 Utils.typeMap = typeMap;
 
-Utils.getBearcat = function() {
+Utils.getBearcat = function () {
 	return require('bearcat');
 }
 
-Utils.genServicesMap = function(services) {
+Utils.genServicesMap = function (services) {
 	var nMap = {}; // namespace
 	var sMap = {}; // service
 	var mMap = {}; // method
