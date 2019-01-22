@@ -9,7 +9,7 @@
     "@olemop/protocol": "^0.0.14",
     "@olemop/rpc": "^0.0.34",
     "@olemop/scheduler": "^0.0.14",
-    "async": "0.2.5",
+    "async": "^2.6.1",
     "cliff": "0.1.8",
     "commander": "2.0.0",
     "crc": "0.2.0",

@@ -104,7 +104,7 @@ exports.stopComps = function (comps, index, force, cb) {
  * @param {Function} cb
  */
 exports.optComponents = function (comps, method, cb) {
-  async.forEachSeries(comps, (comp, done) => {
+  async.eachSeries(comps, (comp, done) => {
     if (typeof comp[method] === 'function') {
       comp[method](done)
     } else {

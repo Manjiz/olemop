@@ -6,21 +6,21 @@
 
 const fs = require('fs')
 const path = require('path')
+const EventEmitter = require('events')
 const olemopUtils = require('@olemop/utils')
-var utils = require('./util/utils');
-var logger = require('@olemop/logger').getLogger('olemop', __filename);
-var EventEmitter = require('events').EventEmitter;
-var events = require('./util/events');
-var appUtil = require('./util/appUtil');
-var Constants = require('./util/constants');
-var appManager = require('./common/manager/appManager')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const utils = require('./util/utils')
+const events = require('./util/events')
+const appUtil = require('./util/appUtil')
+const Constants = require('./util/constants')
+const appManager = require('./common/manager/appManager')
 
 /**
  * Application prototype.
  *
  * @module
  */
-var Application = module.exports = {};
+var Application = module.exports = {}
 
 /**
  * Application states
@@ -668,18 +668,11 @@ Application.use = function (plugin, opts) {
 }
 
 /**
- * Application transaction. Transcation includes conditions and handlers, if conditions are satisfied, handlers would be executed.
- * And you can set retry times to execute handlers. The transaction log is in file logs/transaction.log.
- *
- * @param {String} name transaction name
- * @param {Object} conditions functions which are called before transaction
- * @param {Object} handlers functions which are called during transaction
- * @param {Number} retry retry times to execute handlers if conditions are successfully executed
- * @memberOf Application
+ * @see appManager.transaction
  */
 Application.transaction = function (name, conditions, handlers, retry) {
-  appManager.transaction(name, conditions, handlers, retry);
-};
+  appManager.transaction(name, conditions, handlers, retry)
+}
 
 /**
  * Get master server info.
