@@ -81,6 +81,6 @@ Remote.prototype.kickByUid = function (uid, reason, cb) {
   this.app.get('sessionService').kick(uid, reason, cb)
 }
 
-module.exports = (app) => {
+module.exports = function (app) {
   return new Remote(app)
 }

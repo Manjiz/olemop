@@ -9,7 +9,7 @@ const utils = require('../../util/utils')
  * And you can set retry times to execute handlers. The transaction log is in file logs/transaction.log.
  *
  * @param {String} name transaction name
- * @param {Object} conditions functions which are called before transaction, must call cb at the end
+ * @param {Object} conditions functions which are called before transaction, must call `cb` at the end
  * @param {Object} handlers functions which are called during transaction
  * @param {Number} retry retry times to execute handlers if conditions are successfully executed
  * @example

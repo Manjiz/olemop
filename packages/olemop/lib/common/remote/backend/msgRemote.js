@@ -90,6 +90,6 @@ Remote.prototype.forwardMessage2 = function (route, body, aesPassword, compressG
  * Remote service for backend servers.
  * Receive and handle request message forwarded from frontend server.
  */
-module.exports = (app) => {
+module.exports = function (app) {
   return new Remote(app)
 }

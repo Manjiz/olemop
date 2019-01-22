@@ -62,6 +62,6 @@ Remote.prototype.broadcast = function (route, msg, opts, cb) {
   connector.send(null, route, msg, null, opts, cb)
 }
 
-module.exports = (app) => {
+module.exports = function (app) {
   return new Remote(app)
 }

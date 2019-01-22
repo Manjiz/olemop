@@ -3,7 +3,7 @@ const logger = require('@olemop/logger')
 /**
  * Configure pomelo logger
  */
-module.exports.configure = (app, filename, paramLogger) => {
+module.exports.configure = function (app, filename, paramLogger) {
   const serverId = app.getServerId()
   const base = app.getBase()
   const _logger = paramLogger || logger

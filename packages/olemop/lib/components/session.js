@@ -43,7 +43,7 @@ class Component {
   }
 }
 
-module.exports = (app, opts) => {
+module.exports = function (app, opts) {
   const cmp = new Component(app, opts)
   app.set('sessionService', cmp, true)
   return cmp

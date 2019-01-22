@@ -69,7 +69,7 @@ class Component {
  * @param {Object} opts construct parameters
  * @return {Object}     component instances
  */
-module.exports = (app, opts) => {
+module.exports = function (app, opts) {
   // this should be singleton
   if (instance) return instance
 
