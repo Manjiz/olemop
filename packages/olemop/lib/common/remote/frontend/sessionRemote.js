@@ -2,31 +2,27 @@
  * Remote session service for frontend server.
  * Set session info for backend servers.
  */
-var utils = require('../../../util/utils');
+const utils = require('../../../util/utils')
 
-module.exports = function (app) {
-  return new Remote(app);
-};
-
-var Remote = function (app) {
-  this.app = app;
-};
+const Remote = function (app) {
+  this.app = app
+}
 
 Remote.prototype.bind = function (sid, uid, cb) {
-  this.app.get('sessionService').bind(sid, uid, cb);
-};
+  this.app.get('sessionService').bind(sid, uid, cb)
+}
 
 Remote.prototype.unbind = function (sid, uid, cb) {
-  this.app.get('sessionService').unbind(sid, uid, cb);
-};
+  this.app.get('sessionService').unbind(sid, uid, cb)
+}
 
 Remote.prototype.push = function (sid, key, value, cb) {
-  this.app.get('sessionService').import(sid, key, value, cb);
-};
+  this.app.get('sessionService').import(sid, key, value, cb)
+}
 
 Remote.prototype.pushAll = function (sid, settings, cb) {
-  this.app.get('sessionService').importAll(sid, settings, cb);
-};
+  this.app.get('sessionService').importAll(sid, settings, cb)
+}
 
 /**
  * Get session informations with session id.
@@ -35,13 +31,13 @@ Remote.prototype.pushAll = function (sid, settings, cb) {
  * @param  {Function} cb(err, sinfo)  callback funtion, sinfo would be null if the session not exist.
  */
 Remote.prototype.getBackendSessionBySid = function (sid, cb) {
-  var session = this.app.get('sessionService').get(sid);
+  const session = this.app.get('sessionService').get(sid)
   if (!session) {
-    utils.invokeCallback(cb);
-    return;
+    utils.invokeCallback(cb)
+    return
   }
-  utils.invokeCallback(cb, null, session.toFrontendSession().export());
-};
+  utils.invokeCallback(cb, null, session.toFrontendSession().export())
+}
 
 /**
  * Get all the session informations with the specified user id.
@@ -50,18 +46,18 @@ Remote.prototype.getBackendSessionBySid = function (sid, cb) {
  * @param  {Function} cb(err, sinfo)  callback funtion, sinfo would be null if the session does not exist.
  */
 Remote.prototype.getBackendSessionsByUid = function (uid, cb) {
-  var sessions = this.app.get('sessionService').getByUid(uid);
+  var sessions = this.app.get('sessionService').getByUid(uid)
   if (!sessions) {
-    utils.invokeCallback(cb);
-    return;
+    utils.invokeCallback(cb)
+    return
   }
 
-  var res = [];
-  for (var i=0, l=sessions.length; i<l; i++) {
-    res.push(sessions[i].toFrontendSession().export());
+  var res = []
+  for (var i=0; i < sessions.length; i++) {
+    res.push(sessions[i].toFrontendSession().export())
   }
-  utils.invokeCallback(cb, null, res);
-};
+  utils.invokeCallback(cb, null, res)
+}
 
 /**
  * Kick a session by session id.
@@ -71,8 +67,8 @@ Remote.prototype.getBackendSessionsByUid = function (uid, cb) {
  * @param  {Function} cb  callback function
  */
 Remote.prototype.kickBySid = function (sid, reason, cb) {
-  this.app.get('sessionService').kickBySessionId(sid, reason, cb);
-};
+  this.app.get('sessionService').kickBySessionId(sid, reason, cb)
+}
 
 /**
  * Kick sessions by user id.
@@ -82,5 +78,9 @@ Remote.prototype.kickBySid = function (sid, reason, cb) {
  * @param  {Function} cb     callback function
  */
 Remote.prototype.kickByUid = function (uid, reason, cb) {
-  this.app.get('sessionService').kick(uid, reason, cb);
-};
+  this.app.get('sessionService').kick(uid, reason, cb)
+}
+
+module.exports = (app) => {
+  return new Remote(app)
+}

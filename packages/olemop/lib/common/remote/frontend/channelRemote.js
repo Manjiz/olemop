@@ -2,16 +2,13 @@
  * Remote channel service for frontend server.
  * Receive push request from backend servers and push it to clients.
  */
-var utils = require('../../../util/utils');
-var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
-module.exports = function (app) {
-  return new Remote(app);
-};
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const utils = require('../../../util/utils')
 
-var Remote = function (app) {
-  this.app = app;
-};
+const Remote = function (app) {
+  this.app = app
+}
 
 /**
  * Push message to client by uids.
@@ -24,31 +21,32 @@ var Remote = function (app) {
  */
 Remote.prototype.pushMessage = function (route, msg, uids, opts, cb) {
   if (!msg){
-    logger.error('Can not send empty message! route : %j, compressed msg : %j',
-        route, msg);
-    utils.invokeCallback(cb, new Error('can not send empty message.'));
-    return;
+    logger.error('Can not send empty message! route : %j, compressed msg : %j', route, msg)
+    utils.invokeCallback(cb, new Error('can not send empty message.'))
+    return
   }
 
-  var connector = this.app.components.__connector__;
+  const connector = this.app.components.__connector__
 
-  var sessionService = this.app.get('sessionService');
-  var fails = [], sids = [], sessions, j, k;
-  for (var i=0, l=uids.length; i<l; i++) {
-    sessions = sessionService.getByUid(uids[i]);
+  const sessionService = this.app.get('sessionService')
+  const fails = []
+  const sids = []
+  let sessions
+  for (let i = 0; i < uids.length; i++) {
+    sessions = sessionService.getByUid(uids[i])
     if (!sessions) {
-      fails.push(uids[i]);
+      fails.push(uids[i])
     } else {
-      for (j=0, k=sessions.length; j<k; j++) {
-        sids.push(sessions[j].id);
+      for (let j = 0; j < sessions.length; j++) {
+        sids.push(sessions[j].id)
       }
     }
   }
-  logger.debug('[%s] pushMessage uids: %j, msg: %j, sids: %j', this.app.serverId, uids, msg, sids);
-  connector.send(null, route, msg, sids, opts, function (err) {
-    utils.invokeCallback(cb, err, fails);
-  });
-};
+  logger.debug('[%s] pushMessage uids: %j, msg: %j, sids: %j', this.app.serverId, uids, msg, sids)
+  connector.send(null, route, msg, sids, opts, (err) => {
+    utils.invokeCallback(cb, err, fails)
+  })
+}
 
 /**
  * Broadcast to all the client connectd with current frontend server.
@@ -59,7 +57,11 @@ Remote.prototype.pushMessage = function (route, msg, uids, opts, cb) {
  * @param  {Function}  cb     callback function
  */
 Remote.prototype.broadcast = function (route, msg, opts, cb) {
-  var connector = this.app.components.__connector__;
+  const connector = this.app.components.__connector__
 
-  connector.send(null, route, msg, null, opts, cb);
-};
+  connector.send(null, route, msg, null, opts, cb)
+}
+
+module.exports = (app) => {
+  return new Remote(app)
+}
