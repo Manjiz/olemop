@@ -59,7 +59,7 @@ SkillAction.calDamage = function (equiper, equipObject, target, skill, addParas)
     p[9] = target.def;
     p[10] = SkillAction.wLayer.techs[target.force].getLineupEffect(target._lineup.id);
     p[11] = SkillAction.wLayer.techs[target.force].getCastleEffect();
-    if (target.type===MAP_DEF.TYPE_UNIT){
+    if (target.type === MAP_DEF.TYPE_UNIT){
         p[14] = 2;
     } else {
         p[12] = target.durable;
@@ -98,7 +98,7 @@ SkillAction.scopeLoop = function (cx, cy, cs, cb, cells){
             for (var j = 0; j < objs.length; j++) {
                 var obj = objs[j];
                 //_.log(obj.name);
-                if (visitedObjs.indexOf(obj)===-1){
+                if (visitedObjs.indexOf(obj) === -1){
                     visitedObjs.push(obj);
                     var breakFlag = cb(obj);
                     if (breakFlag){
@@ -166,13 +166,13 @@ SkillAction.checkAffectType = function (target, self, action){
             ret = target.force!==self.force;
             break;
         case SKILL_DEF.AFFECT_FRIEND:
-            ret = target.force===self.force;
+            ret = target.force === self.force;
             break;
         case SKILL_DEF.AFFECT_BOTH:
             ret = true;
             break;
         case SKILL_DEF.AFFECT_SELF:
-            ret = target.force===self.force;
+            ret = target.force === self.force;
             break;
         case SKILL_DEF.AFFECT_TARGET:
             ret = target.force!==self.force;
@@ -191,13 +191,13 @@ SkillAction.getActionTarget = function (target, action){
     var ret = null;
     switch (action.targetType){
         case SKILL_DEF.TARGET_ARMY:
-            if (target.type===MAP_DEF.TYPE_UNIT){
+            if (target.type === MAP_DEF.TYPE_UNIT){
                 ret = target;
             }
             break;
         case SKILL_DEF.TARGET_BUILDING:
-            if (target.type===MAP_DEF.TYPE_BUILDING_PORT ||target.type===MAP_DEF.TYPE_BUILDING_GATE ||
-                target.type===MAP_DEF.TYPE_BUILDING_CASTLE || SkillAction.wLayer.workpieceMgr.checkWorkPiece(target)){
+            if (target.type === MAP_DEF.TYPE_BUILDING_PORT ||target.type === MAP_DEF.TYPE_BUILDING_GATE ||
+                target.type === MAP_DEF.TYPE_BUILDING_CASTLE || SkillAction.wLayer.workpieceMgr.checkWorkPiece(target)){
                 ret = target;
             }
             break;
@@ -207,19 +207,19 @@ SkillAction.getActionTarget = function (target, action){
             }
             break;
         case SKILL_DEF.TARGET_ARMY_WJ:
-            if (target.type===MAP_DEF.TYPE_UNIT){
+            if (target.type === MAP_DEF.TYPE_UNIT){
                 ret = target.wuJiang.getWuJiangs();
             }
             break;
         case SKILL_DEF.TARGET_BUILDING_WJ:
-            if (target.type===MAP_DEF.TYPE_BUILDING_PORT ||target.type===MAP_DEF.TYPE_BUILDING_GATE ||
-                target.type===MAP_DEF.TYPE_BUILDING_CASTLE || SkillAction.wLayer.workpieceMgr.checkWorkPiece(target)){
+            if (target.type === MAP_DEF.TYPE_BUILDING_PORT ||target.type === MAP_DEF.TYPE_BUILDING_GATE ||
+                target.type === MAP_DEF.TYPE_BUILDING_CASTLE || SkillAction.wLayer.workpieceMgr.checkWorkPiece(target)){
                 ret = target.pML.wuJiangMgr.getWJBySuoShu(target.objID);
             }
             break;
         case SKILL_DEF.TARGET_TROOPS:
-            if (target.type===MAP_DEF.TYPE_BUILDING_PORT ||target.type===MAP_DEF.TYPE_BUILDING_GATE || target.type===MAP_DEF.TYPE_UNIT ||
-                target.type===MAP_DEF.TYPE_BUILDING_CASTLE || SkillAction.wLayer.workpieceMgr.checkWorkPiece(target)){
+            if (target.type === MAP_DEF.TYPE_BUILDING_PORT ||target.type === MAP_DEF.TYPE_BUILDING_GATE || target.type === MAP_DEF.TYPE_UNIT ||
+                target.type === MAP_DEF.TYPE_BUILDING_CASTLE || SkillAction.wLayer.workpieceMgr.checkWorkPiece(target)){
                 ret = target;
             }
             break;
@@ -340,7 +340,7 @@ SkillAction.cureInjury = function (paras) {
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
         if (SkillAction.checkAffectType(obj, equipObject, action)) {
             var wjs = [];
-            if (obj.type===MAP_DEF.TYPE_UNIT){
+            if (obj.type === MAP_DEF.TYPE_UNIT){
                 wjs = obj.wuJiang.getWuJiangs();
             }
             for (var i=0;i<wjs.length;i++){
@@ -364,7 +364,7 @@ SkillAction.refresh = function (paras) {
     var buffMgr = equipObject.pML.buffMgr;
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
         if (SkillAction.checkAffectType(obj, equipObject, action)) {
-            if (obj.type===MAP_DEF.TYPE_UNIT){
+            if (obj.type === MAP_DEF.TYPE_UNIT){
                 var buffs = buffMgr.buffList[obj.objID];
                 if (buffs && buffs.length>0){
                     for (var i=0;i<buffs.length;i++){
@@ -391,7 +391,7 @@ SkillAction.taunt = function (paras) {
     var targets = [];   //被嘲讽的目标数组
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
         if (SkillAction.checkAffectType(obj, equipObject, action)) {
-            if (obj.type===MAP_DEF.TYPE_UNIT){
+            if (obj.type === MAP_DEF.TYPE_UNIT){
                 obj.setTarget(equipObject);
                 targets.push(obj);
                 if (obj.emitter){
@@ -456,7 +456,7 @@ SkillAction.linkAtk = function (paras){
     var addParas = paras[4];    //技能附加参数对象
     if (SkillAction.checkTargetBeDebuff(target)) {
         SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
-            if (obj.force === equipObject.force && typeof obj.type===MAP_DEF.TYPE_UNIT) {
+            if (obj.force === equipObject.force && typeof obj.type === MAP_DEF.TYPE_UNIT) {
                 var damage = SkillAction.calDamage(equiper, obj, target, skill, addParas);
                 _.log('linkAtk', damage, obj.name);
                 //target.changeTroops(-damage);
@@ -482,7 +482,7 @@ SkillAction.dotaoe = function (paras){
     var tileNode = SkillAction.initTileNodes(cx, cy, skill.scope);
     SkillAction.wLayer.setTimeMechine(null, skill.duration* _.TIME.SEC, interval* _.TIME.SEC, function (){
         SkillAction.scopeLoop(cx, cy, skill.scope, function (obj){
-            if (obj.force !== oriForce && typeof obj.changeTroops==='function') {
+            if (obj.force !== oriForce && typeof obj.changeTroops === 'function') {
                 if (SkillAction.checkTargetBeDebuff(obj)) {
                     var damage = SkillAction.calDamage(equiper, equipObject, obj, skill, addParas);
                     _.log('dotaoe', damage, obj.name);
@@ -525,7 +525,7 @@ SkillAction.continueHunluan = function (paras){
     var skill = paras[3];   //技能名称
     var addParas = paras[4];    //技能附加参数对象
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
-        if (obj.force !== equipObject.force && obj.buffStatus===ARMY_DEF.BUFF_STATUS_HUNLUAN) { //对已经混乱的目标继续释放混乱
+        if (obj.force !== equipObject.force && obj.buffStatus === ARMY_DEF.BUFF_STATUS_HUNLUAN) { //对已经混乱的目标继续释放混乱
             //_.log('continueHunluan',obj.name);
             if (SkillAction.checkTargetBeDebuff(obj)) {
                 var p = [obj, equiper, equipObject, skill.name, addParas['buffID'], addParas['fomulaID'], addParas['durationID']];
@@ -551,7 +551,7 @@ SkillAction.continueHunluan = function (paras){
 //            for (var j = 0; j < objs.length; j++) {
 //                var obj = objs[j];
 //                //_.log(obj.name);
-//                if (visitedObjs.indexOf(obj)===-1){
+//                if (visitedObjs.indexOf(obj) === -1){
 //                    visitedObjs.push(obj);
 //                    var breakFlag = cb(obj);
 //                    if (breakFlag){
@@ -666,7 +666,7 @@ SkillAction.convert = function (paras){
     var startIdx = 1;
     //先搜索附近是否有能够转移目标的军队
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
-        if (obj.force !== equipObject.force && obj.type===MAP_DEF.TYPE_UNIT) {
+        if (obj.force !== equipObject.force && obj.type === MAP_DEF.TYPE_UNIT) {
             oriForceMap[obj.objID] = obj.force;
             oriObjArr.push(obj);
             obj.force = 1100000+startIdx;
@@ -710,9 +710,9 @@ SkillAction.jiaobing = function (paras){
         SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
             if (obj.force !== equipObject.force) {
                 _.log(obj.name, newTarget.name, obj.type);
-                if (obj.type===MAP_DEF.TYPE_UNIT){
+                if (obj.type === MAP_DEF.TYPE_UNIT){
                     obj.setTarget(newTarget);
-                }else if (obj.type===MAP_DEF.TYPE_BUILDING_CASTLE) {
+                }else if (obj.type === MAP_DEF.TYPE_BUILDING_CASTLE) {
                     CastleCmd.forceOutArmyFromCity(obj, newTarget);
                 }
             }
@@ -731,7 +731,7 @@ SkillAction.addFire = function (paras){
     var skill = paras[3];   //技能名称
     var addParas = paras[4];    //技能附加参数对象
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
-        if (obj.type===MAP_DEF.TYPE_BUILDING_TINDER){
+        if (obj.type === MAP_DEF.TYPE_BUILDING_TINDER){
             //var origin = role.origin || role;
             var info = {
                 name: "火苗",
@@ -747,7 +747,7 @@ SkillAction.addFire = function (paras){
             };
             SkillAction.wLayer.fireMgr.addSkillFire(info);
             obj.destroy();
-        } else if (obj.type===MAP_DEF.TYPE_BUILDING_TRAP_FIRE){
+        } else if (obj.type === MAP_DEF.TYPE_BUILDING_TRAP_FIRE){
             obj.lightBySkill();
         }
     });
@@ -763,7 +763,7 @@ SkillAction.clearFire = function (paras){
     //_.log('clearFire',skill.scope, target.name);
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
         //_.log(obj.type);
-        if (obj.type===MAP_DEF.TYPE_FIRE_FRAME){     //如果是火苗，则熄灭该火苗
+        if (obj.type === MAP_DEF.TYPE_FIRE_FRAME){     //如果是火苗，则熄灭该火苗
             SkillAction.wLayer.fireMgr.clearFireFrame(obj.fireId);
         }
     });
@@ -781,7 +781,7 @@ SkillAction.fuse = function (paras){
     var smallestTroops = 99999999;
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
         _.log(obj.name);
-        if (obj.type===MAP_DEF.TYPE_UNIT && obj!==equipObject && obj.force===equipObject.force && obj.troops>0 && obj.troops<smallestTroops){
+        if (obj.type === MAP_DEF.TYPE_UNIT && obj!==equipObject && obj.force === equipObject.force && obj.troops>0 && obj.troops<smallestTroops){
             if (SkillAction.checkTargetBeDebuff(obj)) {
                 smallestTroops = obj.troops;
                 smallestArmy = obj;
@@ -934,7 +934,7 @@ SkillAction.charge = function (paras){
 
     var cells = SkillAction.findCellsAroundPath(path);
     SkillAction.scopeLoop(target.cx, target.cy, skill.scope, function (obj){
-        if (obj.force!==equipObject.force && typeof obj.changeTroops==='function'){
+        if (obj.force!==equipObject.force && typeof obj.changeTroops === 'function'){
             if (SkillAction.checkTargetBeDebuff(obj)) {
                 var damage = SkillAction.calDamage(equiper, equipObject, obj, skill, addParas);
                 //_.log('charge', damage, obj.name);

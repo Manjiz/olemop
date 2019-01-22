@@ -1,10 +1,7 @@
-var sequeue = require('seq-queue');
+const sequeue = require('seq-queue')
 
-var manager = module.exports;
-
-var queues = {};
-
-manager.timeout = 3000;
+const timeout = 3000
+const queues = {}
 
 /**
  * Add tasks into task group. Create the task group if it dose not exist.
@@ -14,15 +11,14 @@ manager.timeout = 3000;
  * @param {Function} ontimeout task timeout callback
  * @param {Number}   timeout   timeout for task
  */
-manager.addTask = function (key, fn, ontimeout, timeout) {
-  var queue = queues[key];
+const addTask = (key, fn, ontimeout, timeout) => {
+  let queue = queues[key]
   if (!queue) {
-    queue = sequeue.createQueue(manager.timeout);
-    queues[key] = queue;
+    queue = sequeue.createQueue(timeout)
+    queues[key] = queue
   }
-
-  return queue.push(fn, ontimeout, timeout);
-};
+  return queue.push(fn, ontimeout, timeout)
+}
 
 /**
  * Destroy task group
@@ -30,12 +26,16 @@ manager.addTask = function (key, fn, ontimeout, timeout) {
  * @param  {String} key   task key
  * @param  {Boolean} force whether close task group directly
  */
-manager.closeQueue = function (key, force) {
-  if (!queues[key]) {
-    // ignore illeagle key
-    return;
-  }
+const closeQueue = (key, force) => {
+  // ignore illeagle key
+  if (!queues[key]) return
 
-  queues[key].close(force);
-  delete queues[key];
-};
+  queues[key].close(force)
+  delete queues[key]
+}
+
+module.exports = {
+  timeout,
+  addTask,
+  closeQueue
+}
