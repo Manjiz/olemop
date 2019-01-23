@@ -1,6 +1,5 @@
 var logger = require('@olemop/logger').getLogger('olemop-rpc', 'blackhole');
 var EventEmitter = require('events').EventEmitter;
-var utils = require('../../util/utils');
 
 var exp = module.exports = new EventEmitter();
 

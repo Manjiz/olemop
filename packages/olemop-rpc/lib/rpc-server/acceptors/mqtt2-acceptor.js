@@ -30,35 +30,33 @@ var pro = Acceptor.prototype;
 
 pro.listen = function (port) {
   //check status
-  if (!!this.inited) {
+  if (this.inited) {
     this.cb(new Error('already inited.'));
     return;
   }
   this.inited = true;
 
-  var self = this;
-
   this.server = new net.Server();
   this.server.listen(port);
 
-  this.server.on('error', function (err) {
+  this.server.on('error', (err) => {
     logger.error('rpc server is error: %j', err.stack);
-    self.emit('error', err);
+    this.emit('error', err);
   });
 
-  this.server.on('connection', function (stream) {
+  this.server.on('connection', (stream) => {
     var socket = MqttCon(stream);
     socket['id'] = curId++;
 
-    socket.on('connect', function (pkg) {
+    socket.on('connect', (pkg) => {
       // console.log('connected')
-      sendHandshake(socket, self);
+      sendHandshake(socket, this);
     });
 
-    socket.on('publish', function (pkg) {
-      pkg = Coder.decodeServer(pkg.payload, self.servicesMap);
+    socket.on('publish', (pkg) => {
+      pkg = Coder.decodeServer(pkg.payload, this.servicesMap);
       try {
-        processMsg(socket, self, pkg);
+        processMsg(socket, this, pkg);
       } catch (err) {
         var resp = Coder.encodeServer(pkg.id, [cloneError(err)]);
         // doSend(socket, resp);
@@ -66,28 +64,28 @@ pro.listen = function (port) {
       }
     });
 
-    socket.on('pingreq', function () {
+    socket.on('pingreq', () => {
       socket.pingresp();
     });
 
-    socket.on('error', function () {
-      self.onSocketClose(socket);
+    socket.on('error', () => {
+      this.onSocketClose(socket);
     });
 
-    socket.on('close', function () {
-      self.onSocketClose(socket);
+    socket.on('close', () => {
+      this.onSocketClose(socket);
     });
 
-    self.sockets[socket.id] = socket;
+    this.sockets[socket.id] = socket;
 
-    socket.on('disconnect', function (reason) {
-      self.onSocketClose(socket);
+    socket.on('disconnect', (reason) => {
+      this.onSocketClose(socket);
     });
   });
 
   if (this.bufferMsg) {
-    this._interval = setInterval(function () {
-      flush(self);
+    this._interval = setInterval(() => {
+      flush(this);
     }, this.interval);
   }
 };

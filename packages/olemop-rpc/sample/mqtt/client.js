@@ -12,11 +12,11 @@ conn.connect({
 	run();
 });
 
-conn.on('puback', function () {
+conn.on('puback', () => {
 	run();
 });
 
-conn.on('pingresp', function () {
+conn.on('pingresp', () => {
 	run();
 })
 

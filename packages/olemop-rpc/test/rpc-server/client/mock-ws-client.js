@@ -15,10 +15,9 @@ var pro = Client.prototype;
 pro.connect = function(host, port, cb) {
   this.socket = sioClient.connect(host + ':' + port, {'force new connection': true});
 
-  var self = this;
-  this.socket.on('message', function(pkg) {
-    var cb = self.requests[pkg.id];
-    delete self.requests[pkg.id];
+  this.socket.on('message', (pkg) => {
+    var cb = this.requests[pkg.id];
+    delete this.requests[pkg.id];
 
     if(!cb) {
       return;
@@ -27,7 +26,7 @@ pro.connect = function(host, port, cb) {
     cb.apply(null, pkg.resp);
   });
 
-  this.socket.on('connect', function() {
+  this.socket.on('connect', () => {
     utils.invokeCallback(cb);
   });
 };

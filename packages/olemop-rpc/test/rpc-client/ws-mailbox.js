@@ -27,7 +27,7 @@ var msg = {
   args: [1]
 };
 
-var tracer = new Tracer(console, false); 
+var tracer = new Tracer(console, false);
 
 describe('ws mailbox test', function() {
   var gateway;
@@ -145,7 +145,7 @@ describe('ws mailbox test', function() {
 
       setTimeout(function() {
         callbackCount.should.equal(3);
-        if(!!mailbox) {
+        if(mailbox) {
           mailbox.close();
         }
         done();
@@ -202,7 +202,7 @@ describe('ws mailbox test', function() {
 
       setTimeout(function() {
         callbackCount.should.equal(3);
-        if(!!mailbox) {
+        if(mailbox) {
           mailbox.close();
         }
         done();
@@ -268,7 +268,7 @@ describe('ws mailbox test', function() {
 
       setTimeout(function() {
         callbackCount.should.equal(3);
-        if(!!mailbox) {
+        if(mailbox) {
           mailbox.close();
         }
         gateway.stop();
@@ -283,7 +283,7 @@ describe('ws mailbox test', function() {
       var mailbox = Mailbox.create(server);
       mailbox.connect(tracer, function(err) {
         should.not.exist(err);
-        mailbox.on('close', function() {
+        mailbox.on('close', () => {
           closeEventCount++;
         });
         mailbox.close();

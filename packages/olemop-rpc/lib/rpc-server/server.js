@@ -1,27 +1,27 @@
-var Loader = require('@olemop/loader');
-var Gateway = require('./gateway');
+const Loader = require('@olemop/loader')
+const Gateway = require('./gateway')
+// const WSAcceptor = require('./acceptors/ws-acceptor')
+// const TcpAcceptor = require('./acceptors/tcp-acceptor')
+const MqttAcceptor = require('./acceptors/mqtt-acceptor')
 
-var loadRemoteServices = function (paths, context) {
-  var res = {},
-    item, m;
-  for (var i = 0, l = paths.length; i < l; i++) {
-    item = paths[i];
-    m = Loader.load(item.path, context);
-
+const loadRemoteServices = (paths, context) => {
+  const res = {}
+  paths.forEach((item) => {
+    const m = Loader.load(item.path, context)
     if (m) {
-      createNamespace(item.namespace, res);
-      for (var s in m) {
-        res[item.namespace][s] = m[s];
-      }
+      createNamespace(item.namespace, res)
+      Object.keys(m).forEach((key) => {
+        res[item.namespace][key] = m[key]
+      })
     }
-  }
+  })
 
-  return res;
-};
+  return res
+}
 
-var createNamespace = function (namespace, proxies) {
-  proxies[namespace] = proxies[namespace] || {};
-};
+const createNamespace = (namespace, proxies) => {
+  proxies[namespace] = proxies[namespace] || {}
+}
 
 /**
  * Create rpc server.
@@ -33,16 +33,16 @@ var createNamespace = function (namespace, proxies) {
  *                       opts.acceptorFactory {Object} (optionals)acceptorFactory.create(opts, cb)
  * @return {Object}      rpc server instance
  */
-module.exports.create = function (opts) {
+const create = (opts) => {
   if (!opts || !opts.port || opts.port < 0 || !opts.paths) {
-    throw new Error('opts.port or opts.paths invalid.');
+    throw new Error('opts.port or opts.paths invalid.')
   }
-  var services = loadRemoteServices(opts.paths, opts.context);
-  opts.services = services;
-  var gateway = Gateway.create(opts);
-  return gateway;
-};
+  opts.services = loadRemoteServices(opts.paths, opts.context)
+  const gateway = Gateway.create(opts)
+  return gateway
+}
 
-// module.exports.WSAcceptor = require('./acceptors/ws-acceptor');
-// module.exports.TcpAcceptor = require('./acceptors/tcp-acceptor');
-module.exports.MqttAcceptor = require('./acceptors/mqtt-acceptor');
+module.exports = {
+  create,
+  MqttAcceptor
+}

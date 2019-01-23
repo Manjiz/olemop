@@ -66,6 +66,6 @@ client.start(function (err) {
   });
 });
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
   console.error(err);
 });

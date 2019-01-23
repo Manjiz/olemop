@@ -3,8 +3,8 @@ var WebSocketServer = require('ws').Server,
 		port: 3331
 	});
 
-wss.on('connection', function connection(ws) {
-	ws.on('message', function incoming(message) {
+wss.on('connection', (ws) => {
+	ws.on('message', (message) => {
 		ws.send(message);
 	});
 

@@ -1,12 +1,12 @@
 var WebSocket = require('ws');
 var ws = new WebSocket('ws://localhost:3331');
 
-ws.on('open', function open() {
+ws.on('open', () => {
 	start = Date.now();
 	run();
 });
 
-ws.on('message', function (data, flags) {
+ws.on('message', (data, flags) => {
 	// flags.binary will be set if a binary data is received.
 	// flags.masked will be set if the data was masked.
 	run();

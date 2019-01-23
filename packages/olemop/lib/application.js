@@ -711,8 +711,8 @@ Application.getServerId = function () {
  * @memberOf Application
  */
 Application.getServerType = function () {
-  return this.serverType;
-};
+  return this.serverType
+}
 
 /**
  * Get all the current server infos.
@@ -822,30 +822,27 @@ Application.isMaster = function () {
  * @memberOf Application
  */
 Application.addServers = function (servers) {
-  if (!servers || !servers.length) {
-    return;
-  }
+  if (!servers || !servers.length) return
 
-  var item, slist;
-  for (var i=0, l=servers.length; i<l; i++) {
-    item = servers[i];
+  for (let i = 0; i < servers.length; i++) {
+    const item = servers[i]
     // update global server map
-    this.servers[item.id] = item;
+    this.servers[item.id] = item
 
     // update global server type map
-    slist = this.serverTypeMaps[item.serverType];
+    let slist = this.serverTypeMaps[item.serverType]
     if (!slist) {
-      this.serverTypeMaps[item.serverType] = slist = [];
+      this.serverTypeMaps[item.serverType] = slist = []
     }
-    replaceServer(slist, item);
+    replaceServer(slist, item)
 
     // update global server type list
     if (this.serverTypes.indexOf(item.serverType) < 0) {
-      this.serverTypes.push(item.serverType);
+      this.serverTypes.push(item.serverType)
     }
   }
-  this.event.emit(events.ADD_SERVERS, servers);
-};
+  this.event.emit(events.ADD_SERVERS, servers)
+}
 
 /**
  * Remove server info from current application at runtime.
@@ -854,27 +851,22 @@ Application.addServers = function (servers) {
  * @memberOf Application
  */
 Application.removeServers = function (ids) {
-  if (!ids || !ids.length) {
-    return;
-  }
+  if (!ids || !ids.length) return
 
-  var id, item, slist;
-  for (var i=0, l=ids.length; i<l; i++) {
-    id = ids[i];
-    item = this.servers[id];
-    if (!item) {
-      continue;
-    }
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i]
+    const item = this.servers[id]
+    if (!item) continue
     // clean global server map
-    delete this.servers[id];
+    delete this.servers[id]
 
     // clean global server type map
-    slist = this.serverTypeMaps[item.serverType];
-    removeServer(slist, id);
+    const slist = this.serverTypeMaps[item.serverType]
+    removeServer(slist, id)
     // TODO: should remove the server type if the slist is empty?
   }
-  this.event.emit(events.REMOVE_SERVERS, ids);
-};
+  this.event.emit(events.REMOVE_SERVERS, ids)
+}
 
 /**
  * Replace server info from current application at runtime.

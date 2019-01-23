@@ -24,10 +24,10 @@ describe('server', function() {
       var gateway = Server.create(opts);
 
       should.exist(gateway);
-      gateway.on('error', function(err) {
+      gateway.on('error', (err) => {
         errorCount++;
       });
-      gateway.on('closed', function() {
+      gateway.on('closed', () => {
         closeCount++;
       });
 

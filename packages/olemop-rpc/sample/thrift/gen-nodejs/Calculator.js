@@ -569,12 +569,12 @@ CalculatorProcessor = exports.Processor = function (handler) {
 Thrift.inherits(CalculatorProcessor, SharedServiceProcessor)
 CalculatorProcessor.prototype.process = function (input, output) {
   var r = input.readMessageBegin();
-  if (this['process_' + r.fname]) {
-    return this['process_' + r.fname].call(this, r.rseqid, input, output);
+  if (this[`process_${r.fname}`]) {
+    return this[`process_${r.fname}`].call(this, r.rseqid, input, output);
   } else {
     input.skip(Thrift.Type.STRUCT);
     input.readMessageEnd();
-    var x = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN_METHOD, 'Unknown function ' + r.fname);
+    var x = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN_METHOD, `Unknown function ${r.fname}`);
     output.writeMessageBegin(r.fname, Thrift.MessageType.EXCEPTION, r.rseqid);
     x.write(output);
     output.writeMessageEnd();

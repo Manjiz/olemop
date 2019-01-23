@@ -129,7 +129,7 @@ describe('mail station', function() {
           callbackCount++;
         };
       };
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
 
       station.start(function(err) {
         var item;
@@ -164,7 +164,7 @@ describe('mail station', function() {
         };
       };
 
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
 
       station.start(function(err) {
         var item;
@@ -191,7 +191,7 @@ describe('mail station', function() {
         station.addServer(serverList[i]);
       }
 
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
 
       station.start(function(err) {
         // add area server
@@ -221,13 +221,13 @@ describe('mail station', function() {
 
       station.addServer(server);
 
-      station.on('error', function(err) {
+      station.on('error', (err) => {
         should.exist(err);
         ('fail to connect to remote server: ' + serverId).should.equal(err.message);
         eventCount++;
       });
 
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
 
       station.start(function(err) {
         should.exist(station);
@@ -271,7 +271,7 @@ describe('mail station', function() {
         };
       };
 
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
 
       station.start(function(err) {
         // invoke the lazy connect
@@ -281,7 +281,7 @@ describe('mail station', function() {
           station.dispatch(tracer, item.id, msg, null, func(item.id));
         }
 
-        station.on('close', function(mailboxId) {
+        station.on('close', (mailboxId) => {
           mailboxIds.push(mailboxId);
           closeEventCount++;
         });
@@ -314,7 +314,7 @@ describe('mail station', function() {
         errorEventCount++;
       };
 
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
 
       station.start(function(err) {
         station.stop();
@@ -345,7 +345,7 @@ describe('mail station', function() {
         station.addServer(serverList[i]);
       }
 
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
 
       station.start(function(err) {
         station.before(function(fsid, fmsg, fopts, next) {

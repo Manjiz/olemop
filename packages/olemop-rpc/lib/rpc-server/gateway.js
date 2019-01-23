@@ -1,53 +1,69 @@
-var defaultAcceptorFactory = require('./acceptor');
-var EventEmitter = require('events').EventEmitter;
-var Dispatcher = require('./dispatcher');
-var Loader = require('@olemop/loader');
-var utils = require('../util/utils');
-var util = require('util');
-var fs = require('fs');
+const fs = require('fs')
+const util = require('util')
+const EventEmitter = require('events')
+const Loader = require('@olemop/loader')
+const defaultAcceptorFactory = require('./acceptor')
+const Dispatcher = require('./dispatcher')
 
-var Gateway = function (opts) {
-  EventEmitter.call(this);
-  this.opts = opts || {};
-  this.port = opts.port || 3050;
-  this.started = false;
-  this.stoped = false;
-  this.acceptorFactory = opts.acceptorFactory || defaultAcceptorFactory;
-  this.services = opts.services;
-  var dispatcher = new Dispatcher(this.services);
-  if (!!this.opts.reloadRemotes) {
-    watchServices(this, dispatcher);
+const watchServices = (gateway, dispatcher) => {
+  const paths = gateway.opts.paths
+  const app = gateway.opts.context
+  paths.forEach((item) => {
+    fs.watch(item.path, (event) => {
+      if (event === 'change') {
+        const res = {}
+        const m = Loader.load(item.path, app)
+        if (m) {
+          res[item.namespace] = res[item.namespace] || {}
+          Object.keys(m).forEach((key) => {
+            res[item.namespace][key] = m[key]
+          })
+        }
+        dispatcher.emit('reload', res)
+      }
+    })
+  })
+}
+
+const Gateway = function (opts) {
+  EventEmitter.call(this)
+  this.opts = opts || {}
+  this.port = opts.port || 3050
+  this.started = false
+  this.stoped = false
+  this.acceptorFactory = opts.acceptorFactory || defaultAcceptorFactory
+  this.services = opts.services
+  const dispatcher = new Dispatcher(this.services)
+  if (this.opts.reloadRemotes) {
+    watchServices(this, dispatcher)
   }
   this.acceptor = this.acceptorFactory.create(opts, function (tracer, msg, cb) {
-    dispatcher.route(tracer, msg, cb);
-  });
-};
+    dispatcher.route(tracer, msg, cb)
+  })
+}
 
-util.inherits(Gateway, EventEmitter);
+util.inherits(Gateway, EventEmitter)
 
-var pro = Gateway.prototype;
-
-pro.stop = function () {
+Gateway.prototype.stop = function () {
   if (!this.started || this.stoped) {
-    return;
+    return
   }
-  this.stoped = true;
+  this.stoped = true
   try {
-    this.acceptor.close();
+    this.acceptor.close()
   } catch (err) {}
-};
+}
 
-pro.start = function () {
+Gateway.prototype.start = function () {
   if (this.started) {
-    throw new Error('gateway already start.');
+    throw new Error('gateway already start.')
   }
-  this.started = true;
+  this.started = true
 
-  var self = this;
-  this.acceptor.on('error', self.emit.bind(self, 'error'));
-  this.acceptor.on('closed', self.emit.bind(self, 'closed'));
-  this.acceptor.listen(this.port);
-};
+  this.acceptor.on('error', this.emit.bind(this, 'error'))
+  this.acceptor.on('closed', this.emit.bind(this, 'closed'))
+  this.acceptor.listen(this.port)
+}
 
 /**
  * create and init gateway
@@ -56,35 +72,8 @@ pro.start = function () {
  */
 module.exports.create = function (opts) {
   if (!opts || !opts.services) {
-    throw new Error('opts and opts.services should not be empty.');
+    throw new Error('opts and opts.services should not be empty.')
   }
 
-  return new Gateway(opts);
-};
-
-var watchServices = function (gateway, dispatcher) {
-  var paths = gateway.opts.paths;
-  var app = gateway.opts.context;
-  for (var i = 0; i < paths.length; i++) {
-    (function (index) {
-      fs.watch(paths[index].path, function (event, name) {
-        if (event === 'change') {
-          var res = {};
-          var item = paths[index];
-          var m = Loader.load(item.path, app);
-          if (m) {
-            createNamespace(item.namespace, res);
-            for (var s in m) {
-              res[item.namespace][s] = m[s];
-            }
-          }
-          dispatcher.emit('reload', res);
-        }
-      });
-    })(i);
-  }
-};
-
-var createNamespace = function (namespace, proxies) {
-  proxies[namespace] = proxies[namespace] || {};
-};
+  return new Gateway(opts)
+}

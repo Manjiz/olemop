@@ -3,7 +3,6 @@ var EventEmitter = require('events').EventEmitter;
 var constants = require('../../util/constants');
 var Tracer = require('../../util/tracer');
 var client = require('socket.io-client');
-var utils = require('../../util/utils');
 var util = require('util');
 
 var MailBox = function (server, opts) {
@@ -33,51 +32,50 @@ pro.connect = function (tracer, cb) {
     cb(new Error('mailbox has already connected.'));
     return;
   }
-  var self = this;
-  this.socket = client.connect(this.host + ':' + this.port, {
+  this.socket = client.connect(`${this.host}:${this.port}`, {
     'force new connection': true,
     'reconnect': false
   });
-  this.socket.on('message', function (pkg) {
+  this.socket.on('message', (pkg) => {
     try {
       if (pkg instanceof Array) {
-        processMsgs(self, pkg);
+        processMsgs(this, pkg);
       } else {
-        processMsg(self, pkg);
+        processMsg(this, pkg);
       }
     } catch (err) {
       logger.error('rpc client process message with error: %s', err.stack);
     }
   });
 
-  this.socket.on('connect', function () {
-    if (self.connected) {
+  this.socket.on('connect', () => {
+    if (this.connected) {
       return;
     }
-    self.connected = true;
-    if (self.bufferMsg) {
-      self._interval = setInterval(function () {
-        flush(self);
-      }, self.interval);
+    this.connected = true;
+    if (this.bufferMsg) {
+      this._interval = setInterval(() => {
+        flush(this);
+      }, this.interval);
     }
     cb();
   });
 
-  this.socket.on('error', function (err) {
-    logger.error('rpc socket is error, remote server host: %s, port: %s', self.host, self.port);
-    self.emit('close', self.id);
+  this.socket.on('error', (err) => {
+    logger.error('rpc socket is error, remote server host: %s, port: %s', this.host, this.port);
+    this.emit('close', this.id);
     cb(err);
   });
 
-  this.socket.on('disconnect', function (reason) {
+  this.socket.on('disconnect', (reason) => {
     logger.error('rpc socket is disconnect, reason: %s', reason);
-    var reqs = self.requests,
+    var reqs = this.requests,
       cb;
     for (var id in reqs) {
       cb = reqs[id];
       cb(tracer, new Error('disconnect with remote server.'));
     }
-    self.emit('close', self.id);
+    this.emit('close', this.id);
   });
 };
 
@@ -190,7 +188,7 @@ var setCbTimeout = function (mailbox, id, tracer, cb) {
   var timer = setTimeout(function () {
     logger.warn('rpc request is timeout, id: %s, host: %s, port: %s', id, mailbox.host, mailbox.port);
     clearCbTimeout(mailbox, id);
-    if (!!mailbox.requests[id]) {
+    if (mailbox.requests[id]) {
       delete mailbox.requests[id];
     }
     logger.error('rpc callback timeout, remote server host: %s, port: %s', mailbox.host, mailbox.port);

@@ -146,7 +146,7 @@ describe('tcp mailbox test', function() {
 
       setTimeout(function() {
         callbackCount.should.equal(3);
-        if(!!mailbox) {
+        if(mailbox) {
           mailbox.close();
         }
         done();
@@ -203,7 +203,7 @@ describe('tcp mailbox test', function() {
 
       setTimeout(function() {
         callbackCount.should.equal(3);
-        if(!!mailbox) {
+        if(mailbox) {
           mailbox.close();
         }
         done();
@@ -269,7 +269,7 @@ describe('tcp mailbox test', function() {
 
       setTimeout(function() {
         callbackCount.should.equal(3);
-        if(!!mailbox) {
+        if(mailbox) {
           mailbox.close();
         }
         gateway.stop();
@@ -284,7 +284,7 @@ describe('tcp mailbox test', function() {
       var mailbox = Mailbox.create(server);
       mailbox.connect(tracer, function(err) {
         should.not.exist(err);
-        mailbox.on('close', function() {
+        mailbox.on('close', () => {
           closeEventCount++;
         });
         mailbox.close();

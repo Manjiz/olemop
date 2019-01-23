@@ -3,7 +3,6 @@ var EventEmitter = require('events').EventEmitter;
 var Constants = require('../../util/constants');
 var Tracer = require('../../util/tracer');
 var MqttCon = require('mqtt-connection');
-var utils = require('../../util/utils');
 var Coder = require('../../util/coder');
 var util = require('util');
 var net = require('net');
@@ -42,65 +41,63 @@ MailBox.prototype.connect = function (tracer, cb) {
     return cb(new Error('mailbox has already connected.'));
   }
 
-  var self = this;
-
   var stream = net.createConnection(this.port, this.host);
   this.socket = MqttCon(stream);
 
-  var connectTimeout = setTimeout(function () {
-    logger.error('rpc client %s connect to remote server %s timeout', self.serverId, self.id);
-    self.emit('close', self.id);
+  var connectTimeout = setTimeout(() => {
+    logger.error('rpc client %s connect to remote server %s timeout', this.serverId, this.id);
+    this.emit('close', this.id);
   }, CONNECT_TIMEOUT);
 
   this.socket.connect({
-    clientId: 'MQTT_RPC_' + Date.now()
-  }, function () {
-    if (self.connected) {
+    clientId: `MQTT_RPC_${Date.now()}`
+  }, () => {
+    if (this.connected) {
       return;
     }
 
     clearTimeout(connectTimeout);
-    self.connected = true;
-    if (self.bufferMsg) {
-      self._interval = setInterval(function () {
-        flush(self);
-      }, self.interval);
+    this.connected = true;
+    if (this.bufferMsg) {
+      this._interval = setInterval(function () {
+        flush(this);
+      }, this.interval);
     }
 
-    self.setupKeepAlive();
+    this.setupKeepAlive();
   });
 
-  this.socket.on('publish', function (pkg) {
+  this.socket.on('publish', (pkg) => {
     if (pkg.topic == Constants['TOPIC_HANDSHAKE']) {
-      upgradeHandshake(self, pkg.payload);
+      upgradeHandshake(this, pkg.payload);
       return cb();
     }
     try {
       pkg = Coder.decodeClient(pkg.payload);
-      processMsg(self, pkg);
+      processMsg(this, pkg);
     } catch (err) {
-      logger.error('rpc client %s process remote server %s message with error: %s', self.serverId, self.id, err.stack);
+      logger.error('rpc client %s process remote server %s message with error: %s', this.serverId, this.id, err.stack);
     }
   });
 
-  this.socket.on('error', function (err) {
-    logger.error('rpc socket %s is error, remote server %s host: %s, port: %s', self.serverId, self.id, self.host, self.port);
-    self.emit('close', self.id);
-    self.close();
+  this.socket.on('error', (err) => {
+    logger.error('rpc socket %s is error, remote server %s host: %s, port: %s', this.serverId, this.id, this.host, this.port);
+    this.emit('close', this.id);
+    this.close();
   });
 
-  this.socket.on('pingresp', function () {
-    self.lastPong = Date.now();
+  this.socket.on('pingresp', () => {
+    this.lastPong = Date.now();
   });
 
-  this.socket.on('disconnect', function (reason) {
-    logger.error('rpc socket %s is disconnect from remote server %s, reason: %s', self.serverId, self.id, reason);
-    var reqs = self.requests;
+  this.socket.on('disconnect', (reason) => {
+    logger.error('rpc socket %s is disconnect from remote server %s, reason: %s', this.serverId, this.id, reason);
+    var reqs = this.requests;
     for (var id in reqs) {
       var ReqCb = reqs[id];
-      ReqCb(tracer, new Error(self.serverId + ' disconnect with remote server ' + self.id));
+      ReqCb(tracer, new Error(`${this.serverId} disconnect with remote server ${this.id}`));
     }
-    self.emit('close', self.id);
+    this.emit('close', this.id);
   });
 };
 
@@ -134,13 +131,13 @@ MailBox.prototype.send = function (tracer, msg, opts, cb) {
   tracer && tracer.info('client', __filename, 'send', 'mqtt-mailbox try to send');
   if (!this.connected) {
     tracer && tracer.error('client', __filename, 'send', 'mqtt-mailbox not init');
-    cb(tracer, new Error(this.serverId + ' mqtt-mailbox is not init ' + this.id));
+    cb(tracer, new Error(`${this.serverId} mqtt-mailbox is not init ${this.id}`));
     return;
   }
 
   if (this.closed) {
     tracer && tracer.error('client', __filename, 'send', 'mailbox has already closed');
-    cb(tracer, new Error(this.serverId + ' mqtt-mailbox has already closed ' + this.id));
+    cb(tracer, new Error(`${this.serverId} mqtt-mailbox has already closed ${this.id}`));
     return;
   }
 
@@ -173,9 +170,8 @@ MailBox.prototype.send = function (tracer, msg, opts, cb) {
 };
 
 MailBox.prototype.setupKeepAlive = function () {
-  var self = this;
-  this.keepaliveTimer = setInterval(function () {
-    self.checkKeepAlive();
+  this.keepaliveTimer = setInterval(() => {
+    this.checkKeepAlive();
   }, this.keepalive);
 }
 

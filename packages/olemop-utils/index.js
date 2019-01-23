@@ -31,7 +31,7 @@ const listES6ClassMethods = (objInstance) => {
  * @param {Function} cb 准回调函数
  */
 const invokeCallback = function (cb) {
-  cb && typeof cb === 'function' && cb.apply(null, Array.prototype.slice.call(arguments, 1))
+  typeof cb === 'function' && cb.apply(null, Array.prototype.slice.call(arguments, 1))
 }
 
 /**

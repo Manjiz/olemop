@@ -2,7 +2,6 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var utils = require('../../util/utils');
 var wsClient = require('ws');
-var zlib = require('zlib');
 var Tracer = require('../../util/tracer');
 var DEFAULT_CALLBACK_TIMEOUT = 10 * 1000;
 var DEFAULT_INTERVAL = 50;
@@ -46,11 +45,10 @@ pro.connect = function (tracer, cb) {
     return;
   }
 
-  this.socket = wsClient.connect('ws://' + this.host + ':' + this.port);
-  //this.socket = wsClient.connect(this.host + ':' + this.port, {'force new connection': true, 'reconnect': false});
+  this.socket = wsClient.connect(`ws://${this.host}:${this.port}`);
+  //this.socket = wsClient.connect(`${this.host}:${this.port}, {'force new connection': true, 'reconnect': false});
 
-  var self = this;
-  this.socket.on('message', function (data, flags) {
+  this.socket.on('message', (data, flags) => {
     try {
       // console.log("ws rpc client received message = " + data);
       var msg = data;
@@ -58,55 +56,55 @@ pro.connect = function (tracer, cb) {
       msg = JSON.parse(msg);
 
       if (msg.body instanceof Array) {
-        processMsgs(self, msg.body);
+        processMsgs(this, msg.body);
       } else {
-        processMsg(self, msg.body);
+        processMsg(this, msg.body);
       }
     } catch (e) {
       console.error('ws rpc client process message with error: %j', e.stack);
     }
   });
 
-  this.socket.on('open', function () {
-    if (self.connected) {
+  this.socket.on('open', () => {
+    if (this.connected) {
       //ignore reconnect
       return;
     }
     // success to connect
-    self.connected = true;
-    if (self.bufferMsg) {
+    this.connected = true;
+    if (this.bufferMsg) {
       // start flush interval
-      self._interval = setInterval(function () {
-        flush(self);
-      }, self.interval);
+      this._interval = setInterval(() => {
+        flush(this);
+      }, this.interval);
     }
-    self._KPinterval = setInterval(function () {
-      checkKeepAlive(self);
+    this._KPinterval = setInterval(() => {
+      checkKeepAlive(this);
     }, KEEP_ALIVE_INTERVAL);
     utils.invokeCallback(cb);
   });
 
-  this.socket.on('error', function (err) {
+  this.socket.on('error', (err) => {
     utils.invokeCallback(cb, err);
-    self.close();
+    this.close();
   });
 
-  this.socket.on('close', function (code, message) {
-    var reqs = self.requests,
+  this.socket.on('close', (code, message) => {
+    var reqs = this.requests,
       cb;
     for (var id in reqs) {
       cb = reqs[id];
       utils.invokeCallback(cb, new Error('disconnect with remote server.'));
     }
-    self.emit('close', self.id);
-    self.close();
+    this.emit('close', this.id);
+    this.close();
   });
 
-  //  this.socket.on('ping', function (data, flags) {
+  //  this.socket.on('ping', (data, flags) => {
   //  });
-  this.socket.on('pong', function (data, flags) {
+  this.socket.on('pong', (data, flags) => {
     ////console.log('ws received pong: %s', data);
-    self._KP_last_pong_time = Date.now();
+    this._KP_last_pong_time = Date.now();
   });
 
 };
@@ -263,7 +261,7 @@ var processMsg = function (mailbox, pkg) {
 var setCbTimeout = function (mailbox, id) {
   var timer = setTimeout(function () {
     clearCbTimeout(mailbox, id);
-    if (!!mailbox.requests[id]) {
+    if (mailbox.requests[id]) {
       delete mailbox.requests[id];
     }
   }, mailbox.timeoutValue);

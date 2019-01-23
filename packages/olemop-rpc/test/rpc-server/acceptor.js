@@ -16,10 +16,10 @@ describe('acceptor', function() {
       var acceptor = Acceptor.create(null, function(tracer, msg, cb) {});
 
       should.exist(acceptor);
-      acceptor.on('error', function(err) {
+      acceptor.on('error', (err) => {
         errorCount++;
       });
-      acceptor.on('closed', function() {
+      acceptor.on('closed', () => {
         closeCount++;
       });
 
@@ -38,7 +38,7 @@ describe('acceptor', function() {
       var acceptor = Acceptor.create(null, function(tracer, msg, cb) {});
 
       should.exist(acceptor);
-      acceptor.on('error', function(err) {
+      acceptor.on('error', (err) => {
         should.exist(err);
         errorCount++;
       });

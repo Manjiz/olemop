@@ -42,43 +42,41 @@ pro.connect = function (tracer, cb) {
   this.socket = net.connect({
     port: this.port,
     host: this.host
-  }, function (err) {
+  }, (err) => {
     // success to connect
-    self.connected = true;
-    if (self.bufferMsg) {
+    this.connected = true;
+    if (this.bufferMsg) {
       // start flush interval
-      self._interval = setInterval(function () {
-        flush(self);
-      }, self.interval);
+      this._interval = setInterval(() => {
+        flush(this);
+      }, this.interval);
     }
     utils.invokeCallback(cb, err);
   });
 
-  var self = this;
-
-  this.composer.on('data', function (data) {
+  this.composer.on('data', (data) => {
     var pkg = JSON.parse(data.toString());
     if (pkg instanceof Array) {
-      processMsgs(self, pkg);
+      processMsgs(this, pkg);
     } else {
-      processMsg(self, pkg);
+      processMsg(this, pkg);
     }
   });
 
-  this.socket.on('data', function (data) {
-    self.composer.feed(data);
+  this.socket.on('data', (data) => {
+    this.composer.feed(data);
   });
 
-  this.socket.on('error', function (err) {
-    if (!self.connected) {
+  this.socket.on('error', (err) => {
+    if (!this.connected) {
       utils.invokeCallback(cb, err);
       return;
     }
-    self.emit('error', err, self);
+    this.emit('error', err, this);
   });
 
-  this.socket.on('end', function () {
-    self.emit('close', self.id);
+  this.socket.on('end', () => {
+    this.emit('close', this.id);
   });
 
   // TODO: reconnect and heartbeat
@@ -189,7 +187,7 @@ var processMsg = function (mailbox, pkg) {
 var setCbTimeout = function (mailbox, id, tracer, cb) {
   var timer = setTimeout(function () {
     clearCbTimeout(mailbox, id);
-    if (!!mailbox.requests[id]) {
+    if (mailbox.requests[id]) {
       delete mailbox.requests[id];
     }
     logger.error('rpc callback timeout, remote server host: %s, port: %s', mailbox.host, mailbox.port);

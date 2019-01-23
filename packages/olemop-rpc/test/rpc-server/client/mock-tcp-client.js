@@ -20,15 +20,14 @@ pro.connect = function(host, port, cb) {
     utils.invokeCallback(cb);
   });
   console.log('socket: %j', !!this.socket);
-  var self = this;
-  this.socket.on('data', function(data) {
-    self.composer.feed(data);
+  this.socket.on('data', (data) => {
+    this.composer.feed(data);
   });
 
-  this.composer.on('data', function(data) {
+  this.composer.on('data', (data) => {
     var pkg = JSON.parse(data.toString());
-    var cb = self.requests[pkg.id];
-    delete self.requests[pkg.id];
+    var cb = this.requests[pkg.id];
+    delete this.requests[pkg.id];
 
     if(!cb) {
       return;

@@ -1,4 +1,4 @@
-var logger = require('@olemop/logger').getLogger('olemop-rpc', 'Coder');
+// var logger = require('@olemop/logger').getLogger('olemop-rpc', 'Coder');
 // var OutBuffer = require('./buffer/outputBuffer');
 // var InBuffer = require('./buffer/inputBuffer');
 var bBuffer = require('bearcat-buffer');
@@ -72,4 +72,4 @@ Coder.decodeClient = function (buf) {
 	}
 }
 
-module.exports = Coder;
+module.exports = Coder

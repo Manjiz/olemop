@@ -350,8 +350,8 @@ var doForward = function (app, msg, session, routeRecord, cb) {
     );
   } catch(err) {
     if (!finished) {
-      logger.error('fail to forward message:' + err.stack);
-      utils.invokeCallback(cb, err);
+      logger.error('fail to forward message:' + err.stack)
+      utils.invokeCallback(cb, err)
     }
   }
 };

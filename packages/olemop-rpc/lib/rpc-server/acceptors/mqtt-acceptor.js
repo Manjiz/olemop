@@ -1,7 +1,6 @@
 var logger = require('@olemop/logger').getLogger('olemop-rpc', 'mqtt-acceptor');
 var EventEmitter = require('events').EventEmitter;
 var Tracer = require('../../util/tracer');
-var utils = require('../../util/utils');
 var MqttCon = require('mqtt-connection');
 var util = require('util');
 var net = require('net');
@@ -26,40 +25,38 @@ var pro = Acceptor.prototype;
 
 pro.listen = function (port) {
   //check status
-  if (!!this.inited) {
+  if (this.inited) {
     this.cb(new Error('already inited.'));
     return;
   }
   this.inited = true;
 
-  var self = this;
-
   this.server = new net.Server();
   this.server.listen(port);
 
-  this.server.on('error', function (err) {
+  this.server.on('error', (err) => {
     logger.error('rpc server is error: %j', err.stack);
-    self.emit('error', err);
+    this.emit('error', err);
   });
 
-  this.server.on('connection', function (stream) {
+  this.server.on('connection', (stream) => {
     var socket = MqttCon(stream);
     socket['id'] = curId++;
 
-    socket.on('connect', function (pkg) {
+    socket.on('connect', (pkg) => {
       // console.log('connected')
     });
 
-    socket.on('publish', function (pkg) {
+    socket.on('publish', (pkg) => {
       pkg = pkg.payload.toString();
       var isArray = false;
       try {
         pkg = JSON.parse(pkg);
         if (pkg instanceof Array) {
-          processMsgs(socket, self, pkg);
+          processMsgs(socket, this, pkg);
           isArray = true;
         } else {
-          processMsg(socket, self, pkg);
+          processMsg(socket, this, pkg);
         }
       } catch (err) {
         if (!isArray) {
@@ -72,28 +69,28 @@ pro.listen = function (port) {
       }
     });
 
-    socket.on('pingreq', function () {
+    socket.on('pingreq', () => {
       socket.pingresp();
     });
 
-    socket.on('error', function () {
-      self.onSocketClose(socket);
+    socket.on('error', () => {
+      this.onSocketClose(socket);
     });
 
-    socket.on('close', function () {
-      self.onSocketClose(socket);
+    socket.on('close', () => {
+      this.onSocketClose(socket);
     });
 
-    self.sockets[socket.id] = socket;
+    this.sockets[socket.id] = socket;
 
-    socket.on('disconnect', function (reason) {
-      self.onSocketClose(socket);
+    socket.on('disconnect', (reason) => {
+      this.onSocketClose(socket);
     });
   });
 
   if (this.bufferMsg) {
-    this._interval = setInterval(function () {
-      flush(self);
+    this._interval = setInterval(() => {
+      flush(this);
     }, this.interval);
   }
 };

@@ -24,55 +24,53 @@ var pro = Acceptor.prototype;
 
 pro.listen = function (port) {
   //check status
-  if (!!this.inited) {
+  if (this.inited) {
     utils.invokeCallback(this.cb, new Error('already inited.'));
     return;
   }
   this.inited = true;
 
-  var self = this;
-
   this.server = net.createServer();
   this.server.listen(port);
 
-  this.server.on('error', function (err) {
-    self.emit('error', err, this);
+  this.server.on('error', (err) => {
+    this.emit('error', err, this);
   });
 
-  this.server.on('connection', function (socket) {
-    self.sockets[socket.id] = socket;
+  this.server.on('connection', (socket) => {
+    this.sockets[socket.id] = socket;
     socket.composer = new Composer({
-      maxLength: self.pkgSize
+      maxLength: this.pkgSize
     });
 
-    socket.on('data', function (data) {
+    socket.on('data', (data) => {
       socket.composer.feed(data);
     });
 
-    socket.composer.on('data', function (data) {
+    socket.composer.on('data', (data) => {
       var pkg = JSON.parse(data.toString());
       if (pkg instanceof Array) {
-        processMsgs(socket, self, pkg);
+        processMsgs(socket, this, pkg);
       } else {
-        processMsg(socket, self, pkg);
+        processMsg(socket, this, pkg);
       }
     });
 
-    socket.on('close', function () {
-      delete self.sockets[socket.id];
-      delete self.msgQueues[socket.id];
+    socket.on('close', () => {
+      delete this.sockets[socket.id];
+      delete this.msgQueues[socket.id];
     });
   });
 
   if (this.bufferMsg) {
-    this._interval = setInterval(function () {
-      flush(self);
+    this._interval = setInterval(() => {
+      flush(this);
     }, this.interval);
   }
 };
 
 pro.close = function () {
-  if (!!this.closed) {
+  if (this.closed) {
     return;
   }
   this.closed = true;
@@ -174,6 +172,6 @@ module.exports.create = function (opts, cb) {
   return new Acceptor(opts || {}, cb);
 };
 
-process.on('SIGINT', function () {
+process.on('SIGINT', () => {
   process.exit();
 });

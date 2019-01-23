@@ -5,7 +5,7 @@ socket.connect('tcp://localhost:3331');
 
 run();
 
-socket.on('message', function () {
+socket.on('message', () => {
 	run();
 })
 

@@ -101,7 +101,7 @@ OutputBuffer.prototype.writeObject = function (object) {
 	// console.log('writeObject type %s', type);
 	// console.log(object)
 	if (!type) {
-		logger.error('invalid writeObject ' + object);
+		logger.error(`invalid writeObject ${object}');
 		return;
 	}
 

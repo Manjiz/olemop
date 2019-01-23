@@ -32,7 +32,7 @@ var connection = thrift.createConnection("localhost", 9090, {
   protocol : protocol
 });
 
-connection.on('error', function (err) {
+connection.on('error', (err) => {
   assert(false, err);
 });
 

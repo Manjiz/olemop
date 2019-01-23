@@ -31,10 +31,10 @@ describe('gateway', function() {
       var gateway = Gateway.create(opts);
 
       should.exist(gateway);
-      gateway.on('error', function(err) {
+      gateway.on('error', (err) => {
         errorCount++;
       });
-      gateway.on('closed', function() {
+      gateway.on('closed', () => {
         closeCount++;
       });
 
@@ -54,7 +54,7 @@ describe('gateway', function() {
       var gateway = Gateway.create(opts);
 
       should.exist(gateway);
-      gateway.on('error', function(err) {
+      gateway.on('error', (err) => {
         should.exist(err);
         errorCount++;
       });

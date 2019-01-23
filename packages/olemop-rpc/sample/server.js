@@ -11,6 +11,6 @@ var server = Server.create({paths: paths, port: port});
 server.start();
 console.log('rpc server started.');
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
 	console.error(err);
 });

@@ -1,7 +1,6 @@
 var logger = require('@olemop/logger').getLogger('olemop-rpc', 'ws-acceptor');
 var EventEmitter = require('events').EventEmitter;
 var Tracer = require('../../util/tracer');
-var utils = require('../../util/utils');
 var sio = require('socket.io');
 var util = require('util');
 
@@ -24,37 +23,35 @@ var pro = Acceptor.prototype;
 
 pro.listen = function (port) {
   //check status
-  if (!!this.inited) {
+  if (this.inited) {
     this.cb(new Error('already inited.'));
     return;
   }
   this.inited = true;
 
-  var self = this;
-
   this.server = sio.listen(port);
 
   this.server.set('log level', 0);
 
-  this.server.server.on('error', function (err) {
+  this.server.server.on('error', (err) => {
     logger.error('rpc server is error: %j', err.stack);
-    self.emit('error', err);
+    this.emit('error', err);
   });
 
-  this.server.sockets.on('connection', function (socket) {
-    self.sockets[socket.id] = socket;
+  this.server.sockets.on('connection', (socket) => {
+    this.sockets[socket.id] = socket;
 
-    self.emit('connection', {
+    this.emit('connection', {
       id: socket.id,
       ip: socket.handshake.address.address
     });
 
-    socket.on('message', function (pkg) {
+    socket.on('message', (pkg) => {
       try {
         if (pkg instanceof Array) {
-          processMsgs(socket, self, pkg);
+          processMsgs(socket, this, pkg);
         } else {
-          processMsg(socket, self, pkg);
+          processMsg(socket, this, pkg);
         }
       } catch (e) {
         // socke.io would broken if uncaugth the exception
@@ -62,25 +59,24 @@ pro.listen = function (port) {
       }
     });
 
-    socket.on('disconnect', function (reason) {
-      delete self.sockets[socket.id];
-      delete self.msgQueues[socket.id];
+    socket.on('disconnect', (reason) => {
+      delete this.sockets[socket.id];
+      delete this.msgQueues[socket.id];
     });
   });
 
   this.on('connection', ipFilter.bind(this));
 
   if (this.bufferMsg) {
-    this._interval = setInterval(function () {
-      flush(self);
+    this._interval = setInterval(() => {
+      flush(this);
     }, this.interval);
   }
 };
 
 var ipFilter = function (obj) {
   if (typeof this.whitelist === 'function') {
-    var self = this;
-    self.whitelist(function (err, tmpList) {
+    this.whitelist((err, tmpList) => {
       if (err) {
         logger.error('%j.(RPC whitelist).', err);
         return;
@@ -89,14 +85,14 @@ var ipFilter = function (obj) {
         logger.error('%j is not an array.(RPC whitelist).', tmpList);
         return;
       }
-      if (!!obj && !!obj.ip && !!obj.id) {
+      if (obj && obj.ip && obj.id) {
         for (var i in tmpList) {
           var exp = new RegExp(tmpList[i]);
           if (exp.test(obj.ip)) {
             return;
           }
         }
-        var sock = self.sockets[obj.id];
+        var sock = this.sockets[obj.id];
         if (sock) {
           sock.disconnect('unauthorized');
           logger.warn('%s is rejected(RPC whitelist).', obj.ip);
@@ -107,7 +103,7 @@ var ipFilter = function (obj) {
 };
 
 pro.close = function () {
-  if (!!this.closed) {
+  if (this.closed) {
     return;
   }
   this.closed = true;
