@@ -91,7 +91,7 @@ run()
 // client.calculate(1, work, function (err, message) {
 //   console.log('15-10=' + message);
 
-//   client.getStruct(1, function (err, message){
+//   client.getStruct(1, function (err, message) {
 //     console.log('Check log: ' + message.value);
 
 //     //close the connection once we're done

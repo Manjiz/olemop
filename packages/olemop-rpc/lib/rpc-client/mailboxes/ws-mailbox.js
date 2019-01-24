@@ -1,99 +1,157 @@
-var logger = require('@olemop/logger').getLogger('olemop-rpc', 'ws-mailbox');
-var EventEmitter = require('events').EventEmitter;
-var constants = require('../../util/constants');
-var Tracer = require('../../util/tracer');
-var client = require('socket.io-client');
-var util = require('util');
+const util = require('util')
+const EventEmitter = require('events')
+const client = require('socket.io-client')
+const logger = require('@olemop/logger').getLogger('olemop-rpc', 'ws-mailbox')
+const constants = require('../../util/constants')
+const Tracer = require('../../util/tracer')
 
-var MailBox = function (server, opts) {
-  EventEmitter.call(this);
-  this.curId = 0;
-  this.id = server.id;
-  this.host = server.host;
-  this.port = server.port;
-  this.requests = {};
-  this.timeout = {};
-  this.queue = [];
-  this.bufferMsg = opts.bufferMsg;
-  this.interval = opts.interval || constants.DEFAULT_PARAM.INTERVAL;
-  this.timeoutValue = opts.timeout || constants.DEFAULT_PARAM.CALLBACK_TIMEOUT;
-  this.connected = false;
-  this.closed = false;
-  this.opts = opts;
-};
-util.inherits(MailBox, EventEmitter);
+const enqueue = (mailbox, msg) => {
+  mailbox.queue.push(msg)
+}
 
-var pro = MailBox.prototype;
+const flush = (mailbox) => {
+  if (mailbox.closed || !mailbox.queue.length) return
 
-pro.connect = function (tracer, cb) {
-  tracer && tracer.info('client', __filename, 'connect', 'ws-mailbox try to connect');
+  mailbox.socket.emit('message', mailbox.queue)
+  mailbox.queue = []
+}
+
+const processMsgs = (mailbox, pkgs) => {
+  pkgs.forEach((item) => {
+    processMsg(mailbox, item)
+  })
+}
+
+const processMsg = (mailbox, pkg) => {
+  clearCbTimeout(mailbox, pkg.id)
+  const cb = mailbox.requests[pkg.id]
+
+  if (!cb) return
+
+  delete mailbox.requests[pkg.id]
+  const rpcDebugLog = mailbox.opts.rpcDebugLog
+  let tracer = null
+  const sendErr = null
+  if (rpcDebugLog) {
+    tracer = new Tracer(mailbox.opts.rpcLogger, mailbox.opts.rpcDebugLog, mailbox.opts.clientId, pkg.source, pkg.resp, pkg.traceId, pkg.seqId)
+  }
+  const pkgResp = pkg.resp
+  // const args = [tracer, null]
+
+  // pkg.resp.forEach((arg) => {
+  //   args.push(arg)
+  // })
+
+  cb(tracer, sendErr, pkgResp)
+}
+
+const setCbTimeout = (mailbox, id, tracer, cb) => {
+  const timer = setTimeout(() => {
+    logger.warn(`rpc request is timeout, id: ${id}, host: ${mailbox.host}, port: ${ mailbox.port}`)
+    clearCbTimeout(mailbox, id)
+    if (mailbox.requests[id]) {
+      delete mailbox.requests[id]
+    }
+    logger.error(`rpc callback timeout, remote server host: ${mailbox.host}, port: ${mailbox.port}`)
+    cb(tracer, new Error('rpc callback timeout'))
+  }, mailbox.timeoutValue)
+  mailbox.timeout[id] = timer
+}
+
+const clearCbTimeout = (mailbox, id) => {
+  if (!mailbox.timeout[id]) {
+    logger.warn(`timer is not exsits, id: ${id}, host: ${mailbox.host}, port: ${mailbox.port}`)
+    return
+  }
+  clearTimeout(mailbox.timeout[id])
+  delete mailbox.timeout[id]
+}
+
+const MailBox = function (server, opts) {
+  EventEmitter.call(this)
+  this.curId = 0
+  this.id = server.id
+  this.host = server.host
+  this.port = server.port
+  this.requests = {}
+  this.timeout = {}
+  this.queue = []
+  this.bufferMsg = opts.bufferMsg
+  this.interval = opts.interval || constants.DEFAULT_PARAM.INTERVAL
+  this.timeoutValue = opts.timeout || constants.DEFAULT_PARAM.CALLBACK_TIMEOUT
+  this.connected = false
+  this.closed = false
+  this.opts = opts
+}
+
+util.inherits(MailBox, EventEmitter)
+
+MailBox.prototype.connect = function (tracer, cb) {
+  tracer && tracer.info('client', __filename, 'connect', 'ws-mailbox try to connect')
   if (this.connected) {
-    tracer && tracer.error('client', __filename, 'connect', 'mailbox has already connected');
-    cb(new Error('mailbox has already connected.'));
-    return;
+    tracer && tracer.error('client', __filename, 'connect', 'mailbox has already connected')
+    cb(new Error('mailbox has already connected.'))
+    return
   }
   this.socket = client.connect(`${this.host}:${this.port}`, {
     'force new connection': true,
     'reconnect': false
-  });
+  })
   this.socket.on('message', (pkg) => {
     try {
-      if (pkg instanceof Array) {
-        processMsgs(this, pkg);
+      if (Array.isArray(pkg)) {
+        processMsgs(this, pkg)
       } else {
-        processMsg(this, pkg);
+        processMsg(this, pkg)
       }
     } catch (err) {
-      logger.error('rpc client process message with error: %s', err.stack);
+      logger.error(`rpc client process message with error: ${err.stack}`)
     }
-  });
+  })
 
   this.socket.on('connect', () => {
     if (this.connected) {
-      return;
+      return
     }
-    this.connected = true;
+    this.connected = true
     if (this.bufferMsg) {
       this._interval = setInterval(() => {
-        flush(this);
-      }, this.interval);
+        flush(this)
+      }, this.interval)
     }
-    cb();
-  });
+    cb()
+  })
 
   this.socket.on('error', (err) => {
-    logger.error('rpc socket is error, remote server host: %s, port: %s', this.host, this.port);
-    this.emit('close', this.id);
-    cb(err);
-  });
+    logger.error(`rpc socket is error, remote server host: ${this.host}, port: ${this.port}`)
+    this.emit('close', this.id)
+    cb(err)
+  })
 
   this.socket.on('disconnect', (reason) => {
-    logger.error('rpc socket is disconnect, reason: %s', reason);
-    var reqs = this.requests,
-      cb;
-    for (var id in reqs) {
-      cb = reqs[id];
-      cb(tracer, new Error('disconnect with remote server.'));
+    logger.error(`rpc socket is disconnect, reason: ${reason}`)
+    for (let id in this.requests) {
+      const cb = this.requests[id]
+      cb(tracer, new Error('disconnect with remote server.'))
     }
-    this.emit('close', this.id);
-  });
-};
+    this.emit('close', this.id)
+  })
+}
 
 /**
  * close mailbox
  */
-pro.close = function () {
-  if (this.closed) {
-    return;
-  }
-  this.closed = true;
-  this.connected = false;
+MailBox.prototype.close = function () {
+  if (this.closed) return
+
+  this.closed = true
+  this.connected = false
   if (this._interval) {
-    clearInterval(this._interval);
-    this._interval = null;
+    clearInterval(this._interval)
+    this._interval = null
   }
-  this.socket.disconnect();
-};
+  this.socket.disconnect()
+}
 
 /**
  * send message to remote server
@@ -102,109 +160,38 @@ pro.close = function () {
  * @param opts {} attach info to send method
  * @param cb declaration decided by remote interface
  */
-pro.send = function (tracer, msg, opts, cb) {
-  tracer && tracer.info('client', __filename, 'send', 'ws-mailbox try to send');
+MailBox.prototype.send = function (tracer, msg, opts, cb) {
+  tracer && tracer.info('client', __filename, 'send', 'ws-mailbox try to send')
   if (!this.connected) {
-    tracer && tracer.error('client', __filename, 'send', 'ws-mailbox not init');
-    cb(tracer, new Error('ws-mailbox is not init'));
-    return;
+    tracer && tracer.error('client', __filename, 'send', 'ws-mailbox not init')
+    cb(tracer, new Error('ws-mailbox is not init'))
+    return
   }
 
   if (this.closed) {
-    tracer && tracer.error('client', __filename, 'send', 'mailbox has already closed');
-    cb(tracer, new Error('ws-mailbox has already closed'));
-    return;
+    tracer && tracer.error('client', __filename, 'send', 'mailbox has already closed')
+    cb(tracer, new Error('ws-mailbox has already closed'))
+    return
   }
 
-  var id = this.curId++;
-  this.requests[id] = cb;
-  setCbTimeout(this, id, tracer, cb);
+  const id = this.curId++
+  this.requests[id] = cb
+  setCbTimeout(this, id, tracer, cb)
 
-  var pkg;
-  if (tracer && tracer.isEnabled) {
-    pkg = {
-      traceId: tracer.id,
-      seqId: tracer.seq,
-      source: tracer.source,
-      remote: tracer.remote,
-      id: id,
-      msg: msg
-    };
-  } else {
-    pkg = {
-      id: id,
-      msg: msg
-    };
-  }
+  const pkg = tracer && tracer.isEnabled ? {
+    traceId: tracer.id,
+    seqId: tracer.seq,
+    source: tracer.source,
+    remote: tracer.remote,
+    id,
+    msg
+  } : { id, msg }
   if (this.bufferMsg) {
-    enqueue(this, pkg);
+    enqueue(this, pkg)
   } else {
-    this.socket.emit('message', pkg);
+    this.socket.emit('message', pkg)
   }
-};
-
-var enqueue = function (mailbox, msg) {
-  mailbox.queue.push(msg);
-};
-
-var flush = function (mailbox) {
-  if (mailbox.closed || !mailbox.queue.length) {
-    return;
-  }
-  mailbox.socket.emit('message', mailbox.queue);
-  mailbox.queue = [];
-};
-
-var processMsgs = function (mailbox, pkgs) {
-  for (var i = 0, l = pkgs.length; i < l; i++) {
-    processMsg(mailbox, pkgs[i]);
-  }
-};
-
-var processMsg = function (mailbox, pkg) {
-  clearCbTimeout(mailbox, pkg.id);
-  var cb = mailbox.requests[pkg.id];
-  if (!cb) {
-    return;
-  }
-  delete mailbox.requests[pkg.id];
-  var rpcDebugLog = mailbox.opts.rpcDebugLog;
-  var tracer = null;
-  var sendErr = null;
-  if (rpcDebugLog) {
-    tracer = new Tracer(mailbox.opts.rpcLogger, mailbox.opts.rpcDebugLog, mailbox.opts.clientId, pkg.source, pkg.resp, pkg.traceId, pkg.seqId);
-  }
-  var pkgResp = pkg.resp;
-  // var args = [tracer, null];
-
-  // pkg.resp.forEach(function (arg){
-  //   args.push(arg);
-  // });
-
-  cb(tracer, sendErr, pkgResp);
-};
-
-var setCbTimeout = function (mailbox, id, tracer, cb) {
-  var timer = setTimeout(function () {
-    logger.warn('rpc request is timeout, id: %s, host: %s, port: %s', id, mailbox.host, mailbox.port);
-    clearCbTimeout(mailbox, id);
-    if (mailbox.requests[id]) {
-      delete mailbox.requests[id];
-    }
-    logger.error('rpc callback timeout, remote server host: %s, port: %s', mailbox.host, mailbox.port);
-    cb(tracer, new Error('rpc callback timeout'));
-  }, mailbox.timeoutValue);
-  mailbox.timeout[id] = timer;
-};
-
-var clearCbTimeout = function (mailbox, id) {
-  if (!mailbox.timeout[id]) {
-    logger.warn('timer is not exsits, id: %s, host: %s, port: %s', id, mailbox.host, mailbox.port);
-    return;
-  }
-  clearTimeout(mailbox.timeout[id]);
-  delete mailbox.timeout[id];
-};
+}
 
 /**
  * Factory method to create mailbox
@@ -215,5 +202,5 @@ var clearCbTimeout = function (mailbox, id) {
  *                      opts.interval {Boolean} msg queue flush interval if bufferMsg is true. default is 50 ms
  */
 module.exports.create = function (server, opts) {
-  return new MailBox(server, opts || {});
-};
+  return new MailBox(server, opts || {})
+}

@@ -12,34 +12,22 @@ const logger = require('@olemop/logger').getLogger('olemop-rpc', 'rpc-proxy')
  * @param proxyCB {Functoin} proxy callback function
  * @returns function proxy
  */
-const genFunctionProxy = function (serviceName, methodName, origin, attach, proxyCB) {
-  return (function () {
-    const proxy = function () {
-      const len = arguments.length
-      const args = new Array(len)
-      for (let i = 0; i < len; i++) {
-        args[i] = arguments[i]
-      }
-      proxyCB(serviceName, methodName, args, attach)
-    }
+const genFunctionProxy = (serviceName, methodName, origin, attach, proxyCB) => {
+  const proxy = (...args) => {
+    proxyCB(serviceName, methodName, args, attach)
+  }
 
-    proxy.toServer = function () {
-      const len = arguments.length
-      const args = new Array(len)
-      for (let i = 0; i < len; i++) {
-        args[i] = arguments[i]
-      }
-      proxyCB(serviceName, methodName, args, attach, true)
-    }
+  proxy.toServer = (...args) => {
+    proxyCB(serviceName, methodName, args, attach, true)
+  }
 
-    return proxy
-  })()
+  return proxy
 }
 
-const genObjectProxy = function (serviceName, origin, attach, proxyCB) {
-  //generate proxy for function field
+const genObjectProxy = (serviceName, origin, attach, proxyCB) => {
+  // generate proxy for function field
   const res = {}
-  olemopUtils.listES6ClassMethods(origin).forEach(function (field) {
+  olemopUtils.listES6ClassMethods(origin).forEach((field) => {
     if (typeof origin[field] === 'function') {
       res[field] = genFunctionProxy(serviceName, field, origin, attach, proxyCB);
     }

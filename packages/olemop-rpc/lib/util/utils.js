@@ -1,58 +1,54 @@
-var Utils = {};
+const Bearcat = require('bearcat')
 
-Utils.invokeCallback = function (cb) {
+const Utils = {}
+
+/**
+ * @param {Function} cb
+ * @param {*} ... cb parameters
+ */
+Utils.invokeCallback = (...args) => {
+  const cb = args[0]
+  const params = args.slice(1)
 	if (typeof cb === 'function') {
-		cb.apply(null, Array.prototype.slice.call(arguments, 1));
+		cb.apply(null, params)
 	}
-};
+}
 
-Utils.applyCallback = function (cb, args) {
+Utils.applyCallback = (cb, args) => {
 	if (typeof cb === 'function') {
-		cb.apply(null, args);
+		cb.apply(null, args)
 	}
-};
+}
 
-Utils.getObjectClass = function (obj) {
-	if (!obj) {
-		return;
-	}
+Utils.getObjectClass = (obj) => {
+	if (!obj) return
 
-	var constructor = obj.constructor;
-	if (!constructor) {
-		return;
-	}
+	const constructor = obj.constructor
+	if (!constructor) return
 
 	if (constructor.name) {
-		return constructor.name;
+		return constructor.name
 	}
 
-	var str = constructor.toString();
-	if (!str) {
-		return;
-	}
+	const str = constructor.toString()
+	if (!str) return
 
-	var arr = null;
-	if (str.charAt(0) == '[') {
-		arr = str.match(/\[\w+\s*(\w+)\]/);
-	} else {
-		arr = str.match(/function\s*(\w+)/);
-	}
+	const arr = str.charAt(0) == '[' ? str.match(/\[\w+\s*(\w+)\]/) : str.match(/function\s*(\w+)/)
 
 	if (arr && arr.length == 2) {
-		return arr[1];
+		return arr[1]
 	}
-};
+}
 
 /**
  * Utils check float
  *
  * @param  {Float}   float
- * @return {Boolean} true|false
- * @api public
+ * @return {Boolean}
  */
-Utils.checkFloat = function (v) {
-	return v === Number(v) && v % 1 !== 0;
-	// return parseInt(v) !== v;
+Utils.checkFloat = (v) => {
+	return v === Number(v) && v % 1 !== 0
+	// return parseInt(v) !== v
 }
 
 /**
@@ -60,204 +56,128 @@ Utils.checkFloat = function (v) {
  *
  * @param  {String}   type
  * @return {Function} high order function
- * @api public
  */
-Utils.isType = function (type) {
-	return function (obj) {
-		return {}.toString.call(obj) == "[object " + type + "]";
+Utils.isType = (type) => {
+	return (obj) => {
+		return {}.toString.call(obj) === `[object ${type}]`
 	}
 }
 
-/**
- * Utils check array
- *
- * @param  {Array}   array
- * @return {Boolean} true|false
- * @api public
- */
-Utils.checkArray = Array.isArray || Utils.isType("Array");
-
-/**
- * Utils check number
- *
- * @param  {Number}  number
- * @return {Boolean} true|false
- * @api public
- */
-Utils.checkNumber = Utils.isType("Number");
-
-/**
- * Utils check function
- *
- * @param  {Function}   func function
- * @return {Boolean}    true|false
- * @api public
- */
-Utils.checkFunction = Utils.isType("Function");
-/**
- * Utils check object
- *
- * @param  {Object}   obj object
- * @return {Boolean}  true|false
- * @api public
- */
-Utils.checkObject = Utils.isType("Object");
-
-/**
- * Utils check string
- *
- * @param  {String}   string
- * @return {Boolean}  true|false
- * @api public
- */
-Utils.checkString = Utils.isType("String");
-
-/**
- * Utils check boolean
- *
- * @param  {Object}   obj object
- * @return {Boolean}  true|false
- * @api public
- */
-Utils.checkBoolean = Utils.isType("Boolean");
+Utils.checkArray = Array.isArray || Utils.isType('Array')
+Utils.checkNumber = Utils.isType('Number')
+Utils.checkFunction = Utils.isType('Function')
+Utils.checkObject = Utils.isType('Object')
+Utils.checkString = Utils.isType('String')
+Utils.checkBoolean = Utils.isType('Boolean')
 
 /**
  * Utils check bean
  *
  * @param  {Object}   obj object
- * @return {Boolean}  true|false
- * @api public
+ * @return {Boolean}
  */
-Utils.checkBean = function (obj) {
-	return obj && obj['$id'] &&
-		Utils.checkFunction(obj['writeFields']) &&
-		Utils.checkFunction(obj['readFields']);
+Utils.checkBean = (obj) => {
+  return obj && obj['$id']
+    && Utils.checkFunction(obj['writeFields'])
+    && Utils.checkFunction(obj['readFields'])
 }
 
-Utils.checkNull = function (obj) {
-	return !Utils.isNotNull(obj);
-}
-
-/**
- * Utils args to array
- *
- * @param  {Object}  args arguments
- * @return {Array}   array
- * @api public
- */
-Utils.to_array = function (args) {
-	var len = args.length;
-	var arr = new Array(len);
-
-	for (var i = 0; i < len; i++) {
-		arr[i] = args[i];
-	}
-
-	return arr;
-}
+Utils.checkNull = (obj) => !Utils.isNotNull(obj)
 
 /**
  * Utils check is not null
  *
  * @param  {Object}   value
- * @return {Boolean}  true|false
- * @api public
+ * @return {Boolean}
  */
-Utils.isNotNull = function (value) {
-	if (value !== null && typeof value !== 'undefined')
-		return true;
-	return false;
-}
+Utils.isNotNull = (value) => value !== null && typeof value !== 'undefined'
 
-Utils.getType = function (object) {
+Utils.getType = (object) => {
 	if (object == null || typeof object === 'undefined') {
-		return Utils.typeMap['null'];
+		return Utils.typeMap['null']
 	}
 
 	if (Buffer.isBuffer(object)) {
-		return Utils.typeMap['buffer'];
+		return Utils.typeMap['buffer']
 	}
 
 	if (Utils.checkArray(object)) {
-		return Utils.typeMap['array'];
+		return Utils.typeMap['array']
 	}
 
 	if (Utils.checkString(object)) {
-		return Utils.typeMap['string'];
+		return Utils.typeMap['string']
 	}
 
 	if (Utils.checkObject(object)) {
 		if (Utils.checkBean(object)) {
-			return Utils.typeMap['bean'];
-		}
-
-		return Utils.typeMap['object'];
+			return Utils.typeMap['bean']
+		} else {
+      return Utils.typeMap['object']
+    }
 	}
 
 	if (Utils.checkBoolean(object)) {
-		return Utils.typeMap['boolean'];
+		return Utils.typeMap['boolean']
 	}
 
 	if (Utils.checkNumber(object)) {
 		if (Utils.checkFloat(object)) {
-			return Utils.typeMap['float'];
-		}
-
-		if (isNaN(object)) {
-			return Utils.typeMap['null'];
-		}
-
-		return Utils.typeMap['number'];
+			return Utils.typeMap['float']
+		} else if (isNaN(object)) {
+			return Utils.typeMap['null']
+		} else {
+      return Utils.typeMap['number']
+    }
 	}
 }
 
-var typeArray = ['', 'null', 'buffer', 'array', 'string', 'object', 'bean', 'boolean', 'float', 'number'];
-var typeMap = {};
-for (var i = 1; i <= typeArray.length; i++) {
-	typeMap[typeArray[i]] = i;
-}
+const typeArray = ['', 'null', 'buffer', 'array', 'string', 'object', 'bean', 'boolean', 'float', 'number']
+const typeMap = typeArray.reduce((prev, item, index) => {
+  if (index !== 0) {
+    prev[item] = index
+  }
+  return prev
+}, {})
 
-Utils.typeArray = typeArray;
+Utils.typeArray = typeArray
 
-Utils.typeMap = typeMap;
+Utils.typeMap = typeMap
 
-Utils.getBearcat = function () {
-	return require('bearcat');
-}
+Utils.getBearcat = () => Bearcat
 
-Utils.genServicesMap = function (services) {
-	var nMap = {}; // namespace
-	var sMap = {}; // service
-	var mMap = {}; // method
-	var nList = [];
-	var sList = [];
-	var mList = [];
+Utils.genServicesMap = (services) => {
+  // namespace
+  const nMap = {}
+  // service
+  const sMap = {}
+  // method
+	const mMap = {}
+	const nList = []
+	const sList = []
+	const mList = []
 
-	var nIndex = 0;
-	var sIndex = 0;
-	var mIndex = 0;
+  Object.keys(services).forEach((namespace, nIndex) => {
+    nList.push(namespace)
+		nMap[namespace] = nIndex
+    const s = services[namespace]
 
-	for (var namespace in services) {
-		nList.push(namespace);
-		nMap[namespace] = nIndex++;
-		var s = services[namespace];
+    Object.keys(s).forEach((service, sIndex) => {
+      sList.push(service)
+			sMap[service] = sIndex
+      const m = s[service]
 
-		for (var service in s) {
-			sList.push(service);
-			sMap[service] = sIndex++;
-			var m = s[service];
-
-			for (var method in m) {
-				var func = m[method];
+      Object.keys(m).forEach((method, mIndex) => {
+        const func = m[method]
 				if (Utils.checkFunction(func)) {
-					mList.push(method);
-					mMap[method] = mIndex++;
+					mList.push(method)
+					mMap[method] = mIndex
 				}
-			}
-		}
-	}
+      })
+    })
+  })
 
-	return [nMap, sMap, mMap, nList, sList, mList];
+	return [nMap, sMap, mMap, nList, sList, mList]
 }
 
-module.exports = Utils;
+module.exports = Utils

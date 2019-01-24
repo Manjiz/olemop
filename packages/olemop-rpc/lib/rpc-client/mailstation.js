@@ -110,7 +110,7 @@ const errorHandler = (tracer, station, err, serverId, msg, opts, flag, cb) => {
   if (station.handleError) {
     station.handleError(err, serverId, msg, opts)
   } else {
-    logger.error('[olemop-rpc] rpc filter error with serverId: %s, err: %j', serverId, err.stack)
+    logger.error(`[olemop-rpc] rpc filter error with serverId: ${serverId}, err: ${err.stack}`)
     station.emit('error', constants.RPC_ERROR.FILTER_ERROR, tracer, serverId, msg, opts)
   }
 }
@@ -349,8 +349,8 @@ MailStation.prototype.dispatch = function (tracer, serverId, msg, opts, cb) {
       return
     }
     tmpMailbox.send(tracer, msg, opts, (tracer_send, send_err, args) => {
-      // var tracer_send = arguments[0]
-      // var send_err = arguments[1]
+      // const tracer_send = args[0]
+      // const send_err = args[1]
       if (send_err) {
         logger.error(`[olemop-rpc] fail to send message ${send_err.stack || send_err.message}`)
         this.emit('error', constants.RPC_ERROR.FAIL_SEND_MESSAGE, tracer, serverId, msg, opts)
@@ -358,7 +358,7 @@ MailStation.prototype.dispatch = function (tracer, serverId, msg, opts, cb) {
         // utils.applyCallback(cb, send_err)
         return
       }
-      // var args = arguments[2]
+      // const args = args[2]
       doFilter(tracer_send, null, serverId, msg, opts, this.afters, 0, 'after', (tracer, err, serverId, msg, opts) => {
         if (err) {
           errorHandler(tracer, this, err, serverId, msg, opts, false, cb)

@@ -18,7 +18,7 @@ A.prototype.addInternal = function() {
   this.add(1);
 };
 
-var B = function(value){
+var B = function(value) {
   this.value = value;
 };
 B.prototype.addA = function() {

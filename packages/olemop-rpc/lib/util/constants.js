@@ -30,4 +30,4 @@ module.exports = {
 	},
 	TOPIC_RPC: 'r',
 	TOPIC_HANDSHAKE: 'h'
-};
+}

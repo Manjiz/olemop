@@ -1,21 +1,23 @@
-var logger = require('@olemop/logger').getLogger('olemop-rpc', 'blackhole');
-var EventEmitter = require('events').EventEmitter;
+const EventEmitter = require('events')
+const logger = require('@olemop/logger').getLogger('olemop-rpc', 'blackhole')
 
-var exp = module.exports = new EventEmitter();
+const emitter = new EventEmitter()
 
-exp.connect = function (tracer, cb) {
-	tracer && tracer.info('client', __filename, 'connect', 'connect to blackhole');
-	process.nextTick(function () {
-		cb(new Error('fail to connect to remote server and switch to blackhole.'));
-	});
-};
+emitter.connect = (tracer, cb) => {
+	tracer && tracer.info('client', __filename, 'connect', 'connect to blackhole')
+	process.nextTick(() => {
+		cb(new Error('fail to connect to remote server and switch to blackhole.'))
+	})
+}
 
-exp.close = function (cb) {};
+emitter.close = (cb) => {}
 
-exp.send = function (tracer, msg, opts, cb) {
-	tracer && tracer.info('client', __filename, 'send', 'send rpc msg to blackhole');
-	logger.info('message into blackhole: %j', msg);
-	process.nextTick(function () {
-		cb(tracer, new Error('message was forward to blackhole.'));
-	});
-};
+emitter.send = (tracer, msg, opts, cb) => {
+	tracer && tracer.info('client', __filename, 'send', 'send rpc msg to blackhole')
+	logger.info('message into blackhole: %j', msg)
+	process.nextTick(() => {
+		cb(tracer, new Error('message was forward to blackhole.'))
+	})
+}
+
+module.exports = emitter
