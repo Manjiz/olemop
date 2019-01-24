@@ -141,9 +141,9 @@ MailBox.prototype.connect = function (tracer, cb) {
     try {
       pkg = JSON.parse(pkg)
       if (Array.isArray(pkg)) {
-        processMsgs(self, pkg)
+        processMsgs(this, pkg)
       } else {
-        processMsg(self, pkg)
+        processMsg(this, pkg)
       }
     } catch (err) {
       logger.error(`rpc client ${this.serverId} process remote server ${this.id} message with error: ${err.stack}`)
