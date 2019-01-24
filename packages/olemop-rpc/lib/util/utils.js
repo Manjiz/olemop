@@ -1,5 +1,3 @@
-const Bearcat = require('bearcat')
-
 const Utils = {}
 
 /**
@@ -144,7 +142,7 @@ Utils.typeArray = typeArray
 
 Utils.typeMap = typeMap
 
-Utils.getBearcat = () => Bearcat
+Utils.getBearcat = () => require('bearcat')
 
 Utils.genServicesMap = (services) => {
   // namespace
