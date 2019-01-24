@@ -1,6 +1,6 @@
 {
 	"name": "@olemop/rpc",
-	"version": "0.0.41",
+	"version": "0.0.42",
 	"dependencies": {
 		"@olemop/loader": "^0.0.38",
 		"@olemop/logger": "^0.0.38",
@@ -8,8 +8,8 @@
 		"async": "^2.6.1",
 		"crc": "^3.8.0",
 		"mqtt-connection": "^4.0.0",
-		"uuid": "^3.3.2",
-		"stream-pkg": "0.0.5"
+		"stream-pkg": "0.0.5",
+		"uuid": "^3.3.2"
 	},
 	"devDependencies": {
 		"mocha": ">=0.0.1",
