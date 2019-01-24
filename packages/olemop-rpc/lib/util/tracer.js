@@ -1,4 +1,4 @@
-const uuid = require('node-uuid')
+const uuidv1 = require('uuid/v1')
 
 const getModule = (module) => {
   let rs = ''
@@ -18,7 +18,7 @@ const Tracer = function (logger, enabledRpcLog, source, remote, msg, id, seq) {
   this.logger = logger
   this.source = source
   this.remote = remote
-  this.id = id || uuid.v1()
+  this.id = id || uuidv1()
   this.seq = seq || 1
   this.msg = msg
 }

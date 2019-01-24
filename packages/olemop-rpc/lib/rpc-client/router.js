@@ -1,4 +1,4 @@
-const crc = require('crc')
+const crc32 = require('crc/crc32')
 const ConsistentHash = require('../util/consistentHash')
 
 /**
@@ -16,7 +16,7 @@ const defRoute = function (session, msg, context, cb) {
     return
   }
   const uid = (session && session.uid) || ''
-  const index = Math.abs(crc.crc32(uid.toString())) % list.length
+  const index = Math.abs(crc32(uid.toString())) % list.length
   cb(null, list[index].id)
 }
 
