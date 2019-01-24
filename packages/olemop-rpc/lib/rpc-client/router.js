@@ -1,4 +1,4 @@
-const crc32 = require('crc/crc32')
+const { crc32 } = require('crc')
 const ConsistentHash = require('../util/consistentHash')
 
 /**
