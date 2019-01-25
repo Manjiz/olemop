@@ -64,7 +64,7 @@ Switcher.prototype.newSocket = function (socket) {
     if (isHttp(data)) {
       processHttp(self, self.wsprocessor, socket, data);
     } else {
-      if (!!self.setNoDelay) {
+      if (self.setNoDelay) {
         socket.setNoDelay(true);
       }
       processTcp(self, self.tcpprocessor, socket, data);

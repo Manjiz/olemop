@@ -70,8 +70,8 @@ Command.prototype.handle = function (socket, msg) {
     opts.useProto = true;
   }
 
-  if (!!pomelo.app.components.__decodeIO__protobuf__) {
-    if (!!this.useProtobuf) {
+  if (pomelo.app.components.__decodeIO__protobuf__) {
+    if (this.useProtobuf) {
       throw new Error('protobuf can not be both used in the same project.');
     }
     var version = pomelo.app.components.__decodeIO__protobuf__.getVersion();

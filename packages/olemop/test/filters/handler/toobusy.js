@@ -29,7 +29,7 @@ describe("#toobusyFilter",function(){
       service.beforeFilter(null,mockSession,function(err, resp){
         should.exist(mockSession);
         console.log('err: ' + err);
-        if (!!err) {
+        if (err) {
           exit = true;
         }
       });

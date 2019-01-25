@@ -147,7 +147,7 @@ var kill = function (app, agent, msg, cb) {
 
 var stop = function (app, agent, msg, cb) {
   var serverIds = msg.ids;
-  if (!!serverIds.length) {
+  if (serverIds.length) {
     var servers = app.getServers();
     app.set(Constants.RESERVED.STOP_SERVERS, serverIds);
     for (var i=0; i<serverIds.length; i++) {
@@ -180,7 +180,7 @@ var restart = function (app, agent, msg, cb) {
   var serverIds = msg.ids;
   var type = msg.type;
   var servers;
-  if (!serverIds.length && !!type) {
+  if (!serverIds.length && type) {
     servers = app.getServersByType(type);
     if (!servers) {
       utils.invokeCallback(cb, new Error('restart servers with unknown server type: ' + type));
@@ -213,7 +213,7 @@ var restart = function (app, agent, msg, cb) {
         }
         setTimeout(function () {
          runServer(app, msg, function (err, status) {
-          if (!!err) {
+          if (err) {
             logger.error('restart ' + id + ' failed.');
           } else {
             successIds.push(id);
@@ -321,7 +321,7 @@ var parseArgs = function (msg, info, cb) {
     }
     var pairs = args[i].split('=');
     var key = pairs[0];
-    if (!!info[key]) {
+    if (info[key]) {
       info[key] = 1;
     }
     rs[pairs[0]] = pairs[1];
@@ -331,7 +331,7 @@ var parseArgs = function (msg, info, cb) {
 
 var sendCronInfo = function (cron, agent, msg, info, cb) {
   if (isReady(info) && (cron.serverId || cron.serverType)) {
-    if (!!cron.serverId) {
+    if (cron.serverId) {
       agent.notifyById(cron.serverId, module.exports.moduleId, { signal: msg.signal, cron: cron });
     } else {
       agent.notifyByType(cron.serverType, module.exports.moduleId, { signal: msg.signal, cron: cron });

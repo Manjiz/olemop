@@ -148,7 +148,7 @@ pro.removeCrons = function (crons) {
   for (var i=0, l=crons.length; i<l; i++) {
     var cron = crons[i];
     var id = parseInt(cron.id);
-    if (!!this.jobs[id]) {
+    if (this.jobs[id]) {
       schedule.cancelJob(this.jobs[id]);
     } else {
       logger.warn('cron is not in application: %j', cron);

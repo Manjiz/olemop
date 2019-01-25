@@ -9,18 +9,15 @@ const SessionService = require('../common/service/sessionService')
  */
 class Component {
   constructor (app, opts) {
-    const self = this
     this.name = '__session__'
     opts = opts || {}
     this.app = app
     this.service = new SessionService(opts)
 
     const getFun = (m) => {
-      return (() => {
-        return function () {
-          return self.service[m].apply(self.service, arguments)
-        }
-      })()
+      return (...args) => {
+        return this.service[m].apply(this.service, args)
+      }
     }
     // proxy the service methods except the lifecycle interfaces of component
     // var method, self = this
@@ -43,7 +40,7 @@ class Component {
   }
 }
 
-module.exports = function (app, opts) {
+module.exports = (app, opts) => {
   const cmp = new Component(app, opts)
   app.set('sessionService', cmp, true)
   return cmp

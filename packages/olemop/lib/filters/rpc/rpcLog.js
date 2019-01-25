@@ -28,7 +28,7 @@ Filter.prototype.before = function (serverId, msg, opts, next) {
  * After filter for rpc
  */
 Filter.prototype.after = function (serverId, msg, opts, next) {
-  if (!!opts && !!opts.__start_time__) {
+  if (opts && opts.__start_time__) {
     var start = opts.__start_time__;
     var end = Date.now();
     var timeUsed = end - start;

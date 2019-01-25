@@ -89,7 +89,7 @@ var replaceServer = function (self, agent, msg, cb) {
 
 var startOver = function (self, agent, msg, cb) {
   var fun = self.app.lifecycleCbs[Constants.LIFECYCLE.AFTER_STARTALL];
-  if (!!fun) {
+  if (fun) {
     fun.call(null, self.app);
   }
   self.app.event.emit(events.START_ALL);

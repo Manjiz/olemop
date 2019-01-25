@@ -72,7 +72,7 @@ Connector.prototype.start = function (cb) {
     gensocket(socket);
   });
 
-  if (!!this.distinctHost) {
+  if (this.distinctHost) {
     this.listeningServer.listen(this.port, this.host);
   } else {
     this.listeningServer.listen(this.port);

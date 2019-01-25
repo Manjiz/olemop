@@ -96,7 +96,7 @@ Watchdog.prototype.notify = function (msg) {
     return;
   }
   var latch = countDownLatch.createCountDownLatch(count, {timeout: Constants.TIME.TIME_WAIT_COUNTDOWN}, function (isTimeout) {
-    if (!!isTimeout) {
+    if (isTimeout) {
       for (var key in requests) {
         if (!requests[key])  {
           timeouts.push(key);

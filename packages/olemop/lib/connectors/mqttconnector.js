@@ -87,7 +87,7 @@ var composePush = function (route, msgBody) {
 };
 
 Connector.prototype.encode = function (reqId, route, msgBody) {
-	if (!!reqId) {
+	if (reqId) {
 		return composeResponse(reqId, route, msgBody);
 	} else {
 		return composePush(route, msgBody);

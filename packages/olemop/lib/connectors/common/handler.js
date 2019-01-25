@@ -49,7 +49,7 @@ handlers[Package.TYPE_DATA] = handleData;
 
 var handle = function (socket, pkg) {
   var handler = handlers[pkg.type];
-  if (!!handler) {
+  if (handler) {
     handler(socket, pkg);
   } else {
     logger.error('could not find handle invalid data package.');

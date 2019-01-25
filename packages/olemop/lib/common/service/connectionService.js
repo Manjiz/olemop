@@ -59,7 +59,7 @@ pro.increaseConnectionCount = function () {
  * @param uid {String} user id
  */
 pro.removeLoginedUser = function (uid) {
-  if (!!this.logined[uid]) {
+  if (this.logined[uid]) {
     this.loginedCount--;
   }
   delete this.logined[uid];
@@ -74,7 +74,7 @@ pro.decreaseConnectionCount = function (uid) {
   if (this.connCount) {
     this.connCount--;
   }
-  if (!!uid) {
+  if (uid) {
     this.removeLoginedUser(uid);
   }
 };

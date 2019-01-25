@@ -63,7 +63,7 @@ ChannelService.prototype.createChannel = function (name) {
  */
 ChannelService.prototype.getChannel = function (name, create) {
   var channel = this.channels[name];
-  if (!channel && !!create) {
+  if (!channel && create) {
     channel = this.channels[name] = new Channel(name, this);
     addToStore(this, genKey(this), genKey(this, name));
   }
@@ -425,7 +425,7 @@ var restoreChannel = function (self, cb) {
     return
   } else {
     loadAllFromStore(self, genKey(self), function (err, list) {
-      if (!!err) {
+      if (err) {
         utils.invokeCallback(cb, err);
         return;
       } else {
@@ -462,9 +462,9 @@ var restoreChannel = function (self, cb) {
 };
 
 var addToStore = function (self, key, value) {
-  if (!!self.store) {
+  if (self.store) {
     self.store.add(key, value, function (err) {
-      if (!!err) {
+      if (err) {
         logger.error('add key: %s value: %s to store, with err: %j', key, value, err.stack);
       }
     });
@@ -472,9 +472,9 @@ var addToStore = function (self, key, value) {
 };
 
 var removeFromStore = function (self, key, value) {
-  if (!!self.store) {
+  if (self.store) {
     self.store.remove(key, value, function (err) {
-      if (!!err) {
+      if (err) {
         logger.error('remove key: %s value: %s from store, with err: %j', key, value, err.stack);
       }
     });
@@ -482,9 +482,9 @@ var removeFromStore = function (self, key, value) {
 };
 
 var loadAllFromStore = function (self, key, cb) {
-  if (!!self.store) {
+  if (self.store) {
     self.store.load(key, function (err, list) {
-      if (!!err) {
+      if (err) {
         logger.error('load key: %s from store, with err: %j', key, err.stack);
         utils.invokeCallback(cb, err);
       } else {
@@ -495,9 +495,9 @@ var loadAllFromStore = function (self, key, cb) {
 };
 
 var removeAllFromStore = function (self, key) {
-  if (!!self.store) {
+  if (self.store) {
     self.store.removeAll(key, function (err) {
-      if (!!err) {
+      if (err) {
         logger.error('remove key: %s all members from store, with err: %j', key, err.stack);
       }
     });
@@ -505,7 +505,7 @@ var removeAllFromStore = function (self, key) {
 };
 
 var genKey = function (self, name) {
-  if (!!name) {
+  if (name) {
     return self.prefix + ':' + self.app.serverId + ':' + name;
   } else {
     return self.prefix + ':' + self.app.serverId;

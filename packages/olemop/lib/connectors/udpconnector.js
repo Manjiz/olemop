@@ -68,7 +68,7 @@ Connector.prototype.start = function (cb) {
 
   this.socket.on('message', function (data, peer) {
     var socket = self.clients[genKey(peer)];
-    if (!!socket) {
+    if (socket) {
       socket.emit('package', data);
     }
   });

@@ -47,7 +47,7 @@ Server.prototype.start = function (cb) {
   });
 
   this.masterConsole.on('error', function (err) {
-    if (!!err) {
+    if (err) {
       logger.error('masterConsole encounters with error: ' + err.stack);
       return;
     }
@@ -65,7 +65,7 @@ Server.prototype.start = function (cb) {
     var pingTimer = null;
     var server = self.app.getServerById(id);
     var stopFlags = self.app.get(Constants.RESERVED.STOP_SERVERS) || [];
-    if (!!server && (server[Constants.RESERVED.AUTO_RESTART] === 'true' || server[Constants.RESERVED.RESTART_FORCE] === 'true') && stopFlags.indexOf(id) < 0) {
+    if (server && (server[Constants.RESERVED.AUTO_RESTART] === 'true' || server[Constants.RESERVED.RESTART_FORCE] === 'true') && stopFlags.indexOf(id) < 0) {
       var setTimer = function (time) {
         pingTimer = setTimeout(function () {
           utils.ping(server.host, function (flag) {
@@ -91,7 +91,7 @@ Server.prototype.start = function (cb) {
             utils.invokeCallback(cb, new Error('Check port command executed with error.'));
             return;
           } else if (status === 'busy') {
-            if (!!server[Constants.RESERVED.RESTART_FORCE]) {
+            if (server[Constants.RESERVED.RESTART_FORCE]) {
               starter.kill([info.pid], [server]);
             } else {
               utils.invokeCallback(cb, new Error('Port occupied already, check your server to add.'));

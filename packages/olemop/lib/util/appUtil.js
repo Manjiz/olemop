@@ -24,14 +24,14 @@ exports.defaultConfiguration = function (app) {
  * Start servers by type.
  */
 exports.startByType = function (app, cb) {
-  if (!!app.startId) {
+  if (app.startId) {
     if (app.startId === Constants.RESERVED.MASTER) {
       utils.invokeCallback(cb);
     } else {
       starter.runServers(app);
     }
   } else {
-    if (!!app.type && app.type !== Constants.RESERVED.ALL && app.type !== Constants.RESERVED.MASTER) {
+    if (app.type && app.type !== Constants.RESERVED.ALL && app.type !== Constants.RESERVED.MASTER) {
       starter.runServers(app);
     } else {
       utils.invokeCallback(cb);
@@ -171,7 +171,7 @@ var processArgs = function (app, args) {
   app.set(Constants.RESERVED.SERVER_ID, serverId, true);
   app.set(Constants.RESERVED.MODE, mode, true);
   app.set(Constants.RESERVED.TYPE, type, true);
-  if (!!startId) {
+  if (startId) {
     app.set(Constants.RESERVED.STARTID, startId, true);
   }
 

@@ -69,7 +69,7 @@ Socket.prototype.send = function (msg, encode, cb) {
 };
 
 Socket.prototype.close = function () {
-  if (!!this.closeMethod && this.closeMethod === 'end') {
+  if (this.closeMethod && this.closeMethod === 'end') {
     this._socket.end();
   } else {
     try {

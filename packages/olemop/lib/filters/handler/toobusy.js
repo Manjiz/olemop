@@ -16,13 +16,13 @@ var Filter = function (maxLag) {
     toobusy = require('toobusy');
   } catch(e) {
   }
-  if (!!toobusy) {
+  if (toobusy) {
     toobusy.maxLag(maxLag);
   }
 };
 
 Filter.prototype.before = function (msg, session, next) {
-  if (!!toobusy && toobusy()) {
+  if (toobusy && toobusy()) {
     conLogger.warn('[toobusy] reject request msg: ' + msg);
     var err = new Error('Server toobusy!');
     err.code = 500;

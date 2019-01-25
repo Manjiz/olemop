@@ -25,7 +25,7 @@ var Socket = function (id, socket, peer) {
 
   var self = this;
   this.on('package', function (pkg) {
-    if (!!pkg) {
+    if (pkg) {
       pkg = Package.decode(pkg);
       handler(self, pkg);
     }
@@ -57,7 +57,7 @@ Socket.prototype.send = function (msg) {
 
 Socket.prototype.sendRaw = function (msg) {
 	this.socket.send(msg, 0, msg.length, this.port, this.host, function (err, bytes) {
-    if (!!err)	{
+    if (err)	{
       logger.error('send msg to remote with err: %j', err.stack);
       return;
     }

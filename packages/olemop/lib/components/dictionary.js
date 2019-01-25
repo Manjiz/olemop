@@ -1,95 +1,92 @@
-var fs = require('fs');
-var path = require('path');
-var utils = require('../util/utils');
-var Loader = require('@olemop/loader');
-var pathUtil = require('../util/pathUtil');
-var crypto = require('crypto');
+const fs = require('fs')
+const path = require('path')
+const crypto = require('crypto')
+const Loader = require('@olemop/loader')
+const utils = require('../util/utils')
+const pathUtil = require('../util/pathUtil')
 
-module.exports = function (app, opts) {
-  return new Component(app, opts);
-};
+class Component {
+  constructor(app, opts) {
+    this.name = '__dictionary__'
+    this.app = app
+    this.dict = {}
+    this.abbrs = {}
+    this.userDicPath = null
+    this.version = ''
 
-var Component = function (app, opts) {
-  this.app = app;
-  this.dict = {};
-  this.abbrs = {};
-  this.userDicPath = null;
-  this.version = "";
+    // Set user dictionary
+    const p = opts && opts.dict ? opts.dict : path.join(app.getBase(), '/config/dictionary.json')
 
-  //Set user dictionary
-  var p = path.join(app.getBase(), '/config/dictionary.json');
-  if (!!opts && !!opts.dict) {
-    p = opts.dict;
-  }
-  if (fs.existsSync(p)) {
-    this.userDicPath = p;
-  }
-};
-
-var pro = Component.prototype;
-
-pro.name = '__dictionary__';
-
-pro.start = function (cb) {
-  var servers = this.app.get('servers');
-  var routes = [];
-
-  //Load all the handler files
-  for (var serverType in servers) {
-    var p = pathUtil.getHandlerPath(this.app.getBase(), serverType);
-    if (!p) {
-      continue;
+    if (fs.existsSync(p)) {
+      this.userDicPath = p
     }
+  }
 
-    var handlers = Loader.load(p, this.app);
+  start (cb) {
+    const servers = this.app.get('servers')
+    const routes = []
 
-    for (var name in handlers) {
-      var handler = handlers[name];
-      for (var key in handler) {
-        if (typeof(handler[key]) === 'function') {
-          routes.push(serverType + '.' + name + '.' + key);
+    // Load all the handler files
+    for (let serverType in servers) {
+      const p = pathUtil.getHandlerPath(this.app.getBase(), serverType)
+
+      if (!p) continue
+
+      const handlers = Loader.load(p, this.app)
+
+      for (let name in handlers) {
+        const handler = handlers[name]
+        for (let key in handler) {
+          if (typeof(handler[key]) === 'function') {
+            routes.push(`${serverType}.${name}.${key}`)
+          }
         }
       }
     }
-  }
 
-  //Sort the route to make sure all the routers abbr are the same in all the servers
-  routes.sort();
-  var abbr;
-  var i;
-  for (i = 0; i < routes.length; i++) {
-    abbr = i + 1;
-    this.abbrs[abbr] = routes[i];
-    this.dict[routes[i]] = abbr;
-  }
+    // Sort the route to make sure all the routers abbr are the same in all the servers
+    routes.sort()
 
-  //Load user dictionary
-  if (!!this.userDicPath) {
-    var userDic = require(this.userDicPath);
+    routes.forEach((item, index) => {
+      const abbr = index + 1
+      this.abbrs[abbr] = item
+      this.dict[item] = abbr
+    })
 
-    abbr = routes.length + 1;
-    for (i = 0; i < userDic.length; i++) {
-      var route = userDic[i];
+    // Load user dictionary
+    if (this.userDicPath) {
+      const userDic = require(this.userDicPath)
 
-      this.abbrs[abbr] = route;
-      this.dict[route] = abbr;
-      abbr++;
+      let abbr = routes.length + 1
+
+      // maybe there is an object
+      if (userDic && userDic.length) {
+        userDic.forEach((route) => {
+          this.abbrs[abbr] = route
+          this.dict[route] = abbr
+          abbr++
+        })
+      }
     }
+
+    this.version = crypto.createHash('md5').update(JSON.stringify(this.dict)).digest('base64')
+
+    utils.invokeCallback(cb)
   }
 
-  this.version = crypto.createHash('md5').update(JSON.stringify(this.dict)).digest('base64');
+  getDict () {
+    return this.dict
+  }
 
-  utils.invokeCallback(cb);
-};
+  getAbbrs () {
+    return this.abbrs
+  }
 
-pro.getDict = function () {
-  return this.dict;
-};
+  getVersion () {
+    return this.version
+  }
+}
 
-pro.getAbbrs = function () {
-  return this.abbrs;
-};
-
-pro.getVersion = function () {
-  return this.version;
-};
+module.exports = (app, opts) => {
+  return new Component(app, opts)
+}

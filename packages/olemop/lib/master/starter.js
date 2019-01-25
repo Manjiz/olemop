@@ -30,7 +30,7 @@ starter.runServers = function (app) {
     break;
     default:
     server = app.getServerFromConfig(condition);
-    if (!!server) {
+    if (server) {
       this.run(app, server);
     } else {
       servers = app.get(Constants.RESERVED.SERVERS)[condition];
@@ -53,7 +53,7 @@ starter.run = function (app, server, cb) {
   var cmd, key;
   if (utils.isLocal(server.host)) {
     var options = [];
-    if (!!server.args) {
+    if (server.args) {
       if (typeof server.args === 'string') {
         options.push(server.args.trim());
       } else {

@@ -63,7 +63,7 @@ Socket.prototype.sendRaw = function (msg) {
   var self = this;
 
   this.socket.send(msg, {binary: true}, function (err) {
-    if (!!err) {
+    if (err) {
       logger.error('websocket send binary data failed: %j', err.stack);
       return;
     }

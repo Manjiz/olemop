@@ -269,7 +269,7 @@ Application.loadConfigBaseApp = function (key, val, reload) {
     logger.error('invalid configuration with file path: %s', key);
   }
 
-  if (!!realPath && !!reload) {
+  if (realPath && reload) {
     fs.watch(realPath, function (event, filename) {
       if (event === 'change') {
         delete require.cache[require.resolve(realPath)];
@@ -333,7 +333,7 @@ Application.route = function (serverType, routeFunc) {
  */
 Application.beforeStopHook = function (fun) {
   logger.warn('this method was deprecated in pomelo 0.8');
-  if (!!fun && typeof fun === 'function') {
+  if (fun && typeof fun === 'function') {
     this.set(Constants.KEYWORDS.BEFORE_STOP_HOOK, fun);
   }
 };
@@ -366,7 +366,7 @@ Application.beforeStopHook = function (fun) {
       });
     };
     var beforeFun = self.lifecycleCbs[Constants.LIFECYCLE.BEFORE_STARTUP];
-    if (!!beforeFun) {
+    if (beforeFun) {
       beforeFun.call(null, self, startUp);
     } else {
       startUp();
@@ -394,7 +394,7 @@ Application.afterStart = function (cb) {
     if (!err) {
       logger.info('%j finish start', id);
     }
-    if (!!afterFun) {
+    if (afterFun) {
       afterFun.call(null, self, function () {
         utils.invokeCallback(cb, err);
       });
@@ -425,7 +425,7 @@ Application.stop = function (force) {
   }, Constants.TIME.TIME_WAIT_STOP);
 
   var cancelShutDownTimer =function (){
-      if (!!self.stopTimer) {
+      if (self.stopTimer) {
         clearTimeout(self.stopTimer);
       }
   };
@@ -439,9 +439,9 @@ Application.stop = function (force) {
   };
   var fun = this.get(Constants.KEYWORDS.BEFORE_STOP_HOOK);
   var stopFun = this.lifecycleCbs[Constants.LIFECYCLE.BEFORE_SHUTDOWN];
-  if (!!stopFun) {
+  if (stopFun) {
     stopFun.call(null, this, shutDown, cancelShutDownTimer);
-  } else if (!!fun) {
+  } else if (fun) {
     utils.invokeCallback(fun, self, shutDown, cancelShutDownTimer);
   } else {
     shutDown();
@@ -497,7 +497,7 @@ Application.get = function (setting) {
  * @memberOf Application
  */
 Application.enabled = function (setting) {
-  return !!this.get(setting);
+  return this.get(setting);
 };
 
 /**

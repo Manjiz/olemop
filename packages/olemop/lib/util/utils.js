@@ -187,7 +187,7 @@ utils.ping = function (host, cb) {
   if (!module.exports.isLocal(host)) {
     var cmd = 'ping -w 15 ' + host;
     exec(cmd, function (err, stdout, stderr) {
-      if (!!err) {
+      if (err) {
         cb(false);
         return;
       }
@@ -213,7 +213,7 @@ utils.checkPort = function (server, cb) {
   var generateCommand = function (self, host, port) {
     var cmd;
     var ssh_params = pomelo.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS);
-    if (!!ssh_params && Array.isArray(ssh_params)) {
+    if (ssh_params && Array.isArray(ssh_params)) {
       ssh_params = ssh_params.join(' ');
     }
     else {
