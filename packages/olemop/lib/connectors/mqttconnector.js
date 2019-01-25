@@ -1,18 +1,33 @@
-var util = require('util')
-var EventEmitter = require('events')
-var mqtt = require('mqtt')
-var constants = require('../util/constants')
-var MQTTSocket = require('./mqttsocket')
-var Adaptor = require('./mqtt/mqttadaptor')
-var generate = require('./mqtt/generate')
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
+const net = require('net')
+const util = require('util')
+const EventEmitter = require('events')
+const mqttCon = require('mqtt-connection')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const MQTTSocket = require('./mqttsocket')
+const Adaptor = require('./mqtt/mqttadaptor')
+const generate = require('./mqtt/generate')
+const constants = require('../util/constants')
 
-var curId = 1
+let curId = 1
+
+const composeResponse = (msgId, route, msgBody) => ({
+  id: msgId,
+  body: msgBody
+})
+
+const composePush = (route, msgBody) => {
+  const msg = generate.publish(msgBody)
+  if (!msg) {
+    logger.error('invalid mqtt publish message: %j', msgBody)
+  }
+  return msg
+}
+
 /**
  * Connector that manager low level connection and protocol bewteen server and client.
  * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
  */
-var Connector = function (port, host, opts) {
+const Connector = function (port, host, opts) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts)
   }
@@ -24,39 +39,40 @@ var Connector = function (port, host, opts) {
 
   this.adaptor = new Adaptor(this.opts)
 }
+
 util.inherits(Connector, EventEmitter)
 
-module.exports = Connector
 /**
  * Start connector to listen the specified port
  */
 Connector.prototype.start = function (cb) {
-  var self = this
-  this.mqttServer = mqtt.createServer()
-  this.mqttServer.on('client', function (client) {
-		client.on('error', function (err) {
-			client.stream.destroy()
-		})
+  this.mqttServer = new net.Server()
+  this.mqttServer.on('connection', (stream) => {
+    const client = mqttCon(stream)
 
-    client.on('close', function () {
-			client.stream.destroy()
-		})
+    client.on('error', (err) => {
+      client.stream.destroy()
+    })
 
-    client.on('disconnect', function (packet) {
-			client.stream.destroy()
-		})
+    client.on('close', () => {
+      client.stream.destroy()
+    })
 
-    if(self.opts.disconnectOnTimeout) {
-      var timeout = self.opts.timeout * 1000 || constants.TIME.DEFAULT_MQTT_HEARTBEAT_TIMEOUT
-      client.stream.setTimeout(timeout,function () {
+    client.on('disconnect', (packet) => {
+      client.stream.destroy()
+    })
+
+    if (this.opts.disconnectOnTimeout) {
+      const timeout = this.opts.timeout * 1000 || constants.TIME.DEFAULT_MQTT_HEARTBEAT_TIMEOUT
+      client.stream.setTimeout(timeout, () => {
         client.emit('close')
       })
     }
 
-    client.on('connect', function (packet) {
-      client.connack({returnCode: 0})
-      var mqttsocket = new MQTTSocket(curId++, client, self.adaptor)
-      self.emit('connection', mqttsocket)
+    client.on('connect', (packet) => {
+      CloseEventient.connack({returnCode: 0})
+      const mqttsocket = new MQTTSocket(curId++, client, this.adaptor)
+      this.emit('connection', mqttsocket)
     })
   })
 
@@ -70,30 +86,12 @@ Connector.prototype.stop = function () {
 	process.exit(0)
 }
 
-var composeResponse = function (msgId, route, msgBody) {
-  return {
-    id: msgId,
-    body: msgBody
-  }
-}
-
-var composePush = function (route, msgBody) {
-  var msg = generate.publish(msgBody)
-  if(!msg) {
-    logger.error('invalid mqtt publish message: %j', msgBody)
-  }
-
-  return msg
-}
-
 Connector.prototype.encode = function (reqId, route, msgBody) {
-	if (reqId) {
-		return composeResponse(reqId, route, msgBody)
-	} else {
-		return composePush(route, msgBody)
-	}
+  return reqId ? composeResponse(reqId, route, msgBody) : composePush(route, msgBody)
 }
 
 Connector.prototype.close = function () {
   this.mqttServer.close()
 }
+
+module.exports = Connector

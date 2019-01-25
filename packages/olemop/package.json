@@ -14,7 +14,6 @@
     "commander": "2.0.0",
     "crc": "^3.8.0",
     "fs-extra": "^7.0.1",
-    "mqtt": "0.3.9",
     "mqtt-connection": "^4.0.0",
     "node-bignumber": "1.2.1",
     "seq-queue": "0.0.5",

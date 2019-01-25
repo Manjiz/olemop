@@ -1,4 +1,4 @@
-**
+/**
  * Mock remote service
  */
 module.exports = function(app) {
