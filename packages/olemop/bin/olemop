@@ -14,11 +14,8 @@ const starter = require('../lib/master/starter')
 const constants = require('../lib/util/constants')
 const { version } = require('../package.json')
 
-/**
- *  Constant Variables
- */
 const TIME_INIT = 1 * 1000
-const TIME_KILL_WAIT = 5 * 1000
+// const TIME_KILL_WAIT = 5 * 1000
 const KILL_CMD_LUX = 'kill -9 `ps -ef|grep node|awk \'{print $2}\'`'
 const KILL_CMD_WIN = 'taskkill /im node.exe /f'
 
