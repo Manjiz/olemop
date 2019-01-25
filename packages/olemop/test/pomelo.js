@@ -4,7 +4,7 @@ var mockBase = process.cwd() + '/test';
 
 describe('pomelo', function () {
   describe('#createApp', function () {
-    it('should create and get app, be the same instance', function(done) {
+    it('should create and get app, be the same instance', function (done) {
       var app = pomelo.createApp({base: mockBase});
       should.exist(app);
 

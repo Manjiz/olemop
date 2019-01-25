@@ -29,7 +29,7 @@ var msg = {
 describe('client', function () {
   var gateways = [];
 
-  before(function(done) {
+  before(function (done) {
     gateways = [];
     //start remote servers
     var item, opts, gateway;
@@ -48,7 +48,7 @@ describe('client', function () {
     done();
   });
 
-  after(function(done) {
+  after(function (done) {
     //stop remote servers
     for(var i=0; i<gateways.length; i++) {
       gateways[i].stop();
@@ -57,12 +57,12 @@ describe('client', function () {
   });
 
   describe('#create', function () {
-    it('should be ok for creating client with an empty opts', function(done) {
+    it('should be ok for creating client with an empty opts', function (done) {
       var client = Client.create();
 
       should.exist(client);
 
-      client.start(function(err) {
+      client.start(function (err) {
         should.not.exist(err);
         client.stop(true);
         done();
@@ -84,12 +84,12 @@ describe('client', function () {
       }
     });
 
-    it('should replace the default router by pass a opts.route to the create function', function(done) {
+    it('should replace the default router by pass a opts.route to the create function', function (done) {
       var routeCount = 0, server = serverList[1], serverId = server.id, callbackCount = 0;
 
       var router = {
         id: 'aaa',
-        route: function(msg, routeParam, servers, cb) {
+        route: function (msg, routeParam, servers, cb) {
           routeCount++;
           cb(null, serverId);
         }
@@ -103,9 +103,9 @@ describe('client', function () {
       client.addProxies(records);
       client.addServer(serverList[1]);
 
-      client.start(function(err) {
+      client.start(function (err) {
         should.not.exist(err);
-        client.proxies.sys.connector.whoAmIRemote.doService(null, function(err, sid) {
+        client.proxies.sys.connector.whoAmIRemote.doService(null, function (err, sid) {
           callbackCount++;
           serverId.should.equal(sid);
         });
@@ -121,20 +121,20 @@ describe('client', function () {
   });
 
   describe('#status', function () {
-    it('should return an error if start twice', function(done) {
+    it('should return an error if start twice', function (done) {
       var client = Client.create();
-      client.start(function(err) {
+      client.start(function (err) {
         should.not.exist(err);
-        client.start(function(err) {
+        client.start(function (err) {
           should.exist(err);
           done();
         });
       });
     });
 
-    it('should ignore the later operation if stop twice', function(done) {
+    it('should ignore the later operation if stop twice', function (done) {
       var client = Client.create();
-      client.start(function(err) {
+      client.start(function (err) {
         should.not.exist(err);
         client.stop();
         client.stop();
@@ -142,28 +142,28 @@ describe('client', function () {
       });
     });
 
-    it('should return an error if try to do rpc invoke when the client not start', function(done) {
+    it('should return an error if try to do rpc invoke when the client not start', function (done) {
       var client = Client.create();
       var sid = serverList[0].id;
 
-      client.rpcInvoke(sid, msg, function(err) {
+      client.rpcInvoke(sid, msg, function (err) {
         should.exist(err);
         done();
       });
     });
 
-    it('should return an error if try to do rpc invoke after the client stop', function(done) {
+    it('should return an error if try to do rpc invoke after the client stop', function (done) {
       var client = Client.create();
       var sid = serverList[0].id;
 
       client.addServer(serverList[0]);
 
       client.start(function () {
-        client.rpcInvoke(sid, msg, function(err) {
+        client.rpcInvoke(sid, msg, function (err) {
           should.not.exist(err);
           client.stop(true);
           setTimeout(function () {
-            client.rpcInvoke(sid, msg, function(err) {
+            client.rpcInvoke(sid, msg, function (err) {
               should.exist(err);
               done();
             });

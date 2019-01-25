@@ -32,47 +32,47 @@ describe('loader', function () {
 			services.whoAmIRemote.should.have.property('name');
 			services.whoAmIRemote.name.should.be.a('string');
 		});
-		
-		it('should invoke functions of loaded object successfully', function(done) {
+
+		it('should invoke functions of loaded object successfully', function (done) {
 			var callbackCount = 0, sid = 'area-server-1';
 			var context = {id: sid};
 			var services = Loader.load(path, context);
 			should.exist(services);
 
-			services.addOneRemote.doService(1, function(err, res) {
+			services.addOneRemote.doService(1, function (err, res) {
 				callbackCount++;
 				res.should.equal(2);
 			});
 
-			services.addOneRemote.doAddTwo(1, function(err, res) {
+			services.addOneRemote.doAddTwo(1, function (err, res) {
 				callbackCount++;
 				res.should.be.equal(3);
 			});
 
-			services.addThreeRemote.doService(1, function(err, res) {
+			services.addThreeRemote.doService(1, function (err, res) {
 				callbackCount++;
 				res.should.equal(4);
 			});
-			
+
 			// context should be pass to factory function for each module
-			services.whoAmIRemote.doService(function(err, res) {
+			services.whoAmIRemote.doService(function (err, res) {
 				callbackCount++;
 				res.should.equal(sid);
 			});
-			
+
 			setTimeout(function () {
 				callbackCount.should.equal(4);
 				done();
 			}, WAIT_TIME);
 		});
-		
+
 		it('should throw an error if the path is empty', function () {
 			var path = './mock-remote/connector';
 			(function () {
 				Loader.load(path);
 			}).should.throw();
 		});
-		
+
 		it('should throw exception if the path dose not exist', function () {
 			var path = './some/error/path';
 			(function () {

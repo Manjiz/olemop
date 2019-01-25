@@ -61,7 +61,7 @@ describe('channel manager test', function () {
   });
 
   describe('#pushMessageByUids', function () {
-    it('should push message to the right frontend server', function(done) {
+    it('should push message to the right frontend server', function (done) {
       var sid1 = 'sid1', sid2 = 'sid2';
       var uid1 = 'uid1', uid2 = 'uid2', uid3 = 'uid3';
       var orgRoute = 'test.route.string';
@@ -78,7 +78,7 @@ describe('channel manager test', function () {
 
       var invokeCount = 0;
 
-      var mockRpcInvoke = function(sid, rmsg, cb) {
+      var mockRpcInvoke = function (sid, rmsg, cb) {
         invokeCount++;
         var args = rmsg.args;
         var route = args[0];
@@ -105,19 +105,19 @@ describe('channel manager test', function () {
       });
     });
 
-    it('should return an err if uids is empty', function(done) {
+    it('should return an err if uids is empty', function (done) {
       var mockMsg = {key: 'some remote message'};
       var app = pomelo.createApp({base: mockBase});
       var channelService = new ChannelService(app);
 
-      channelService.pushMessageByUids(mockMsg, null, function(err) {
+      channelService.pushMessageByUids(mockMsg, null, function (err) {
         should.exist(err);
         err.message.should.equal('uids should not be empty');
         done();
       });
     });
 
-    it('should return err if all message fail to push', function(done) {
+    it('should return err if all message fail to push', function (done) {
       var sid1 = 'sid1', sid2 = 'sid2';
       var uid1 = 'uid1', uid2 = 'uid2', uid3 = 'uid3';
       var mockUids = [
@@ -133,7 +133,7 @@ describe('channel manager test', function () {
 
       var invokeCount = 0;
 
-      var mockRpcInvoke = function(sid, rmsg, cb) {
+      var mockRpcInvoke = function (sid, rmsg, cb) {
         invokeCount++;
         cb(new Error('[TestMockError] mock rpc error'));
       };
@@ -142,7 +142,7 @@ describe('channel manager test', function () {
       app.rpcInvoke = mockRpcInvoke;
       var channelService = new ChannelService(app);
 
-      channelService.pushMessageByUids(mockMsg, mockUids, function(err) {
+      channelService.pushMessageByUids(mockMsg, mockUids, function (err) {
         invokeCount.should.equal(2);
         should.exist(err);
         err.message.should.equal('all uids push message fail');
@@ -150,7 +150,7 @@ describe('channel manager test', function () {
       });
     });
 
-    it('should return fail uid list if fail to push messge to some of the uids', function(done) {
+    it('should return fail uid list if fail to push messge to some of the uids', function (done) {
       var sid1 = 'sid1', sid2 = 'sid2';
       var uid1 = 'uid1', uid2 = 'uid2', uid3 = 'uid3';
       var mockUids = [{sid: sid1, uid: uid1}, {sid: sid2, uid: uid2}, {sid: sid2, uid: uid3}];
@@ -162,7 +162,7 @@ describe('channel manager test', function () {
 
       var invokeCount = 0;
 
-      var mockRpcInvoke = function(sid, rmsg, cb) {
+      var mockRpcInvoke = function (sid, rmsg, cb) {
         invokeCount++;
         if(rmsg.args[2].indexOf(uid1) >= 0) {
           cb(null, [uid1]);
@@ -177,7 +177,7 @@ describe('channel manager test', function () {
       app.rpcInvoke = mockRpcInvoke;
       var channelService = new ChannelService(app);
 
-      channelService.pushMessageByUids(mockMsg, mockUids, function(err, fails) {
+      channelService.pushMessageByUids(mockMsg, mockUids, function (err, fails) {
         invokeCount.should.equal(2);
         should.not.exist(err);
         should.exist(fails);
@@ -190,7 +190,7 @@ describe('channel manager test', function () {
   });
 
   describe('#broadcast', function () {
-    it('should push message to all specified frontend servers', function(done) {
+    it('should push message to all specified frontend servers', function (done) {
       var mockServers = [
         {id: 'connector-1', serverType: 'connector', other: 'xxx1'},
         {id: 'connector-2', serverType: 'connector', other: 'xxx2'},
@@ -209,7 +209,7 @@ describe('channel manager test', function () {
       var invokeCount = 0;
       var sids = [];
 
-      var mockRpcInvoke = function(sid, rmsg, cb) {
+      var mockRpcInvoke = function (sid, rmsg, cb) {
         invokeCount++;
         var args = rmsg.args;
         var route = args[0];

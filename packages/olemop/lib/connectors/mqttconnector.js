@@ -1,5 +1,5 @@
 var util = require('util')
-var EventEmitter = require('events').EventEmitter
+var EventEmitter = require('events')
 var mqtt = require('mqtt')
 var constants = require('../util/constants')
 var MQTTSocket = require('./mqttsocket')
@@ -46,7 +46,7 @@ Connector.prototype.start = function (cb) {
 			client.stream.destroy()
 		})
 
-    if (self.opts.disconnectOnTimeout) {
+    if(self.opts.disconnectOnTimeout) {
       var timeout = self.opts.timeout * 1000 || constants.TIME.DEFAULT_MQTT_HEARTBEAT_TIMEOUT
       client.stream.setTimeout(timeout,function () {
         client.emit('close')
@@ -79,7 +79,7 @@ var composeResponse = function (msgId, route, msgBody) {
 
 var composePush = function (route, msgBody) {
   var msg = generate.publish(msgBody)
-  if (!msg) {
+  if(!msg) {
     logger.error('invalid mqtt publish message: %j', msgBody)
   }
 

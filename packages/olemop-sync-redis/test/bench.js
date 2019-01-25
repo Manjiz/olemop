@@ -23,7 +23,7 @@ var objects = [
       there: 'is'
       , only: 'chaos'
       , butterfly: ['says', ['there', 'is', 'only', 'chaos']]
-      , pi: Math.PI  
+      , pi: Math.PI
   })
 
   , JSON.stringify({
@@ -75,7 +75,7 @@ var objects = [
         console.log('');
         cb();
       })
-      break      
+      break
     default:
       cb();
       break
@@ -109,7 +109,7 @@ var objects = [
 
     for (var i=num; i--; ) {
       var data = db.get(i);
-      if (!!data) { 
+      if (!!data) {
         done++
       }
       if (done === num) {
@@ -130,7 +130,7 @@ var objects = [
     , timer = new Date()
 
     for (var i=num; i--; ) {
-      var res = db.hset('hkey','num',num) 
+      var res = db.hset('hkey','num',num)
       if (!!res) {
         done++
       }
@@ -169,7 +169,7 @@ var objects = [
   var scenario = [ ['all', 1000] , ['all', 2000] ,	['sets', 5000] , ['sets', 10000] , ['gets', 5000] , ['gets', 10000] ,	['hsets', 5000] ,	['hgets', 10000] ];
   var scenarioLen = scenario.length;
 
-  var next = function(i, o) {
+  var next = function (i, o) {
     if (i < scenarioLen) {
       bench(objects[o], scenario[i][0], scenario[i][1], function () {
         setTimeout(function () {
@@ -198,7 +198,7 @@ var objects = [
     }
   }
 
-  var consistency = function(cb) {
+  var consistency = function (cb) {
     var done = 0
     , num = 100
     console.log('writes...')
@@ -224,7 +224,7 @@ var objects = [
     }
   }
 
-  var doesitwork = function(cb) {
+  var doesitwork = function (cb) {
     var cnt = 0
     , max = 6
 
@@ -254,13 +254,13 @@ var objects = [
         cntmass++
     }
     if (cntmass===50) {
-      var data = db.get('mass'); 
+      var data = db.get('mass');
       console.log('mass:', data)
       cnt++
         if (cnt === max) cb()
     }
   }
-  var start = function(db) {
+  var start = function (db) {
     console.log('checking consistency...')
     consistency(function () {
       console.log('done.')

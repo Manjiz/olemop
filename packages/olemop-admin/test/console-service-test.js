@@ -8,7 +8,7 @@ var masterHost = '127.0.0.1';
 var masterPort = 3333;
 
 describe('console service', function () {
-	it('should forward message from master to the monitorHandler method of the module of the right monitor, and get the response by masterAgent.request', function(done) {
+	it('should forward message from master to the monitorHandler method of the module of the right monitor, and get the response by masterAgent.request', function (done) {
 		var monitorId1 = 'connector-server-1';
 		var monitorId2 = 'area-server-1';
 		var monitorType1 = 'connector';
@@ -28,14 +28,14 @@ describe('console service', function () {
 		});
 
 		var monitorConsole1 = ConsoleService.createMonitorConsole({
-			host: masterHost, 
-			port: masterPort, 
-			id: monitorId1, 
+			host: masterHost,
+			port: masterPort,
+			id: monitorId1,
 			type: monitorType1
 		});
 
 		monitorConsole1.register(moduleId1, {
-			monitorHandler: function(agent, msg, cb) {
+			monitorHandler: function (agent, msg, cb) {
 				req1Count++;
 				should.exist(msg);
 				msg.should.eql(msg1);
@@ -44,14 +44,14 @@ describe('console service', function () {
 		});
 
 		var monitorConsole2 = ConsoleService.createMonitorConsole({
-			host: masterHost, 
-			port: masterPort, 
-			id: monitorId2, 
+			host: masterHost,
+			port: masterPort,
+			id: monitorId2,
 			type: monitorType2
 		});
 
 		monitorConsole2.register(moduleId2, {
-			monitorHandler: function(agent, msg, cb) {
+			monitorHandler: function (agent, msg, cb) {
 				req2Count++;
 				should.exist(msg);
 				msg.should.eql(msg2);
@@ -61,25 +61,25 @@ describe('console service', function () {
 
 		flow.exec(function () {
 			masterConsole.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
 			monitorConsole1.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
 			monitorConsole2.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
-			masterConsole.agent.request(monitorId1, moduleId1, msg1, function(err, resp) {
+			masterConsole.agent.request(monitorId1, moduleId1, msg1, function (err, resp) {
 				resp1Count++;
 				should.not.exist(err);
 				should.exist(resp);
 				resp.should.eql(msg1);
 			});
 
-			masterConsole.agent.request(monitorId2, moduleId2, msg2, function(err, resp) {
+			masterConsole.agent.request(monitorId2, moduleId2, msg2, function (err, resp) {
 				resp2Count++;
 				should.not.exist(err);
 				should.exist(resp);
@@ -100,7 +100,7 @@ describe('console service', function () {
 		}, WAIT_TIME);
 	});
 
-	it('should forward message from monitor to the masterHandler of the right module of the master by monitor.notify', function(done) {
+	it('should forward message from monitor to the masterHandler of the right module of the master by monitor.notify', function (done) {
 		var monitorId = 'connector-server-1';
 		var monitorType = 'connector';
 		var moduleId = 'testModuleId';
@@ -113,7 +113,7 @@ describe('console service', function () {
 		});
 
 		masterConsole.register(moduleId, {
-			masterHandler: function(agent, msg, cb) {
+			masterHandler: function (agent, msg, cb) {
 				reqCount++;
 				should.exist(msg);
 				msg.should.eql(orgMsg);
@@ -121,20 +121,20 @@ describe('console service', function () {
 		});
 
 		var monitorConsole =ConsoleService.createMonitorConsole({
-			host: masterHost, 
-			port: masterPort, 
-			id: monitorId, 
+			host: masterHost,
+			port: masterPort,
+			id: monitorId,
 			type: monitorType
 		});
 
 		flow.exec(function () {
 			masterConsole.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
 			monitorConsole.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
 			monitorConsole.agent.notify(moduleId, orgMsg);
 		});		// end of flow.exec
@@ -148,7 +148,7 @@ describe('console service', function () {
 		}, WAIT_TIME);
 	});
 
-	it('should fail if the module is disable', function(done) {
+	it('should fail if the module is disable', function (done) {
 		var monitorId = 'connector-server-1';
 		var monitorType = 'connector';
 		var moduleId = 'testModuleId';
@@ -159,21 +159,21 @@ describe('console service', function () {
 		});
 
 		masterConsole.register(moduleId, {
-			masterHandler: function(agent, msg, cb) {
+			masterHandler: function (agent, msg, cb) {
 				// should not come here
 				true.should.not.be.ok();
 			}
 		});
 
 		var monitorConsole = ConsoleService.createMonitorConsole({
-			host: masterHost, 
-			port: masterPort, 
-			id: monitorId, 
+			host: masterHost,
+			port: masterPort,
+			id: monitorId,
 			type: monitorType
 		});
 
 		monitorConsole.register(moduleId, {
-			monitorHandler: function(agent, msg, cb) {
+			monitorHandler: function (agent, msg, cb) {
 				// should not come here
 				true.should.not.be.ok();
 			}
@@ -181,13 +181,13 @@ describe('console service', function () {
 
 		flow.exec(function () {
 			masterConsole.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
 			masterConsole.disable(moduleId);
 			monitorConsole.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
 			monitorConsole.disable(moduleId);
 			monitorConsole.agent.notify(moduleId, orgMsg);
@@ -201,7 +201,7 @@ describe('console service', function () {
 		}, WAIT_TIME);
 	});
 
-	it('should fail if the monitor not exists', function(done) {
+	it('should fail if the monitor not exists', function (done) {
 		var monitorId = 'connector-server-1';
 		var moduleId = 'testModuleId';
 		var orgMsg = {msg: 'message to someone'};
@@ -212,10 +212,10 @@ describe('console service', function () {
 
 		flow.exec(function () {
 			masterConsole.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
-			masterConsole.agent.request(monitorId, moduleId, orgMsg, function(err, resp) {
+			masterConsole.agent.request(monitorId, moduleId, orgMsg, function (err, resp) {
 				should.exist(err);
 				should.not.exist(resp);
 			});
@@ -227,7 +227,7 @@ describe('console service', function () {
 		}, WAIT_TIME);
 	});
 
-	it('should invoke masterHandler periodically in pull mode', function(done) {
+	it('should invoke masterHandler periodically in pull mode', function (done) {
 		var moduleId = 'testModuleId';
 		var intervalSec = 1;
 		var invokeCount = 0;
@@ -238,9 +238,9 @@ describe('console service', function () {
 		});
 
 		masterConsole.register(moduleId, {
-			type: 'pull', 
-			interval: intervalSec, 
-			masterHandler: function(agent, msg, cb) {
+			type: 'pull',
+			interval: intervalSec,
+			masterHandler: function (agent, msg, cb) {
 				invokeCount++;
 			}
 		});
@@ -254,7 +254,7 @@ describe('console service', function () {
 		}, intervalSec * (turn - 0.5) * 1000);
 	});
 
-	it('should invoke monitorHandler periodically in push mode', function(done) {
+	it('should invoke monitorHandler periodically in push mode', function (done) {
 		var monitorId = 'connector-server-1';
 		var monitorType = 'connector';
 		var moduleId = 'testModuleId';
@@ -267,28 +267,28 @@ describe('console service', function () {
 		});
 
 		var monitorConsole = ConsoleService.createMonitorConsole({
-			host: masterHost, 
-			port: masterPort, 
-			id: monitorId, 
+			host: masterHost,
+			port: masterPort,
+			id: monitorId,
 			type: monitorType
 		});
 
 		monitorConsole.register(moduleId, {
-			type: 'push', 
-			interval: intervalSec, 
-			monitorHandler: function(agent, msg, cb) {
+			type: 'push',
+			interval: intervalSec,
+			monitorHandler: function (agent, msg, cb) {
 				invokeCount++;
 			}
 		});
 
 		flow.exec(function () {
 			masterConsole.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
 			monitorConsole.start(this);
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err);
 		});
 
