@@ -1,5 +1,5 @@
 var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 var httpServer = require('http').createServer();
 var SioSocket = require('./siosocket');
 

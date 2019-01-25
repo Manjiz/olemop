@@ -2,7 +2,7 @@ var logger = require('@olemop/logger').getLogger('olemop', __filename);
 var utils = require('../util/utils');
 var Constants = require('../util/constants');
 var countDownLatch = require('../util/countDownLatch');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 var util = require('util');
 
 var Watchdog = function (app, service) {

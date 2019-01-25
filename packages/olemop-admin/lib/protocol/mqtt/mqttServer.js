@@ -1,5 +1,5 @@
 var logger = require('@olemop/logger').getLogger('olemop-admin', 'MqttServer');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 var MqttCon = require('mqtt-connection');
 var Util = require('util');
 var net = require('net');

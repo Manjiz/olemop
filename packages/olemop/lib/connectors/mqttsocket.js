@@ -1,5 +1,5 @@
 var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 
 var ST_INITED = 1;
 var ST_CLOSED = 2;

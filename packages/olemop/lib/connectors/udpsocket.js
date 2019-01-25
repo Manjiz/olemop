@@ -2,7 +2,7 @@ var util = require('util');
 var handler = require('./common/handler');
 var protocol = require('@olemop/protocol');
 var Package = protocol.Package;
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 var logger = require('@olemop/logger').getLogger('olemop', __filename);
 
 var ST_INITED = 0;

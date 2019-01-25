@@ -1,7 +1,7 @@
 var net = require('net');
 var tls = require('tls');
 var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 
 var HybridSocket = require('./hybridsocket');
 var Switcher = require('./hybrid/switcher');

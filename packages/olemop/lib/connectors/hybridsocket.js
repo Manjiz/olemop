@@ -1,5 +1,5 @@
 var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 var handler = require('./common/handler');
 var protocol = require('@olemop/protocol');
 var logger = require('@olemop/logger').getLogger('olemop', __filename);

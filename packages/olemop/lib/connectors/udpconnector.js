@@ -11,7 +11,7 @@ var protocol = require('@olemop/protocol');
 var Package = protocol.Package;
 var Message = protocol.Message;
 var coder = require('./common/coder');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 
 var curId = 1;
 

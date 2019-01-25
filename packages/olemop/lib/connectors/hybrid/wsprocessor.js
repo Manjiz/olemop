@@ -1,5 +1,5 @@
 var HttpServer = require('http').Server;
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 var util = require('util');
 var WebSocketServer = require('ws').Server;
 

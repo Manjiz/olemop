@@ -1,4 +1,4 @@
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events')
 var util = require('util');
 var WSProcessor = require('./wsprocessor');
 var TCPProcessor = require('./tcpprocessor');
