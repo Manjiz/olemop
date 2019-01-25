@@ -1,7 +1,7 @@
-var HttpServer = require('http').Server;
+var http = require('http')
 var EventEmitter = require('events')
 var util = require('util');
-var WebSocketServer = require('ws').Server;
+var WebSocket = require('ws');
 
 var ST_STARTED = 1;
 var ST_CLOSED = 2;
@@ -11,14 +11,13 @@ var ST_CLOSED = 2;
  */
 var Processor = function () {
   EventEmitter.call(this);
-  this.httpServer = new HttpServer();
+  this.httpServer = http.createServer()
 
-  var self = this;
-  this.wsServer = new WebSocketServer({server: this.httpServer});
+  this.wsServer = new WebSocket.Server({ server: this.httpServer })
 
-  this.wsServer.on('connection', function (socket) {
+  this.wsServer.on('connection', (socket) => {
     // emit socket to outside
-    self.emit('connection', socket);
+    this.emit('connection', socket);
   });
 
   this.state = ST_STARTED;
@@ -28,9 +27,7 @@ util.inherits(Processor, EventEmitter);
 module.exports = Processor;
 
 Processor.prototype.add = function (socket, data) {
-  if (this.state !== ST_STARTED) {
-    return;
-  }
+  if (this.state !== ST_STARTED) return
   this.httpServer.emit('connection', socket);
   if (typeof socket.ondata === 'function') {
     // compatible with stream2
@@ -42,9 +39,7 @@ Processor.prototype.add = function (socket, data) {
 };
 
 Processor.prototype.close = function () {
-  if (this.state !== ST_STARTED) {
-    return;
-  }
+  if (this.state !== ST_STARTED) return
   this.state = ST_CLOSED;
   this.wsServer.close();
   this.wsServer = null;
