@@ -10,9 +10,9 @@ var paths = [
 
 var port = 3333;
 
-describe('server', function() {
+describe('server', function () {
 
-  describe('#create', function() {
+  describe('#create', function () {
     it('should create gateway by providing port and paths parameters', function(done) {
       var opts = {
         paths: paths,
@@ -34,7 +34,7 @@ describe('server', function() {
       gateway.start();
       gateway.stop();
 
-      setTimeout(function() {
+      setTimeout(function () {
         errorCount.should.equal(0);
         closeCount.should.equal(1);
         done();
@@ -54,13 +54,13 @@ describe('server', function() {
         listenCount++;
       };
 
-      MockAcceptor.prototype.close = function() {
+      MockAcceptor.prototype.close = function () {
         closeCount++;
       };
 
-      MockAcceptor.prototype.on = function() {};
+      MockAcceptor.prototype.on = function () {};
 
-      MockAcceptor.prototype.emit = function() {};
+      MockAcceptor.prototype.emit = function () {};
 
       var acceptorFactory = {
         create: function(opts, cb) {
@@ -81,7 +81,7 @@ describe('server', function() {
       gateway.start();
       gateway.stop();
 
-      setTimeout(function() {
+      setTimeout(function () {
         constructCount.should.equal(1);
         listenCount.should.equal(1);
         closeCount.should.equal(1);

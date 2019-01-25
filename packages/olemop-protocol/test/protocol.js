@@ -3,9 +3,9 @@ var Protocol = require('../');
 var Package = Protocol.Package;
 var Message = Protocol.Message;
 
-describe('Pomelo protocol test', function() {
-  describe('String encode and decode', function() {
-    it('should be ok to encode and decode Chinese string', function() {
+describe('Pomelo protocol test', function () {
+  describe('String encode and decode', function () {
+    it('should be ok to encode and decode Chinese string', function () {
       var str = '你好, abc~~~';
       var buf = Protocol.strencode(str);
       should.exist(buf);
@@ -13,8 +13,8 @@ describe('Pomelo protocol test', function() {
     });
   });
 
-  describe('Package encode and decode', function() {
-    it('should keep the same data after encoding and decoding', function() {
+  describe('Package encode and decode', function () {
+    it('should keep the same data after encoding and decoding', function () {
       var msg = 'hello world~';
       var buf = Package.encode(Package.TYPE_DATA, Protocol.strencode(msg));
       should.exist(buf);
@@ -25,7 +25,7 @@ describe('Pomelo protocol test', function() {
       msg.should.equal(Protocol.strdecode(res.body));
     });
 
-    it('should ok when encoding and decoding package without body', function() {
+    it('should ok when encoding and decoding package without body', function () {
       var buf = Package.encode(Package.TYPE_HANDSHAKE);
       should.exist(buf);
       var res = Package.decode(buf);
@@ -35,8 +35,8 @@ describe('Pomelo protocol test', function() {
     });
   });
 
-  describe('Message encode and decode', function() {
-    it('should be ok for encoding and decoding request', function() {
+  describe('Message encode and decode', function () {
+    it('should be ok for encoding and decoding request', function () {
       var id = 128;
       var compress = 0;
       var route = 'connector.entryHandler.entry';
@@ -54,7 +54,7 @@ describe('Pomelo protocol test', function() {
       msg.should.equal(Protocol.strdecode(res.body));
     });
 
-    it('should be ok for encoding and decoding empty route', function() {
+    it('should be ok for encoding and decoding empty route', function () {
       var id = 256;
       var compress = 0;
       var route = '';
@@ -72,7 +72,7 @@ describe('Pomelo protocol test', function() {
       msg.should.equal(Protocol.strdecode(res.body));
     });
 
-    it('should be ok for encoding and decoding null route', function() {
+    it('should be ok for encoding and decoding null route', function () {
       var n = Math.floor(10000*Math.random());
       var id = 128 * n;
       var compress = 0;
@@ -91,7 +91,7 @@ describe('Pomelo protocol test', function() {
       msg.should.equal(Protocol.strdecode(res.body));
     });
 
-    it('should be ok for encoding and decoding compress route', function() {
+    it('should be ok for encoding and decoding compress route', function () {
       var id = 256;
       var compress = 1;
       var route = 3;
@@ -110,7 +110,7 @@ describe('Pomelo protocol test', function() {
       msg.should.equal(Protocol.strdecode(res.body));
     });
 
-    it('should be ok for encoding and decoding mutil-bytes id', function() {
+    it('should be ok for encoding and decoding mutil-bytes id', function () {
       var id = Math.pow(2, 30);
       var compress = 1;
       var route = 3;
@@ -129,7 +129,7 @@ describe('Pomelo protocol test', function() {
       msg.should.equal(Protocol.strdecode(res.body));
     });
 
-    it('should be ok for encoding and decoding notify', function() {
+    it('should be ok for encoding and decoding notify', function () {
       var compress = 0;
       var route = 'connector.entryHandler.entry';
       var msg = 'hello world~';
@@ -146,7 +146,7 @@ describe('Pomelo protocol test', function() {
       msg.should.equal(Protocol.strdecode(res.body));
     });
 
-    it('should be ok for encoding and decoding response', function() {
+    it('should be ok for encoding and decoding response', function () {
       var id = 1;
       var compress = 0;
       var msg = 'hello world~';
@@ -163,7 +163,7 @@ describe('Pomelo protocol test', function() {
       msg.should.equal(Protocol.strdecode(res.body));
     });
 
-    it('should be ok for encoding and decoding push', function() {
+    it('should be ok for encoding and decoding push', function () {
       var compress = 0;
       var route = 'connector.entryHandler.entry';
       var msg = 'hello world~';

@@ -7,7 +7,7 @@ var SNode = function(bb) {
 };
 
 SNode.prototype = {
-  doAction: function() {
+  doAction: function () {
     this.blackboard.scount++;
     return bt.RES_SUCCESS;
   }
@@ -17,7 +17,7 @@ var FNode = function(bb) {
   this.blackboard = bb;
 };
 FNode.prototype = {
-  doAction: function() {
+  doAction: function () {
     this.blackboard.fcount++;
     return bt.RES_FAIL;
   }
@@ -27,7 +27,7 @@ var WNode = function(bb) {
   this.blackboard = bb;
 };
 WNode.prototype = {
-  doAction: function() {
+  doAction: function () {
     if(this.blackboard.wcount < 2) {
       this.blackboard.wcount++;
       return bt.RES_WAIT;
@@ -38,8 +38,8 @@ WNode.prototype = {
   }
 };
 
-describe('Loop Test', function() {
-  it('should invoke the child in loop', function() {
+describe('Loop Test', function () {
+  it('should invoke the child in loop', function () {
     var bb = {
       scount: 0, 
       fcount: 0, 
@@ -77,7 +77,7 @@ describe('Loop Test', function() {
     loopConditionCount.should.equal(3);
   });
 
-  it('should return fail and break loop if child return fail', function() {
+  it('should return fail and break loop if child return fail', function () {
     var bb = {
       scount: 0, 
       fcount: 0, 
@@ -109,7 +109,7 @@ describe('Loop Test', function() {
     loopConditionCount.should.equal(0);
   });
 
-  it('should return wait when the child return wait', function() {
+  it('should return wait when the child return wait', function () {
     var bb = {
       scount: 0, 
       fcount: 0, 

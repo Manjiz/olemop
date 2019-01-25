@@ -7,9 +7,9 @@ var WAIT_TIME = 100;
 
 var port = 3333;
 
-describe('acceptor', function() {
+describe('acceptor', function () {
 
-  describe('#listen', function() {
+  describe('#listen', function () {
     it('should be ok when listen a valid port and emit a closed event when it closed', function(done) {
       var errorCount = 0;
       var closeCount = 0;
@@ -26,7 +26,7 @@ describe('acceptor', function() {
       acceptor.listen(port);
       acceptor.close();
 
-      setTimeout(function() {
+      setTimeout(function () {
         errorCount.should.equal(0);
         closeCount.should.equal(1);
         done();
@@ -45,7 +45,7 @@ describe('acceptor', function() {
 
       acceptor.listen(80);
 
-      setTimeout(function() {
+      setTimeout(function () {
         errorCount.should.equal(1);
         acceptor.close();
         done();
@@ -53,7 +53,7 @@ describe('acceptor', function() {
     });
   });
 
-  describe('#new message callback', function() {
+  describe('#new message callback', function () {
     it('should invoke the callback function with the same msg and return response to remote client by cb', function(done) {
       var callbackCount = 0;
       var clientCallbackCount = 0;
@@ -73,14 +73,14 @@ describe('acceptor', function() {
       acceptor.listen(port);
 
       var client = Client.create();
-      client.connect('127.0.0.1', port, function() {
+      client.connect('127.0.0.1', port, function () {
         client.send(orgMsg, function(backMsg) {
           backMsg.should.eql(orgMsg);
           clientCallbackCount++;
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         callbackCount.should.equal(1);
         clientCallbackCount.should.equal(1);
         client.close();
@@ -111,7 +111,7 @@ describe('acceptor', function() {
       acceptor.listen(port);
 
       var client = Client.create();
-      client.connect('127.0.0.1', port, function() {
+      client.connect('127.0.0.1', port, function () {
         client.send(orgMsg1, function(backMsg) {
           backMsg.should.eql(orgMsg1);
           clientCallbackCount++;
@@ -122,7 +122,7 @@ describe('acceptor', function() {
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         callbackCount.should.equal(2);
         clientCallbackCount.should.equal(2);
         client.close();

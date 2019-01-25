@@ -9,17 +9,17 @@ var WAIT_TIME = 100;
 var masterHost = '127.0.0.1';
 var masterPort = 3333;
 
-describe('agent', function() {
+describe('agent', function () {
 	it('should emit a error if master agent listen a port in use', function(done) {
 		var master = new Master();
 		var invalidPort = 80;
 		var errorCount = 0;
-		master.on('error', function() {
+		master.on('error', function () {
 			errorCount++;
 		});
 		master.listen(invalidPort);
 
-		setTimeout(function() {
+		setTimeout(function () {
 			errorCount.should.equal(1);
 			done();
 		}, WAIT_TIME);
@@ -36,7 +36,7 @@ describe('agent', function() {
 			errorCount++;
 		});
 
-		setTimeout(function() {
+		setTimeout(function () {
 			errorCount.should.equal(1);
 			done();
 		}, WAIT_TIME);
@@ -89,7 +89,7 @@ describe('agent', function() {
 		});
 
 		master.listen(masterPort);
-		flow.exec(function() {
+		flow.exec(function () {
 			monitor1.connect(masterPort, masterHost, this);
 		}, 
 		function(err) {
@@ -113,7 +113,7 @@ describe('agent', function() {
 			});
 		});
 
-		setTimeout(function() {
+		setTimeout(function () {
 			req1Count.should.equal(1);
 			req2Count.should.equal(1);
 			resp1Count.should.equal(1);
@@ -156,7 +156,7 @@ describe('agent', function() {
 		});
 
 		master.listen(masterPort);
-		flow.exec(function() {
+		flow.exec(function () {
 			monitor.connect(masterPort, masterHost, this);
 		}, 
 		function(err) {
@@ -169,7 +169,7 @@ describe('agent', function() {
 			});
 		});
 
-		setTimeout(function() {
+		setTimeout(function () {
 			reqCount.should.equal(1);
 			respCount.should.equal(1);
 
@@ -225,7 +225,7 @@ describe('agent', function() {
 		});
 
 		master.listen(masterPort);
-		flow.exec(function() {
+		flow.exec(function () {
 			monitor1.connect(masterPort, masterHost, this);
 		}, 
 		function(err) {
@@ -238,7 +238,7 @@ describe('agent', function() {
 			master.notifyById(monitorId2, moduleId2, msg2);
 		});
 
-		setTimeout(function() {
+		setTimeout(function () {
 			req1Count.should.equal(1);
 			req2Count.should.equal(1);
 
@@ -315,7 +315,7 @@ describe('agent', function() {
 		});
 
 		master.listen(masterPort);
-		flow.exec(function() {
+		flow.exec(function () {
 			monitor1.connect(masterPort, masterHost, this);
 		}, 
 		function(err) {
@@ -332,7 +332,7 @@ describe('agent', function() {
 			master.notifyByType(monitorType2, moduleId2, msg2);
 		});
 
-		setTimeout(function() {
+		setTimeout(function () {
 			req1Count.should.equal(1);
 			req2Count.should.equal(1);
 			req3Count.should.equal(1);
@@ -391,7 +391,7 @@ describe('agent', function() {
 		});
 
 		master.listen(masterPort);
-		flow.exec(function() {
+		flow.exec(function () {
 			monitor1.connect(masterPort, masterHost, this);
 		}, 
 		function(err) {
@@ -403,7 +403,7 @@ describe('agent', function() {
 			master.notifyAll(orgModuleId, orgMsg);
 		});
 
-		setTimeout(function() {
+		setTimeout(function () {
 			req1Count.should.equal(1);
 			req2Count.should.equal(1);
 
@@ -442,7 +442,7 @@ describe('agent', function() {
 		});
 
 		master.listen(masterPort);
-		flow.exec(function() {
+		flow.exec(function () {
 			monitor.connect(masterPort, masterHost, this);
 		}, 
 		function(err) {
@@ -450,7 +450,7 @@ describe('agent', function() {
 			monitor.notify(orgModuleId, orgMsg);
 		});
 
-		setTimeout(function() {
+		setTimeout(function () {
 			reqCount.should.equal(1);
 
 			monitor.close();

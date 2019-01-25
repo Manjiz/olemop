@@ -13,14 +13,14 @@ describe("#taskManager",function(){
       taskCount++;
       task.done();
     };
-    var onTimeout = function() {
+    var onTimeout = function () {
       should.fail('should not timeout.');
     };
     var taskCount = 0;
 
     taskManager.addTask(key, fn, onTimeout);
 
-    setTimeout(function() {
+    setTimeout(function () {
       taskCount.should.equal(1);
       done();
     }, WAIT_TIME);
@@ -31,7 +31,7 @@ describe("#taskManager",function(){
     var fn = function(task) {
       taskCount++;
     };
-    var onTimeout = function() {
+    var onTimeout = function () {
       timeoutCount++;
     };
     var taskCount = 0;
@@ -39,7 +39,7 @@ describe("#taskManager",function(){
 
     taskManager.addTask(key, fn, onTimeout);
 
-    setTimeout(function() {
+    setTimeout(function () {
       taskCount.should.equal(1);
       timeoutCount.should.equal(1);
       done();
@@ -51,7 +51,7 @@ describe("#taskManager",function(){
     var fn = function(task) {
       taskCount++;
     };
-    var onTimeout = function() {
+    var onTimeout = function () {
       timeoutCount++;
     };
     var taskCount = 0;
@@ -59,10 +59,10 @@ describe("#taskManager",function(){
 
     taskManager.addTask(key, fn, onTimeout);
 
-    process.nextTick(function() {
+    process.nextTick(function () {
       taskManager.closeQueue(key, true);
 
-      setTimeout(function() {
+      setTimeout(function () {
         taskCount.should.equal(1);
         timeoutCount.should.equal(0);
         done();

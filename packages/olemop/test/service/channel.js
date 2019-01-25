@@ -6,9 +6,9 @@ var mockBase = process.cwd() + '/test';
 var channelName = 'test_channel';
 var mockApp = {serverId: 'test-server-1'};
 
-describe('channel test', function() {
-  describe('#add', function() {
-    it('should add a member into channel and could fetch it later', function() {
+describe('channel test', function () {
+  describe('#add', function () {
+    it('should add a member into channel and could fetch it later', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);
@@ -22,7 +22,7 @@ describe('channel test', function() {
       sid.should.equal(member.sid);
     });
 
-    it('should fail if the sid not specified', function() {
+    it('should fail if the sid not specified', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);
@@ -31,7 +31,7 @@ describe('channel test', function() {
       channel.add(uid, null).should.be.false;
     });
 
-    it('should fail after the channel has been destroied', function() {
+    it('should fail after the channel has been destroied', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);
@@ -43,8 +43,8 @@ describe('channel test', function() {
     });
   });
 
-  describe('#leave', function() {
-    it('should remove the member from channel when leave', function() {
+  describe('#leave', function () {
+    it('should remove the member from channel when leave', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);
@@ -60,7 +60,7 @@ describe('channel test', function() {
       should.not.exist(member);
     });
 
-    it('should fail if uid or sid not specified', function() {
+    it('should fail if uid or sid not specified', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);
@@ -73,8 +73,8 @@ describe('channel test', function() {
     });
   });
 
-  describe('#getMembers', function() {
-    it('should return all the members of channel', function() {
+  describe('#getMembers', function () {
+    it('should return all the members of channel', function () {
       var uinfos = [
         {uid: 'uid1', sid: 'sid1'},
         {uid: 'uid2', sid: 'sid2'},
@@ -100,7 +100,7 @@ describe('channel test', function() {
     });
   });
 
-  describe('#pushMessage', function() {
+  describe('#pushMessage', function () {
     it('should push message to the right frontend server by sid', function(done) {
       var sid1 = 'sid1', sid2 = 'sid2';
       var uid1 = 'uid1', uid2 = 'uid2', uid3 = 'uid3';
@@ -139,12 +139,12 @@ describe('channel test', function() {
         channel.add(mockUids[i].uid, mockUids[i].sid);
       }
 
-      channel.pushMessage(mockMsg, function() {
+      channel.pushMessage(mockMsg, function () {
         invokeCount.should.equal(2);
         done();
       });
     });
-    it('should fail if channel has destroied', function() {
+    it('should fail if channel has destroied', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);

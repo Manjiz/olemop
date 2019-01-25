@@ -6,20 +6,20 @@ var WAIT_TIME = 1000;
 var mockBase = process.cwd() + '/test';
 
 describe('application test', function(){
-  afterEach(function() {
+  afterEach(function () {
     app.state = 0;
     app.settings = {};
   });
 
-  describe('#init', function() {
-    it('should init the app instance', function() {
+  describe('#init', function () {
+    it('should init the app instance', function () {
       app.init({base: mockBase});
       app.state.should.equal(1);  // magic number from application.js
     });
   });
 
-  describe('#set and get', function() {
-    it('should play the role of normal set and get', function() {
+  describe('#set and get', function () {
+    it('should play the role of normal set and get', function () {
       should.not.exist(app.get('some undefined key'));
 
       var key = 'some defined key', value = 'some value';
@@ -27,7 +27,7 @@ describe('application test', function(){
       value.should.equal(app.get(key));
     });
 
-    it('should return the value if pass just one parameter to the set method', function() {
+    it('should return the value if pass just one parameter to the set method', function () {
       var key = 'some defined key', value = 'some value';
       should.not.exist(app.set(key));
       app.set(key, value);
@@ -35,8 +35,8 @@ describe('application test', function(){
     });
   });
 
-  describe("#enable and disable", function() {
-    it('should play the role of enable and disable', function() {
+  describe("#enable and disable", function () {
+    it('should play the role of enable and disable', function () {
       var key = 'some enable key';
       app.enabled(key).should.be.false;
       app.disabled(key).should.be.true;
@@ -51,7 +51,7 @@ describe('application test', function(){
     });
   });
 
-  describe("#compoent", function() {
+  describe("#compoent", function () {
     it('should load the component and fire their lifecircle callback by app.start, app.afterStart, app.stop', function(done) {
       var startCount = 0, afterStartCount = 0, stopCount = 0;
 
@@ -81,11 +81,11 @@ describe('application test', function(){
         should.not.exist(err);
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         // wait for after start
         app.stop(false);
 
-        setTimeout(function() {
+        setTimeout(function () {
           // wait for stop
           startCount.should.equal(1);
           afterStartCount.should.equal(1);
@@ -95,11 +95,11 @@ describe('application test', function(){
       }, WAIT_TIME);
     });
 
-    it('should access the component with a name by app.components.name after loaded', function() {
+    it('should access the component with a name by app.components.name after loaded', function () {
       var key1 = 'key1', comp1 = {content: 'some thing in comp1'};
       var comp2 = {name: 'key2', content: 'some thing in comp2'};
       var key3 = 'key3';
-      var comp3 = function() {
+      var comp3 = function () {
         return {content: 'some thing in comp3', name: key3};
       };
 
@@ -113,7 +113,7 @@ describe('application test', function(){
       app.components.key3.should.eql(comp3());
     });
 
-    it('should ignore duplicated components', function() {
+    it('should ignore duplicated components', function () {
       var key = 'key';
       var comp1 = {content: 'some thing in comp1'};
       var comp2 = {content: 'some thing in comp2'};
@@ -127,11 +127,11 @@ describe('application test', function(){
     });
   });
 
-  describe('#filter', function() {
-    it('should add before filter and could fetch it later', function() {
+  describe('#filter', function () {
+    it('should add before filter and could fetch it later', function () {
       var filters = [
-        function() {console.error('filter1');},
-        function() {}
+        function () {console.error('filter1');},
+        function () {}
       ];
 
       app.init({base: mockBase});
@@ -149,10 +149,10 @@ describe('application test', function(){
       }
     });
 
-    it('should add after filter and could fetch it later', function() {
+    it('should add after filter and could fetch it later', function () {
       var filters = [
-        function() {console.error('filter1');},
-        function() {}
+        function () {console.error('filter1');},
+        function () {}
       ];
 
       app.init({base: mockBase});
@@ -170,10 +170,10 @@ describe('application test', function(){
       }
     });
 
-    it('should add filter and could fetch it from before and after filter later', function() {
+    it('should add filter and could fetch it from before and after filter later', function () {
       var filters = [
-        function() {console.error('filter1');},
-        function() {}
+        function () {console.error('filter1');},
+        function () {}
       ];
 
       app.init({base: mockBase});
@@ -199,11 +199,11 @@ describe('application test', function(){
     });
   });
 
-   describe('#globalFilter', function() {
-    it('should add before global filter and could fetch it later', function() {
+   describe('#globalFilter', function () {
+    it('should add before global filter and could fetch it later', function () {
       var filters = [
-        function() {console.error('global filter1');},
-        function() {}
+        function () {console.error('global filter1');},
+        function () {}
       ];
 
       app.init({base: mockBase});
@@ -221,10 +221,10 @@ describe('application test', function(){
       }
     });
 
-    it('should add after global filter and could fetch it later', function() {
+    it('should add after global filter and could fetch it later', function () {
       var filters = [
-        function() {console.error('filter1');},
-        function() {}
+        function () {console.error('filter1');},
+        function () {}
       ];
 
       app.init({base: mockBase});
@@ -242,10 +242,10 @@ describe('application test', function(){
       }
     });
 
-    it('should add filter and could fetch it from before and after filter later', function() {
+    it('should add filter and could fetch it from before and after filter later', function () {
       var filters = [
-        function() {console.error('filter1');},
-        function() {}
+        function () {console.error('filter1');},
+        function () {}
       ];
 
       app.init({base: mockBase});
@@ -271,8 +271,8 @@ describe('application test', function(){
     });
   });
 
-  describe('#configure', function() {
-    it('should execute the code block wtih the right environment', function() {
+  describe('#configure', function () {
+    it('should execute the code block wtih the right environment', function () {
       var proCount = 0, devCount = 0;
       var proEnv = 'production', devEnv = 'development', serverType = 'server';
 
@@ -280,21 +280,21 @@ describe('application test', function(){
       app.set('serverType', serverType);
       app.set('env', proEnv);
 
-      app.configure(proEnv, serverType, function() {
+      app.configure(proEnv, serverType, function () {
         proCount++;
       });
 
-      app.configure(devEnv, serverType, function() {
+      app.configure(devEnv, serverType, function () {
         devCount++;
       });
 
       app.set('env', devEnv);
 
-      app.configure(proEnv, serverType, function() {
+      app.configure(proEnv, serverType, function () {
         proCount++;
       });
 
-      app.configure(devEnv, serverType, function() {
+      app.configure(devEnv, serverType, function () {
         devCount++;
       });
 
@@ -302,7 +302,7 @@ describe('application test', function(){
       devCount.should.equal(1);
     });
 
-    it('should execute the code block wtih the right server', function() {
+    it('should execute the code block wtih the right server', function () {
       var server1Count = 0, server2Count = 0;
       var proEnv = 'production', serverType1 = 'server1', serverType2 = 'server2';
 
@@ -310,21 +310,21 @@ describe('application test', function(){
       app.set('serverType', serverType1);
       app.set('env', proEnv);
 
-      app.configure(proEnv, serverType1, function() {
+      app.configure(proEnv, serverType1, function () {
         server1Count++;
       });
 
-      app.configure(proEnv, serverType2, function() {
+      app.configure(proEnv, serverType2, function () {
         server2Count++;
       });
 
       app.set('serverType', serverType2);
 
-      app.configure(proEnv, serverType1, function() {
+      app.configure(proEnv, serverType1, function () {
         server1Count++;
       });
 
-      app.configure(proEnv, serverType2, function() {
+      app.configure(proEnv, serverType2, function () {
         server2Count++;
       });
 
@@ -333,11 +333,11 @@ describe('application test', function(){
     });
   });
 
-  describe('#route', function() {
-    it('should add route record and could fetch it later', function() {
+  describe('#route', function () {
+    it('should add route record and could fetch it later', function () {
       var type1 = 'area', type2 = 'connector';
-      var func1 = function() {console.log('func1');};
-      var func2 = function() {console.log('func2');};
+      var func1 = function () {console.log('func1');};
+      var func2 = function () {console.log('func2');};
 
       app.init({base: mockBase});
 
@@ -351,8 +351,8 @@ describe('application test', function(){
     });
   });
 
-  describe('#transaction', function() {
-    it('should execute all conditions and handlers', function() {
+  describe('#transaction', function () {
+    it('should execute all conditions and handlers', function () {
       var conditions = {
         test1: function(cb) {
           console.log('condition1');
@@ -382,7 +382,7 @@ describe('application test', function(){
       app.transaction('test', conditions, handlers, 5);
     });
 
-    it('shoud execute conditions with error and do not execute handlers', function() {
+    it('shoud execute conditions with error and do not execute handlers', function () {
       var conditions = {
         test1: function(cb) {
           console.log('condition1');
@@ -411,7 +411,7 @@ describe('application test', function(){
     });
   });
 
-  describe('#add and remove servers', function() {
+  describe('#add and remove servers', function () {
     it('should add servers and emit event and fetch the new server info by get methods', function(done) {
       var newServers = [
         {id: 'connector-server-1', serverType: 'connecctor', host: '127.0.0.1', port: 1234, clientPort: 3000, frontend: true},
@@ -537,22 +537,22 @@ describe('application test', function(){
     });
   });
 
-  describe('#beforeStopHook', function() {
+  describe('#beforeStopHook', function () {
     it('should be called before application stopped.', function(done) {
       var count = 0;
       app.init({base: mockBase});
-      app.beforeStopHook(function() {
+      app.beforeStopHook(function () {
         count++;
       });
       app.start(function(err) {
         should.not.exist(err);
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         // wait for after start
         app.stop(false);
 
-        setTimeout(function() {
+        setTimeout(function () {
           // wait for stop
           count.should.equal(1);
           done();
@@ -560,7 +560,7 @@ describe('application test', function(){
       }, WAIT_TIME);
     });
   });
-  describe('#use', function() {
+  describe('#use', function () {
     it('should exist plugin component and event', function(done) {
       var plugin = {
         components: mockBase + '/mock-plugin/components/',

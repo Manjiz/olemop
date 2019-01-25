@@ -6,16 +6,16 @@ var channelName = 'test_channel';
 var mockBase = process.cwd() + '/test';
 var mockApp = {serverId: 'test-server-1'};
 
-describe('channel manager test', function() {
-  describe('#createChannel', function() {
-    it('should create and return a channel with the specified name', function() {
+describe('channel manager test', function () {
+  describe('#createChannel', function () {
+    it('should create and return a channel with the specified name', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);
       channelName.should.equal(channel.name);
     });
 
-    it('should return the same channel if the name has already existed', function() {
+    it('should return the same channel if the name has already existed', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);
@@ -25,8 +25,8 @@ describe('channel manager test', function() {
     });
   });
 
-  describe('#destroyChannel', function() {
-    it('should delete the channel instance', function() {
+  describe('#destroyChannel', function () {
+    it('should delete the channel instance', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.createChannel(channelName);
       should.exist(channel);
@@ -37,8 +37,8 @@ describe('channel manager test', function() {
     });
   });
 
-  describe('#getChannel', function() {
-    it('should return the channel with the specified name if it exists', function() {
+  describe('#getChannel', function () {
+    it('should return the channel with the specified name if it exists', function () {
       var channelService = new ChannelService(mockApp);
       channelService.createChannel(channelName);
       var channel = channelService.getChannel(channelName);
@@ -46,13 +46,13 @@ describe('channel manager test', function() {
       channelName.should.equal(channel.name);
     });
 
-    it('should return undefined if the channel dose not exist', function() {
+    it('should return undefined if the channel dose not exist', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.getChannel(channelName);
       should.not.exist(channel);
     });
 
-    it('should create and return a new channel if create parameter is set', function() {
+    it('should create and return a new channel if create parameter is set', function () {
       var channelService = new ChannelService(mockApp);
       var channel = channelService.getChannel(channelName, true);
       should.exist(channel);
@@ -60,7 +60,7 @@ describe('channel manager test', function() {
     });
   });
 
-  describe('#pushMessageByUids', function() {
+  describe('#pushMessageByUids', function () {
     it('should push message to the right frontend server', function(done) {
       var sid1 = 'sid1', sid2 = 'sid2';
       var uid1 = 'uid1', uid2 = 'uid2', uid3 = 'uid3';
@@ -99,7 +99,7 @@ describe('channel manager test', function() {
       app.rpcInvoke = mockRpcInvoke;
       var channelService = new ChannelService(app);
 
-      channelService.pushMessageByUids(orgRoute, mockMsg, mockUids, function() {
+      channelService.pushMessageByUids(orgRoute, mockMsg, mockUids, function () {
         invokeCount.should.equal(2);
         done();
       });
@@ -189,7 +189,7 @@ describe('channel manager test', function() {
     });
   });
 
-  describe('#broadcast', function() {
+  describe('#broadcast', function () {
     it('should push message to all specified frontend servers', function(done) {
       var mockServers = [
         {id: 'connector-1', serverType: 'connector', other: 'xxx1'},
@@ -229,7 +229,7 @@ describe('channel manager test', function() {
       var channelService = new ChannelService(app);
 
       channelService.broadcast(mockSType, mockRoute, mockMsg,
-                               opts, function() {
+                               opts, function () {
         invokeCount.should.equal(2);
         sids.length.should.equal(connectorIds.length);
         for(var i=0, l=connectorIds.length; i<l; i++) {

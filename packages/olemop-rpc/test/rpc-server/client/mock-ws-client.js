@@ -3,7 +3,7 @@ var EventEmitter = require('events');
 var util = require('util');
 var utils = require('../../../lib/util/utils');
 
-var Client = function() {
+var Client = function () {
   EventEmitter.call(this);
   this.requests = {};
   this.curId = 0;
@@ -37,7 +37,7 @@ pro.send = function(msg, cb) {
   this.socket.emit('message', {id: id, msg: msg});
 };
 
-pro.close = function() {
+pro.close = function () {
   this.socket.disconnect();
 };
 

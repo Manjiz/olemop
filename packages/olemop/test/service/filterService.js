@@ -28,8 +28,8 @@ var mockFilter2 = {
 };
 
 var blackholdFilter = {
-  before: function() {},
-  after: function() {}
+  before: function () {},
+  after: function () {}
 };
 
 var MockSession = function(){
@@ -39,14 +39,14 @@ var MockSession = function(){
   this.afterCount2 = 0;
 };
 
-describe('filter service test', function() {
-  describe('#filter', function() {
+describe('filter service test', function () {
+  describe('#filter', function () {
     it('should register before filter by calling before method and fire filter chain by calling beforeFilter', function(done) {
       var session = new MockSession();
       var service = new FilterService();
       service.before(mockFilter1);
       service.before(mockFilter2);
-      service.beforeFilter(null, session, function() {
+      service.beforeFilter(null, session, function () {
         should.exist(session);
         session.beforeCount1.should.equal(1);
         session.beforeCount2.should.equal(1);
@@ -61,7 +61,7 @@ describe('filter service test', function() {
       var service = new FilterService();
       service.after(mockFilter1);
       service.after(mockFilter2);
-      service.afterFilter(null, null, session, null, function() {
+      service.afterFilter(null, null, session, null, function () {
         should.exist(session);
         session.beforeCount1.should.equal(0);
         session.beforeCount2.should.equal(0);
@@ -84,14 +84,14 @@ describe('filter service test', function() {
         session.afterCount++;
         cb();
       });
-      service.beforeFilter(null, session, function() {
+      service.beforeFilter(null, session, function () {
         beforeCount++;
       });
-      service.afterFilter(null, null, session, null, function() {
+      service.afterFilter(null, null, session, null, function () {
         afterCount++;
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         session.beforeCount.should.equal(1);
         session.afterCount.should.equal(1);
         beforeCount.should.equal(1);
@@ -108,14 +108,14 @@ describe('filter service test', function() {
 
       service.before(blackholdFilter);
       service.after(blackholdFilter);
-      service.beforeFilter(null, session, function() {
+      service.beforeFilter(null, session, function () {
         beforeCount++;
       });
-      service.afterFilter(null, null, session, null, function() {
+      service.afterFilter(null, null, session, null, function () {
         afterCount++;
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         session.beforeCount1.should.equal(0);
         session.beforeCount2.should.equal(0);
         session.afterCount1.should.equal(0);

@@ -10,7 +10,7 @@ var mockApp = {
 };
 
 var mockSession = {
-  exportSession: function() {
+  exportSession: function () {
     return this;
   }
 };
@@ -18,8 +18,8 @@ var mockSession = {
 var mockMsg = {key: 'some request message'};
 var mockRouteRecord = {serverType: 'connector', handler: 'testHandler', method: 'testMethod'};
 
-describe('handler service test', function() {
-  describe('handle', function() {
+describe('handler service test', function () {
+  describe('handle', function () {
     it('should dispatch the request to the handler if the route match current server type', function(done) {
       var invoke1Count = 0, invoke2Count = 0;
       // mock datas
@@ -44,7 +44,7 @@ describe('handler service test', function() {
       var service = new HandlerService(mockApp, mockOpts);
       service.handlerMap = {connector: mockHandlers};
 
-      service.handle(mockRouteRecord, mockMsg, mockSession, function() {
+      service.handle(mockRouteRecord, mockMsg, mockSession, function () {
         invoke1Count.should.equal(1);
         invoke2Count.should.equal(0);
         done();

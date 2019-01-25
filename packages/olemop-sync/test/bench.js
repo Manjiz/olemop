@@ -41,10 +41,10 @@ var objects = [
     console.log('-------------------')
     switch (what) {
     case 'all':
-      sets(obj, num, function() {
-        gets(obj, num, function() {
-          hsets(obj, num, function() {
-            hgets(obj, num, function() {
+      sets(obj, num, function () {
+        gets(obj, num, function () {
+          hsets(obj, num, function () {
+            hgets(obj, num, function () {
               console.log('');
               cb();
             });
@@ -53,25 +53,25 @@ var objects = [
       })
       break
     case 'sets':
-      sets(obj, num, function() {
+      sets(obj, num, function () {
         console.log('');
         cb();
       })
       break
     case 'gets':
-      gets(obj, num, function() {
+      gets(obj, num, function () {
         console.log('');
         cb();
       })
       break
     case 'hsets':
-      hsets(obj, num, function() {
+      hsets(obj, num, function () {
         console.log('');
         cb();
       })
       break
     case 'hgets':
-      hgets(obj, num, function() {
+      hgets(obj, num, function () {
         console.log('');
         cb();
       })
@@ -171,8 +171,8 @@ var objects = [
 
   var next = function(i, o) {
     if (i < scenarioLen) {
-      bench(objects[o], scenario[i][0], scenario[i][1], function() {
-        setTimeout(function() {
+      bench(objects[o], scenario[i][0], scenario[i][1], function () {
+        setTimeout(function () {
           next(++i, o)
         }, scenario[i][1] / 3) // give some time for the hd to breath
       })
@@ -262,7 +262,7 @@ var objects = [
   }
   var start = function(db) {
     console.log('checking consistency...')
-    consistency(function() {
+    consistency(function () {
       console.log('done.')
       console.log('=====================')
       console.log('benchmark starting...')

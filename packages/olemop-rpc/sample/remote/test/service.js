@@ -3,7 +3,7 @@
 module.exports = function(context) {
 	return {
 		echo: function(msg, data, cb) {
-			// setTimeout(function() {
+			// setTimeout(function () {
 				// console.log(msg);
 				// console.log(data);
 				cb(null, msg);

@@ -28,7 +28,7 @@ var msg = {
   args: []
 };
 
-describe('mail station', function() {
+describe('mail station', function () {
   var gateways = [];
 
   before(function(done) {
@@ -58,7 +58,7 @@ describe('mail station', function() {
     done();
   });
 
-  describe('#create', function() {
+  describe('#create', function () {
     it('should be ok for pass an empty opts to the factory method', function(done) {
       var station = MailStation.create();
       should.exist(station);
@@ -72,7 +72,7 @@ describe('mail station', function() {
       station.should.have.property('mailboxFactory');
     });
 
-    it('should change the default mailbox by pass the mailboxFactory to the create function', function() {
+    it('should change the default mailbox by pass the mailboxFactory to the create function', function () {
       var mailboxFactory = {
         create: function(opts, cb) {
           return null;
@@ -91,8 +91,8 @@ describe('mail station', function() {
     });
   });
 
-  describe('#addServer', function() {
-    it('should add the server info into the mail station', function() {
+  describe('#addServer', function () {
+    it('should add the server info into the mail station', function () {
       var station = MailStation.create();
       should.exist(station);
 
@@ -111,7 +111,7 @@ describe('mail station', function() {
     });
   });
 
-  describe('#dispatch', function() {
+  describe('#dispatch', function () {
     it('should send request to the right remote server and get the response from callback function', function(done) {
       var callbackCount = 0;
       var count = 0;
@@ -139,7 +139,7 @@ describe('mail station', function() {
           station.dispatch(tracer, item.id, msg, null, func(item.id));
         }
       });
-      setTimeout(function() {
+      setTimeout(function () {
         callbackCount.should.equal(count);
         station.stop();
         done();
@@ -174,7 +174,7 @@ describe('mail station', function() {
           station.dispatch(tracer, item.id, msg, null, func(item.id));
         }
       });
-      setTimeout(function() {
+      setTimeout(function () {
         callbackCount.should.equal(count);
         station.stop();
         done();
@@ -203,7 +203,7 @@ describe('mail station', function() {
           callbackCount++;
         });
       });
-      setTimeout(function() {
+      setTimeout(function () {
         callbackCount.should.equal(1);
         station.stop();
         done();
@@ -237,7 +237,7 @@ describe('mail station', function() {
           callbackCount++;
         });
       });
-      setTimeout(function() {
+      setTimeout(function () {
         eventCount.should.equal(1);
         callbackCount.should.equal(1);
         station.stop();
@@ -246,7 +246,7 @@ describe('mail station', function() {
     });
   });
 
-  describe('#close', function() {
+  describe('#close', function () {
     it('should emit a close event for each mailbox close', function(done) {
       var closeEventCount = 0, i, l;
       var remoteIds = [];
@@ -287,9 +287,9 @@ describe('mail station', function() {
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         station.stop(true);
-        setTimeout(function() {
+        setTimeout(function () {
           closeEventCount.should.equal(remoteIds.length);
           mailboxIds.sort();
           mailboxIds.should.eql(remoteIds);
@@ -324,14 +324,14 @@ describe('mail station', function() {
           station.dispatch(tracer, item.id, msg, null, func);
         }
       });
-      setTimeout(function() {
+      setTimeout(function () {
         errorEventCount.should.equal(serverList.length);
         done();
       }, WAIT_TIME);
     });
   });
 
-  describe('#filters', function() {
+  describe('#filters', function () {
     it('should invoke filters in turn', function(done) {
       var preFilterCount = 0;
       var afterFilterCount = 0;
@@ -388,10 +388,10 @@ describe('mail station', function() {
           next(fsid, fmsg, fopts);
         });
 
-        station.dispatch(tracer, sid, orgMsg, orgOpts, function() {});
+        station.dispatch(tracer, sid, orgMsg, orgOpts, function () {});
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         preFilterCount.should.equal(2);
         afterFilterCount.should.equal(2);
         station.stop();

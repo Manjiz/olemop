@@ -26,7 +26,7 @@ var msg = {
   args: []
 };
 
-describe('client', function() {
+describe('client', function () {
   var gateways = [];
 
   before(function(done) {
@@ -56,7 +56,7 @@ describe('client', function() {
     done();
   });
 
-  describe('#create', function() {
+  describe('#create', function () {
     it('should be ok for creating client with an empty opts', function(done) {
       var client = Client.create();
 
@@ -69,7 +69,7 @@ describe('client', function() {
       });
     });
 
-    it('should add proxy instances by addProxies method', function() {
+    it('should add proxy instances by addProxies method', function () {
       var client = Client.create();
 
       should.exist(client);
@@ -111,7 +111,7 @@ describe('client', function() {
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         routeCount.should.equal(1);
         callbackCount.should.equal(1);
         client.stop();
@@ -120,7 +120,7 @@ describe('client', function() {
     });
   });
 
-  describe('#status', function() {
+  describe('#status', function () {
     it('should return an error if start twice', function(done) {
       var client = Client.create();
       client.start(function(err) {
@@ -158,11 +158,11 @@ describe('client', function() {
 
       client.addServer(serverList[0]);
 
-      client.start(function() {
+      client.start(function () {
         client.rpcInvoke(sid, msg, function(err) {
           should.not.exist(err);
           client.stop(true);
-          setTimeout(function() {
+          setTimeout(function () {
             client.rpcInvoke(sid, msg, function(err) {
               should.exist(err);
               done();

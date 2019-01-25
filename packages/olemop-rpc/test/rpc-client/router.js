@@ -4,7 +4,7 @@ var route = require('../../' + lib + '/rpc-client/router').route;
 
 var WAIT_TIME = 20;
 
-describe('router', function() {
+describe('router', function () {
   var servers = {
     'logic': [
       {id: 'logic-server-1', host: 'localhost',  port: 3333},
@@ -26,7 +26,7 @@ describe('router', function() {
     'uid': 'changchang005@gmail.com'
   };
 
-  describe("#route", function() {
+  describe("#route", function () {
     it('should return the same result for the same user if the mapping info not changed', function(done) {
       var firstRoute, secondRoute;
 
@@ -40,7 +40,7 @@ describe('router', function() {
         secondRoute = sid;
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         firstRoute.should.equal(secondRoute);
         done();
       }, WAIT_TIME);
@@ -76,7 +76,7 @@ describe('router', function() {
         okCount++;
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         okCount.should.equal(2);
         done();
       }, WAIT_TIME);

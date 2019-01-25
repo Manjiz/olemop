@@ -1,6 +1,6 @@
 var schedule = require('@olemop/scheduler');
 
-var cronJob = function() {
+var cronJob = function () {
 	console.log('doing %s', Date.now())
 }
 

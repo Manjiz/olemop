@@ -4,7 +4,7 @@ var util = require('util');
 var utils = require('../../../lib/util/utils');
 var Composer = require('stream-pkg');
 
-var Client = function() {
+var Client = function () {
   EventEmitter.call(this);
   this.requests = {};
   this.curId = 0;
@@ -16,7 +16,7 @@ util.inherits(Client, EventEmitter);
 var pro = Client.prototype;
 
 pro.connect = function(host, port, cb) {
-  this.socket = net.connect({port: port, host: host}, function() {
+  this.socket = net.connect({port: port, host: host}, function () {
     utils.invokeCallback(cb);
   });
   console.log('socket: %j', !!this.socket);
@@ -43,7 +43,7 @@ pro.send = function(msg, cb) {
   this.socket.write(this.composer.compose(JSON.stringify({id: id, msg: msg})));
 };
 
-pro.close = function() {
+pro.close = function () {
   this.socket.end();
 };
 

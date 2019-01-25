@@ -11,8 +11,8 @@ var mockBase = process.cwd() + '/test';
 
 var WAIT_TIME = 200;
 
-describe('channel remote test', function() {
-  describe('#pushMessage', function() {
+describe('channel remote test', function () {
+  describe('#pushMessage', function () {
     it('should push message the the specified clients', function(done) {
       var sids = [1, 2, 3, 4, 5, 6];
       var uids = [11, 12, 13];
@@ -61,7 +61,7 @@ describe('channel remote test', function() {
       };
       app.set('sessionService', sessionService);
       var channelRemote = remote(app);
-      channelRemote.pushMessage(mockRoute, mockMsg, uids, {isPush: true}, function() {
+      channelRemote.pushMessage(mockRoute, mockMsg, uids, {isPush: true}, function () {
         invokeCount.should.equal(uids.length);
         invokeUids.length.should.equal(uids.length);
         for(var i=0, l=uids.length; i<l; i++) {
@@ -72,7 +72,7 @@ describe('channel remote test', function() {
     });
   });
 
-  describe('#broadcast', function() {
+  describe('#broadcast', function () {
     it('should broadcast to all the client connected', function(done) {
       var sids = [1, 2, 3, 4, 5];
       var uids = [11, 12, 13, 14, 15];
@@ -111,7 +111,7 @@ describe('channel remote test', function() {
       app.set('sessionService', sessionService);
       app.set('channelService', channelService);
       var channelRemote = remote(app);
-      channelRemote.broadcast(mockRoute, mockMsg, {type: 'broadcast'}, function() {
+      channelRemote.broadcast(mockRoute, mockMsg, {type: 'broadcast'}, function () {
         invokeCount.should.equal(1);
         done();
       });
@@ -158,7 +158,7 @@ describe('channel remote test', function() {
       app.set('sessionService', sessionService);
       app.set('channelService', channelService);
       var channelRemote = remote(app);
-      channelRemote.broadcast(mockRoute, mockMsg, {type: 'broadcast', userOptions: {binded: true}}, function() {
+      channelRemote.broadcast(mockRoute, mockMsg, {type: 'broadcast', userOptions: {binded: true}}, function () {
         invokeCount.should.equal(1);
         done();
       });

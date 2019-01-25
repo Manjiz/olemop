@@ -24,7 +24,7 @@ var services = {
 
 var tracer = new Tracer(console, false);
 
-describe('dispatcher', function() {
+describe('dispatcher', function () {
   it('should be find the right service object', function(done) {
     var methodStr = 'doService';
     var serviceStr1 = 'addOneService';
@@ -51,7 +51,7 @@ describe('dispatcher', function() {
     });
 
     //wait for all finished
-    setTimeout(function() {
+    setTimeout(function () {
       callbackCount.should.equal(2);
       done();
     }, WAIT_TIME);
@@ -81,7 +81,7 @@ describe('dispatcher', function() {
     });
 
     //wait for all finished
-    setTimeout(function() {
+    setTimeout(function () {
       callbackCount.should.equal(2);
       done();
     }, WAIT_TIME);

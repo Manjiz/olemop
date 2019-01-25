@@ -2,9 +2,9 @@ var should = require('should');
 var pomelo = require('../../');
 var consoleModule = require('../../lib/modules/console');
 
-describe('console module test', function() {
-	describe('#monitorHandler', function() {
-		it('should execute the corresponding command with different signals', function() {
+describe('console module test', function () {
+	describe('#monitorHandler', function () {
+		it('should execute the corresponding command with different signals', function () {
 			var flag;
 			var rs;
 			var opts = {
@@ -23,7 +23,7 @@ describe('console module test', function() {
 					removeCrons: function(array) {
 						rs = array;
 					},
-					isFrontend: function() {
+					isFrontend: function () {
 						return true;
 					}
 				}
@@ -62,7 +62,7 @@ describe('console module test', function() {
 		});
 	});
 
-	describe('#clientHandler', function() {
+	describe('#clientHandler', function () {
     var _exit;
     var _setTimeout;
     var exitCount = 0;
@@ -85,12 +85,12 @@ describe('console module test', function() {
 					stop: function(value) {
 						return value;
 					},
-					getServerById: function() {
+					getServerById: function () {
 						return {
 							host: '127.0.0.1'
 						};
 					},
-					getServers: function() {
+					getServers: function () {
 						return {
 							'chat-server-1': {
 
@@ -108,7 +108,7 @@ describe('console module test', function() {
 					set: function(value) {
 						return value;
 					},
-					getServersByType: function() {
+					getServersByType: function () {
 						return [{id: 'chat-server-1'}];
 					}
 				}
@@ -116,7 +116,7 @@ describe('console module test', function() {
 		var module = new consoleModule(opts);
 		it('should execute kill command', function(done) {
 			var msg = {signal: 'kill'};
-      process.exit = function() {exitCount++;};
+      process.exit = function () {exitCount++;};
       setTimeout = function(cb, timeout) {
         if (timeout > 3000) {
           timeout = 3000;
@@ -180,7 +180,7 @@ describe('console module test', function() {
 			});
 		});
 
-		it('should execute list command', function() {
+		it('should execute list command', function () {
 			var msg = {signal: 'list'};
 			var agent = {
 				request: function(recordId, moduleId, msg, cb) {
@@ -198,7 +198,7 @@ describe('console module test', function() {
 			});
 		});
 
-		it('should execute add command', function() {
+		it('should execute add command', function () {
 			var msg1 = {signal: 'add', args: ['host=127.0.0.1', 'port=88888', 'clusterCount=2']};
 			var msg2 = {signal: 'add', args: ['host=127.0.0.1', 'port=88888', 'id=chat-server-1', 'serverType=chat']};
 			var agent = {};
@@ -211,7 +211,7 @@ describe('console module test', function() {
 			});
 		});
 
-		it('should execute blacklist command', function() {
+		it('should execute blacklist command', function () {
 			var msg1 = {signal: 'blacklist', args: ['127.0.0.1']};
 			var msg2 = {signal: 'blacklist', args: ['abc']};
 			var agent = {
@@ -227,7 +227,7 @@ describe('console module test', function() {
 			});
 		});
 
-		it('should execute restart command', function() {
+		it('should execute restart command', function () {
 			var msg1 = {signal: 'restart', ids:['chat-server-1']};
 			var msg2 = {signal: 'restart', type:'chat', ids:[]};
 			var agent = {

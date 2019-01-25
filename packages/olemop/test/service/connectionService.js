@@ -10,14 +10,14 @@ var mockApp = {
     return this.settings[key];
   },
 
-  getServerId: function() {
+  getServerId: function () {
     return this.get('serverId');
   }
 };
 
-describe('connection service test', function() {
-  describe('#addLoginedUser', function() {
-    it('should add logined user and could fetch it later', function() {
+describe('connection service test', function () {
+  describe('#addLoginedUser', function () {
+    it('should add logined user and could fetch it later', function () {
       var service = new ConnectionService(mockApp);
       should.exist(service);
       service.loginedCount.should.equal(0);
@@ -33,8 +33,8 @@ describe('connection service test', function() {
     });
   });
 
-  describe('#increaseConnectionCount', function() {
-    it('should increate connection count and could fetch it later', function() {
+  describe('#increaseConnectionCount', function () {
+    it('should increate connection count and could fetch it later', function () {
       var service = new ConnectionService(mockApp);
       should.exist(service);
       service.connCount.should.equal(0);
@@ -44,8 +44,8 @@ describe('connection service test', function() {
     });
   });
 
-  describe('#removeLoginedUser', function() {
-    it('should remove logined user info with the uid', function() {
+  describe('#removeLoginedUser', function () {
+    it('should remove logined user info with the uid', function () {
       var service = new ConnectionService(mockApp);
       should.exist(service);
       service.loginedCount.should.equal(0);
@@ -71,8 +71,8 @@ describe('connection service test', function() {
     });
   });
 
-  describe('#decreaseConnectionCount', function() {
-    it('should decrease connection count only if uid is empty', function() {
+  describe('#decreaseConnectionCount', function () {
+    it('should decrease connection count only if uid is empty', function () {
       var service = new ConnectionService(mockApp);
       should.exist(service);
 
@@ -82,7 +82,7 @@ describe('connection service test', function() {
       service.connCount.should.equal(0);
     });
 
-    it('should keep zero if connection count become zero', function() {
+    it('should keep zero if connection count become zero', function () {
       var service = new ConnectionService(mockApp);
       should.exist(service);
 
@@ -91,7 +91,7 @@ describe('connection service test', function() {
       service.connCount.should.equal(0);
     });
 
-    it('should remove the logined info if uid is specified', function() {
+    it('should remove the logined info if uid is specified', function () {
       var service = new ConnectionService(mockApp);
       should.exist(service);
 

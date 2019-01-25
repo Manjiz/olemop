@@ -29,7 +29,7 @@ var msg = {
 
 var tracer = new Tracer(console, false);
 
-describe('tcp mailbox test', function() {
+describe('tcp mailbox test', function () {
   var gateway;
 
   before(function(done) {
@@ -53,7 +53,7 @@ describe('tcp mailbox test', function() {
     done();
   });
 
-  describe('#create', function() {
+  describe('#create', function () {
     it('should be ok for creating a mailbox and connect to the right remote server', function(done) {
       var mailbox = Mailbox.create(server);
       should.exist(mailbox);
@@ -80,7 +80,7 @@ describe('tcp mailbox test', function() {
     });
   });
 
-  describe('#send', function() {
+  describe('#send', function () {
     it('should send request to remote server and get the response from callback function', function(done) {
       var mailbox = Mailbox.create(server);
       mailbox.connect(tracer, function(err) {
@@ -144,7 +144,7 @@ describe('tcp mailbox test', function() {
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         callbackCount.should.equal(3);
         if(mailbox) {
           mailbox.close();
@@ -201,7 +201,7 @@ describe('tcp mailbox test', function() {
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         callbackCount.should.equal(3);
         if(mailbox) {
           mailbox.close();
@@ -267,7 +267,7 @@ describe('tcp mailbox test', function() {
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         callbackCount.should.equal(3);
         if(mailbox) {
           mailbox.close();
@@ -278,7 +278,7 @@ describe('tcp mailbox test', function() {
     });
   });
 
-  describe('#close', function() {
+  describe('#close', function () {
     it('should emit a close event when mailbox close', function(done) {
       var closeEventCount = 0;
       var mailbox = Mailbox.create(server);
@@ -290,7 +290,7 @@ describe('tcp mailbox test', function() {
         mailbox.close();
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         closeEventCount.should.equal(1);
         done();
       }, WAIT_TIME);

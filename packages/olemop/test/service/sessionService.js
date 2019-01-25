@@ -2,8 +2,8 @@ var should = require('should');
 var pomelo = require('../../');
 var SessionService = require('../../lib/common/service/sessionService');
 
-describe('session service test', function() {
-  describe('#bind', function() {
+describe('session service test', function () {
+  describe('#bind', function () {
     it('should get session by uid after binded', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
@@ -59,7 +59,7 @@ describe('session service test', function() {
     });
   });
 
-  describe('#unbind', function() {
+  describe('#unbind', function () {
     it('should fail unbind session if session not exist', function(done) {
       var service = new SessionService();
       var sid = 1;
@@ -99,7 +99,7 @@ describe('session service test', function() {
     });
   });
 
-  describe('#remove', function() {
+  describe('#remove', function () {
     it('should not get the session after remove', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
@@ -116,7 +116,7 @@ describe('session service test', function() {
     });
   });
 
-  describe('#import', function() {
+  describe('#import', function () {
     it('should update the session with the key/value pair', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
@@ -188,7 +188,7 @@ describe('session service test', function() {
     });
   });
 
-  describe('#kick', function() {
+  describe('#kick', function () {
     it('should kick the sessions', function(done) {
       var service = new SessionService();
       var sid1 = 1, fid1 = 'frontend-server-1';
@@ -203,11 +203,11 @@ describe('session service test', function() {
 
       var session1 = service.create(sid1, fid1, socket);
       var session2 = service.create(sid2, fid2, socket);
-      session1.on('closed', function() {
+      session1.on('closed', function () {
         eventCount++;
       });
 
-      session2.on('closed', function() {
+      session2.on('closed', function () {
         eventCount++;
       });
 
@@ -239,11 +239,11 @@ describe('session service test', function() {
 
       var session1 = service.create(sid1, fid1, socket);
       var session2 = service.create(sid2, fid2, socket);
-      session1.on('closed', function() {
+      session1.on('closed', function () {
         eventCount++;
       });
 
-      session2.on('closed', function() {
+      session2.on('closed', function () {
         eventCount++;
       });
 
@@ -281,7 +281,7 @@ describe('session service test', function() {
       var eventCount = 0;
 
       var session = service.create(sid, fid, socket);
-      session.on('closed', function() {
+      session.on('closed', function () {
         eventCount++;
       });
 
@@ -304,7 +304,7 @@ describe('session service test', function() {
     });
   });
 
-  describe('#forEachSession', function() {
+  describe('#forEachSession', function () {
     it('should iterate all created sessions', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
@@ -320,7 +320,7 @@ describe('session service test', function() {
     });
   });
 
-  describe('#forEachBindedSession', function() {
+  describe('#forEachBindedSession', function () {
     it('should iterate all binded sessions', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
@@ -339,8 +339,8 @@ describe('session service test', function() {
   });
 });
 
-describe('frontend session test', function() {
-  describe('#bind', function() {
+describe('frontend session test', function () {
+  describe('#bind', function () {
     it('should get session by uid after binded', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
@@ -369,7 +369,7 @@ describe('frontend session test', function() {
     });
   });
 
-  describe('#unbind', function() {
+  describe('#unbind', function () {
     it('should fail to get session after session unbinded', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
@@ -388,9 +388,9 @@ describe('frontend session test', function() {
     });
   });
 
-  describe('#set/get', function() {
+  describe('#set/get', function () {
     it('should update the key/value pair in frontend session but not session',
-        function() {
+        function () {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
       var key = 'key-1', value = 'value-1';
@@ -405,7 +405,7 @@ describe('frontend session test', function() {
     });
   });
 
-  describe('#push', function() {
+  describe('#push', function () {
     it('should push the specified key/value pair to session', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};
@@ -445,7 +445,7 @@ describe('frontend session test', function() {
     });
   });
   
-  describe('#export', function() {
+  describe('#export', function () {
     it('should equal frontend session after export', function(done) {
       var service = new SessionService();
       var sid = 1, fid = 'frontend-server-1', socket = {};

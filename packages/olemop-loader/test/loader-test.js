@@ -6,9 +6,9 @@ var path = __dirname + '/mock-remote/area/';
 
 var WAIT_TIME = 20;
 
-describe('loader', function() {
-	describe('#load', function() {
-		it('should load all modules under the path but sub-directory', function() {
+describe('loader', function () {
+	describe('#load', function () {
+		it('should load all modules under the path but sub-directory', function () {
 			var services = Loader.load(path);
 			should.exist(services);
 
@@ -60,22 +60,22 @@ describe('loader', function() {
 				res.should.equal(sid);
 			});
 			
-			setTimeout(function() {
+			setTimeout(function () {
 				callbackCount.should.equal(4);
 				done();
 			}, WAIT_TIME);
 		});
 		
-		it('should throw an error if the path is empty', function() {
+		it('should throw an error if the path is empty', function () {
 			var path = './mock-remote/connector';
-			(function() {
+			(function () {
 				Loader.load(path);
 			}).should.throw();
 		});
 		
-		it('should throw exception if the path dose not exist', function() {
+		it('should throw exception if the path dose not exist', function () {
 			var path = './some/error/path';
-			(function() {
+			(function () {
 				Loader.loadPath(path);
 			}).should.throw();
 		});

@@ -23,8 +23,8 @@ var services = {
 var port = 3333;
 var opts = {services: services, port: port};
 
-describe('gateway', function() {
-  describe('#start', function() {
+describe('gateway', function () {
+  describe('#start', function () {
     it('should be ok when listen a valid port and emit a closed event when it closed', function(done) {
       var errorCount = 0;
       var closeCount = 0;
@@ -41,7 +41,7 @@ describe('gateway', function() {
       gateway.start();
       gateway.stop();
 
-      setTimeout(function() {
+      setTimeout(function () {
         errorCount.should.equal(0);
         closeCount.should.equal(1);
         done();
@@ -61,14 +61,14 @@ describe('gateway', function() {
 
       gateway.start();
 
-      setTimeout(function() {
+      setTimeout(function () {
         errorCount.should.equal(1);
         done();
       }, WAIT_TIME);
     });
   });
 
-  describe('#new message callback', function() {
+  describe('#new message callback', function () {
     it('should route msg to the appropriate service object and return response to remote client by callback', function(done) {
       var clientCallbackCount = 0;
       var value = 1;
@@ -85,14 +85,14 @@ describe('gateway', function() {
       gateway.start();
 
       var client = Client.create();
-      client.connect('127.0.0.1', port, function() {
+      client.connect('127.0.0.1', port, function () {
         client.send(msg, function(err, result) {
           result.should.eql(value + 1);
           clientCallbackCount++;
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         clientCallbackCount.should.equal(1);
         client.close();
         gateway.stop();
@@ -116,7 +116,7 @@ describe('gateway', function() {
       gateway.start();
 
       var client = Client.create();
-      client.connect('127.0.0.1', port, function() {
+      client.connect('127.0.0.1', port, function () {
         client.send(msg, function(err, result) {
           should.exist(err)
           should.not.exist(result);
@@ -124,7 +124,7 @@ describe('gateway', function() {
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         clientCallbackCount.should.equal(1);
         client.close();
         gateway.stop();
@@ -154,7 +154,7 @@ describe('gateway', function() {
       gateway.start();
 
       var client = Client.create();
-      client.connect('127.0.0.1', port, function() {
+      client.connect('127.0.0.1', port, function () {
         client.send(msg1, function(err, result) {
           result.should.eql(value + 1);
           clientCallbackCount++;
@@ -166,7 +166,7 @@ describe('gateway', function() {
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         clientCallbackCount.should.equal(2);
         client.close();
         gateway.stop();

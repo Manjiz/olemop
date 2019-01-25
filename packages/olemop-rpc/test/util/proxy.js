@@ -11,17 +11,17 @@ A.prototype.add = function(num) {
 A.prototype.sub = function(num) {
   this.value -= num;
 };
-A.prototype.addB = function() {
+A.prototype.addB = function () {
   this.b.value++;
 };
-A.prototype.addInternal = function() {
+A.prototype.addInternal = function () {
   this.add(1);
 };
 
 var B = function(value) {
   this.value = value;
 };
-B.prototype.addA = function() {
+B.prototype.addA = function () {
   this.a.value++;
 };
 
@@ -29,9 +29,9 @@ var callback = function(service, method, args, attach, invoke) {
 
 };
 
-describe('proxy', function() {
-  describe('#create', function() {
-    it('should invoke the proxy function if it had been set', function() {
+describe('proxy', function () {
+  describe('#create', function () {
+    it('should invoke the proxy function if it had been set', function () {
       var callbackCount = 0;
       var cb = function(service, method, args, attach, invoke) {
         callbackCount++;
@@ -47,7 +47,7 @@ describe('proxy', function() {
       callbackCount.should.equal(1);
     });
 
-    it('should invoke the origin function if the proxy function not set', function() {
+    it('should invoke the origin function if the proxy function not set', function () {
       var value = 1;
       var a = new A(value);
 
@@ -58,7 +58,7 @@ describe('proxy', function() {
       a.value.should.equal(value + 1);
     });
 
-    it('should invoke the origin function if the invoke callback had been called in proxy function', function() {
+    it('should invoke the origin function if the invoke callback had been called in proxy function', function () {
       var callbackCount = 0;
       var originCallCount = 0;
       var value = 1;
@@ -85,7 +85,7 @@ describe('proxy', function() {
       a.value.should.equal(value + 1);
     });
 
-    it('should not invoke the origin function if the invoke callback not called', function() {
+    it('should not invoke the origin function if the invoke callback not called', function () {
       var callbackCount = 0;
       var originCallCount = 0;
       var value = 1;
@@ -111,7 +111,7 @@ describe('proxy', function() {
       a.value.should.equal(value);
     });
 
-    it('should flush the operation result on fields to the origin object', function() {
+    it('should flush the operation result on fields to the origin object', function () {
       var value = 1;
 
       var a = new A(value);
@@ -125,7 +125,7 @@ describe('proxy', function() {
       a.value.should.equal(value + 1);
     });
 
-    it('should be ok if create proxies for two objects that references each other', function() {
+    it('should be ok if create proxies for two objects that references each other', function () {
       var callbackCount = 0;
       var valueA = 1;
       var valueB = 2;
@@ -155,7 +155,7 @@ describe('proxy', function() {
       b.value.should.equal(valueB + 1);
     });
 
-    it('should not proxy the internal invoking', function() {
+    it('should not proxy the internal invoking', function () {
       var callbackCount = 0;
       var value = 1;
 
@@ -175,7 +175,7 @@ describe('proxy', function() {
       a.value.should.equal(value + 1);
     });
 
-    it('should has the same class info with origin object', function() {
+    it('should has the same class info with origin object', function () {
       var a = new A(1);
 
       var proxy = Proxy.create({
@@ -185,7 +185,7 @@ describe('proxy', function() {
       proxy.should.be.an.instanceof(A);
     });
 
-    it('should pass the attach from opts to invoke callback', function() {
+    it('should pass the attach from opts to invoke callback', function () {
       var callbackCount = 0;
       var expectAttach = {someValue: 1, someObject: {}, someStr: "hello"};
 
