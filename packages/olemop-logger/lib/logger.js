@@ -8,10 +8,15 @@ const funcs = {
 	opts: (name, opts) => opts && opts[name]
 }
 
+/**
+ * [2010-01-17 11:43:37.987] [DEBUG] [default] - Some debug messages
+ * [2010-01-17 11:43:37.987] [DEBUG] [default] - [xxx] [yyy] Some debug messages
+ * [2010-01-17 11:43:37.987] [DEBUG] [default] - 32: [xxx] [yyy] Some debug messages
+ */
 const getLogger = (...args) => {
   let categoryName = args[0]
 
-  const prefix = args.slice(1).map((item) => `[${item}]`).join(' ')
+  const prefix = args.slice(1).map((item) => `[${item}]`).join(' ') + ' '
 
 	if (typeof categoryName === 'string') {
 		// category name is __filename then cut the prefix path
@@ -20,7 +25,7 @@ const getLogger = (...args) => {
 
   const logger = log4js.getLogger(categoryName)
 
-	const pLogger = {}
+  const pLogger = {}
 	for (let key in logger) {
 		pLogger[key] = logger[key]
 	}
@@ -113,9 +118,8 @@ const configureLevels = (levels) => {
  *     args: command line arguments, such as: args:1
  *     opts: key/value from opts argument of configure function
  *
- * @param  {String|Object} config configure file name or configure object
- * @param  {Object} opts   options
- * @return {Void}
+ * @param {string|object} config configure filename or configure object
+ * @param {object} opts options
  */
 const configure = (config, opts) => {
 	const filename = config
@@ -143,14 +147,14 @@ const configure = (config, opts) => {
 	}
 
 	// config object could not turn on the auto reload configure file in log4js
-	log4js.configure(config, opts)
+	return log4js.configure(config, opts)
 }
 
 const replaceProperties = (configObj, opts) => {
 	if (configObj instanceof Array) {
-		for (let i = 0, l = configObj.length; i < l; i++) {
-			configObj[i] = replaceProperties(configObj[i], opts)
-		}
+    configObj.forEach((item, index) => {
+      configObj[index] = replaceProperties(item, opts)
+    })
 	} else if (typeof configObj === 'object') {
 		let field
 		for (let f in configObj) {
@@ -166,6 +170,10 @@ const replaceProperties = (configObj, opts) => {
 	return configObj
 }
 
+/**
+ * 替换配置值中的特定标识：${scope:name:defaultValue}
+ * scope: env | args | opts
+ */
 const doReplace = (src, opts) => {
 	if (!src) {
 		return src
@@ -192,14 +200,14 @@ const doReplace = (src, opts) => {
 		}
 
 		const func = funcs[scope]
-		if (!func && typeof func !== 'function') {
+		if (!func || typeof func !== 'function') {
 			res += pro
 			continue
 		}
 
 		res += src.substring(lastIndex, m.index)
 		lastIndex = ptn.lastIndex
-		res += (func(name, opts) || defaultValue)
+		res += func(name, opts) || defaultValue
 	}
 
 	if (lastIndex < src.length) {

@@ -2,12 +2,14 @@
   "name": "@olemop/logger",
   "version": "0.0.38",
   "main": "lib/logger",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "log4js": "^3.0.3"
   },
   "devDependencies": {
-    "mocha": ">=0.0.1",
-    "should": ">=0.0.1"
+    "jest": "^24.0.0"
   },
   "publishConfig": {
     "access": "public"

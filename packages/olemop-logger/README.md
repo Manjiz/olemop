@@ -82,4 +82,12 @@ the above configuration means reload the configuration file every 30 seconds. Yo
 
 ## Example
 
-See `./example`
+```javascript
+const logger = require('@olemop/logger').getLogger('log', __filename, process.pid)
+
+process.env.LOGGER_LINE = true
+
+logger.info('test1')
+logger.warn('test2')
+logger.error('test3')
+```

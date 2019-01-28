@@ -1,9 +1,4 @@
-.project
-logs/
-config/
-node_modules/*
-.settings/
-**/*.svn
-*.svn
-*.sublime-project
-*.sublime-workspace
+# install modules
+node_modules
+
+logs
