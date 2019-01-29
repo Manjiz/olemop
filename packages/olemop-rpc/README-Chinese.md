@@ -31,7 +31,7 @@ console.log('rpc server started.');
 
 ### Client
 
-``` javascript
+```javascript
 var Client = require('@olemop/rpc').client;
 
 // remote service interface path info list

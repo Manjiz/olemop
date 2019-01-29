@@ -89,7 +89,7 @@ RES_SUCCESS, RES_FAIL, RES_WAIT分别代表当前执行成功，失败和仍在�
 
 ## 用法
 
-``` javascript
+```javascript
 const bt = require('@olemop/behavior-tree')
 const { Sequence, Node } = bt
 

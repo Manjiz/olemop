@@ -13,7 +13,7 @@ Module would use the filename by default. For example: load `lib/a.js` and the r
 It would use the name if the module with a name property. For example
 
 ```javascript
-a.js
+// a.js
 exports.name = 'test'
 ```
 
@@ -38,7 +38,7 @@ npm install @olemop/loader
 
 ## Usage
 
-``` javascript
+```javascript
 const Loader = require('@olemop/loader')
 
 const res = Loader.load('.')

@@ -25,7 +25,7 @@ npm install @olemop/sync-redis
 
 ## Usage
 
-``` javascript
+```javascript
 const SyncRedis = require('@olemop/sync-redis')
 
 // db connection etc
@@ -48,7 +48,7 @@ const sync = new SyncRedis({
 })
 
 sync.exec(OPT_KEY, id, { name: 'hello' })
-``` 
+```
 
 `options` object properties
 
@@ -74,13 +74,13 @@ sync.exec(OPT_KEY, id, { name: 'hello' })
 
 ### sync.exec(key,id,val,cb)
 
-Add a object to sync for timer exec call back. 
+Add a object to sync for timer exec call back.
 
 #### Arguments
 
 + key - the key function mapping for wanted to call back,it must be unique.
-+ id - object primary key for merger operation. 
-+ val -  the object wanted to synchronized. 
++ id - object primary key for merger operation.
++ val -  the object wanted to synchronized.
 + cb - the function call back when timer exec.
 
 ### sync.flush(key,id,val,cb)
@@ -91,8 +91,8 @@ waiting queue data
 #### Arguments
 
 + key - the key function mapping for wanted to call back,it must be unique.
-+ id - object primary key for merger operation. 
-+ val -  the object wanted to synchronized. 
++ id - object primary key for merger operation.
++ val -  the object wanted to synchronized.
 + cb - the function call back when timer exec.
 
 ### sync.isDone
@@ -100,7 +100,7 @@ waiting queue data
 get the db sync status when the queue is empty,it should return true;otherwise
 return false;
 
-## Notice 
+## Notice
 
 system default sync time is 1000 * 60,
 if you use mysql or redis sync,you should set options.client,the file sync is default but it doesn't load in current.

@@ -20,7 +20,7 @@ npm install @olemop/sync
 
 ## Usage
 
-``` javascript
+```javascript
 var opt = opt || {};
 
 var updateUser = function (dbclient,val) {
@@ -30,7 +30,7 @@ var updateUser = function (dbclient,val) {
 var dbclient = {};//db connection etc;
 var id = 10001;
 var optKey = 'updateUser';
-var mapping = {}; //key function mapping 
+var mapping = {}; //key function mapping
 mapping[optKey]=updateUser;
 opt.mapping = mapping;
 opt.client = dbclient;
@@ -39,19 +39,19 @@ opt.interval = 2000;
 var Sync = require('pomelo-sync');
 var sync = new Sync(opt) ;
 sync.exec(optKey,id,{name:'hello'});
-``` 
+```
 
 ## API
 
 ### sync.exec(key,id,val,cb)
 
-Add a object to sync for timer exec call back. 
+Add a object to sync for timer exec call back.
 
 #### Arguments
 
 + key - the key function mapping for wanted to call back,it must be unique.
-+ id - object primary key for merger operation. 
-+ val -  the object wanted to synchronized. 
++ id - object primary key for merger operation.
++ val -  the object wanted to synchronized.
 + cb - the function call back when timer exec.
 
 ### sync.flush(key,id,val,cb)
@@ -62,8 +62,8 @@ waiting queue data;
 #### Arguments
 
 + key - the key function mapping for wanted to call back,it must be unique.
-+ id - object primary key for merger operation. 
-+ val -  the object wanted to synchronized. 
++ id - object primary key for merger operation.
++ val -  the object wanted to synchronized.
 + cb - the function call back when timer exec.
 
 ### sync.isDone
@@ -71,7 +71,7 @@ waiting queue data;
 get the db sync status when the queue is empty,it should return true;otherwise
 return false;
 
-## Notice 
+## Notice
 
 system default sync time is 1000 * 60,
 if you use mysql or redis sync,you should set options.client,the file sync is default but it doesn't load in current.

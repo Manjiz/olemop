@@ -1,5 +1,5 @@
 # @olemop/scheduler
-@olemop/scheduler is a schedule tool for nodejs, it's purpose is to provide a product level schedule module which is high efficient and can support large number job schedule.You can 
+@olemop/scheduler is a schedule tool for nodejs, it's purpose is to provide a product level schedule module which is high efficient and can support large number job schedule.You can
 
 As a schedule tool, it support two kinds of trigger: A simple trigger which use a js object and  a Cron time trigger which use a Cron time string.
 ##Installation
@@ -10,12 +10,12 @@ npm install @olemop/scheduler
 Simple job will receive a object as a trigger, which take three attributes, a JS function as object, and an object as the parameters in the job.
 
 ###Simple trigge example
-``` javascript
+```javascript
 //Fire 10000ms after now, and run 10 times with a 1000ms interval.
 var trigger1 = {
   start : Date.now() + 10000, //Start time, use the time in date object
   period : 1000,      //Fire interval, the precision is millisecond
-  count : 10          //Fire times, in this case the trigger will fire 10 times.   
+  count : 10          //Fire times, in this case the trigger will fire 10 times.
 }
 
 //Fire right now, and run 10 times with 1000ms interval.
@@ -38,14 +38,14 @@ var trigger4 = {
 var trigger5 = {
 }
 
-//Illegal! The 'count' attribute cannot used alone without 'period'.  
+//Illegal! The 'count' attribute cannot used alone without 'period'.
 var trigger6 = {
   count : 10;
 }
-``` 
+```
 
 ###Simple job example
-``` javascript
+```javascript
 var schedule = require('../lib/schedule');
 
 var simpleJob = function (data){
@@ -58,7 +58,7 @@ schedule.scheduleJob({start:Date.now(), period:3000, count: 10}, simpleJob, {nam
 Cron job is the job that use cron trigger, it is just like the simple job, only use the cron trigger instead of simple trigger.
 
 ###Cron job example
-``` javascript
+```javascript
 var schedule = require('../lib/schedule');
 
 var cronJob = function (data){
@@ -83,7 +83,7 @@ Cron trigger has 7 fiels, the format is very like the cronTab in linux, only add
 ###Exampe of cron tirggers
 
 "0/2 0 8 * * 6"    Fire at every Satuaday at every even seconds of 08:00
-"0 30 10 1 4 *"      Fire at 10:30 on 1st of March  
+"0 30 10 1 4 *"      Fire at 10:30 on 1st of March
 "15 15 15 10 10 *"   Fire at Octorber 10th, at 15:15:15.
 
 ###Special characters
@@ -94,17 +94,17 @@ Cron trigger has 7 fiels, the format is very like the cronTab in linux, only add
 
 /: means increasement. For exapmle, 1/20 in the second field means 1, 21 and 41 second, and 1/2 means for every odd seconds as 1, 3, 5 ... ...
 
-,: means additional values. For example, 1, 10, 15 in the second field means 1, 10 and 15 second. You can use '-', and '/' with ',', for example, 11,20-22,0/2 in the second filed means 11, 21 and all the even seconds. 
+,: means additional values. For example, 1, 10, 15 in the second field means 1, 10 and 15 second. You can use '-', and '/' with ',', for example, 11,20-22,0/2 in the second filed means 11, 21 and all the even seconds.
 
-##Cancel Job 
-``` javascript
+##Cancel Job
+```javascript
 var schedule = require('../lib/schedule');
 
 var simpleJob = function (){
    console.log("run simple Job ");
 }
 
-//Add a simple job and save the id 
+//Add a simple job and save the id
 var id = schedule.scheduleJob({period: 1000}, simpleJob, {});
 
 /**

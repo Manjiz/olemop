@@ -10,7 +10,7 @@ npm install @olemop/status-plugin
 
 ## Usage
 
-``` javascript
+```javascript
 const status = require('@olemop/status-plugin')
 
 app.use(status, {
@@ -73,7 +73,7 @@ Return:
 
 status plugin use redis as a default persistent storage, you can change it with your own implementation. 
 
-``` javascript
+```javascript
 const status = require('@olemop/status-plugin')
 const mysqlStatusManager = require('./mysqlStatusManager')
 
@@ -88,7 +88,7 @@ app.use(status, {
 
 cleanOnStartUp option: when you enable this option, status plugin would clean up the old data with the given prefix string.
 
-``` javascript
+```javascript
 app.use(status, {
   status: {
     host: '127.0.0.1',

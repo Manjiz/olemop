@@ -38,7 +38,7 @@ npm install @olemop/loader
 
 ## 用法
 
-``` javascript
+```javascript
 const Loader = require('@olemop/loader')
 
 const res = Loader.load('.')
