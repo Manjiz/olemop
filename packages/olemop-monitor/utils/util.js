@@ -1,12 +1,8 @@
 /**
- * convert Date as  yyyy-mm-dd hh:mm:ss
+ * convert Date as yyyy-mm-dd hh:mm:ss
  */
-function formatTime(date) {
-	var n = date.getFullYear(); 
-	var y = date.getMonth() + 1;
-	var r = date.getDate(); 
-	var mytime = date.toLocaleTimeString(); 
-	var mytimes = n+ "-" + y + "-" + r + " " + mytime;
-  return mytimes;
+const formatTime = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.toLocaleTimeString()}`
+
+module.exports = {
+  formatTime
 }
-module.exports.formatTime = formatTime;

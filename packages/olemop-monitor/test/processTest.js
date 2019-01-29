@@ -1,16 +1,16 @@
-var processMonitor = require('../lib/processMonitor');
+const processMonitor = require('../lib/processMonitor')
 
 function test() {
-	var param = {
-		pid: 4838,
+	processMonitor.getPsInfo({
+		pid: 3650,
 		serverId: 'auth-server-1'
-	};
-	processMonitor.getPsInfo(param, function(err, data) {
-		if (!!err) {
-			console.log (err);
-			return;
-		}
-		console.log('process information is :', data);
-	});
-};
-test();
+	}, (err, data) => {
+		if (err) {
+			console.log(err)
+			return
+    }
+		console.log('process information is: %j', data)
+	})
+}
+
+test()

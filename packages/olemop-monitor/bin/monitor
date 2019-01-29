@@ -1,8 +1,5 @@
 #!/usr/bin/env node
-/**
- * Module dependencies
- */
 
-var program = require('commander');
-var Monitor = require('../');
+const program = require('commander')
+const Monitor = require('../')
 
