@@ -97,7 +97,7 @@ export default class DataSync {
    * Select database at the given `index`.
    *
    * @api private
-   * @param {Number} index
+   * @param {number} index
    */
   selectDB (index) {
     let db = this.dbs[index]

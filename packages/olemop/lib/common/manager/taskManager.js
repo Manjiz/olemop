@@ -9,7 +9,7 @@ const queues = {}
  * @param {string}   key       task key
  * @param {Function} fn        task callback
  * @param {Function} ontimeout task timeout callback
- * @param {Number}   timeout   timeout for task
+ * @param {number}   timeout   timeout for task
  */
 const addTask = (key, fn, ontimeout, timeout) => {
   let queue = queues[key]

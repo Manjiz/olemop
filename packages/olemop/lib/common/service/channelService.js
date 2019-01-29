@@ -199,7 +199,7 @@ var Channel = function (name, service) {
 /**
  * Add user to channel.
  *
- * @param {Number} uid user id
+ * @param {number} uid user id
  * @param {string} sid frontend server id which user has connected to
  */
 Channel.prototype.add = function (uid, sid) {
@@ -219,7 +219,7 @@ Channel.prototype.add = function (uid, sid) {
 /**
  * Remove user from channel.
  *
- * @param {Number} uid user id
+ * @param {number} uid user id
  * @param {string} sid frontend server id which user has connected to.
  * @return [Boolean] true if success or false if fail
  */

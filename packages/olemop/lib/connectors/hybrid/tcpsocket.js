@@ -123,8 +123,8 @@ var onend = function (socket, chunk) {
  *
  * @param  {Object} socket Socket instance
  * @param  {Object} data   Buffer instance
- * @param  {Number} offset offset read star from data
- * @return {Number}        new offset of data after read
+ * @param  {number} offset offset read star from data
+ * @returns {number}        new offset of data after read
  */
 var readHead = function (socket, data, offset) {
   var hlen = socket.headSize - socket.headOffset;
@@ -164,8 +164,8 @@ var readHead = function (socket, data, offset) {
  *
  * @param  {Object} socket Socket instance
  * @param  {Object} data   Buffer instance
- * @param  {Number} offset offset read star from data
- * @return {Number}        new offset of data after read
+ * @param  {number} offset offset read star from data
+ * @returns {number}        new offset of data after read
  */
 var readBody = function (socket, data, offset) {
   var blen = socket.packageSize - socket.packageOffset;

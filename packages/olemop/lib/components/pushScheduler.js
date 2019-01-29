@@ -78,7 +78,7 @@ class PushScheduler {
   /**
    * Schedule how the message to send.
    *
-   * @param  {Number}   reqId request id
+   * @param  {number}   reqId request id
    * @param {string}   route route string of the message
    * @param  {Object}   msg   message content after encoded
    * @param  {Array}    recvs array of receiver's session id

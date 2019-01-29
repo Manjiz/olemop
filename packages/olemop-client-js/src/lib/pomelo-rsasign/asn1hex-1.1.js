@@ -42,7 +42,7 @@
  * @memberOf ASN1HEX
  * @function
  * @param {string} s hexadecimal string of ASN.1 DER encoded data
- * @param {Number} pos string index
+ * @param {number} pos string index
  * @return byte length for ASN.1 L(length) bytes
  */
 var BigInteger = require("./jsbn.js");
@@ -66,7 +66,7 @@ function _asnhex_getByteLengthOfL_AtObj(s, pos) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} s hexadecimal string of ASN.1 DER encoded data
- * @param {Number} pos string index
+ * @param {number} pos string index
  * @returns {string} hexadecimal string for ASN.1 L(length) bytes
  */
 function _asnhex_getHexOfL_AtObj(s, pos) {
@@ -89,7 +89,7 @@ function _asnhex_getHexOfL_AtObj(s, pos) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} s hexadecimal string of ASN.1 DER encoded data
- * @param {Number} pos string index
+ * @param {number} pos string index
  * @return ASN.1 L(length) integer value
  */
 function _asnhex_getIntOfL_AtObj(s, pos) {
@@ -110,7 +110,7 @@ function _asnhex_getIntOfL_AtObj(s, pos) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} s hexadecimal string of ASN.1 DER encoded data
- * @param {Number} pos string index
+ * @param {number} pos string index
  */
 function _asnhex_getStartPosOfV_AtObj(s, pos) {
   var l_len = _asnhex_getByteLengthOfL_AtObj(s, pos);
@@ -124,7 +124,7 @@ function _asnhex_getStartPosOfV_AtObj(s, pos) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} s hexadecimal string of ASN.1 DER encoded data
- * @param {Number} pos string index
+ * @param {number} pos string index
  * @returns {string} hexadecimal string of ASN.1 value.
  */
 function _asnhex_getHexOfV_AtObj(s, pos) {
@@ -139,7 +139,7 @@ function _asnhex_getHexOfV_AtObj(s, pos) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} s hexadecimal string of ASN.1 DER encoded data
- * @param {Number} pos string index
+ * @param {number} pos string index
  * @returns {string} hexadecimal string of ASN.1 TLV.
  * @since 1.1
  */
@@ -156,7 +156,7 @@ function _asnhex_getHexOfTLV_AtObj(s, pos) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} s hexadecimal string of ASN.1 DER encoded data
- * @param {Number} pos string index
+ * @param {number} pos string index
  * @return next sibling starting index for ASN.1 object string
  */
 function _asnhex_getPosOfNextSibling_AtObj(s, pos) {
@@ -171,7 +171,7 @@ function _asnhex_getPosOfNextSibling_AtObj(s, pos) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} s hexadecimal string of ASN.1 DER encoded data
- * @param {Number} start string index of ASN.1 object
+ * @param {number} start string index of ASN.1 object
  * @return {Array of Number} array of indexes for childen of ASN.1 objects
  */
 function _asnhex_getPosArrayOfChildren_AtObj(h, pos) {
@@ -202,9 +202,9 @@ function _asnhex_getPosArrayOfChildren_AtObj(h, pos) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} h hexadecimal string of ASN.1 DER encoded data
- * @param {Number} idx start string index of ASN.1 object
- * @param {Number} nth for child
- * @return {Number} string index of nth child.
+ * @param {number} idx start string index of ASN.1 object
+ * @param {number} nth for child
+ * @returns {number} string index of nth child.
  * @since 1.1
  */
 function _asnhex_getNthChildIndex_AtObj(h, idx, nth) {
@@ -220,9 +220,9 @@ function _asnhex_getNthChildIndex_AtObj(h, idx, nth) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} h hexadecimal string of ASN.1 DER encoded data
- * @param {Number} currentIndex start string index of ASN.1 object
+ * @param {number} currentIndex start string index of ASN.1 object
  * @param {Array of Number} nthList array list of nth
- * @return {Number} string index refered by nthList
+ * @returns {number} string index refered by nthList
  * @since 1.1
  */
 function _asnhex_getDecendantIndexByNthList(h, currentIndex, nthList) {
@@ -240,9 +240,9 @@ function _asnhex_getDecendantIndexByNthList(h, currentIndex, nthList) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} h hexadecimal string of ASN.1 DER encoded data
- * @param {Number} currentIndex start string index of ASN.1 object
+ * @param {number} currentIndex start string index of ASN.1 object
  * @param {Array of Number} nthList array list of nth
- * @return {Number} hexadecimal string of ASN.1 TLV refered by nthList
+ * @returns {number} hexadecimal string of ASN.1 TLV refered by nthList
  * @since 1.1
  */
 function _asnhex_getDecendantHexTLVByNthList(h, currentIndex, nthList) {
@@ -256,9 +256,9 @@ function _asnhex_getDecendantHexTLVByNthList(h, currentIndex, nthList) {
  * @memberOf ASN1HEX
  * @function
  * @param {string} h hexadecimal string of ASN.1 DER encoded data
- * @param {Number} currentIndex start string index of ASN.1 object
+ * @param {number} currentIndex start string index of ASN.1 object
  * @param {Array of Number} nthList array list of nth
- * @return {Number} hexadecimal string of ASN.1 V refered by nthList
+ * @returns {number} hexadecimal string of ASN.1 V refered by nthList
  * @since 1.1
  */
 function _asnhex_getDecendantHexVByNthList(h, currentIndex, nthList) {

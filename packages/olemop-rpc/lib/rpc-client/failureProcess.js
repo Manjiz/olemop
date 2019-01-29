@@ -4,7 +4,7 @@ const constants = require('../util/constants')
 /**
  * Failover rpc failure process. This will try other servers with option retries.
  *
- * @param code {Number} error code number.
+ * @param code {number} error code number.
  * @param tracer {Object} current rpc tracer.
  * @param serverId {string} rpc remote target server id.
  * @param msg {Object} rpc message.
@@ -32,7 +32,7 @@ const failover = function (code, tracer, serverId, msg, opts, cb) {
 /**
  * Failsafe rpc failure process.
  *
- * @param code {Number} error code number.
+ * @param code {number} error code number.
  * @param tracer {Object} current rpc tracer.
  * @param serverId {string} rpc remote target server id.
  * @param msg {Object} rpc message.
@@ -82,7 +82,7 @@ const failsafe = function (code, tracer, serverId, msg, opts, cb) {
 /**
  * Failback rpc failure process. This will try the same server with sendInterval option and retries option.
  *
- * @param code {Number} error code number.
+ * @param code {number} error code number.
  * @param tracer {Object} current rpc tracer.
  * @param serverId {string} rpc remote target server id.
  * @param msg {Object} rpc message.
@@ -96,7 +96,7 @@ const failback = function (code, tracer, serverId, msg, opts, cb) {
 /**
  * Failfast rpc failure process. This will ignore error in rpc client.
  *
- * @param code {Number} error code number.
+ * @param code {number} error code number.
  * @param tracer {Object} current rpc tracer.
  * @param serverId {string} rpc remote target server id.
  * @param msg {Object} rpc message.

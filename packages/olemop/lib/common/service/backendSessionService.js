@@ -72,7 +72,7 @@ BackendSessionService.prototype.getByUid = function (frontendId, uid, cb) {
  * Kick a session by session id.
  *
  * @param {string}   frontendId cooperating frontend server id
- * @param  {Number}   sid        session id
+ * @param  {number}   sid        session id
  * @param  {Function} cb         callback function
  *
  * @memberOf BackendSessionService
@@ -118,7 +118,7 @@ BackendSessionService.prototype.kickByUid = function (frontendId, uid, reason, c
  * the sessionService.bind in the cooperating frontend server.
  *
  * @param {string}   frontendId cooperating frontend server id
- * @param  {Number}   sid        session id
+ * @param  {number}   sid        session id
  * @param {string}   uid        user id
  * @param  {Function} cb         callback function
  *
@@ -138,7 +138,7 @@ BackendSessionService.prototype.bind = function (frontendId, sid, uid, cb) {
  * the sessionService.unbind in the cooperating frontend server.
  *
  * @param {string}   frontendId cooperating frontend server id
- * @param  {Number}   sid        session id
+ * @param  {number}   sid        session id
  * @param {string}   uid        user id
  * @param  {Function} cb         callback function
  *
@@ -157,7 +157,7 @@ BackendSessionService.prototype.unbind = function (frontendId, sid, uid, cb) {
  * Push the specified customized change to the frontend internal session.
  *
  * @param {string}   frontendId cooperating frontend server id
- * @param  {Number}   sid        session id
+ * @param  {number}   sid        session id
  * @param {string}   key        key in session that should be push
  * @param  {Object}   value      value in session, primitive js object
  * @param  {Function} cb         callback function
@@ -177,7 +177,7 @@ BackendSessionService.prototype.push = function (frontendId, sid, key, value, cb
  * Push all the customized changes to the frontend internal session.
  *
  * @param {string}   frontendId cooperating frontend server id
- * @param  {Number}   sid        session id
+ * @param  {number}   sid        session id
  * @param  {Object}   settings   key/values in session that should be push
  * @param  {Function} cb         callback function
  *

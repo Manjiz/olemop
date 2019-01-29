@@ -20,9 +20,9 @@ var ST_CLOSED = 3
  *                 opts.id             {string} server id
  *                 opts.type           {string} server type, 'master', 'connector', etc.
  *                 opts.socket         {Object} socket-io object
- *                 opts.reqId          {Number} reqId add by 1
+ *                 opts.reqId          {number} reqId add by 1
  *                 opts.callbacks      {Object} callbacks
- *                 opts.state          {Number} MasterAgent state
+ *                 opts.state          {number} MasterAgent state
  * @api public
  */
 var MasterAgent = function (consoleService, opts) {
@@ -471,7 +471,7 @@ var removeConnection = function (agent, id, type, info) {
  * send msg to monitor
  *
  * @param {Object} socket socket-io object
- * @param {Number} reqId request id
+ * @param {number} reqId request id
  * @param {string} moduleId module id/name
  * @param {Object} msg message
  * @api private
@@ -484,7 +484,7 @@ var sendToMonitor = function (socket, reqId, moduleId, msg) {
  * send msg to client
  *
  * @param {Object} socket socket-io object
- * @param {Number} reqId request id
+ * @param {number} reqId request id
  * @param {string} moduleId module id/name
  * @param {Object} msg message
  * @api private

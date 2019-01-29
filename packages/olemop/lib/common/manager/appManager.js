@@ -11,7 +11,7 @@ const utils = require('../../util/utils')
  * @param {string} name transaction name
  * @param {Object} conditions functions which are called before transaction, must call `cb` at the end
  * @param {Object} handlers functions which are called during transaction
- * @param {Number} retry retry times to execute handlers if conditions are successfully executed
+ * @param {number} retry retry times to execute handlers if conditions are successfully executed
  * @example
 
   const conditions = {

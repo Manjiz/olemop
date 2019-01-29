@@ -62,7 +62,7 @@ Remote.prototype.getBackendSessionsByUid = function (uid, cb) {
 /**
  * Kick a session by session id.
  *
- * @param  {Number}   sid session id
+ * @param  {number}   sid session id
  * @param {string}   reason  kick reason
  * @param  {Function} cb  callback function
  */

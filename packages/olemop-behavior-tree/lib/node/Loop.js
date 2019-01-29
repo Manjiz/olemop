@@ -5,7 +5,7 @@
  *        opts.blackboard {Object} blackboard object
  *        opts.child {Object} origin action that is decorated
  *        opts.loopCond(blackboard) {Function} loop condition callback. Return true to continue the loop.
- * @return {Number}
+ * @returns {number}
  *          bt.RES_SUCCESS if loop finished successfully;
  *          bt.RES_FAIL and break loop if child return fail;
  *          bt.RES_WAIT if child return wait or loop is continue.

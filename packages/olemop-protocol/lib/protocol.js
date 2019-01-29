@@ -113,7 +113,7 @@
    *   1 - 3: big-endian body length
    * Body: body length bytes
    *
-   * @param  {Number}    type   package type
+   * @param  {number}    type   package type
    * @param  {ByteArray} body   body content in bytes
    * @return {ByteArray}        new byte array that contains encode result
    */
@@ -159,9 +159,9 @@
   /**
    * Message protocol encode.
    *
-   * @param  {Number} id            message id
-   * @param  {Number} type          message type
-   * @param  {Number} compressRoute whether compress route
+   * @param  {number} id            message id
+   * @param  {number} type          message type
+   * @param  {number} compressRoute whether compress route
    * @param  {Number|String} route  route code or route string
    * @param  {Buffer} msg           message body bytes
    * @return {Buffer}               encode result
