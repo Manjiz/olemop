@@ -1,6 +1,6 @@
 {
   "name": "@olemop/protobuf",
-  "version": "0.0.38",
+  "version": "0.0.47",
   "main": "./lib/protobuf",
   "devDependencies": {
     "mocha": "^5.2.0",

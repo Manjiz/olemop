@@ -1,6 +1,6 @@
 {
   "name": "@olemop/client-js",
-  "version": "0.0.45",
+  "version": "0.0.47",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@olemop/protobuf": "^0.0.38",
-    "@olemop/protocol": "^0.0.45",
+    "@olemop/protobuf": "^0.0.47",
+    "@olemop/protocol": "^0.0.47",
     "pomelo-jsclient-websocket": "^0.1.1",
     "wolfy87-eventemitter": "^5.2.5"
   },

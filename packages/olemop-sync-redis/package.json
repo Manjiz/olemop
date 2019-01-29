@@ -1,6 +1,6 @@
 {
   "name": "@olemop/sync-redis",
-  "version": "0.0.45",
+  "version": "0.0.47",
   "main": "dist/dbsync.js",
   "scripts": {
     "build": "tsc"
