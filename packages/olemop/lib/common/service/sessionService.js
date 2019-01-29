@@ -55,7 +55,7 @@ class SessionService {
    * Create and return internal session.
    *
    * @param {Integer} sid uniqe id for the internal session
-   * @param {String} frontendId frontend server in which the internal session is created
+   * @param {string} frontendId frontend server in which the internal session is created
    * @param {Object} socket the underlying socket would be held by the internal session
    *
    * @return {Session}
@@ -345,7 +345,7 @@ class SessionService {
   /**
    * Send message to the client by session id.
    *
-   * @param {String} sid session id
+   * @param {string} sid session id
    * @param {Object} msg message to send
    *
    * @memberOf SessionService
@@ -365,7 +365,7 @@ class SessionService {
   /**
    * Send message to the client by user id.
    *
-   * @param {String} uid userId
+   * @param {string} uid userId
    * @param {Object} msg message to send
    *
    * @memberOf SessionService
@@ -491,7 +491,7 @@ class Session extends EventEmitter {
   /**
    * Remove value from the session.
    *
-   * @param {String} key session key
+   * @param {string} key session key
    * @api public
    */
   remove (key) {
@@ -501,7 +501,7 @@ class Session extends EventEmitter {
   /**
    * Get value from the session.
    *
-   * @param {String} key session key
+   * @param {string} key session key
    * @return {Object} value associated with session key
    * @api public
    */

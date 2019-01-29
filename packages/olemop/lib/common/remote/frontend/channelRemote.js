@@ -13,7 +13,7 @@ const Remote = function (app) {
 /**
  * Push message to client by uids.
  *
- * @param  {String}   route route string of message
+ * @param {string}   route route string of message
  * @param  {Object}   msg   message
  * @param  {Array}    uids  user ids that would receive the message
  * @param  {Object}   opts  push options
@@ -51,7 +51,7 @@ Remote.prototype.pushMessage = function (route, msg, uids, opts, cb) {
 /**
  * Broadcast to all the client connectd with current frontend server.
  *
- * @param  {String}    route  route string
+ * @param {string}    route  route string
  * @param  {Object}    msg    message
  * @param  {Boolean}   opts   broadcast options.
  * @param  {Function}  cb     callback function

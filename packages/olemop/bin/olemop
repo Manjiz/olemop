@@ -135,7 +135,7 @@ program.parse(process.argv)
 /**
  * Init application at the given directory `path`.
  *
- * @param {String} path
+ * @param {string} path
  */
 function init(path) {
   console.log(INIT_PROJ_NOTICE)
@@ -161,7 +161,7 @@ function init(path) {
 /**
  * Create directory and files at the given directory `path`.
  *
- * @param {String} ph
+ * @param {string} ph
  */
 function createApplicationAt(ph, type) {
   const name = path.basename(path.resolve(CUR_DIR, ph))
@@ -422,7 +422,7 @@ function add(opts) {
 /**
  * Terminal application.
  *
- * @param {String} signal stop/kill
+ * @param {string} signal stop/kill
  * @param {Object} opts options for `stop/kill` operation
  */
 function terminal(signal, opts) {
@@ -492,7 +492,7 @@ function connectToMaster(id, opts, cb) {
 /**
  * Start master slaves.
  *
- * @param {String} option for `startMasterha` operation
+ * @param {string} option for `startMasterha` operation
  */
 function startMasterha(opts) {
   const configFile = path.join(opts.directory, constants.FILEPATH.MASTER_HA)
@@ -511,7 +511,7 @@ function startMasterha(opts) {
 /**
  * Check if the given directory `path` is empty.
  *
- * @param {String} path
+ * @param {string} path
  * @param {Function} fn
  */
 function emptyDirectory(path, fn) {
@@ -526,7 +526,7 @@ function emptyDirectory(path, fn) {
 /**
  * Prompt confirmation with the given `msg`.
  *
- * @param {String} msg
+ * @param {string} msg
  * @param {Function} fn
  */
 function confirm(msg, fn) {
@@ -538,7 +538,7 @@ function confirm(msg, fn) {
 /**
  * Prompt input with the given `msg` and callback `fn`.
  *
- * @param {String} msg
+ * @param {string} msg
  * @param {Function} fn
  */
 function prompt(msg, fn) {
@@ -556,7 +556,7 @@ function prompt(msg, fn) {
 /**
  * Exit with the given `str`.
  *
- * @param {String} str
+ * @param {string} str
  */
 function abort(str) {
   console.error(str)
@@ -566,8 +566,8 @@ function abort(str) {
 /**
  * Copy template files to project.
  *
- * @param {String} origin
- * @param {String} target
+ * @param {string} origin
+ * @param {string} target
  */
 function copy(origin, target) {
   if (!fs.existsSync(origin)) {

@@ -100,7 +100,7 @@ exports.stopComps = function (comps, index, force, cb) {
  * Any component {method} return err, it would return err directly.
  *
  * @param {Array} comps loaded component list
- * @param {String} method component lifecycle method name, such as: start, stop
+ * @param {string} method component lifecycle method name, such as: start, stop
  * @param {Function} cb
  */
 exports.optComponents = function (comps, method, cb) {

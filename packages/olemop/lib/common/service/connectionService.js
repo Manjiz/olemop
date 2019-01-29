@@ -17,7 +17,7 @@ var pro = Service.prototype;
 /**
  * Add logined user.
  *
- * @param uid {String} user id
+ * @param uid {string} user id
  * @param info {Object} record for logined user
  */
 pro.addLoginedUser = function (uid, info) {
@@ -30,7 +30,7 @@ pro.addLoginedUser = function (uid, info) {
 
 /**
  * Update user info.
- * @param uid {String} user id
+ * @param uid {string} user id
  * @param info {Object} info for update.
  */
 pro.updateUserInfo = function (uid, info) {
@@ -56,7 +56,7 @@ pro.increaseConnectionCount = function () {
 /**
  * Remote logined user
  *
- * @param uid {String} user id
+ * @param uid {string} user id
  */
 pro.removeLoginedUser = function (uid) {
   if (this.logined[uid]) {
@@ -68,7 +68,7 @@ pro.removeLoginedUser = function (uid) {
 /**
  * Decrease connection count
  *
- * @param uid {String} uid
+ * @param uid {string} uid
  */
 pro.decreaseConnectionCount = function (uid) {
   if (this.connCount) {

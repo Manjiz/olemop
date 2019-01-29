@@ -27,7 +27,7 @@ Remote.prototype.pushAll = function (sid, settings, cb) {
 /**
  * Get session informations with session id.
  *
- * @param  {String}   sid session id binded with the session
+ * @param {string}   sid session id binded with the session
  * @param  {Function} cb(err, sinfo)  callback funtion, sinfo would be null if the session not exist.
  */
 Remote.prototype.getBackendSessionBySid = function (sid, cb) {
@@ -42,7 +42,7 @@ Remote.prototype.getBackendSessionBySid = function (sid, cb) {
 /**
  * Get all the session informations with the specified user id.
  *
- * @param  {String}   uid user id binded with the session
+ * @param {string}   uid user id binded with the session
  * @param  {Function} cb(err, sinfo)  callback funtion, sinfo would be null if the session does not exist.
  */
 Remote.prototype.getBackendSessionsByUid = function (uid, cb) {
@@ -63,7 +63,7 @@ Remote.prototype.getBackendSessionsByUid = function (uid, cb) {
  * Kick a session by session id.
  *
  * @param  {Number}   sid session id
- * @param  {String}   reason  kick reason
+ * @param {string}   reason  kick reason
  * @param  {Function} cb  callback function
  */
 Remote.prototype.kickBySid = function (sid, reason, cb) {
@@ -74,7 +74,7 @@ Remote.prototype.kickBySid = function (sid, reason, cb) {
  * Kick sessions by user id.
  *
  * @param  {Number|String}   uid user id
- * @param  {String}          reason     kick reason
+ * @param {string}          reason     kick reason
  * @param  {Function} cb     callback function
  */
 Remote.prototype.kickByUid = function (uid, reason, cb) {

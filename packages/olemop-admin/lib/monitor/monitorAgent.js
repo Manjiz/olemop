@@ -18,8 +18,8 @@ var STATUS_INTERVAL = 5 * 1000; // 60 seconds
  * @constructor
  * @param {Object} opts construct parameter
  *                 opts.consoleService {Object} consoleService
- *                 opts.id             {String} server id
- *                 opts.type           {String} server type, 'master', 'connector', etc.
+ *                 opts.id             {string} server id
+ *                 opts.type           {string} server type, 'master', 'connector', etc.
  *                 opts.info           {Object} more server info for current server, {id, serverType, host, port}
  * @api public
  */
@@ -41,8 +41,8 @@ Util.inherits(MonitorAgent, EventEmitter);
 /**
  * register and connect to master server
  *
- * @param {String} port
- * @param {String} host
+ * @param {string} port
+ * @param {string} host
  * @param {Function} cb callback function
  * @api public
  */
@@ -185,7 +185,7 @@ MonitorAgent.prototype.close = function () {
 /**
  * set module
  *
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} value module object
  * @api public
  */
@@ -196,7 +196,7 @@ MonitorAgent.prototype.set = function (moduleId, value) {
 /**
  * get module
  *
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @api public
  */
 MonitorAgent.prototype.get = function (moduleId) {
@@ -206,7 +206,7 @@ MonitorAgent.prototype.get = function (moduleId) {
 /**
  * notify master server without callback
  *
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} msg message
  * @api public
  */

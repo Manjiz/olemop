@@ -213,7 +213,7 @@ class Component {
   /**
    * Proxy for rpc client rpcInvoke.
    *
-   * @param {String}   serverId remote server id
+   * @param {string}   serverId remote server id
    * @param {Object}   msg      rpc message: {serverType: serverType, service: serviceName, method: methodName, args: arguments}
    * @param {Function} cb      callback function
    */

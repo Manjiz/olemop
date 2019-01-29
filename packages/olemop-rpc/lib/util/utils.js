@@ -52,7 +52,7 @@ Utils.checkFloat = (v) => {
 /**
  * Utils check type
  *
- * @param  {String}   type
+ * @param {string}   type
  * @return {Function} high order function
  */
 Utils.isType = (type) => {

@@ -299,7 +299,7 @@ MailStation.prototype.replaceServers = function (serverInfos) {
  * Dispatch rpc message to the mailbox
  *
  * @param  {Object}   tracer   rpc debug tracer
- * @param  {String}   serverId remote server id
+ * @param {string}   serverId remote server id
  * @param  {Object}   msg      rpc invoke message
  * @param  {Object}   opts     rpc invoke option args
  * @param  {Function} cb       callback function
@@ -414,7 +414,7 @@ MailStation.prototype.filter = function (filter) {
  * Try to connect to remote server
  *
  * @param  {Object}   tracer   rpc debug tracer
- * @return {String}   serverId remote server id
+ * @returns {string}   serverId remote server id
  * @param  {Function}   cb     callback function
  */
 MailStation.prototype.connect = function (tracer, serverId, cb) {

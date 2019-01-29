@@ -35,8 +35,8 @@ const createStation = (opts) => Station.create(opts)
  * Add proxy into array.
  *
  * @param proxies {Object} rpc proxies
- * @param namespace {String} rpc namespace sys/user
- * @param serverType {String} rpc remote server type
+ * @param namespace {string} rpc namespace sys/user
+ * @param serverType {string} rpc remote server type
  * @param proxy {Object} rpc proxy
  */
 const insertProxy = (proxies, namespace, serverType, proxy) => {
@@ -55,7 +55,7 @@ const insertProxy = (proxies, namespace, serverType, proxy) => {
  *
  * @param client     {Object} current client instance.
  * @param msg        {Object} rpc message.
- * @param serverType {String} remote server type.
+ * @param serverType {string} remote server type.
  * @param serverId   {Object} mailbox init context parameter.
  */
 const rpcToSpecifiedServer = (client, msg, serverType, serverId, cb) => {
@@ -84,7 +84,7 @@ const rpcToSpecifiedServer = (client, msg, serverType, serverId, cb) => {
  * Calculate remote target server id for rpc client.
  *
  * @param client {Object} current client instance.
- * @param serverType {String} remote server type.
+ * @param serverType {string} remote server type.
  * @param routeParam {Object} mailbox init context parameter.
  * @param cb {Function} return rpc remote target server id.
  */
@@ -133,8 +133,8 @@ const getRouteTarget = (client, serverType, msg, routeParam, cb) => {
  * Generate prxoy for function type field
  *
  * @param client {Object} current client instance.
- * @param serviceName {String} delegated service name.
- * @param methodName {String} delegated method name.
+ * @param serviceName {string} delegated service name.
+ * @param methodName {string} delegated method name.
  * @param args {Object} rpc invoke arguments.
  * @param attach {Object} attach parameter pass to proxyCB.
  * @param isToSpecifiedServer {boolean} true means rpc route to specified remote server.
@@ -332,7 +332,7 @@ Client.prototype.replaceServers = function (servers) {
 /**
  * Do the rpc invoke directly.
  *
- * @param serverId {String} remote server id
+ * @param serverId {string} remote server id
  * @param msg {Object} rpc message. Message format:
  *    {serverType: serverType, service: serviceName, method: methodName, args: arguments}
  * @param cb {Function} cb(err, ...)

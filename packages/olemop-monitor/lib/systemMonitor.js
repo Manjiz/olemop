@@ -26,7 +26,7 @@ function getSysInfo(callback) {
 /**
  * analysis the disk i/o data,return a map contains kb_read,kb_wrtn ect.
  *
- * @param {String} data, the output of the command 'iostat'
+ * @param {string} data, the output of the command 'iostat'
  */
 function format(data) {
 	const time = util.formatTime(new Date())

@@ -90,9 +90,9 @@ starter.run = function (app, server, cb) {
 /**
  * Bind process with cpu
  *
- * @param {String} sid server id
- * @param {String} pid process id
- * @param {String} host server host
+ * @param {string} sid server id
+ * @param {string} pid process id
+ * @param {string} host server host
  * @return {Void}
  */
 starter.bindCpu = function (sid, pid, host) {
@@ -114,8 +114,8 @@ starter.bindCpu = function (sid, pid, host) {
 /**
  * Kill application in all servers
  *
- * @param {String} pids  array of server's pid
- * @param {String} serverIds array of serverId
+ * @param {string} pids  array of server's pid
+ * @param {string} serverIds array of serverId
  */
 starter.kill = function (pids, servers) {
   var cmd;
@@ -147,8 +147,8 @@ starter.kill = function (pids, servers) {
 /**
  * Use ssh to run command.
  *
- * @param {String} cmd command that would be executed in the remote server
- * @param {String} host remote server host
+ * @param {string} cmd command that would be executed in the remote server
+ * @param {string} host remote server host
  * @param {Function} cb callback function
  *
  */
@@ -169,7 +169,7 @@ starter.sshrun = function (cmd, host, cb) {
 /**
  * Run local command.
  *
- * @param {String} cmd
+ * @param {string} cmd
  * @param {Callback} callback
  *
  */
@@ -181,7 +181,7 @@ starter.localrun = (cmd, host, options, callback) => {
 /**
  * Fork child process to run command.
  *
- * @param {String} command
+ * @param {string} command
  * @param {Object} options
  * @param {Callback} callback
  *

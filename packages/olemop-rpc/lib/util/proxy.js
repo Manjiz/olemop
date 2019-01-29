@@ -4,10 +4,10 @@ const logger = require('@olemop/logger').getLogger('olemop-rpc', 'rpc-proxy')
 /**
  * Generate prxoy for function type field
  *
- * @param namespace {String} current namespace
- * @param serverType {String} server type string
- * @param serviceName {String} delegated service name
- * @param methodName {String} delegated method name
+ * @param namespace {string} current namespace
+ * @param serverType {string} server type string
+ * @param serviceName {string} delegated service name
+ * @param methodName {string} delegated method name
  * @param origin {Object} origin object
  * @param proxyCB {Functoin} proxy callback function
  * @returns function proxy
@@ -41,7 +41,7 @@ const genObjectProxy = (serviceName, origin, attach, proxyCB) => {
  * @param  {Object} opts construct parameters
  *           opts.origin {Object} delegated object
  *           opts.proxyCB {Function} proxy invoke callback
- *           opts.service {String} deletgated service name
+ *           opts.service {string} deletgated service name
  *           opts.attach {Object} attach parameter pass to proxyCB
  * @return {Object}      proxy instance
  */

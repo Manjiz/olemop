@@ -402,8 +402,8 @@ function _zeroPaddingOfSignature(hex, bitLength) {
  * @name signString
  * @memberOf RSAKey#
  * @function
- * @param {String} s message string to be signed.
- * @param {String} hashAlg hash algorithm name for signing.<br/>
+ * @param {string} s message string to be signed.
+ * @param {string} hashAlg hash algorithm name for signing.<br/>
  * @return returns hexadecimal string of signature value.
  */
 function _rsasign_signString(s, hashAlg) {
@@ -476,8 +476,8 @@ function _rsasign_verifyHexSignatureForMessage(hSig, sMsg) {
  * @name verifyString
  * @memberOf RSAKey#
  * @function
- * @param {String} sMsg message string to be verified.
- * @param {String} hSig hexadecimal string of siganture.<br/>
+ * @param {string} sMsg message string to be verified.
+ * @param {string} hSig hexadecimal string of siganture.<br/>
  *                 non-hexadecimal charactors including new lines will be ignored.
  * @return returns 1 if valid, otherwise 0
  */
@@ -546,7 +546,7 @@ function _rsapem_getHexValueArrayOfChildrenFromHex(hPrivateKey) {
  * @name readPrivateKeyFromASN1HexString
  * @memberOf RSAKey#
  * @function
- * @param {String} keyHex ASN.1 hexadecimal string of PKCS#1 private key.
+ * @param {string} keyHex ASN.1 hexadecimal string of PKCS#1 private key.
  * @since 1.1.1
  */
 function _rsapem_readPrivateKeyFromASN1HexString(keyHex) {
@@ -559,7 +559,7 @@ function _rsapem_readPrivateKeyFromASN1HexString(keyHex) {
  * @name readPrivateKeyFromPEMString
  * @memberOf RSAKey#
  * @function
- * @param {String} keyPEM string of PKCS#1 private key.
+ * @param {string} keyPEM string of PKCS#1 private key.
  */
 function _rsapem_readPrivateKeyFromPEMString(keyPEM) {
   var keyB64 = _rsapem_pemToBase64(keyPEM);
@@ -694,9 +694,9 @@ KJUR.crypto.Util = new function () {
      * @name getDigestInfoHex
      * @memberOf KJUR.crypto.Util
      * @function
-     * @param {String} hHash hexadecimal hash value
-     * @param {String} alg hash algorithm name (ex. 'sha1')
-     * @return {String} hexadecimal string DigestInfo ASN.1 structure
+     * @param {string} hHash hexadecimal hash value
+     * @param {string} alg hash algorithm name (ex. 'sha1')
+     * @returns {string} hexadecimal string DigestInfo ASN.1 structure
      */
     this.getDigestInfoHex = function (hHash, alg) {
 	if (typeof this.DIGESTINFOHEAD[alg] == "undefined")
@@ -709,10 +709,10 @@ KJUR.crypto.Util = new function () {
      * @name getPaddedDigestInfoHex
      * @memberOf KJUR.crypto.Util
      * @function
-     * @param {String} hHash hexadecimal hash value
-     * @param {String} alg hash algorithm name (ex. 'sha1')
+     * @param {string} hHash hexadecimal hash value
+     * @param {string} alg hash algorithm name (ex. 'sha1')
      * @param {Integer} keySize key bit length (ex. 1024)
-     * @return {String} hexadecimal string of PKCS#1 padded DigestInfo
+     * @returns {string} hexadecimal string of PKCS#1 padded DigestInfo
      */
     this.getPaddedDigestInfoHex = function (hHash, alg, keySize) {
 	var hDigestInfo = this.getDigestInfoHex(hHash, alg);
@@ -737,8 +737,8 @@ KJUR.crypto.Util = new function () {
      * @name sha1
      * @memberOf KJUR.crypto.Util
      * @function
-     * @param {String} s input string to be hashed
-     * @return {String} hexadecimal string of hash value
+     * @param {string} s input string to be hashed
+     * @returns {string} hexadecimal string of hash value
      * @since 1.0.3
      */
     this.sha1 = function (s) {
@@ -751,8 +751,8 @@ KJUR.crypto.Util = new function () {
      * @name sha256
      * @memberOf KJUR.crypto.Util
      * @function
-     * @param {String} s input string to be hashed
-     * @return {String} hexadecimal string of hash value
+     * @param {string} s input string to be hashed
+     * @returns {string} hexadecimal string of hash value
      * @since 1.0.3
      */
     this.sha256 = function (s) {
@@ -765,8 +765,8 @@ KJUR.crypto.Util = new function () {
      * @name sha512
      * @memberOf KJUR.crypto.Util
      * @function
-     * @param {String} s input string to be hashed
-     * @return {String} hexadecimal string of hash value
+     * @param {string} s input string to be hashed
+     * @returns {string} hexadecimal string of hash value
      * @since 1.0.3
      */
     this.sha512 = function (s) {
@@ -779,8 +779,8 @@ KJUR.crypto.Util = new function () {
      * @name md5
      * @memberOf KJUR.crypto.Util
      * @function
-     * @param {String} s input string to be hashed
-     * @return {String} hexadecimal string of hash value
+     * @param {string} s input string to be hashed
+     * @returns {string} hexadecimal string of hash value
      * @since 1.0.3
      */
     this.md5 = function (s) {
@@ -793,8 +793,8 @@ KJUR.crypto.Util = new function () {
      * @name ripemd160
      * @memberOf KJUR.crypto.Util
      * @function
-     * @param {String} s input string to be hashed
-     * @return {String} hexadecimal string of hash value
+     * @param {string} s input string to be hashed
+     * @returns {string} hexadecimal string of hash value
      * @since 1.0.3
      */
     this.ripemd160 = function (s) {
@@ -856,8 +856,8 @@ KJUR.crypto.MessageDigest = function (params) {
      * @name setAlgAndProvider
      * @memberOf KJUR.crypto.MessageDigest
      * @function
-     * @param {String} alg hash algorithm name
-     * @param {String} prov provider name
+     * @param {string} alg hash algorithm name
+     * @param {string} prov provider name
      * @description
      * @example
      * // for SHA1
@@ -927,7 +927,7 @@ KJUR.crypto.MessageDigest = function (params) {
      * @name updateString
      * @memberOf KJUR.crypto.MessageDigest
      * @function
-     * @param {String} str string to update
+     * @param {string} str string to update
      * @description
      * @example
      * md.updateString('New York');
@@ -941,7 +941,7 @@ KJUR.crypto.MessageDigest = function (params) {
      * @name updateHex
      * @memberOf KJUR.crypto.MessageDigest
      * @function
-     * @param {String} hex hexadecimal string to update
+     * @param {string} hex hexadecimal string to update
      * @description
      * @example
      * md.updateHex('0afe36');
@@ -968,7 +968,7 @@ KJUR.crypto.MessageDigest = function (params) {
      * @name digestString
      * @memberOf KJUR.crypto.MessageDigest
      * @function
-     * @param {String} str string to final update
+     * @param {string} str string to final update
      * @description
      * @example
      * md.digestString('aaa')
@@ -982,7 +982,7 @@ KJUR.crypto.MessageDigest = function (params) {
      * @name digestHex
      * @memberOf KJUR.crypto.MessageDigest
      * @function
-     * @param {String} hex hexadecimal string to final update
+     * @param {string} hex hexadecimal string to final update
      * @description
      * @example
      * md.digestHex('0f2abd')
@@ -1006,7 +1006,7 @@ KJUR.crypto.MessageDigest = function (params) {
  * @name KJUR.crypto.Signature
  * @class Signature class which is very similar to java.security.Signature class
  * @param {Array} params parameters for constructor
- * @property {String} state Current state of this signature object whether 'SIGN', 'VERIFY' or null
+ * @property {string} state Current state of this signature object whether 'SIGN', 'VERIFY' or null
  * @description
  * <br/>
  * As for params of constructor's argument, it can be specify following attributes:
@@ -1071,8 +1071,8 @@ KJUR.crypto.Signature = function (params) {
      * @name setAlgAndProvider
      * @memberOf KJUR.crypto.Signature
      * @function
-     * @param {String} alg signature algorithm name
-     * @param {String} prov provider name
+     * @param {string} alg signature algorithm name
+     * @param {string} prov provider name
      * @description
      * @example
      * md.setAlgAndProvider('SHA1withRSA', 'cryptojs/jsrsa');
@@ -1177,7 +1177,7 @@ KJUR.crypto.Signature = function (params) {
      * @name initVerifyByCertificatePEM
      * @memberOf KJUR.crypto.Signature
      * @function
-     * @param {String} certPEM PEM formatted string of certificate
+     * @param {string} certPEM PEM formatted string of certificate
      * @since 1.0.2
      * @description
      * @example
@@ -1206,7 +1206,7 @@ KJUR.crypto.Signature = function (params) {
      * @name updateString
      * @memberOf KJUR.crypto.Signature
      * @function
-     * @param {String} str string to use for the update
+     * @param {string} str string to use for the update
      * @description
      * @example
      * sig.updateString('aaa')
@@ -1220,7 +1220,7 @@ KJUR.crypto.Signature = function (params) {
      * @name updateHex
      * @memberOf KJUR.crypto.Signature
      * @function
-     * @param {String} hex hexadecimal string to use for the update
+     * @param {string} hex hexadecimal string to use for the update
      * @description
      * @example
      * sig.updateHex('1f2f3f')
@@ -1248,7 +1248,7 @@ KJUR.crypto.Signature = function (params) {
      * @name signString
      * @memberOf KJUR.crypto.Signature
      * @function
-     * @param {String} str string to final update
+     * @param {string} str string to final update
      * @return the signature bytes of a hexadecimal string
      * @description
      * @example
@@ -1263,7 +1263,7 @@ KJUR.crypto.Signature = function (params) {
      * @name signHex
      * @memberOf KJUR.crypto.Signature
      * @function
-     * @param {String} hex hexadecimal string to final update
+     * @param {string} hex hexadecimal string to final update
      * @return the signature bytes of a hexadecimal string
      * @description
      * @example
@@ -1278,7 +1278,7 @@ KJUR.crypto.Signature = function (params) {
      * @name verify
      * @memberOf KJUR.crypto.Signature
      * @function
-     * @param {String} str string to final update
+     * @param {string} str string to final update
      * @return {Boolean} true if the signature was verified, otherwise false
      * @description
      * @example

@@ -39,7 +39,7 @@ ChannelService.prototype.start = function (cb) {
 /**
  * Create channel with name.
  *
- * @param {String} name channel's name
+ * @param {string} name channel's name
  * @memberOf ChannelService
  */
 ChannelService.prototype.createChannel = function (name) {
@@ -56,7 +56,7 @@ ChannelService.prototype.createChannel = function (name) {
 /**
  * Get channel by name.
  *
- * @param {String} name channel's name
+ * @param {string} name channel's name
  * @param {Boolean} create if true, create channel
  * @return {Channel}
  * @memberOf ChannelService
@@ -73,7 +73,7 @@ ChannelService.prototype.getChannel = function (name, create) {
 /**
  * Destroy channel by name.
  *
- * @param {String} name channel name
+ * @param {string} name channel name
  * @memberOf ChannelService
  */
 ChannelService.prototype.destroyChannel = function (name) {
@@ -86,7 +86,7 @@ ChannelService.prototype.destroyChannel = function (name) {
  * Push message by uids.
  * Group the uids by group. ignore any uid if sid not specified.
  *
- * @param {String} route message route
+ * @param {string} route message route
  * @param {Object} msg message that would be sent to client
  * @param {Array} uids the receiver info list, [{uid: userId, sid: frontendServerId}]
  * @param {Object} opts user-defined push options, optional
@@ -124,8 +124,8 @@ ChannelService.prototype.pushMessageByUids = function (route, msg, uids, opts, c
 /**
  * Broadcast message to all the connected clients.
  *
- * @param  {String}   stype      frontend server type string
- * @param  {String}   route      route string
+ * @param {string}   stype      frontend server type string
+ * @param {string}   route      route string
  * @param  {Object}   msg        message
  * @param  {Object}   opts       user-defined broadcast options, optional
  *                               opts.binded: push to binded sessions or all the sessions
@@ -200,7 +200,7 @@ var Channel = function (name, service) {
  * Add user to channel.
  *
  * @param {Number} uid user id
- * @param {String} sid frontend server id which user has connected to
+ * @param {string} sid frontend server id which user has connected to
  */
 Channel.prototype.add = function (uid, sid) {
   if (this.state > ST_INITED) {
@@ -220,7 +220,7 @@ Channel.prototype.add = function (uid, sid) {
  * Remove user from channel.
  *
  * @param {Number} uid user id
- * @param {String} sid frontend server id which user has connected to.
+ * @param {string} sid frontend server id which user has connected to.
  * @return [Boolean] true if success or false if fail
  */
 Channel.prototype.leave = function (uid, sid) {
@@ -271,7 +271,7 @@ Channel.prototype.getMembers = function () {
 /**
  * Get Member info.
  *
- * @param  {String} uid user id
+ * @param {string} uid user id
  * @return {Object} member info
  */
 Channel.prototype.getMember = function (uid) {
@@ -289,7 +289,7 @@ Channel.prototype.destroy = function () {
 /**
  * Push message to all the members in the channel
  *
- * @param {String} route message route
+ * @param {string} route message route
  * @param {Object} msg message that would be sent to client
  * @param {Object} opts user-defined push options, optional
  * @param {Function} cb callback function
@@ -359,7 +359,7 @@ var deleteFrom = function (uid, sid, group) {
 /**
  * push message by group
  *
- * @param route {String} route route message
+ * @param route {string} route route message
  * @param msg {Object} message that would be sent to client
  * @param groups {Object} grouped uids, , key: sid, value: [uid]
  * @param opts {Object} push options

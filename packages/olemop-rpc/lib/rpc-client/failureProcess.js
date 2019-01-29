@@ -6,7 +6,7 @@ const constants = require('../util/constants')
  *
  * @param code {Number} error code number.
  * @param tracer {Object} current rpc tracer.
- * @param serverId {String} rpc remote target server id.
+ * @param serverId {string} rpc remote target server id.
  * @param msg {Object} rpc message.
  * @param opts {Object} rpc client options.
  * @param cb {Function} user rpc callback.
@@ -34,7 +34,7 @@ const failover = function (code, tracer, serverId, msg, opts, cb) {
  *
  * @param code {Number} error code number.
  * @param tracer {Object} current rpc tracer.
- * @param serverId {String} rpc remote target server id.
+ * @param serverId {string} rpc remote target server id.
  * @param msg {Object} rpc message.
  * @param opts {Object} rpc client options.
  * @param cb {Function} user rpc callback.
@@ -84,7 +84,7 @@ const failsafe = function (code, tracer, serverId, msg, opts, cb) {
  *
  * @param code {Number} error code number.
  * @param tracer {Object} current rpc tracer.
- * @param serverId {String} rpc remote target server id.
+ * @param serverId {string} rpc remote target server id.
  * @param msg {Object} rpc message.
  * @param opts {Object} rpc client options.
  * @param cb {Function} user rpc callback.
@@ -98,7 +98,7 @@ const failback = function (code, tracer, serverId, msg, opts, cb) {
  *
  * @param code {Number} error code number.
  * @param tracer {Object} current rpc tracer.
- * @param serverId {String} rpc remote target server id.
+ * @param serverId {string} rpc remote target server id.
  * @param msg {Object} rpc message.
  * @param opts {Object} rpc client options.
  * @param cb {Function} user rpc callback.

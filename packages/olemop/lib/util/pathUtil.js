@@ -6,8 +6,8 @@ var exp = module.exports;
 /**
  * Get system remote service path
  *
- * @param  {String} role server role: frontend, backend
- * @return {String}      path string if the path exist else null
+ * @param {string} role server role: frontend, backend
+ * @returns {string}      path string if the path exist else null
  */
 exp.getSysRemotePath = function (role) {
   var p = path.join(__dirname, '/../common/remote/', role);
@@ -17,9 +17,9 @@ exp.getSysRemotePath = function (role) {
 /**
  * Get user remote service path
  *
- * @param  {String} appBase    application base path
- * @param  {String} serverType server type
- * @return {String}            path string if the path exist else null
+ * @param {string} appBase    application base path
+ * @param {string} serverType server type
+ * @returns {string}            path string if the path exist else null
  */
 exp.getUserRemotePath = function (appBase, serverType) {
   var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.REMOTE);
@@ -29,9 +29,9 @@ exp.getUserRemotePath = function (appBase, serverType) {
 /**
  * Get user remote cron path
  *
- * @param  {String} appBase    application base path
- * @param  {String} serverType server type
- * @return {String}            path string if the path exist else null
+ * @param {string} appBase    application base path
+ * @param {string} serverType server type
+ * @returns {string}            path string if the path exist else null
  */
 exp.getCronPath = function (appBase, serverType) {
   var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.CRON);
@@ -42,7 +42,7 @@ exp.getCronPath = function (appBase, serverType) {
  * List all the subdirectory names of user remote directory
  * which hold the codes for all the server types.
  *
- * @param  {String} appBase application base path
+ * @param {string} appBase application base path
  * @return {Array}         all the subdiretory name under servers/
  */
 exp.listUserRemoteDir = function (appBase) {
@@ -60,9 +60,9 @@ exp.listUserRemoteDir = function (appBase) {
 /**
  * Compose remote path record
  *
- * @param  {String} namespace  remote path namespace, such as: 'sys', 'user'
- * @param  {String} serverType
- * @param  {String} path       remote service source path
+ * @param {string} namespace  remote path namespace, such as: 'sys', 'user'
+ * @param {string} serverType
+ * @param {string} path       remote service source path
  * @return {Object}            remote path record
  */
 exp.remotePathRecord = function (namespace, serverType, path) {
@@ -72,9 +72,9 @@ exp.remotePathRecord = function (namespace, serverType, path) {
 /**
  * Get handler path
  *
- * @param  {String} appBase    application base path
- * @param  {String} serverType server type
- * @return {String}            path string if the path exist else null
+ * @param {string} appBase    application base path
+ * @param {string} serverType server type
+ * @returns {string}            path string if the path exist else null
  */
 exp.getHandlerPath = function (appBase, serverType) {
   var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.HANDLER);
@@ -84,8 +84,8 @@ exp.getHandlerPath = function (appBase, serverType) {
 /**
  * Get admin script root path.
  *
- * @param  {String} appBase application base path
- * @return {String}         script path string
+ * @param {string} appBase application base path
+ * @returns {string}         script path string
  */
 exp.getScriptPath = function (appBase) {
   return path.join(appBase, Constants.DIR.SCRIPT);
@@ -94,8 +94,8 @@ exp.getScriptPath = function (appBase) {
 /**
  * Get logs path.
  *
- * @param  {String} appBase application base path
- * @return {String}         logs path string
+ * @param {string} appBase application base path
+ * @returns {string}         logs path string
  */
 exp.getLogPath = function (appBase) {
   return path.join(appBase, Constants.DIR.LOG);

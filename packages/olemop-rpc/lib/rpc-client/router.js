@@ -24,7 +24,7 @@ const defRoute = function (session, msg, context, cb) {
  * Random algorithm for calculating server id.
  *
  * @param client {Object} rpc client.
- * @param serverType {String} rpc target serverType.
+ * @param serverType {string} rpc target serverType.
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
@@ -42,7 +42,7 @@ const rdRoute = function (client, serverType, msg, cb) {
  * Round-Robin algorithm for calculating server id.
  *
  * @param client {Object} rpc client.
- * @param serverType {String} rpc target serverType.
+ * @param serverType {string} rpc target serverType.
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
@@ -65,7 +65,7 @@ const rrRoute = function (client, serverType, msg, cb) {
  * Weight-Round-Robin algorithm for calculating server id.
  *
  * @param client {Object} rpc client.
- * @param serverType {String} rpc target serverType.
+ * @param serverType {string} rpc target serverType.
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
@@ -116,7 +116,7 @@ const wrrRoute = function (client, serverType, msg, cb) {
  * Least-Active algorithm for calculating server id.
  *
  * @param client {Object} rpc client.
- * @param serverType {String} rpc target serverType.
+ * @param serverType {string} rpc target serverType.
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */
@@ -168,7 +168,7 @@ const laRoute = function (client, serverType, msg, cb) {
  * Consistent-Hash algorithm for calculating server id.
  *
  * @param client {Object} rpc client.
- * @param serverType {String} rpc target serverType.
+ * @param serverType {string} rpc target serverType.
  * @param msg {Object} rpc message.
  * @param cb {Function} cb(err, serverId).
  */

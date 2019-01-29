@@ -108,7 +108,7 @@ export default class DataSync extends Commands {
    * Lookup `key`, when volatile compare timestamps to
    * expire the key.
    *
-   * @param {String} key
+   * @param {string} key
    * @return {Object}
    */
   lookup (key) {
@@ -120,7 +120,7 @@ export default class DataSync extends Commands {
   /**
    * Write the given `cmd`, and `args` to the AOF.
    *
-   * @param {String} cmd
+   * @param {string} cmd
    * @param {Array} args
    */
   writeToAOF (cmd, args) {

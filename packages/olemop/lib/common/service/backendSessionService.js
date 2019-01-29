@@ -35,8 +35,8 @@ BackendSessionService.prototype.create = function (opts) {
 /**
  * Get backend session by frontend server id and session id.
  *
- * @param  {String}   frontendId frontend server id that session attached
- * @param  {String}   sid        session id
+ * @param {string}   frontendId frontend server id that session attached
+ * @param {string}   sid        session id
  * @param  {Function} cb         callback function. args: cb(err, BackendSession)
  *
  * @memberOf BackendSessionService
@@ -53,8 +53,8 @@ BackendSessionService.prototype.get = function (frontendId, sid, cb) {
 /**
  * Get backend sessions by frontend server id and user id.
  *
- * @param  {String}   frontendId frontend server id that session attached
- * @param  {String}   uid        user id binded with the session
+ * @param {string}   frontendId frontend server id that session attached
+ * @param {string}   uid        user id binded with the session
  * @param  {Function} cb         callback function. args: cb(err, BackendSessions)
  *
  * @memberOf BackendSessionService
@@ -71,7 +71,7 @@ BackendSessionService.prototype.getByUid = function (frontendId, uid, cb) {
 /**
  * Kick a session by session id.
  *
- * @param  {String}   frontendId cooperating frontend server id
+ * @param {string}   frontendId cooperating frontend server id
  * @param  {Number}   sid        session id
  * @param  {Function} cb         callback function
  *
@@ -93,9 +93,9 @@ BackendSessionService.prototype.kickBySid = function (frontendId, sid, reason, c
 /**
  * Kick sessions by user id.
  *
- * @param  {String}          frontendId cooperating frontend server id
+ * @param {string}          frontendId cooperating frontend server id
  * @param  {Number|String}   uid        user id
- * @param  {String}          reason     kick reason
+ * @param {string}          reason     kick reason
  * @param  {Function}        cb         callback function
  *
  * @memberOf BackendSessionService
@@ -117,9 +117,9 @@ BackendSessionService.prototype.kickByUid = function (frontendId, uid, reason, c
  * Bind the session with the specified user id. It would finally invoke the
  * the sessionService.bind in the cooperating frontend server.
  *
- * @param  {String}   frontendId cooperating frontend server id
+ * @param {string}   frontendId cooperating frontend server id
  * @param  {Number}   sid        session id
- * @param  {String}   uid        user id
+ * @param {string}   uid        user id
  * @param  {Function} cb         callback function
  *
  * @memberOf BackendSessionService
@@ -137,9 +137,9 @@ BackendSessionService.prototype.bind = function (frontendId, sid, uid, cb) {
  * Unbind the session with the specified user id. It would finally invoke the
  * the sessionService.unbind in the cooperating frontend server.
  *
- * @param  {String}   frontendId cooperating frontend server id
+ * @param {string}   frontendId cooperating frontend server id
  * @param  {Number}   sid        session id
- * @param  {String}   uid        user id
+ * @param {string}   uid        user id
  * @param  {Function} cb         callback function
  *
  * @memberOf BackendSessionService
@@ -156,9 +156,9 @@ BackendSessionService.prototype.unbind = function (frontendId, sid, uid, cb) {
 /**
  * Push the specified customized change to the frontend internal session.
  *
- * @param  {String}   frontendId cooperating frontend server id
+ * @param {string}   frontendId cooperating frontend server id
  * @param  {Number}   sid        session id
- * @param  {String}   key        key in session that should be push
+ * @param {string}   key        key in session that should be push
  * @param  {Object}   value      value in session, primitive js object
  * @param  {Function} cb         callback function
  *
@@ -176,7 +176,7 @@ BackendSessionService.prototype.push = function (frontendId, sid, key, value, cb
 /**
  * Push all the customized changes to the frontend internal session.
  *
- * @param  {String}   frontendId cooperating frontend server id
+ * @param {string}   frontendId cooperating frontend server id
  * @param  {Number}   sid        session id
  * @param  {Object}   settings   key/values in session that should be push
  * @param  {Function} cb         callback function
@@ -261,7 +261,7 @@ BackendSession.prototype.unbind = function (uid, cb) {
 /**
  * Set the key/value into backend session.
  *
- * @param {String} key   key
+ * @param {string} key   key
  * @param {Object} value value
  */
 BackendSession.prototype.set = function (key, value) {
@@ -271,7 +271,7 @@ BackendSession.prototype.set = function (key, value) {
 /**
  * Get the value from backend session by key.
  *
- * @param  {String} key key
+ * @param {string} key key
  * @return {Object}     value
  */
 BackendSession.prototype.get = function (key) {
@@ -281,7 +281,7 @@ BackendSession.prototype.get = function (key) {
 /**
  * Push the key/value in backend session to the front internal session.
  *
- * @param  {String}   key key
+ * @param {string}   key key
  * @param  {Function} cb  callback function
  */
 BackendSession.prototype.push = function (key, cb) {

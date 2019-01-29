@@ -32,7 +32,7 @@ function getPsInfo(param, callback) {
  * convert serverInfo to required format, and the callback will handle the serverInfo
  *
  * @param {Object} param contains serverId etc
- * @param {String} data the output if the command 'ps'
+ * @param {string} data the output if the command 'ps'
  * @param {Function} cb
  */
 function format(param, data, cb) {

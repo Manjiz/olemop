@@ -71,7 +71,7 @@ Application.init = function (opts) {
  *  pomelo start
  *  // app.getBase() -> /home/game
  *
- * @return {String} application base path
+ * @returns {string} application base path
  *
  * @memberOf Application
  */
@@ -82,7 +82,7 @@ Application.getBase = function () {
 /**
  * Override require method in application
  *
- * @param {String} relative path of file
+ * @param {string} relative path of file
  *
  * @memberOf Application
  */
@@ -200,7 +200,7 @@ Application.rpcFilter = function (filter) {
 /**
  * Load component
  *
- * @param  {String} name    (optional) name of the component
+ * @param {string} name    (optional) name of the component
  * @param  {Object} component component instance or factory function of the component
  * @param  {[type]} opts    (optional) construct parameters for the factory function
  * @return {Object}     app instance for chain invoke
@@ -242,8 +242,8 @@ Application.load = function (name, component, opts) {
 /**
  * Load Configure json file to settings.(support different enviroment directory & compatible for old path)
  *
- * @param {String} key environment key
- * @param {String} val environment value
+ * @param {string} key environment key
+ * @param {string} val environment value
  * @param {Boolean} reload whether reload after change default false
  * @return {Server|Mixed} for chaining, or the setting value
  * @memberOf Application
@@ -282,8 +282,8 @@ Application.loadConfigBaseApp = function (key, val, reload) {
 /**
  * Load Configure json file to settings.
  *
- * @param {String} key environment key
- * @param {String} val environment value
+ * @param {string} key environment key
+ * @param {string} val environment value
  * @return {Server|Mixed} for chaining, or the setting value
  * @memberOf Application
  */
@@ -309,7 +309,7 @@ Application.loadConfig = function (key, val) {
  *    cb(null, areas[0].id);
  *  };
  *
- * @param  {String} serverType server type string
+ * @param {string} serverType server type string
  * @param  {Function} routeFunc  route function. routeFunc(session, msg, app, cb)
  * @return {Object}     current application instance for chain invoking
  * @memberOf Application
@@ -461,8 +461,8 @@ Application.stop = function (force) {
  *  app.get('key2');  // 'value2'
  *  app.key2;         // 'value2'
  *
- * @param {String} setting the setting of application
- * @param {String} val the setting's value
+ * @param {string} setting the setting of application
+ * @param {string} val the setting's value
  * @param {Boolean} attach whether attach the settings to application
  * @return {Server|Mixed} for chaining, or the setting value
  * @memberOf Application
@@ -481,8 +481,8 @@ Application.set = function (setting, val, attach) {
 /**
  * Get property from setting
  *
- * @param {String} setting application setting
- * @return {String} val
+ * @param {string} setting application setting
+ * @returns {string} val
  * @memberOf Application
  */
 Application.get = function (setting) {
@@ -492,7 +492,7 @@ Application.get = function (setting) {
 /**
  * Check if `setting` is enabled.
  *
- * @param {String} setting application setting
+ * @param {string} setting application setting
  * @return {Boolean}
  * @memberOf Application
  */
@@ -503,7 +503,7 @@ Application.enabled = function (setting) {
 /**
  * Check if `setting` is disabled.
  *
- * @param {String} setting application setting
+ * @param {string} setting application setting
  * @return {Boolean}
  * @memberOf Application
  */
@@ -514,7 +514,7 @@ Application.disabled = function (setting) {
 /**
  * Enable `setting`.
  *
- * @param {String} setting application setting
+ * @param {string} setting application setting
  * @return {app} for chaining
  * @memberOf Application
  */
@@ -525,7 +525,7 @@ Application.enable = function (setting) {
 /**
  * Disable `setting`.
  *
- * @param {String} setting application setting
+ * @param {string} setting application setting
  * @return {app} for chaining
  * @memberOf Application
  */
@@ -553,9 +553,9 @@ Application.disable = function (setting) {
  *    // executed for development env and connector server type
  *  });
  *
- * @param {String} env application environment
+ * @param {string} env application environment
  * @param {Function} fn callback function
- * @param {String} type server type
+ * @param {string} type server type
  * @return {Application} for chaining
  * @memberOf Application
  */
@@ -582,7 +582,7 @@ Application.configure = function (env, type, fn) {
 /**
  * Register admin modules. Admin modules is the extends point of the monitor system.
  *
- * @param {String} module (optional) module id or provoided by module.moduleId
+ * @param {string} module (optional) module id or provoided by module.moduleId
  * @param {Object} module module object or factory function for module
  * @param {Object} opts construct parameter for module
  * @memberOf Application
@@ -747,7 +747,7 @@ Application.getServerTypes = function () {
 /**
  * Get server info by server id from current server cluster.
  *
- * @param  {String} serverId server id
+ * @param {string} serverId server id
  * @return {Object} server info or undefined
  * @memberOf Application
  */
@@ -758,7 +758,7 @@ Application.getServerById = function (serverId) {
 /**
  * Get server info by server id from servers.json.
  *
- * @param  {String} serverId server id
+ * @param {string} serverId server id
  * @return {Object} server info or undefined
  * @memberOf Application
  */
@@ -770,7 +770,7 @@ Application.getServerFromConfig = function (serverId) {
 /**
  * Get server infos by server type.
  *
- * @param  {String} serverType server type
+ * @param {string} serverType server type
  * @return {Array}      server info list
  * @memberOf Application
  */

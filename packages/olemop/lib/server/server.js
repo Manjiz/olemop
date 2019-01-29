@@ -307,7 +307,7 @@ var response = function (isGlobal, server, err, msg, session, resp, opts, cb) {
 /**
  * Parse route string.
  *
- * @param  {String} route route string, such as: serverName.handlerName.methodName
+ * @param {string} route route string, such as: serverName.handlerName.methodName
  * @return {Object}       parse result object or null for illeagle route string
  */
 var parseRoute = function (route) {

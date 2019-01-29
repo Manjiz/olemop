@@ -17,8 +17,8 @@ var ST_CLOSED = 3
  * @constructor
  * @param {Object} opts construct parameter
  *                 opts.consoleService {Object} consoleService
- *                 opts.id             {String} server id
- *                 opts.type           {String} server type, 'master', 'connector', etc.
+ *                 opts.id             {string} server id
+ *                 opts.type           {string} server type, 'master', 'connector', etc.
  *                 opts.socket         {Object} socket-io object
  *                 opts.reqId          {Number} reqId add by 1
  *                 opts.callbacks      {Object} callbacks
@@ -46,7 +46,7 @@ Util.inherits(MasterAgent, EventEmitter)
 /**
  * master listen to a port and handle register and request
  *
- * @param {String} port
+ * @param {string} port
  * @api public
  */
 MasterAgent.prototype.listen = function (port, cb) {
@@ -132,7 +132,7 @@ MasterAgent.prototype.close = function () {
 /**
  * set module
  *
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} value module object
  * @api public
  */
@@ -143,7 +143,7 @@ MasterAgent.prototype.set = function (moduleId, value) {
 /**
  * get module
  *
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @api public
  */
 MasterAgent.prototype.get = function (moduleId) {
@@ -153,7 +153,7 @@ MasterAgent.prototype.get = function (moduleId) {
 /**
  * getClientById
  *
- * @param {String} clientId
+ * @param {string} clientId
  * @api public
  */
 MasterAgent.prototype.getClientById = function (clientId) {
@@ -163,8 +163,8 @@ MasterAgent.prototype.getClientById = function (clientId) {
 /**
  * request monitor{master node} data from monitor
  *
- * @param {String} serverId
- * @param {String} moduleId module id/name
+ * @param {string} serverId
+ * @param {string} moduleId module id/name
  * @param {Object} msg
  * @param {Function} callback function
  * @api public
@@ -202,9 +202,9 @@ MasterAgent.prototype.request = function (serverId, moduleId, msg, cb) {
 /**
  * request server data from monitor by serverInfo{host:port}
  *
- * @param {String} serverId
+ * @param {string} serverId
  * @param {Object} serverInfo
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} msg
  * @param {Function} callback function
  * @api public
@@ -241,8 +241,8 @@ MasterAgent.prototype.requestServer = function (serverId, serverInfo, moduleId, 
 /**
  * notify a monitor{master node} by id without callback
  *
- * @param {String} serverId
- * @param {String} moduleId module id/name
+ * @param {string} serverId
+ * @param {string} moduleId module id/name
  * @param {Object} msg
  * @api public
  */
@@ -265,9 +265,9 @@ MasterAgent.prototype.notifyById = function (serverId, moduleId, msg) {
 /**
  * notify a monitor by server{host:port} without callback
  *
- * @param {String} serverId
+ * @param {string} serverId
  * @param {Object} serverInfo{host:port}
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} msg
  * @api public
  */
@@ -299,8 +299,8 @@ MasterAgent.prototype.notifyByServer = function (serverId, serverInfo, moduleId,
 /**
  * notify slaves by id without callback
  *
- * @param {String} serverId
- * @param {String} moduleId module id/name
+ * @param {string} serverId
+ * @param {string} moduleId module id/name
  * @param {Object} msg
  * @api public
  */
@@ -322,8 +322,8 @@ MasterAgent.prototype.notifySlavesById = function (serverId, moduleId, msg) {
 /**
  * notify monitors by type without callback
  *
- * @param {String} type serverType
- * @param {String} moduleId module id/name
+ * @param {string} type serverType
+ * @param {string} moduleId module id/name
  * @param {Object} msg
  * @api public
  */
@@ -344,7 +344,7 @@ MasterAgent.prototype.notifyByType = function (type, moduleId, msg) {
 /**
  * notify all the monitors without callback
  *
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} msg
  * @api public
  */
@@ -359,8 +359,8 @@ MasterAgent.prototype.notifyAll = function (moduleId, msg) {
 /**
  * notify a client by id without callback
  *
- * @param {String} clientId
- * @param {String} moduleId module id/name
+ * @param {string} clientId
+ * @param {string} moduleId module id/name
  * @param {Object} msg
  * @api public
  */
@@ -389,8 +389,8 @@ MasterAgent.prototype.notifyCommand = function (command, moduleId, msg) {
  * add monitor,client to connection -- idMap
  *
  * @param {Object} agent agent object
- * @param {String} id
- * @param {String} type serverType
+ * @param {string} id
+ * @param {string} type serverType
  * @param {Object} socket socket-io object
  * @api private
  */
@@ -421,8 +421,8 @@ var addConnection = function (agent, id, type, pid, info, socket) {
  * remove monitor,client connection -- idMap
  *
  * @param {Object} agent agent object
- * @param {String} id
- * @param {String} type serverType
+ * @param {string} id
+ * @param {string} type serverType
  * @api private
  */
 var removeConnection = function (agent, id, type, info) {
@@ -472,7 +472,7 @@ var removeConnection = function (agent, id, type, info) {
  *
  * @param {Object} socket socket-io object
  * @param {Number} reqId request id
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} msg message
  * @api private
  */
@@ -485,7 +485,7 @@ var sendToMonitor = function (socket, reqId, moduleId, msg) {
  *
  * @param {Object} socket socket-io object
  * @param {Number} reqId request id
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} msg message
  * @api private
  */
@@ -501,7 +501,7 @@ var doSend = function (socket, topic, msg) {
  * broadcast msg to monitor
  *
  * @param {Object} record registered modules
- * @param {String} moduleId module id/name
+ * @param {string} moduleId module id/name
  * @param {Object} msg message
  * @api private
  */

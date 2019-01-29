@@ -41,7 +41,7 @@ export const incr = (key: string) => {
 
 /**
  * INCRBY <key>  counter with step <num>
- * @param {String} key
+ * @param {string} key
  * @param {number} num
  */
 export const incrby = (key: string, num: number) => {

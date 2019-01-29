@@ -89,7 +89,7 @@ Connector.encode = Connector.prototype.encode = function (reqId, route, msg) {
  *   route: route length bytes
  *   body: the rest bytes
  *
- * @param  {String} data socket.io package from client
+ * @param {string} data socket.io package from client
  * @return {Object}      message object
  */
 Connector.decode = Connector.prototype.decode = function (msg) {

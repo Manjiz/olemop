@@ -15,9 +15,9 @@ var MS_OF_SECOND = 1000
  * @class ConsoleService
  * @constructor
  * @param {Object} opts construct parameter
- *                 opts.type 	{String} server type, 'master', 'connector', etc.
- *                 opts.id 		{String} server id
- *                 opts.host 	{String} (monitor only) master server host
+ *                 opts.type 	{string} server type, 'master', 'connector', etc.
+ *                 opts.id 		{string} server id
+ *                 opts.host 	{string} (monitor only) master server host
  *                 opts.port 	{String | Number} listen port for master or master port for monitor
  *                 opts.master  {Boolean} current service is master or monitor
  *                 opts.info 	{Object} more server info for current server, {id, serverType, host, port}
@@ -106,7 +106,7 @@ ConsoleService.prototype.stop = function () {
 /**
  * register a new adminConsole module
  *
- * @param {String} moduleId adminConsole id/name
+ * @param {string} moduleId adminConsole id/name
  * @param {Object} module module object
  * @api public
  */
@@ -117,7 +117,7 @@ ConsoleService.prototype.register = function (moduleId, module) {
 /**
  * enable adminConsole module
  *
- * @param {String} moduleId adminConsole id/name
+ * @param {string} moduleId adminConsole id/name
  * @api public
  */
 ConsoleService.prototype.enable = function (moduleId) {
@@ -133,7 +133,7 @@ ConsoleService.prototype.enable = function (moduleId) {
 /**
  * disable adminConsole module
  *
- * @param {String} moduleId adminConsole id/name
+ * @param {string} moduleId adminConsole id/name
  * @api public
  */
 ConsoleService.prototype.disable = function (moduleId) {
@@ -152,8 +152,8 @@ ConsoleService.prototype.disable = function (moduleId) {
 /**
  * call concrete module and handler(monitorHandler,masterHandler,clientHandler)
  *
- * @param {String} moduleId adminConsole id/name
- * @param {String} method handler
+ * @param {string} moduleId adminConsole id/name
+ * @param {string} method handler
  * @param {Object} msg message
  * @param {Function} cb callback function
  * @api public
@@ -231,7 +231,7 @@ ConsoleService.prototype.command = function (command, moduleId, msg, cb) {
 /**
  * set module data to a map
  *
- * @param {String} moduleId adminConsole id/name
+ * @param {string} moduleId adminConsole id/name
  * @param {Object} value module data
  * @api public
  */
@@ -243,7 +243,7 @@ ConsoleService.prototype.set = function (moduleId, value) {
 /**
  * get module data from map
  *
- * @param {String} moduleId adminConsole id/name
+ * @param {string} moduleId adminConsole id/name
  * @api public
  */
 ConsoleService.prototype.get = function (moduleId) {
@@ -254,7 +254,7 @@ ConsoleService.prototype.get = function (moduleId) {
  * register a module service
  *
  * @param {Object} service consoleService object
- * @param {String} moduleId adminConsole id/name
+ * @param {string} moduleId adminConsole id/name
  * @param {Object} module module object
  * @api private
  */
@@ -464,9 +464,9 @@ module.exports.createMasterConsole = function (opts) {
  * Create monitor ConsoleService
  *
  * @param {Object} opts construct parameter
- *                      opts.type {String} server type, 'master', 'connector', etc.
- *                      opts.id {String} server id
- *                      opts.host {String} master server host
+ *                      opts.type {string} server type, 'master', 'connector', etc.
+ *                      opts.id {string} server id
+ *                      opts.host {string} master server host
  *                      opts.port {String | Number} master port
  */
 module.exports.createMonitorConsole = function (opts) {
