@@ -118,8 +118,8 @@ const configureLevels = (levels) => {
  *     args: command line arguments, such as: args:1
  *     opts: key/value from opts argument of configure function
  *
- * @param {string|object} config configure filename or configure object
- * @param {object} opts options
+ * @param {string|Object} config configure filename or configure object
+ * @param {Object} opts options
  */
 const configure = (config, opts) => {
 	const filename = config

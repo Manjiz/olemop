@@ -20,7 +20,7 @@ module.exports.moduleId = 'monitorLog';
  *
  * @class Module
  * @constructor
- * @param {object} opts
+ * @param {Object} opts
  * @api public
  */
 var Module = function (opts) {

@@ -63,9 +63,9 @@ const requireUncached = (m) => require(m)
  * @param  {string} mpath    the path of modules. Load all the files under the
  *                           path, but *not* recursively if the path contain
  *                           any sub-directory.
- * @param  {object} context  the context parameter that would be pass to the
+ * @param  {Object} context  the context parameter that would be pass to the
  *                           module factory function.
- * @return {object}          module that has loaded.
+ * @return {Object}          module that has loaded.
  */
 module.exports.load = function (mpath, context) {
 	if (!mpath) {

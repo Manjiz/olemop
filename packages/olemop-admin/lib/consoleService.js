@@ -336,7 +336,7 @@ var doScheduleJob = function (args) {
  *
  * @param {Function} outer outer function
  * @param {Function} inner inner function
- * @param {object} event
+ * @param {Object} event
  * @api private
  */
 var exportEvent = function (outer, inner, event) {

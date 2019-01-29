@@ -118,10 +118,10 @@ OutBuffer.prototype.writeString = function (str) {
 	this.offset += len
 }
 
-OutBuffer.prototype.writeObject = function (object) {
-	const type = utils.getType(object)
+OutBuffer.prototype.writeObject = function (obj) {
+	const type = utils.getType(obj)
 	if (!type) {
-		throw new Error(`invalid writeObject ${object}`)
+		throw new Error(`invalid writeObject ${obj}`)
 	}
 
 	this.writeByte(type)
@@ -131,53 +131,53 @@ OutBuffer.prototype.writeObject = function (object) {
 	if (typeMap['null'] === type) return
 
 	if (typeMap['buffer'] === type) {
-		this.writeBuffer(object)
+		this.writeBuffer(obj)
 		return
 	}
 
 	if (typeMap['array'] === type) {
-		const len = object.length
+		const len = obj.length
 		this.writeVInt(len)
 		for (let i = 0; i < len; i++) {
-			this.writeObject(object[i])
+			this.writeObject(obj[i])
 		}
 		return
 	}
 
 	if (typeMap['string'] === type) {
-		this.writeString(object)
+		this.writeString(obj)
 		return
 	}
 
 	if (typeMap['object'] === type) {
-		this.writeString(JSON.stringify(object))
+		this.writeString(JSON.stringify(obj))
 		// logger.error('invalid writeObject object must be bearcat beans and should implement writeFields and readFields interfaces')
 		return
 	}
 
 	if (typeMap['bean'] === type) {
-		this.writeString(object['$id'])
-		object.writeFields(this)
+		this.writeString(obj['$id'])
+		obj.writeFields(this)
 		return
 	}
 
 	if (typeMap['boolean'] === type) {
-		this.writeBoolean(object)
+		this.writeBoolean(obj)
 		return
 	}
 
 	if (typeMap['float'] === type) {
-		this.writeFloat(object)
+		this.writeFloat(obj)
 		return
 	}
 
 	if (typeMap['uint'] === type) {
-		this.writeUInt(object)
+		this.writeUInt(obj)
 		return
 	}
 
 	if (typeMap['sint'] === type) {
-		this.writeSInt(object)
+		this.writeSInt(obj)
 		return
 	}
 }
