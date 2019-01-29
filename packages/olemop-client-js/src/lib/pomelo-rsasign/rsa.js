@@ -47,7 +47,7 @@ function parseBigInt(str, r) {
 // this is use to format the input for openssl
 function linebrk(buf, n) {
 	var s = buf.toString('ascii')
-	var ret = ""
+	var ret = ''
 	var i = 0
 	while (i + n < s.length) {
 		ret += s.substring(i, i + n) + "\n"
@@ -277,7 +277,7 @@ function RSADecrypt(ctext) {
 
 // Added by @eschnou
 function baToString(b) {
-	var ret = ""
+	var ret = ''
 	for (var i=0; i < b.length; i++) {
 		var c = b[i] & 255
 		if (c < 128) { // utf-8 decode
@@ -365,7 +365,7 @@ _RSASIGN_HASHHEXFUNC['ripemd160'] = function (s){return KJUR.crypto.Util.ripemd1
 //_RSASIGN_HASHHEXFUNC['sha1'] =   function (s){return sha1.hex(s);}   // http://user1.matsumoto.ne.jp/~goma/js/hash.html
 //_RSASIGN_HASHHEXFUNC['sha256'] = function (s){return sha256.hex;}    // http://user1.matsumoto.ne.jp/~goma/js/hash.html
 
-var _RE_HEXDECONLY = new RegExp("")
+var _RE_HEXDECONLY = new RegExp('')
 _RE_HEXDECONLY.compile("[^0-9a-f]", "gi")
 
 // ========================================================================
@@ -379,7 +379,7 @@ function _rsasign_getHexPaddedDigestInfoForString(s, keySize, hashAlg) {
 
   var sHead = "0001"
   var sTail = "00" + _RSASIGN_DIHEAD[hashAlg] + sHashHex
-  var sMid = ""
+  var sMid = ''
   var fLen = pmStrLen - sHead.length - sTail.length
   for (var i = 0; i < fLen; i += 2) {
     sMid += "ff"
@@ -389,7 +389,7 @@ function _rsasign_getHexPaddedDigestInfoForString(s, keySize, hashAlg) {
 }
 
 function _zeroPaddingOfSignature(hex, bitLength) {
-  var s = ""
+  var s = ''
   var nZero = bitLength / 4 - hex.length
   for (var i = 0; i < nZero; i++) {
     s = s + "0"
@@ -486,7 +486,7 @@ function _rsasign_verifyString(sMsg, hSig) {
   if (hSig.length != Math.ceil(this.n.bitLength() / 4)) {
   	return 0
   }
-  hSig = hSig.replace(/[ \n]+/g, "")
+  hSig = hSig.replace(/[ \n]+/g, '')
   var biSig = parseBigInt(hSig, 16)
   var biDecryptedSig = this.doPublic(biSig)
   var hDigestInfo = biDecryptedSig.toString(16).replace(/^1f+00/, '')
@@ -504,9 +504,9 @@ function _rsasign_verifyString(sMsg, hSig) {
 
 function _rsapem_pemToBase64(sPEMPrivateKey) {
   var s = sPEMPrivateKey
-  s = s.replace("-----BEGIN RSA PRIVATE KEY-----", "")
-  s = s.replace("-----END RSA PRIVATE KEY-----", "")
-  s = s.replace(/[ \n]+/g, "")
+  s = s.replace("-----BEGIN RSA PRIVATE KEY-----", '')
+  s = s.replace("-----END RSA PRIVATE KEY-----", '')
+  s = s.replace(/[ \n]+/g, '')
   return s
 }
 
@@ -723,7 +723,7 @@ KJUR.crypto.Util = new function () {
 
 	var hHead = "0001"
 	var hTail = "00" + hDigestInfo
-	var hMid = ""
+	var hMid = ''
 	var fLen = pmStrLen - hHead.length - hTail.length
 	for (var i = 0; i < fLen; i += 2) {
 	    hMid += "ff"
@@ -1058,7 +1058,7 @@ KJUR.crypto.Signature = function (params) {
     }
 
     this._zeroPaddingOfSignature = function (hex, bitLength) {
-	var s = ""
+	var s = ''
 	var nZero = bitLength / 4 - hex.length
 	for (var i = 0; i < nZero; i++) {
 	    s = s + "0"

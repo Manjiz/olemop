@@ -10,15 +10,15 @@ var protocol = require('../util/protocol')
 var utils = require('../util/utils')
 
 var Client = function (opt) {
-	this.id = ""
+	this.id = ''
 	this.reqId = 1
 	this.callbacks = {}
 	this.listeners = {}
 	this.state = Client.ST_INITED
 	this.socket = null
 	opt = opt || {}
-	this.username = opt['username'] || ""
-	this.password = opt['password'] || ""
+	this.username = opt['username'] || ''
+	this.password = opt['password'] || ''
 	this.md5 = opt['md5'] || false
 }
 

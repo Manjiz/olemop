@@ -220,7 +220,7 @@ function bnToString(b) {
   else if (b == 32) k = 5
   else if (b == 4) k = 2
   else return this.toRadix(b)
-  var km = (1<<k)-1, d, m = false, r = "", i = this.t
+  var km = (1<<k)-1, d, m = false, r = '', i = this.t
   var p = this.DB-(i*this.DB)%k
   if (i-- > 0) {
     if (p < this.DB && (d = this[i]>>p) > 0) {
@@ -649,7 +649,7 @@ if (b == null) b = 10
 if (this.signum() == 0 || b < 2 || b > 36) return "0"
 var cs = this.chunkSize(b)
 var a = Math.pow(b,cs)
-var d = nbv(a), y = nbi(), z = nbi(), r = ""
+var d = nbv(a), y = nbi(), z = nbi(), r = ''
 this.divRemTo(d,y,z)
 while(y.signum() > 0) {
  r = (a+z.intValue()).toString(b).substr(1) + r

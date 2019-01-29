@@ -64,7 +64,7 @@ var server = thrift.createServer(Calculator, {
 
     var entry = new SharedStruct()
     entry.key = logid
-    entry.value = ""+val
+    entry.value = ''+val
     data[logid] = entry
 
     result(null, val)

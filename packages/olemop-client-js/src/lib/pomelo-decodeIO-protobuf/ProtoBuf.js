@@ -243,7 +243,7 @@ function loadProtoBuf(ByteBuffer) {
                         //     if (err) {
                         //         callback(null)
                         //     }
-                        //     else callback(""+data)
+                        //     else callback(''+data)
                         // })
                     } else {
                         try {
@@ -375,7 +375,7 @@ function loadProtoBuf(ByteBuffer) {
                  * @type {string}
                  * @expose
                  */
-                this.source = ""+proto
+                this.source = ''+proto
 
                 /**
                  * Current index.
@@ -931,7 +931,7 @@ function loadProtoBuf(ByteBuffer) {
                 var msg = {} // Note: At some point we might want to exclude the parser, so we need a dict.
                 token = this.tn.next()
                 if (!Lang.NAME.test(token)) {
-                    throw(new Error("Illegal message name"+(parent ? " in message "+parent["name"] : "")+" at line "+this.tn.line+": "+token))
+                    throw(new Error("Illegal message name"+(parent ? " in message "+parent["name"] : '')+" at line "+this.tn.line+": "+token))
                 }
                 msg["name"] = token
                 token = this.tn.next()
@@ -1459,7 +1459,7 @@ function loadProtoBuf(ByteBuffer) {
             Namespace.prototype.resolve = function (qn, excludeFields) {
                 var part = qn.split(".")
                 var ptr = this, i=0
-                if (part[i] == "") { // Fully qualified name, e.g. ".My.Message'
+                if (part[i] == '') { // Fully qualified name, e.g. ".My.Message'
                     while (ptr.parent != null) {
                         ptr = ptr.parent
                     }
@@ -2276,7 +2276,7 @@ function loadProtoBuf(ByteBuffer) {
                 }
                 // Length-delimited string
                 if (this.type == ProtoBuf.TYPES["string"]) {
-                    return ""+value
+                    return ''+value
                 }
                 // Length-delimited bytes
                 if (this.type == ProtoBuf.TYPES["bytes"]) {
@@ -2927,7 +2927,7 @@ function loadProtoBuf(ByteBuffer) {
                  * @type {ProtoBuf.Reflect.Namespace}
                  * @expose
                  */
-                this.ns = new Reflect.Namespace(null, "") // Global namespace
+                this.ns = new Reflect.Namespace(null, '') // Global namespace
 
                 /**
                  * Namespace pointer.
@@ -3073,7 +3073,7 @@ function loadProtoBuf(ByteBuffer) {
                 if (typeof def["rule"] !== 'string' || typeof def["name"] !== 'string' || typeof def["type"] !== 'string' || typeof def["id"] === 'undefined') {
                     return false
                 }
-                if (!Lang.RULE.test(def["rule"]) || !Lang.NAME.test(def["name"]) || !Lang.TYPEREF.test(def["type"]) || !Lang.ID.test(""+def["id"])) {
+                if (!Lang.RULE.test(def["rule"]) || !Lang.NAME.test(def["name"]) || !Lang.TYPEREF.test(def["type"]) || !Lang.ID.test(''+def["id"])) {
                     return false
                 }
                 if (typeof def["options"] != 'undefined') {
@@ -3116,7 +3116,7 @@ function loadProtoBuf(ByteBuffer) {
                     if (typeof def["values"][i]["name"] !== 'string' || typeof def["values"][i]["id"] === 'undefined') {
                         return false
                     }
-                    if (!Lang.NAME.test(def["values"][i]["name"]) || !Lang.NEGID.test(""+def["values"][i]["id"])) {
+                    if (!Lang.NAME.test(def["values"][i]["name"]) || !Lang.NEGID.test(''+def["values"][i]["id"])) {
                         return false
                     }
                 }
@@ -3300,10 +3300,10 @@ function loadProtoBuf(ByteBuffer) {
                             importRoot = this.importRoot
                         } else { // Otherwise compute from filename
                             if (filename.indexOf("/") >= 0) { // Unix
-                                importRoot = filename.replace(/\/[^\/]*$/, "")
-                                if (/* /file.proto */ importRoot === "") importRoot = "/"
+                                importRoot = filename.replace(/\/[^\/]*$/, '')
+                                if (/* /file.proto */ importRoot === '') importRoot = "/"
                             } else if (filename.indexOf("\\") >= 0) { // Windows
-                                importRoot = filename.replace(/\\[^\\]*$/, "")
+                                importRoot = filename.replace(/\\[^\\]*$/, '')
                                 delim = '\\'
                             } else {
                                 importRoot = "."
@@ -3328,9 +3328,9 @@ function loadProtoBuf(ByteBuffer) {
                                 throw(new Error("Failed to import '"+importFilename+"' in '"+filename+"': File not found"))
                             }
                             if (/\.json$/i.test(importFilename)) { // Always possible
-                                this["import"](JSON.parse(contents+""), importFilename) // May throw
+                                this["import"](JSON.parse(contents+''), importFilename) // May throw
                             } else {
-                                this["import"]((new ProtoBuf.DotProto.Parser(contents+"")).parse(), importFilename) // May throw
+                                this["import"]((new ProtoBuf.DotProto.Parser(contents+'')).parse(), importFilename) // May throw
                             }
                         } else { // Import structure
                             if (!filename) {
@@ -3551,7 +3551,7 @@ function loadProtoBuf(ByteBuffer) {
                 filename = builder
                 builder = null
             }
-            return ProtoBuf.loadJson((new ProtoBuf.DotProto.Parser(proto+"")).parse(), builder, filename)
+            return ProtoBuf.loadJson((new ProtoBuf.DotProto.Parser(proto+'')).parse(), builder, filename)
         }
 
         /**

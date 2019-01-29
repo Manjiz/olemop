@@ -30,13 +30,13 @@ utils.format = function (date, format) {
     }
 
     if (/(y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length))
+        format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
     }
     for (var k in o) {
         if (new RegExp("(" + k + ")").test(format)) {
             format = format.replace(RegExp.$1,
                 RegExp.$1.length === 1 ? o[k] :
-                ("00" + o[k]).substr(("" + o[k]).length))
+                ("00" + o[k]).substr(('' + o[k]).length))
         }
     }
 
@@ -96,7 +96,7 @@ utils.defaultAuthUser = function (msg, env, cb) {
     if (md5) {
         for (var i = 0; i < len; i++) {
             var user = adminUser[i]
-            var p = ""
+            var p = ''
             if (user['username'] === username) {
                 p = utils.md5(user['password'])
                 if (password === p) {

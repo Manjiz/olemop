@@ -1586,7 +1586,7 @@ function loadByteBuffer(Long) {
          * @returns {number} Number of bytes required
          */
         ByteBuffer.calculateUTF8String = function (str) {
-            str = ""+str
+            str = ''+str
             var bytes = 0
             for (var i=0, k=str.length; i<k; ++i) {
                 // Does not throw since JS strings are already UTF8 encoded
@@ -1601,7 +1601,7 @@ function loadByteBuffer(Long) {
          * @inner
          */
         var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
-        B64 = B64+"" // Prevent CC from inlining this for less code size
+        B64 = B64+'' // Prevent CC from inlining this for less code size
 
         /**
          * Encodes a ByteBuffer's contents to a base64 string.
@@ -1690,7 +1690,7 @@ function loadByteBuffer(Long) {
             } else if (bb.length < bb.offset) {
                 bb = bb.clone().flip()
             }
-            if (bb.array === null) return ""
+            if (bb.array === null) return ''
             var val, out = []
             for (var i=bb.offset, k=bb.length; i<k; ++i) {
                 val = bb.view.getUint8(i).toString(16).toUpperCase()
@@ -1816,7 +1816,7 @@ function loadByteBuffer(Long) {
         ByteBuffer.prototype.readUTF8String = function (chars, offset) {
             var advance = typeof offset === 'undefined'
             offset = typeof offset !== 'undefined' ? offset : this.offset
-            var dec, result = "", start = offset
+            var dec, result = '', start = offset
             for (var i=0; i<chars; ++i) {
                 dec = ByteBuffer.decodeUTF8Char(this, offset)
                 offset += dec["length"]
@@ -1845,7 +1845,7 @@ function loadByteBuffer(Long) {
         ByteBuffer.prototype.readUTF8StringBytes = function (length, offset) {
             var advance = typeof offset === 'undefined'
             offset = typeof offset !== 'undefined' ? offset : this.offset
-            var dec, result = "", start = offset
+            var dec, result = '', start = offset
             length = offset + length // Limit
             while (offset < length) {
                 dec = ByteBuffer.decodeUTF8Char(this, offset)
@@ -1853,7 +1853,7 @@ function loadByteBuffer(Long) {
                 result += String.fromCharCode(dec["char"])
             }
             if (offset != length) {
-                throw(new Error("Actual string length differs from the specified: "+((offset>length ? "+" : "")+offset-length)+" bytes"))
+                throw(new Error("Actual string length differs from the specified: "+((offset>length ? "+" : '')+offset-length)+" bytes"))
             }
             if (advance) {
                 this.offset = offset
@@ -1874,7 +1874,7 @@ function loadByteBuffer(Long) {
          * @expose
          */
         ByteBuffer.prototype.writeLString = function (str, offset) {
-            str = ""+str
+            str = ''+str
             var advance = typeof offset === 'undefined'
             offset = typeof offset !== 'undefined' ? offset : this.offset
             var encLen = ByteBuffer.encodeUTF8Char(str.length, this, offset)
@@ -1920,7 +1920,7 @@ function loadByteBuffer(Long) {
          * @expose
          */
         ByteBuffer.prototype.writeVString = function (str, offset) {
-            str = ""+str
+            str = ''+str
             var advance = typeof offset === 'undefined'
             offset = typeof offset !== 'undefined' ? offset : this.offset
             var encLen = this.writeVarint32(ByteBuffer.calculateUTF8String(str), offset)
@@ -1969,7 +1969,7 @@ function loadByteBuffer(Long) {
          * @expose
          */
         ByteBuffer.prototype.writeCString = function (str, offset) {
-            str = ""+str
+            str = ''+str
             var advance = typeof offset === 'undefined'
             offset = typeof offset !== 'undefined' ? offset : this.offset
             var encLen = this.writeUTF8String(str, offset)
@@ -1993,7 +1993,7 @@ function loadByteBuffer(Long) {
         ByteBuffer.prototype.readCString = function (offset) {
             var advance = typeof offset === 'undefined'
             offset = typeof offset !== 'undefined' ? offset : this.offset
-            var dec, result = "", start = offset
+            var dec, result = '', start = offset
             do {
                 dec = ByteBuffer.decodeUTF8Char(this, offset)
                 offset += dec["length"]
@@ -2057,7 +2057,7 @@ function loadByteBuffer(Long) {
             if (wrap < 1) wrap = 16
 
             // Left colum: hex with offsets
-            var out = "",
+            var out = '',
                 lines = [],
                 val,
                 view = this.view
@@ -2099,17 +2099,17 @@ function loadByteBuffer(Long) {
 
             // Right column: ASCII, using dots for (usually) non-printable characters
             var n = 0
-            out = ""
+            out = ''
             for (i=0, k=this.array.byteLength; i<k; ++i) {
                 if (i>0 && i%wrap == 0) {
                     lines[n] += " "+out
-                    out = ""
+                    out = ''
                     n++
                 }
                 val = view.getUint8(i)
                 out += val > 32 && val < 127 ? String.fromCharCode(val) : "."
             }
-            if (out != "") {
+            if (out != '') {
                 lines[n] += " "+out
             }
             return lines.join("\n")
@@ -2136,7 +2136,7 @@ function loadByteBuffer(Long) {
          * @expose
          */
         ByteBuffer.prototype.toHex = function (debug) {
-            var out = "",
+            var out = '',
                 val,
                 view = this.view,
                 i, k
@@ -2187,7 +2187,7 @@ function loadByteBuffer(Long) {
          * @expose
          */
         ByteBuffer.prototype.toBase64 = function () {
-            if (this.array === null || this.offset >= this.length) return ""
+            if (this.array === null || this.offset >= this.length) return ''
             return ByteBuffer.encode64(this)
         }
 
@@ -2197,7 +2197,7 @@ function loadByteBuffer(Long) {
          * @expose
          */
         ByteBuffer.prototype.toUTF8 = function () {
-            if (this.array === null || this.offset >= this.length) return ""
+            if (this.array === null || this.offset >= this.length) return ''
             return this.readUTF8StringBytes(this.length - this.offset, this.offset)["string"]
         }
 
@@ -2210,7 +2210,7 @@ function loadByteBuffer(Long) {
          * @expose
          */
         ByteBuffer.prototype.toString = function (enc) {
-            enc = enc || ""
+            enc = enc || ''
             switch (enc) {
                 case "utf8":
                     return this.toUTF8()

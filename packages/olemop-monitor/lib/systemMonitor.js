@@ -30,7 +30,7 @@ function getSysInfo(callback) {
  */
 function format(data) {
 	const time = util.formatTime(new Date())
-  const outputArray = data.toString().replace(/^\s+|\s+$/g,"").split(/\s+/)
+  const outputArray = data.toString().replace(/^\s+|\s+$/g,'').split(/\s+/)
   const outputValues = []
   let counter = 0
   outputArray.forEach((item) => {

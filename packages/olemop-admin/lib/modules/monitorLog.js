@@ -77,7 +77,7 @@ var fetchLogs = function (root, msg, callback) {
 	var endLogs = []
 	exec('tail -n ' + number + ' ' + filePath, function (error, output) {
 		var endOut = []
-		output = output.replace(/^\s+|\s+$/g, "").split(/\s+/)
+		output = output.replace(/^\s+|\s+$/g, '').split(/\s+/)
 
 		for (var i=5; i<output.length; i+=6) {
 			endOut.push(output[i])

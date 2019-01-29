@@ -154,7 +154,7 @@ MailBox.prototype.close = function () {
 /**
  * send message to remote server
  *
- * @param msg {service:"", method:"", args:[]}
+ * @param msg {service:'', method:'', args:[]}
  * @param opts {} attach info to send method
  * @param cb declaration decided by remote interface
  */
@@ -192,7 +192,7 @@ MailBox.prototype.send = function (tracer, msg, opts, cb) {
 /**
  * Factory method to create mailbox
  *
- * @param {Object} server remote server info {id:"", host:"", port:""}
+ * @param {Object} server remote server info {id:'', host:'', port:''}
  * @param {Object} opts construct parameters
  *                      opts.bufferMsg {Boolean} msg should be buffered or send immediately.
  *                      opts.interval {Boolean} msg queue flush interval if bufferMsg is true. default is 50 ms

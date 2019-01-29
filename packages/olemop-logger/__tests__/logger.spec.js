@@ -58,10 +58,10 @@ describe('configure', () => {
     log4js.configure = jest.fn()
 
     logger.configure({
-      "appenders": {
-        "olemop": {
-          "type": "file",
-          "filename": "${opts:base}/logs/olemop-${opts:serverId}.log"
+      appenders: {
+        olemop: {
+          type: 'file',
+          filename: "${opts:base}/logs/olemop-${opts:serverId}.log"
         }
       }
     }, {

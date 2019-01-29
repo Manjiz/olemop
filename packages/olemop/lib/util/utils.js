@@ -107,13 +107,13 @@ utils.format = function (date, format) {
   }
 
   if (/(y+)/.test(format)) {
-    format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length))
+    format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
 
   for (var k in o) {
     if (new RegExp("(" + k + ")").test(format)) {
       format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] :
-        ("00" + o[k]).substr(("" + o[k]).length))
+        ("00" + o[k]).substr(('' + o[k]).length))
     }
   }
   return format
@@ -135,7 +135,7 @@ utils.hasChineseChar = function (str) {
  */
 utils.unicodeToUtf8 = function (str) {
   var i, len, ch
-  var utf8Str = ""
+  var utf8Str = ''
   len = str.length
   for (i = 0; i < len; i++) {
     ch = str.charCodeAt(i)
@@ -217,7 +217,7 @@ utils.checkPort = function (server, cb) {
       ssh_params = ssh_params.join(' ')
     }
     else {
-      ssh_params = ""
+      ssh_params = ''
     }
     if (!self.isLocal(host)) {
       cmd = util.format('ssh %s %s "netstat -an|awk \'{print $4}\'|grep %s|wc -l"', host, ssh_params, port)

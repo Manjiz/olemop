@@ -13,9 +13,9 @@
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
  *
  * IN NO EVENT SHALL TOM WU BE LIABLE FOR ANY SPECIAL, INCIDENTAL,
  * INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES WHATSOEVER
@@ -37,7 +37,7 @@ var b64pad="="
 function hex2b64(h) {
   var i
   var c
-  var ret = ""
+  var ret = ''
   for (i = 0; i+3 <= h.length; i+=3) {
     c = parseInt(h.substring(i,i+3),16)
     ret += b64map.charAt(c >> 6) + b64map.charAt(c & 63)
@@ -56,7 +56,7 @@ function hex2b64(h) {
 
 // convert a base64 string to hex
 function b64tohex(s) {
-  var ret = ""
+  var ret = ''
   var i
   var k = 0 // b64 state, 0-3
   var slop
