@@ -342,15 +342,15 @@ var doForward = function (app, msg, session, routeRecord, cb) {
       session.export(),
       function (err, resp, opts) {
         if (err) {
-          logger.error('fail to process remote message:' + err.stack);
+          logger.error(`fail to process remote message: ${err.stack}`)
         }
         finished = true;
         utils.invokeCallback(cb, err, resp, opts);
       }
     );
-  } catch(err) {
+  } catch (err) {
     if (!finished) {
-      logger.error('fail to forward message:' + err.stack)
+      logger.error(`fail to forward message: ${err.stack}`)
       utils.invokeCallback(cb, err)
     }
   }

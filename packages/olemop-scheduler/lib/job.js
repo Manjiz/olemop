@@ -47,7 +47,7 @@ pro.run = function (){
     if (late>warnLimit)
       logger.warn('run Job count ' + jobCount + ' late :' + late + ' lateCount ' + (++lateCount));
     this.func(this.data);
-  }catch(e){
+  } catch (e){
     logger.error("Job run error for exception ! " + e.stack);
   }
 };

@@ -14,7 +14,7 @@ module.exports = function (maxLag) {
 var Filter = function (maxLag) {
   try {
     toobusy = require('toobusy');
-  } catch(e) {
+  } catch (e) {
   }
   if (toobusy) {
     toobusy.maxLag(maxLag);

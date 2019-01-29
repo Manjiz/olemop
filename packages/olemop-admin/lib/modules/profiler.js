@@ -4,7 +4,7 @@ var utils = require('../util/utils');
 var profiler = null;
 try {
 	profiler = require('v8-profiler');
-} catch(e) {
+} catch (e) {
 }
 
 var fs = require('fs');

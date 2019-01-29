@@ -89,7 +89,7 @@ var fetchLogs = function (root, msg, callback) {
 			var json;
 			try{
 				json = JSON.parse(endOut[j]);
-			} catch(e) {
+			} catch (e) {
 				logger.error('the log cannot parsed to json, '+e);
 				continue;
 			}

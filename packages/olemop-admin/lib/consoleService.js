@@ -21,7 +21,6 @@ var MS_OF_SECOND = 1000
  *                 opts.port 	{String | Number} listen port for master or master port for monitor
  *                 opts.master  {Boolean} current service is master or monitor
  *                 opts.info 	{Object} more server info for current server, {id, serverType, host, port}
- * @api public
  */
 var ConsoleService = function (opts) {
 	EventEmitter.call(this);

@@ -48,9 +48,8 @@ describe('export log4js func', () => {
 //   test('getLogger', () => {
 //     const oLogger = logger.getLogger('olemop', 'xxx', 'yyy')
 //     oLogger.level = 'debug'
-//     oLogger.debug('Some debug messages')
-
-//     // expect(storedMessage).toBe('Some debug messages')
+//     oLogger.debug('some messages')
+//     // expect(storedMessage).toBe('some messages')
 //   })
 // })
 
