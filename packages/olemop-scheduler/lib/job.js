@@ -1,67 +1,67 @@
 /**
  * This is the class of the job used in schedule module
  */
-var cronTrigger = require('./cronTrigger');
-var simpleTrigger = require('./simpleTrigger');
+var cronTrigger = require('./cronTrigger')
+var simpleTrigger = require('./simpleTrigger')
 
-var jobId = 1;
+var jobId = 1
 
-var SIMPLE_JOB = 1;
-var CRON_JOB  = 2;
-var jobCount = 0;
+var SIMPLE_JOB = 1
+var CRON_JOB  = 2
+var jobCount = 0
 
-var warnLimit = 500;
+var warnLimit = 500
 
-var logger = require('log4js').getLogger(__filename);
+var logger = require('log4js').getLogger(__filename)
 
 
 //For test
-var lateCount = 0;
+var lateCount = 0
 
 var Job = function (trigger, jobFunc, jobData){
   this.data = jobData ? jobData : null
-  this.func = jobFunc;
+  this.func = jobFunc
 
   if (typeof(trigger) == 'string'){
-    this.type = CRON_JOB;
-    this.trigger = cronTrigger.createTrigger(trigger, this);
+    this.type = CRON_JOB
+    this.trigger = cronTrigger.createTrigger(trigger, this)
   }else if (typeof(trigger) == 'object'){
-    this.type = SIMPLE_JOB;
-    this.trigger = simpleTrigger.createTrigger(trigger, this);
+    this.type = SIMPLE_JOB
+    this.trigger = simpleTrigger.createTrigger(trigger, this)
   }
 
-  this.id = jobId++;
-  this.runTime = 0;
-};
+  this.id = jobId++
+  this.runTime = 0
+}
 
-var pro = Job.prototype;
+var pro = Job.prototype
 
 /**
  * Run the job code
  */
 pro.run = function (){
   try{
-    jobCount++;
-    this.runTime++;
-    var late = Date.now() - this.excuteTime();
+    jobCount++
+    this.runTime++
+    var late = Date.now() - this.excuteTime()
     if (late>warnLimit)
-      logger.warn('run Job count ' + jobCount + ' late :' + late + ' lateCount ' + (++lateCount));
-    this.func(this.data);
+      logger.warn('run Job count ' + jobCount + ' late :' + late + ' lateCount ' + (++lateCount))
+    this.func(this.data)
   } catch (e){
-    logger.error("Job run error for exception ! " + e.stack);
+    logger.error("Job run error for exception ! " + e.stack)
   }
-};
+}
 
 /**
  * Compute the next excution time
  */
 pro.nextTime = function (){
-  return this.trigger.nextExcuteTime();
-};
+  return this.trigger.nextExcuteTime()
+}
 
 pro.excuteTime = function (){
-    return this.trigger.excuteTime();
-};
+    return this.trigger.excuteTime()
+}
 
 /**
  * The Interface to create Job
@@ -71,7 +71,7 @@ pro.excuteTime = function (){
  * @return The new instance of the give job or null if fail
  */
 function createJob(trigger, jobFunc, jobData){
-  return new Job(trigger, jobFunc, jobData);
+  return new Job(trigger, jobFunc, jobData)
 }
 
-module.exports.createJob = createJob;
+module.exports.createJob = createJob

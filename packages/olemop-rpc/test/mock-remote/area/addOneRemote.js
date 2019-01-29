@@ -4,11 +4,11 @@
 module.exports = function(app) {
   return {
     doService: function(value, cb) {
-      cb(null, value + 1);
+      cb(null, value + 1)
     },
 
     doAddTwo: function(value, cb) {
-      cb(null, value + 2);
+      cb(null, value + 2)
     }
-  };
-};
+  }
+}

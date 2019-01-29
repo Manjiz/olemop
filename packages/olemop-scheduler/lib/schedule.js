@@ -1,62 +1,62 @@
 /**
  * The main class and interface of the schedule module
  */
-var PriorityQueue = require('./priorityQueue');
-var Job = require('./job.js');
-var timerCount = 0;
+var PriorityQueue = require('./priorityQueue')
+var Job = require('./job.js')
+var timerCount = 0
 
-var logger = require('log4js').getLogger(__filename);
+var logger = require('log4js').getLogger(__filename)
 
-var map = {};
-var queue = PriorityQueue.createPriorityQueue(comparator);
+var map = {}
+var queue = PriorityQueue.createPriorityQueue(comparator)
 
-var jobId = 0;
-var timer;
+var jobId = 0
+var timer
 
 //The accuracy of the scheduler, it will affect the performance when the schedule tasks are
 //crowded together
-var accuracy = 10;
+var accuracy = 10
 
 /**
  * Schedule a new Job
  */
 function scheduleJob(trigger, jobFunc, jobData){
-  var job = Job.createJob(trigger, jobFunc, jobData);
-  var excuteTime = job.excuteTime();
-  var id = job.id;
+  var job = Job.createJob(trigger, jobFunc, jobData)
+  var excuteTime = job.excuteTime()
+  var id = job.id
 
-  map[id] = job;
+  map[id] = job
   var element = {
     id : id,
     time : excuteTime
-  };
-
-  var curJob = queue.peek();
-  if (!curJob || excuteTime < curJob.time){
-    queue.offer(element);
-    setTimer(job);
-
-    return job.id;
   }
 
-  queue.offer(element);
-  return job.id;
+  var curJob = queue.peek()
+  if (!curJob || excuteTime < curJob.time){
+    queue.offer(element)
+    setTimer(job)
+
+    return job.id
+  }
+
+  queue.offer(element)
+  return job.id
 }
 
 /**
  * Cancel Job
  */
 function cancelJob(id){
-  var curJob = queue.peek();
+  var curJob = queue.peek()
   if (curJob && id === curJob.id){ // to avoid queue.peek() is null
-    queue.pop();
-    delete map[id];
+    queue.pop()
+    delete map[id]
 
-    clearTimeout(timer);
-    excuteJob();
+    clearTimeout(timer)
+    excuteJob()
   }
-  delete map[id];
-  return true;
+  delete map[id]
+  return true
 }
 
 /**
@@ -66,38 +66,38 @@ function cancelJob(id){
  * @return void
  */
 function setTimer(job){
-  clearTimeout(timer);
+  clearTimeout(timer)
 
-  timer = setTimeout(excuteJob, job.excuteTime()-Date.now());
+  timer = setTimeout(excuteJob, job.excuteTime()-Date.now())
 }
 
 /**
  * The function used to ran the schedule job, and setTimeout for next running job
  */
 function excuteJob(){
-  var job = peekNextJob();
-  var nextJob;
+  var job = peekNextJob()
+  var nextJob
 
   while(job && job.excuteTime() - Date.now() < accuracy){
-    job.run();
-    queue.pop();
+    job.run()
+    queue.pop()
 
-    var nextTime = job.nextTime();
+    var nextTime = job.nextTime()
 
     if (nextTime === null){
-      delete map[job.id];
+      delete map[job.id]
     }else{
-      queue.offer({id:job.id, time: nextTime});
+      queue.offer({id:job.id, time: nextTime})
     }
-    job = peekNextJob();
+    job = peekNextJob()
   }
 
   //If all the job have been canceled
   if (!job)
-    return;
+    return
 
   //Run next schedule
-  setTimer(job);
+  setTimer(job)
 }
 
 /**
@@ -106,14 +106,14 @@ function excuteJob(){
  */
 function peekNextJob(){
   if (queue.size() <= 0)
-    return null;
+    return null
 
-  var job = null;
+  var job = null
 
   do{
-    job = map[queue.peek().id];
-    if (!job) queue.pop();
-  }while(!job && queue.size() > 0);
+    job = map[queue.peek().id]
+    if (!job) queue.pop()
+  }while(!job && queue.size() > 0)
 
   return job ? job : null
 }
@@ -123,19 +123,19 @@ function peekNextJob(){
  * @return Next valid job
  */
 function getNextJob(){
-  var job = null;
+  var job = null
 
   while(!job && queue.size() > 0){
-    var id = queue.pop().id;
-    job = map[id];
+    var id = queue.pop().id
+    job = map[id]
   }
 
   return job ? job : null
 }
 
 function comparator(e1, e2){
-  return e1.time > e2.time;
+  return e1.time > e2.time
 }
 
-module.exports.scheduleJob = scheduleJob;
-module.exports.cancelJob = cancelJob;
+module.exports.scheduleJob = scheduleJob
+module.exports.cancelJob = cancelJob

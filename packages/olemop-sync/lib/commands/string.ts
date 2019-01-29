@@ -79,7 +79,7 @@ export const decr = (key) => {
   const obj = this.lookup(key)
   if (!obj) {
     this.db.data[key] = { val: -1 }
-    return -1;
+    return -1
   } else {
     return --obj.val
   }

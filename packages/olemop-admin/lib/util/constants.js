@@ -7,4 +7,4 @@ module.exports = {
 	},
 	TYPE_CLIENT: 'client',
 	TYPE_MONITOR: 'monitor'
-};
+}

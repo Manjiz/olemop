@@ -1,17 +1,17 @@
-var logger = require('@olemop/logger').getLogger('olemop', __filename);
+var logger = require('@olemop/logger').getLogger('olemop', __filename)
 
 /**
  * Filter service.
  * Register and fire before and after filters.
  */
 var Service = function () {
-  this.befores = [];    // before filters
-  this.afters = [];     // after filters
-};
+  this.befores = []    // before filters
+  this.afters = []     // after filters
+}
 
-module.exports = Service;
+module.exports = Service
 
-Service.prototype.name = 'filter';
+Service.prototype.name = 'filter'
 
 /**
  * Add before filter into the filter chain.
@@ -19,8 +19,8 @@ Service.prototype.name = 'filter';
  * @param filter {Object|Function} filter instance or filter function.
  */
 Service.prototype.before = function (filter){
-  this.befores.push(filter);
-};
+  this.befores.push(filter)
+}
 
 /**
  * Add after filter into the filter chain.
@@ -28,8 +28,8 @@ Service.prototype.before = function (filter){
  * @param filter {Object|Function} filter instance or filter function.
  */
 Service.prototype.after = function (filter){
-  this.afters.unshift(filter);
-};
+  this.afters.unshift(filter)
+}
 
 /**
  * TODO: other insert method for filter? such as unshift
@@ -44,26 +44,26 @@ Service.prototype.after = function (filter){
  * @param cb {Function} cb(err) callback function to invoke next chain node
  */
 Service.prototype.beforeFilter = function (msg, session, cb) {
-  var index = 0, self = this;
+  var index = 0, self = this
   var next = function (err, resp, opts) {
     if (err || index >= self.befores.length) {
-      cb(err, resp, opts);
-      return;
+      cb(err, resp, opts)
+      return
     }
 
-    var handler = self.befores[index++];
+    var handler = self.befores[index++]
     if (typeof handler === 'function') {
-      handler(msg, session, next);
+      handler(msg, session, next)
     } else if (typeof handler.before === 'function') {
-      handler.before(msg, session, next);
+      handler.before(msg, session, next)
     } else {
-      logger.error('meet invalid before filter, handler or handler.before should be function.');
-      next(new Error('invalid before filter.'));
+      logger.error('meet invalid before filter, handler or handler.before should be function.')
+      next(new Error('invalid before filter.'))
     }
-  }; //end of next
+  } //end of next
 
-  next();
-};
+  next()
+}
 
 /**
  * Do after filter chain.
@@ -77,24 +77,24 @@ Service.prototype.beforeFilter = function (msg, session, cb) {
  * @param cb {Function} cb(err) callback function to invoke next chain node
  */
 Service.prototype.afterFilter = function (err, msg, session, resp, cb) {
-  var index = 0, self = this;
+  var index = 0, self = this
   function next(err) {
     //if done
     if (index >= self.afters.length) {
-      cb(err);
-      return;
+      cb(err)
+      return
     }
 
-    var handler = self.afters[index++];
+    var handler = self.afters[index++]
     if (typeof handler === 'function') {
-      handler(err, msg, session, resp, next);
+      handler(err, msg, session, resp, next)
     } else if (typeof handler.after === 'function') {
-      handler.after(err, msg, session, resp, next);
+      handler.after(err, msg, session, resp, next)
     } else {
-      logger.error('meet invalid after filter, handler or handler.after should be function.');
-      next(new Error('invalid after filter.'));
+      logger.error('meet invalid after filter, handler or handler.after should be function.')
+      next(new Error('invalid after filter.'))
     }
   } //end of next
 
-  next(err);
-};
+  next(err)
+}

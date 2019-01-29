@@ -9,9 +9,9 @@
 
 data sync module is simple sync memory data into store engine like mysql,redis,file.
 
-As we known, updating data is very frequently in game application. Especial in MMORPG kind game. User game data,such as location,flood,equipment,etc. almost always change as time going. For the purpose of avoid such update action cost, we decide to keep a copy data in memory. And keep synchronized with a timer and log;
+As we known, updating data is very frequently in game application. Especial in MMORPG kind game. User game data,such as location,flood,equipment,etc. almost always change as time going. For the purpose of avoid such update action cost, we decide to keep a copy data in memory. And keep synchronized with a timer and log
 
-Data sync can support both timer call and instance invoke for the different situation. Most of time the developer don't pay attention to it;
+Data sync can support both timer call and instance invoke for the different situation. Most of time the developer don't pay attention to it
 
 Data sync also can support memory operation like NOSQL database such as redis,mongodb etc. most of time developer can seem as a memory database without transaction.
 
@@ -98,7 +98,7 @@ waiting queue data
 ### sync.isDone
 
 get the db sync status when the queue is empty,it should return true;otherwise
-return false;
+return false
 
 ## Notice
 
@@ -109,4 +109,4 @@ Mysql OR mapping in this modules do not support,user should realize it self.
 ## ADD
 
 for more usage detail , reading source and benchmark and test case from
-source is recommended;
+source is recommended

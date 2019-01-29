@@ -1,1 +1,1 @@
-module.exports = require('./mock-ws-client');
+module.exports = require('./mock-ws-client')

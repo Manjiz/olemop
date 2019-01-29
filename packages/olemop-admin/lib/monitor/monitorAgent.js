@@ -1,15 +1,15 @@
-var logger = require('@olemop/logger').getLogger('olemop-admin', 'MonitorAgent');
-var MqttClient = require('../protocol/mqtt/mqttClient');
+var logger = require('@olemop/logger').getLogger('olemop-admin', 'MonitorAgent')
+var MqttClient = require('../protocol/mqtt/mqttClient')
 var EventEmitter = require('events')
-var protocol = require('../util/protocol');
-var utils = require('../util/utils');
-var Util = require('util');
+var protocol = require('../util/protocol')
+var utils = require('../util/utils')
+var Util = require('util')
 
-var ST_INITED = 1;
-var ST_CONNECTED = 2;
-var ST_REGISTERED = 3;
-var ST_CLOSED = 4;
-var STATUS_INTERVAL = 5 * 1000; // 60 seconds
+var ST_INITED = 1
+var ST_CONNECTED = 2
+var ST_REGISTERED = 3
+var ST_CLOSED = 4
+var STATUS_INTERVAL = 5 * 1000 // 60 seconds
 
 /**
  * MonitorAgent Constructor
@@ -24,19 +24,19 @@ var STATUS_INTERVAL = 5 * 1000; // 60 seconds
  * @api public
  */
 var MonitorAgent = function (opts) {
-  EventEmitter.call(this);
-  this.reqId = 1;
-  this.opts = opts;
-  this.id = opts.id;
-  this.socket = null;
-  this.callbacks = {};
-  this.type = opts.type;
-  this.info = opts.info;
-  this.state = ST_INITED;
-  this.consoleService = opts.consoleService;
-};
+  EventEmitter.call(this)
+  this.reqId = 1
+  this.opts = opts
+  this.id = opts.id
+  this.socket = null
+  this.callbacks = {}
+  this.type = opts.type
+  this.info = opts.info
+  this.state = ST_INITED
+  this.consoleService = opts.consoleService
+}
 
-Util.inherits(MonitorAgent, EventEmitter);
+Util.inherits(MonitorAgent, EventEmitter)
 
 /**
  * register and connect to master server
@@ -48,126 +48,126 @@ Util.inherits(MonitorAgent, EventEmitter);
  */
 MonitorAgent.prototype.connect = function (port, host, cb) {
   if (this.state > ST_INITED) {
-    logger.error('monitor client has connected or closed.');
-    return;
+    logger.error('monitor client has connected or closed.')
+    return
   }
 
   cb = cb || function () {}
 
-  this.socket = new MqttClient(this.opts);
-  this.socket.connect(host, port);
+  this.socket = new MqttClient(this.opts)
+  this.socket.connect(host, port)
 
   // this.socket = sclient.connect(host + ':' + port, {
   //   'force new connection': true,
   //   'reconnect': true,
   //   'max reconnection attempts': 20
-  // });
-  var self = this;
+  // })
+  var self = this
   this.socket.on('register', function (msg) {
     if (msg && msg.code === protocol.PRO_OK) {
-      self.state = ST_REGISTERED;
-      cb();
+      self.state = ST_REGISTERED
+      cb()
     } else {
-      self.emit('close');
-      logger.error('server %j %j register master failed', self.id, self.type);
+      self.emit('close')
+      logger.error('server %j %j register master failed', self.id, self.type)
     }
-  });
+  })
 
   this.socket.on('monitor', function (msg) {
     if (self.state !== ST_REGISTERED) {
-      return;
+      return
     }
 
-    msg = protocol.parse(msg);
+    msg = protocol.parse(msg)
 
     if (msg.command) {
       // a command from master
       self.consoleService.command(msg.command, msg.moduleId, msg.body, function (err, res) {
         //notify should not have a callback
-      });
+      })
     } else {
-      var respId = msg.respId;
+      var respId = msg.respId
       if (respId) {
         // a response from monitor
-        var respCb = self.callbacks[respId];
+        var respCb = self.callbacks[respId]
         if (!respCb) {
-          logger.warn('unknown resp id:' + respId);
-          return;
+          logger.warn('unknown resp id:' + respId)
+          return
         }
-        delete self.callbacks[respId];
-        respCb(msg.error, msg.body);
-        return;
+        delete self.callbacks[respId]
+        respCb(msg.error, msg.body)
+        return
       }
 
       // request from master
       self.consoleService.execute(msg.moduleId, 'monitorHandler', msg.body, function (err, res) {
         if (protocol.isRequest(msg)) {
-          var resp = protocol.composeResponse(msg, err, res);
+          var resp = protocol.composeResponse(msg, err, res)
           if (resp) {
-            self.doSend('monitor', resp);
+            self.doSend('monitor', resp)
           }
         } else {
           //notify should not have a callback
-          logger.error('notify should not have a callback.');
+          logger.error('notify should not have a callback.')
         }
-      });
+      })
     }
-  });
+  })
 
   this.socket.on('connect', function () {
     if (self.state > ST_INITED) {
       //ignore reconnect
-      return;
+      return
     }
-    self.state = ST_CONNECTED;
+    self.state = ST_CONNECTED
     var req = {
       id: self.id,
       type: 'monitor',
       serverType: self.type,
       pid: process.pid,
       info: self.info
-    };
-    var authServer = self.consoleService.authServer;
-    var env = self.consoleService.env;
+    }
+    var authServer = self.consoleService.authServer
+    var env = self.consoleService.env
     authServer(req, env, function (token) {
-      req['token'] = token;
-      self.doSend('register', req);
-    });
-  });
+      req['token'] = token
+      self.doSend('register', req)
+    })
+  })
 
   this.socket.on('error', function (err) {
     if (self.state < ST_CONNECTED) {
       // error occurs during connecting stage
-      cb(err);
+      cb(err)
     } else {
-      self.emit('error', err);
+      self.emit('error', err)
     }
-  });
+  })
 
   this.socket.on('disconnect', function (reason) {
-    self.state = ST_CLOSED;
-    self.emit('close');
-  });
+    self.state = ST_CLOSED
+    self.emit('close')
+  })
 
   this.socket.on('reconnect', function () {
-    self.state = ST_CONNECTED;
+    self.state = ST_CONNECTED
     var req = {
       id: self.id,
       type: 'monitor',
       info: self.info,
       pid: process.pid,
       serverType: self.type
-    };
+    }
 
-    self.doSend('reconnect', req);
-  });
+    self.doSend('reconnect', req)
+  })
 
   this.socket.on('reconnect_ok', function (msg) {
     if (msg && msg.code === protocol.PRO_OK) {
-      self.state = ST_REGISTERED;
+      self.state = ST_REGISTERED
     }
-  });
-};
+  })
+}
 
 /**
  * close monitor agent
@@ -176,11 +176,11 @@ MonitorAgent.prototype.connect = function (port, host, cb) {
  */
 MonitorAgent.prototype.close = function () {
   if (this.state >= ST_CLOSED) {
-    return;
+    return
   }
-  this.state = ST_CLOSED;
-  this.socket.disconnect();
-};
+  this.state = ST_CLOSED
+  this.socket.disconnect()
+}
 
 /**
  * set module
@@ -190,8 +190,8 @@ MonitorAgent.prototype.close = function () {
  * @api public
  */
 MonitorAgent.prototype.set = function (moduleId, value) {
-  this.consoleService.set(moduleId, value);
-};
+  this.consoleService.set(moduleId, value)
+}
 
 /**
  * get module
@@ -200,8 +200,8 @@ MonitorAgent.prototype.set = function (moduleId, value) {
  * @api public
  */
 MonitorAgent.prototype.get = function (moduleId) {
-  return this.consoleService.get(moduleId);
-};
+  return this.consoleService.get(moduleId)
+}
 
 /**
  * notify master server without callback
@@ -212,26 +212,26 @@ MonitorAgent.prototype.get = function (moduleId) {
  */
 MonitorAgent.prototype.notify = function (moduleId, msg) {
   if (this.state !== ST_REGISTERED) {
-    logger.error('agent can not notify now, state:' + this.state);
-    return;
+    logger.error('agent can not notify now, state:' + this.state)
+    return
   }
-  this.doSend('monitor', protocol.composeRequest(null, moduleId, msg));
-  // this.socket.emit('monitor', protocol.composeRequest(null, moduleId, msg));
-};
+  this.doSend('monitor', protocol.composeRequest(null, moduleId, msg))
+  // this.socket.emit('monitor', protocol.composeRequest(null, moduleId, msg))
+}
 
 MonitorAgent.prototype.request = function (moduleId, msg, cb) {
   if (this.state !== ST_REGISTERED) {
-    logger.error('agent can not request now, state:' + this.state);
-    return;
+    logger.error('agent can not request now, state:' + this.state)
+    return
   }
-  var reqId = this.reqId++;
-  this.callbacks[reqId] = cb;
-  this.doSend('monitor', protocol.composeRequest(reqId, moduleId, msg));
-  // this.socket.emit('monitor', protocol.composeRequest(reqId, moduleId, msg));
-};
-
-MonitorAgent.prototype.doSend = function (topic, msg) {
-  this.socket.send(topic, msg);
+  var reqId = this.reqId++
+  this.callbacks[reqId] = cb
+  this.doSend('monitor', protocol.composeRequest(reqId, moduleId, msg))
+  // this.socket.emit('monitor', protocol.composeRequest(reqId, moduleId, msg))
 }
 
-module.exports = MonitorAgent;
+MonitorAgent.prototype.doSend = function (topic, msg) {
+  this.socket.send(topic, msg)
+}
+
+module.exports = MonitorAgent

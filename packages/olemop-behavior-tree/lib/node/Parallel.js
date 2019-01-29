@@ -2,7 +2,7 @@
  * Parallel node: a parent node that would invoke children in parallel.
  * The node would wait for all the children finished and return the result.
  * The result value would be decided by the policy.
- * POLICY_FAIL_ON_ONE stands for return fail if any fails;
+ * POLICY_FAIL_ON_ONE stands for return fail if any fails
  * POLICY_FAIL_ON_ALL stands for return fail if and only if all fail.
  */
 

@@ -1,4 +1,4 @@
 module.exports = function(app, opts) {
-  var service = {name: 'mockPlugin'};
-  return service;
-};
+  var service = {name: 'mockPlugin'}
+  return service
+}

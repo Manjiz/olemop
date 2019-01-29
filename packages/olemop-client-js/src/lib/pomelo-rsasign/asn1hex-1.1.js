@@ -45,18 +45,18 @@
  * @param {number} pos string index
  * @return byte length for ASN.1 L(length) bytes
  */
-var BigInteger = require("./jsbn.js");
+var BigInteger = require("./jsbn.js")
 
 function parseBigInt(str, r) {
-  return new BigInteger(str, r);
+  return new BigInteger(str, r)
 }
 
 function _asnhex_getByteLengthOfL_AtObj(s, pos) {
-  if (s.substring(pos + 2, pos + 3) != '8') return 1;
-  var i = parseInt(s.substring(pos + 3, pos + 4));
-  if (i == 0) return -1; 		// length octet '80' indefinite length
-  if (0 < i && i < 10) return i + 1;	// including '8?' octet;
-  return -2;				// malformed format
+  if (s.substring(pos + 2, pos + 3) != '8') return 1
+  var i = parseInt(s.substring(pos + 3, pos + 4))
+  if (i == 0) return -1 		// length octet '80' indefinite length
+  if (0 < i && i < 10) return i + 1	// including '8?' octet
+  return -2				// malformed format
 }
 
 
@@ -70,9 +70,9 @@ function _asnhex_getByteLengthOfL_AtObj(s, pos) {
  * @returns {string} hexadecimal string for ASN.1 L(length) bytes
  */
 function _asnhex_getHexOfL_AtObj(s, pos) {
-  var len = _asnhex_getByteLengthOfL_AtObj(s, pos);
-  if (len < 1) return '';
-  return s.substring(pos + 2, pos + 2 + len * 2);
+  var len = _asnhex_getByteLengthOfL_AtObj(s, pos)
+  if (len < 1) return ''
+  return s.substring(pos + 2, pos + 2 + len * 2)
 }
 
 //
@@ -93,15 +93,15 @@ function _asnhex_getHexOfL_AtObj(s, pos) {
  * @return ASN.1 L(length) integer value
  */
 function _asnhex_getIntOfL_AtObj(s, pos) {
-  var hLength = _asnhex_getHexOfL_AtObj(s, pos);
-  if (hLength == '') return -1;
-  var bi;
+  var hLength = _asnhex_getHexOfL_AtObj(s, pos)
+  if (hLength == '') return -1
+  var bi
   if (parseInt(hLength.substring(0, 1)) < 8) {
-     bi = parseBigInt(hLength, 16);
+     bi = parseBigInt(hLength, 16)
   } else {
-     bi = parseBigInt(hLength.substring(2), 16);
+     bi = parseBigInt(hLength.substring(2), 16)
   }
-  return bi.intValue();
+  return bi.intValue()
 }
 
 /**
@@ -113,9 +113,9 @@ function _asnhex_getIntOfL_AtObj(s, pos) {
  * @param {number} pos string index
  */
 function _asnhex_getStartPosOfV_AtObj(s, pos) {
-  var l_len = _asnhex_getByteLengthOfL_AtObj(s, pos);
-  if (l_len < 0) return l_len;
-  return pos + (l_len + 1) * 2;
+  var l_len = _asnhex_getByteLengthOfL_AtObj(s, pos)
+  if (l_len < 0) return l_len
+  return pos + (l_len + 1) * 2
 }
 
 /**
@@ -128,9 +128,9 @@ function _asnhex_getStartPosOfV_AtObj(s, pos) {
  * @returns {string} hexadecimal string of ASN.1 value.
  */
 function _asnhex_getHexOfV_AtObj(s, pos) {
-  var pos1 = _asnhex_getStartPosOfV_AtObj(s, pos);
-  var len = _asnhex_getIntOfL_AtObj(s, pos);
-  return s.substring(pos1, pos1 + len * 2);
+  var pos1 = _asnhex_getStartPosOfV_AtObj(s, pos)
+  var len = _asnhex_getIntOfL_AtObj(s, pos)
+  return s.substring(pos1, pos1 + len * 2)
 }
 
 /**
@@ -144,10 +144,10 @@ function _asnhex_getHexOfV_AtObj(s, pos) {
  * @since 1.1
  */
 function _asnhex_getHexOfTLV_AtObj(s, pos) {
-  var hT = s.substr(pos, 2);
-  var hL = _asnhex_getHexOfL_AtObj(s, pos);
-  var hV = _asnhex_getHexOfV_AtObj(s, pos);
-  return hT + hL + hV;
+  var hT = s.substr(pos, 2)
+  var hL = _asnhex_getHexOfL_AtObj(s, pos)
+  var hV = _asnhex_getHexOfV_AtObj(s, pos)
+  return hT + hL + hV
 }
 
 /**
@@ -160,9 +160,9 @@ function _asnhex_getHexOfTLV_AtObj(s, pos) {
  * @return next sibling starting index for ASN.1 object string
  */
 function _asnhex_getPosOfNextSibling_AtObj(s, pos) {
-  var pos1 = _asnhex_getStartPosOfV_AtObj(s, pos);
-  var len = _asnhex_getIntOfL_AtObj(s, pos);
-  return pos1 + len * 2;
+  var pos1 = _asnhex_getStartPosOfV_AtObj(s, pos)
+  var len = _asnhex_getIntOfL_AtObj(s, pos)
+  return pos1 + len * 2
 }
 
 /**
@@ -175,25 +175,25 @@ function _asnhex_getPosOfNextSibling_AtObj(s, pos) {
  * @return {Array of Number} array of indexes for childen of ASN.1 objects
  */
 function _asnhex_getPosArrayOfChildren_AtObj(h, pos) {
-  var a = new Array();
-  var p0 = _asnhex_getStartPosOfV_AtObj(h, pos);
-  a.push(p0);
+  var a = new Array()
+  var p0 = _asnhex_getStartPosOfV_AtObj(h, pos)
+  a.push(p0)
 
-  var len = _asnhex_getIntOfL_AtObj(h, pos);
-  var p = p0;
-  var k = 0;
+  var len = _asnhex_getIntOfL_AtObj(h, pos)
+  var p = p0
+  var k = 0
   while (1) {
-    var pNext = _asnhex_getPosOfNextSibling_AtObj(h, p);
-    if (pNext == null || (pNext - p0  >= (len * 2))) break;
-    if (k >= 200) break;
+    var pNext = _asnhex_getPosOfNextSibling_AtObj(h, p)
+    if (pNext == null || (pNext - p0  >= (len * 2))) break
+    if (k >= 200) break
 
-    a.push(pNext);
-    p = pNext;
+    a.push(pNext)
+    p = pNext
 
-    k++;
+    k++
   }
 
-  return a;
+  return a
 }
 
 /**
@@ -208,8 +208,8 @@ function _asnhex_getPosArrayOfChildren_AtObj(h, pos) {
  * @since 1.1
  */
 function _asnhex_getNthChildIndex_AtObj(h, idx, nth) {
-  var a = _asnhex_getPosArrayOfChildren_AtObj(h, idx);
-  return a[nth];
+  var a = _asnhex_getPosArrayOfChildren_AtObj(h, idx)
+  return a[nth]
 }
 
 // ========== decendant methods ==============================
@@ -227,11 +227,11 @@ function _asnhex_getNthChildIndex_AtObj(h, idx, nth) {
  */
 function _asnhex_getDecendantIndexByNthList(h, currentIndex, nthList) {
   if (nthList.length == 0) {
-    return currentIndex;
+    return currentIndex
   }
-  var firstNth = nthList.shift();
-  var a = _asnhex_getPosArrayOfChildren_AtObj(h, currentIndex);
-  return _asnhex_getDecendantIndexByNthList(h, a[firstNth], nthList);
+  var firstNth = nthList.shift()
+  var a = _asnhex_getPosArrayOfChildren_AtObj(h, currentIndex)
+  return _asnhex_getDecendantIndexByNthList(h, a[firstNth], nthList)
 }
 
 /**
@@ -246,8 +246,8 @@ function _asnhex_getDecendantIndexByNthList(h, currentIndex, nthList) {
  * @since 1.1
  */
 function _asnhex_getDecendantHexTLVByNthList(h, currentIndex, nthList) {
-  var idx = _asnhex_getDecendantIndexByNthList(h, currentIndex, nthList);
-  return _asnhex_getHexOfTLV_AtObj(h, idx);
+  var idx = _asnhex_getDecendantIndexByNthList(h, currentIndex, nthList)
+  return _asnhex_getHexOfTLV_AtObj(h, idx)
 }
 
 /**
@@ -262,8 +262,8 @@ function _asnhex_getDecendantHexTLVByNthList(h, currentIndex, nthList) {
  * @since 1.1
  */
 function _asnhex_getDecendantHexVByNthList(h, currentIndex, nthList) {
-  var idx = _asnhex_getDecendantIndexByNthList(h, currentIndex, nthList);
-  return _asnhex_getHexOfV_AtObj(h, idx);
+  var idx = _asnhex_getDecendantIndexByNthList(h, currentIndex, nthList)
+  return _asnhex_getHexOfV_AtObj(h, idx)
 }
 
 // ========== class definition ==============================
@@ -277,29 +277,29 @@ function _asnhex_getDecendantHexVByNthList(h, currentIndex, nthList) {
  * @since 1.1
  */
 function ASN1HEX() {
-  return ASN1HEX;
+  return ASN1HEX
 }
 
-module.exports.getByteLengthOfL_AtObj = _asnhex_getByteLengthOfL_AtObj;
+module.exports.getByteLengthOfL_AtObj = _asnhex_getByteLengthOfL_AtObj
 
-module.exports.getHexOfL_AtObj = _asnhex_getHexOfL_AtObj;
+module.exports.getHexOfL_AtObj = _asnhex_getHexOfL_AtObj
 
-module.exports.getIntOfL_AtObj = _asnhex_getIntOfL_AtObj;
+module.exports.getIntOfL_AtObj = _asnhex_getIntOfL_AtObj
 
-module.exports.getStartPosOfV_AtObj = _asnhex_getStartPosOfV_AtObj;
+module.exports.getStartPosOfV_AtObj = _asnhex_getStartPosOfV_AtObj
 
-module.exports.getHexOfV_AtObj = _asnhex_getHexOfV_AtObj;
+module.exports.getHexOfV_AtObj = _asnhex_getHexOfV_AtObj
 
-module.exports.getHexOfTLV_AtObj = _asnhex_getHexOfTLV_AtObj;
+module.exports.getHexOfTLV_AtObj = _asnhex_getHexOfTLV_AtObj
 
-module.exports.getPosOfNextSibling_AtObj = _asnhex_getPosOfNextSibling_AtObj;
+module.exports.getPosOfNextSibling_AtObj = _asnhex_getPosOfNextSibling_AtObj
 
-module.exports.getPosArrayOfChildren_AtObj = _asnhex_getPosArrayOfChildren_AtObj;
+module.exports.getPosArrayOfChildren_AtObj = _asnhex_getPosArrayOfChildren_AtObj
 
-module.exports.getNthChildIndex_AtObj = _asnhex_getNthChildIndex_AtObj;
+module.exports.getNthChildIndex_AtObj = _asnhex_getNthChildIndex_AtObj
 
-module.exports.getDecendantIndexByNthList = _asnhex_getDecendantIndexByNthList;
+module.exports.getDecendantIndexByNthList = _asnhex_getDecendantIndexByNthList
 
-module.exports.getDecendantHexVByNthList = _asnhex_getDecendantHexVByNthList;
+module.exports.getDecendantHexVByNthList = _asnhex_getDecendantHexVByNthList
 
-module.exports.getDecendantHexTLVByNthList = _asnhex_getDecendantHexTLVByNthList;
+module.exports.getDecendantHexTLVByNthList = _asnhex_getDecendantHexTLVByNthList

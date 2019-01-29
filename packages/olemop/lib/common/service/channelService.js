@@ -1,12 +1,12 @@
-var utils = require('../../util/utils');
-var ChannelRemote = require('../remote/frontend/channelRemote');
-var logger = require('@olemop/logger').getLogger('olemop', __filename);
+var utils = require('../../util/utils')
+var ChannelRemote = require('../remote/frontend/channelRemote')
+var logger = require('@olemop/logger').getLogger('olemop', __filename)
 
 /**
  * constant
  */
-var ST_INITED = 0;
-var ST_DESTROYED = 1;
+var ST_INITED = 0
+var ST_DESTROYED = 1
 
 /**
  * Create and maintain channels for server local.
@@ -18,21 +18,21 @@ var ST_DESTROYED = 1;
  * @constructor
  */
 var ChannelService = function (app, opts) {
-  opts = opts || {};
-  this.app = app;
-  this.channels = {};
-  this.prefix = opts.prefix;
-  this.store = opts.store;
-  this.broadcastFilter = opts.broadcastFilter;
-  this.channelRemote = new ChannelRemote(app);
-};
+  opts = opts || {}
+  this.app = app
+  this.channels = {}
+  this.prefix = opts.prefix
+  this.store = opts.store
+  this.broadcastFilter = opts.broadcastFilter
+  this.channelRemote = new ChannelRemote(app)
+}
 
-module.exports = ChannelService;
+module.exports = ChannelService
 
 
 ChannelService.prototype.start = function (cb) {
-  restoreChannel(this, cb);
-};
+  restoreChannel(this, cb)
+}
 
 
 
@@ -44,14 +44,14 @@ ChannelService.prototype.start = function (cb) {
  */
 ChannelService.prototype.createChannel = function (name) {
   if (this.channels[name]) {
-    return this.channels[name];
+    return this.channels[name]
   }
 
-  var c = new Channel(name, this);
-  addToStore(this, genKey(this), genKey(this, name));
-  this.channels[name] = c;
-  return c;
-};
+  var c = new Channel(name, this)
+  addToStore(this, genKey(this), genKey(this, name))
+  this.channels[name] = c
+  return c
+}
 
 /**
  * Get channel by name.
@@ -62,13 +62,13 @@ ChannelService.prototype.createChannel = function (name) {
  * @memberOf ChannelService
  */
 ChannelService.prototype.getChannel = function (name, create) {
-  var channel = this.channels[name];
+  var channel = this.channels[name]
   if (!channel && create) {
-    channel = this.channels[name] = new Channel(name, this);
-    addToStore(this, genKey(this), genKey(this, name));
+    channel = this.channels[name] = new Channel(name, this)
+    addToStore(this, genKey(this), genKey(this, name))
   }
-  return channel;
-};
+  return channel
+}
 
 /**
  * Destroy channel by name.
@@ -77,10 +77,10 @@ ChannelService.prototype.getChannel = function (name, create) {
  * @memberOf ChannelService
  */
 ChannelService.prototype.destroyChannel = function (name) {
-  delete this.channels[name];
-  removeFromStore(this, genKey(this), genKey(this, name));
-  removeAllFromStore(this, genKey(this, name));
-};
+  delete this.channels[name]
+  removeFromStore(this, genKey(this), genKey(this, name))
+  removeAllFromStore(this, genKey(this, name))
+}
 
 /**
  * Push message by uids.
@@ -95,16 +95,16 @@ ChannelService.prototype.destroyChannel = function (name) {
  */
 ChannelService.prototype.pushMessageByUids = function (route, msg, uids, opts, cb) {
   if (typeof route !== 'string') {
-    cb = opts;
-    opts = uids;
-    uids = msg;
-    msg = route;
-    route = msg.route;
+    cb = opts
+    opts = uids
+    uids = msg
+    msg = route
+    route = msg.route
   }
 
   if (!cb && typeof opts === 'function') {
-    cb = opts;
-    opts = {};
+    cb = opts
+    opts = {}
   }
 
   if (!uids || uids.length === 0) {
@@ -119,7 +119,7 @@ ChannelService.prototype.pushMessageByUids = function (route, msg, uids, opts, c
   }
 
   sendMessageByGroup(this, route, msg, groups, opts, cb)
-};
+}
 
 /**
  * Broadcast message to all the connected clients.
@@ -188,13 +188,13 @@ ChannelService.prototype.broadcast = (stype, route, msg, opts, cb) => {
  * @constructor
  */
 var Channel = function (name, service) {
-  this.name = name;
-  this.groups = {};       // group map for uids. key: sid, value: [uid]
-  this.records = {};      // member records. key: uid
-  this.__channelService__ = service;
-  this.state = ST_INITED;
-  this.userAmount =0;
-};
+  this.name = name
+  this.groups = {}       // group map for uids. key: sid, value: [uid]
+  this.records = {}      // member records. key: uid
+  this.__channelService__ = service
+  this.state = ST_INITED
+  this.userAmount =0
+}
 
 /**
  * Add user to channel.
@@ -204,17 +204,17 @@ var Channel = function (name, service) {
  */
 Channel.prototype.add = function (uid, sid) {
   if (this.state > ST_INITED) {
-    return false;
+    return false
   } else {
-    var res = add(uid, sid, this.groups);
+    var res = add(uid, sid, this.groups)
     if (res) {
-      this.records[uid] = {sid: sid, uid: uid};
-      this.userAmount =this.userAmount+1;
+      this.records[uid] = {sid: sid, uid: uid}
+      this.userAmount =this.userAmount+1
     }
-    addToStore(this.__channelService__, genKey(this.__channelService__, this.name), genValue(sid, uid));
-    return res;
+    addToStore(this.__channelService__, genKey(this.__channelService__, this.name), genValue(sid, uid))
+    return res
   }
-};
+}
 
 /**
  * Remove user from channel.
@@ -225,20 +225,20 @@ Channel.prototype.add = function (uid, sid) {
  */
 Channel.prototype.leave = function (uid, sid) {
   if (!uid || !sid) {
-    return false;
+    return false
   }
-  var res = deleteFrom(uid, sid, this.groups[sid]);
+  var res = deleteFrom(uid, sid, this.groups[sid])
   if (res){
-    delete this.records[uid];
-    this.userAmount = this.userAmount-1;
+    delete this.records[uid]
+    this.userAmount = this.userAmount-1
   }
-  if (this.userAmount<0) this.userAmount=0;//robust
-  removeFromStore(this.__channelService__, genKey(this.__channelService__, this.name), genValue(sid, uid));
+  if (this.userAmount<0) this.userAmount=0//robust
+  removeFromStore(this.__channelService__, genKey(this.__channelService__, this.name), genValue(sid, uid))
   if (this.groups[sid] && this.groups[sid].length === 0) {
-    delete this.groups[sid];
+    delete this.groups[sid]
   }
-  return res;
-};
+  return res
+}
 /**
  * Get channel UserAmount in a channel.
 
@@ -246,8 +246,8 @@ Channel.prototype.leave = function (uid, sid) {
  * @return {number } channel member amount
  */
 Channel.prototype.getUserAmount = function () {
-  return this.userAmount;
-};
+  return this.userAmount
+}
 
 /**
  * Get channel members.
@@ -257,16 +257,16 @@ Channel.prototype.getUserAmount = function () {
  * @return {Array} channel member uid list
  */
 Channel.prototype.getMembers = function () {
-  var res = [], groups = this.groups;
-  var group, i, l;
+  var res = [], groups = this.groups
+  var group, i, l
   for (var sid in groups) {
-    group = groups[sid];
+    group = groups[sid]
     for (i=0, l=group.length; i<l; i++) {
-      res.push(group[i]);
+      res.push(group[i])
     }
   }
-  return res;
-};
+  return res
+}
 
 /**
  * Get Member info.
@@ -275,16 +275,16 @@ Channel.prototype.getMembers = function () {
  * @return {Object} member info
  */
 Channel.prototype.getMember = function (uid) {
-  return this.records[uid];
-};
+  return this.records[uid]
+}
 
 /**
  * Destroy channel.
  */
 Channel.prototype.destroy = function () {
-  this.state = ST_DESTROYED;
-  this.__channelService__.destroyChannel(this.name);
-};
+  this.state = ST_DESTROYED
+  this.__channelService__.destroyChannel(this.name)
+}
 
 /**
  * Push message to all the members in the channel
@@ -296,24 +296,24 @@ Channel.prototype.destroy = function () {
  */
 Channel.prototype.pushMessage = function (route, msg, opts, cb) {
   if (this.state !== ST_INITED) {
-    utils.invokeCallback(new Error('channel is not running now'));
-    return;
+    utils.invokeCallback(new Error('channel is not running now'))
+    return
   }
 
   if (typeof route !== 'string') {
-    cb = opts;
-    opts = msg;
-    msg = route;
-    route = msg.route;
+    cb = opts
+    opts = msg
+    msg = route
+    route = msg.route
   }
 
   if (!cb && typeof opts === 'function') {
-    cb = opts;
-    opts = {};
+    cb = opts
+    opts = {}
   }
 
-  sendMessageByGroup(this.__channelService__, route, msg, this.groups, opts, cb);
-};
+  sendMessageByGroup(this.__channelService__, route, msg, this.groups, opts, cb)
+}
 
 /**
  * add uid and sid into group. ignore any uid that uid not specified.
@@ -324,37 +324,37 @@ Channel.prototype.pushMessage = function (route, msg, opts, cb) {
  */
 var add = function (uid, sid, groups) {
   if (!sid) {
-    logger.warn('ignore uid %j for sid not specified.', uid);
-    return false;
+    logger.warn('ignore uid %j for sid not specified.', uid)
+    return false
   }
 
-  var group = groups[sid];
+  var group = groups[sid]
   if (!group) {
-    group = [];
-    groups[sid] = group;
+    group = []
+    groups[sid] = group
   }
 
-  group.push(uid);
-  return true;
-};
+  group.push(uid)
+  return true
+}
 
 /**
  * delete element from array
  */
 var deleteFrom = function (uid, sid, group) {
   if (!uid || !sid || !group) {
-    return false;
+    return false
   }
 
   for (var i=0, l=group.length; i<l; i++) {
     if (group[i] === uid) {
-      group.splice(i, 1);
-      return true;
+      group.splice(i, 1)
+      return true
     }
   }
 
-  return false;
-};
+  return false
+}
 
 /**
  * push message by group
@@ -426,92 +426,92 @@ var restoreChannel = function (self, cb) {
   } else {
     loadAllFromStore(self, genKey(self), function (err, list) {
       if (err) {
-        utils.invokeCallback(cb, err);
-        return;
+        utils.invokeCallback(cb, err)
+        return
       } else {
         if (!list.length || !Array.isArray(list)) {
-          utils.invokeCallback(cb);
-          return;
+          utils.invokeCallback(cb)
+          return
         }
         var load = function (key) {
           return (function () {
             loadAllFromStore(self, key, function (err, items) {
               for (var j=0; j<items.length; j++) {
-                var array = items[j].split(':');
-                var sid = array[0];
-                var uid = array[1];
-                var channel = self.channels[name];
-                var res = add(uid, sid, channel.groups);
+                var array = items[j].split(':')
+                var sid = array[0]
+                var uid = array[1]
+                var channel = self.channels[name]
+                var res = add(uid, sid, channel.groups)
                 if (res) {
-                  channel.records[uid] = {sid: sid, uid: uid};
+                  channel.records[uid] = {sid: sid, uid: uid}
                 }
               }
-            });
-          })();
-        };
+            })
+          })()
+        }
 
        for (var i=0; i<list.length; i++) {
-        var name = list[i].slice(genKey(self).length + 1);
-        self.channels[name] = new Channel(name, self);
-        load(list[i]);
+        var name = list[i].slice(genKey(self).length + 1)
+        self.channels[name] = new Channel(name, self)
+        load(list[i])
       }
-      utils.invokeCallback(cb);
+      utils.invokeCallback(cb)
     }
-  });
+  })
 }
-};
+}
 
 var addToStore = function (self, key, value) {
   if (self.store) {
     self.store.add(key, value, function (err) {
       if (err) {
-        logger.error('add key: %s value: %s to store, with err: %j', key, value, err.stack);
+        logger.error('add key: %s value: %s to store, with err: %j', key, value, err.stack)
       }
-    });
+    })
   }
-};
+}
 
 var removeFromStore = function (self, key, value) {
   if (self.store) {
     self.store.remove(key, value, function (err) {
       if (err) {
-        logger.error('remove key: %s value: %s from store, with err: %j', key, value, err.stack);
+        logger.error('remove key: %s value: %s from store, with err: %j', key, value, err.stack)
       }
-    });
+    })
   }
-};
+}
 
 var loadAllFromStore = function (self, key, cb) {
   if (self.store) {
     self.store.load(key, function (err, list) {
       if (err) {
-        logger.error('load key: %s from store, with err: %j', key, err.stack);
-        utils.invokeCallback(cb, err);
+        logger.error('load key: %s from store, with err: %j', key, err.stack)
+        utils.invokeCallback(cb, err)
       } else {
-        utils.invokeCallback(cb, null, list);
+        utils.invokeCallback(cb, null, list)
       }
-    });
+    })
   }
-};
+}
 
 var removeAllFromStore = function (self, key) {
   if (self.store) {
     self.store.removeAll(key, function (err) {
       if (err) {
-        logger.error('remove key: %s all members from store, with err: %j', key, err.stack);
+        logger.error('remove key: %s all members from store, with err: %j', key, err.stack)
       }
-    });
+    })
   }
-};
+}
 
 var genKey = function (self, name) {
   if (name) {
-    return self.prefix + ':' + self.app.serverId + ':' + name;
+    return self.prefix + ':' + self.app.serverId + ':' + name
   } else {
-    return self.prefix + ':' + self.app.serverId;
+    return self.prefix + ':' + self.app.serverId
   }
-};
+}
 
 var genValue = function (sid, uid) {
-  return sid + ':' + uid;
-};
+  return sid + ':' + uid
+}

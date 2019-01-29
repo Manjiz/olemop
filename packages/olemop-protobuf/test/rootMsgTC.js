@@ -1,10 +1,10 @@
-var tc = module.exports;
+var tc = module.exports
 
 tc.onMove = {
     'entityId':14,
     'path' : [{'x':128,'y':796},{'x':677,'y':895}],
     'speed':160
-};
+}
 
 tc['area.playerHandler.enterScene'] = {
     entities : {
@@ -74,4 +74,4 @@ tc['area.playerHandler.enterScene'] = {
           ]}
         ]
     }
-};
+}

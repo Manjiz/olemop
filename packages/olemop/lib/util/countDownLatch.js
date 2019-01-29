@@ -1,18 +1,18 @@
-var exp = module.exports;
+var exp = module.exports
 
 /**
  * Count down to zero or timeout and invoke cb finally.
  */
 var CountDownLatch = function (count, opts, cb) {
-  this.count = count;
-  this.cb = cb;
-  var self = this;
+  this.count = count
+  this.cb = cb
+  var self = this
   if (opts.timeout) {
     this.timerId = setTimeout(function () {
-      self.cb(true);
-    }, opts.timeout);
+      self.cb(true)
+    }, opts.timeout)
   }
-};
+}
 
 /**
  * Call when a task finish to count down.
@@ -21,17 +21,17 @@ var CountDownLatch = function (count, opts, cb) {
  */
 CountDownLatch.prototype.done = function () {
   if (this.count <= 0) {
-    throw new Error('illegal state.');
+    throw new Error('illegal state.')
   }
 
-  this.count--;
+  this.count--
   if (this.count === 0) {
     if (this.timerId) {
-      clearTimeout(this.timerId);
+      clearTimeout(this.timerId)
     }
-    this.cb();
+    this.cb()
   }
-};
+}
 
 /**
  * Create a count down latch
@@ -44,17 +44,17 @@ CountDownLatch.prototype.done = function () {
  */
 exp.createCountDownLatch = function (count, opts, cb) {
   if (!count || count <= 0) {
-    throw new Error('count should be positive.');
+    throw new Error('count should be positive.')
   }
 
   if (!cb && typeof opts === 'function') {
-    cb = opts;
-    opts = {};
+    cb = opts
+    opts = {}
   }
 
   if (typeof cb !== 'function') {
-    throw new Error('cb should be a function.');
+    throw new Error('cb should be a function.')
   }
 
-  return new CountDownLatch(count, opts, cb);
-};
+  return new CountDownLatch(count, opts, cb)
+}

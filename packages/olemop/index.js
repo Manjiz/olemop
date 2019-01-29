@@ -1,1 +1,1 @@
-module.exports = require('./lib/pomelo');
+module.exports = require('./lib/pomelo')

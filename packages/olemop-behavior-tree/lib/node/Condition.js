@@ -5,7 +5,7 @@
  *        opts.blackboard {Object} blackboard object
  *        opts.cond(blackboard) {Function} condition callback. Return true or false to decide the node return success or fail.
  * @returns {number}
- *          bt.RES_SUCCESS if cond callback return true;
+ *          bt.RES_SUCCESS if cond callback return true
  *          bt.RES_FAIL if cond undefined or return false.
  */
 

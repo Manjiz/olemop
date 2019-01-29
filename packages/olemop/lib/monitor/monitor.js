@@ -2,19 +2,19 @@
  * Component for monitor.
  * Load and start monitor client.
  */
-var logger = require('@olemop/logger').getLogger('olemop', __filename);
-var admin = require('@olemop/admin');
-var moduleUtil = require('../util/moduleUtil');
-var utils = require('../util/utils');
-var Constants = require('../util/constants');
+var logger = require('@olemop/logger').getLogger('olemop', __filename)
+var admin = require('@olemop/admin')
+var moduleUtil = require('../util/moduleUtil')
+var utils = require('../util/utils')
+var Constants = require('../util/constants')
 
 var Monitor = function (app, opts) {
-  opts = opts || {};
-  this.app = app;
-  this.serverInfo = app.getCurServer();
-  this.masterInfo = app.getMaster();
-  this.modules = [];
-  this.closeWatcher = opts.closeWatcher;
+  opts = opts || {}
+  this.app = app
+  this.serverInfo = app.getCurServer()
+  this.masterInfo = app.getMaster()
+  this.modules = []
+  this.closeWatcher = opts.closeWatcher
 
   this.monitorConsole = admin.createMonitorConsole({
     id: this.serverInfo.id,
@@ -24,50 +24,50 @@ var Monitor = function (app, opts) {
     info: this.serverInfo,
     env: this.app.get(Constants.RESERVED.ENV),
     authServer: app.get('adminAuthServerMonitor') // auth server function
-  });
-};
+  })
+}
 
-module.exports = Monitor;
+module.exports = Monitor
 
 Monitor.prototype.start = function (cb) {
-  moduleUtil.registerDefaultModules(false, this.app, this.closeWatcher);
-  this.startConsole(cb);
-};
+  moduleUtil.registerDefaultModules(false, this.app, this.closeWatcher)
+  this.startConsole(cb)
+}
 
 Monitor.prototype.startConsole = function (cb) {
-  moduleUtil.loadModules(this, this.monitorConsole);
+  moduleUtil.loadModules(this, this.monitorConsole)
 
-  var self = this;
+  var self = this
   this.monitorConsole.start(function (err) {
     if (err) {
-      utils.invokeCallback(cb, err);
-      return;
+      utils.invokeCallback(cb, err)
+      return
     }
     moduleUtil.startModules(self.modules, function (err) {
-      utils.invokeCallback(cb, err);
-      return;
-    });
-  });
+      utils.invokeCallback(cb, err)
+      return
+    })
+  })
 
   this.monitorConsole.on('error', function (err) {
     if (err) {
-      logger.error('monitorConsole encounters with error: %j', err.stack);
-      return;
+      logger.error('monitorConsole encounters with error: %j', err.stack)
+      return
     }
-  });
-};
+  })
+}
 
 Monitor.prototype.stop = function (cb) {
-  this.monitorConsole.stop();
-  this.modules = [];
+  this.monitorConsole.stop()
+  this.modules = []
   process.nextTick(function () {
-    utils.invokeCallback(cb);
-  });
-};
+    utils.invokeCallback(cb)
+  })
+}
 
 // monitor reconnect to master
 Monitor.prototype.reconnect = function (masterInfo) {
-  var self = this;
+  var self = this
   this.stop(function () {
     self.monitorConsole = admin.createMonitorConsole({
       id: self.serverInfo.id,
@@ -76,9 +76,9 @@ Monitor.prototype.reconnect = function (masterInfo) {
       port: masterInfo.port,
       info: self.serverInfo,
       env: self.app.get(Constants.RESERVED.ENV)
-    });
+    })
     self.startConsole(function () {
-      logger.info('restart modules for server : %j finish.', self.app.serverId);
-    });
-  });
-};
+      logger.info('restart modules for server : %j finish.', self.app.serverId)
+    })
+  })
+}

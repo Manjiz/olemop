@@ -1,4 +1,4 @@
-var schedule = require('@olemop/scheduler');
+var schedule = require('@olemop/scheduler')
 
 var cronJob = function () {
 	console.log('doing %s', Date.now())
@@ -7,7 +7,7 @@ var cronJob = function () {
 try {
 	schedule.scheduleJob("0 5 14/2 * * *", cronJob, {
 		name: 'cronJobExample'
-	});
+	})
 } catch (e) {
-	console.log(e.stack);
+	console.log(e.stack)
 }

@@ -29,7 +29,7 @@ const genObjectProxy = (serviceName, origin, attach, proxyCB) => {
   const res = {}
   olemopUtils.listES6ClassMethods(origin).forEach((field) => {
     if (typeof origin[field] === 'function') {
-      res[field] = genFunctionProxy(serviceName, field, origin, attach, proxyCB);
+      res[field] = genFunctionProxy(serviceName, field, origin, attach, proxyCB)
     }
   })
   return res

@@ -1,14 +1,14 @@
 /**
  * This is the trigger used to decode the cronTimer and calculate the next excution time of the cron Trigger.
  */
-var logger = require('log4js').getLogger(__filename);
+var logger = require('log4js').getLogger(__filename)
 
-var SECOND = 0;
-var MIN = 1;
-var HOUR = 2;
-var DOM = 3;
-var MONTH = 4;
-var DOW = 5;
+var SECOND = 0
+var MIN = 1
+var HOUR = 2
+var DOM = 3
+var MONTH = 4
+var DOW = 5
 
 var Limit = [
   [0, 59],
@@ -17,28 +17,28 @@ var Limit = [
   [1, 31],
   [0, 11],
   [0, 6]
-];
+]
 
 /**
  * The constructor of the CronTrigger
  * @param trigger The trigger str used to build the cronTrigger instance
  */
 var CronTrigger = function (trigger, job) {
-  this.trigger = this.decodeTrigger(trigger);
+  this.trigger = this.decodeTrigger(trigger)
 
-  this.nextTime = this.nextExcuteTime(Date.now());
+  this.nextTime = this.nextExcuteTime(Date.now())
 
-  this.job = job;
-};
+  this.job = job
+}
 
-var pro = CronTrigger.prototype;
+var pro = CronTrigger.prototype
 
 /**
  * Get the current excuteTime of trigger
  */
 pro.excuteTime = function () {
-  return this.nextTime;
-};
+  return this.nextTime
+}
 
 /**
  * Caculate the next valid cronTime after the given time
@@ -47,114 +47,114 @@ pro.excuteTime = function () {
  */
 pro.nextExcuteTime = function (time) {
   // add 1s to the time so it must be the next time
-  time = time || this.nextTime;
-  time += 1000;
+  time = time || this.nextTime
+  time += 1000
 
-  var cronTrigger = this.trigger;
-  var date = new Date(time);
-  date.setMilliseconds(0);
+  var cronTrigger = this.trigger
+  var date = new Date(time)
+  date.setMilliseconds(0)
 
   outmost: while (true) {
     if (date.getFullYear() > 2999) {
-      logger.error("Can't compute the next time, exceed the limit");
-      return null;
+      logger.error("Can't compute the next time, exceed the limit")
+      return null
     }
     if (!timeMatch(date.getMonth(), cronTrigger[MONTH])) {
-      var nextMonth = nextCronTime(date.getMonth(), cronTrigger[MONTH]);
+      var nextMonth = nextCronTime(date.getMonth(), cronTrigger[MONTH])
 
       if (nextMonth == null)
-        return null;
+        return null
 
       if (nextMonth <= date.getMonth()) {
-        date.setYear(date.getFullYear() + 1);
-        date.setMonth(0);
-        date.setDate(1);
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        continue;
+        date.setYear(date.getFullYear() + 1)
+        date.setMonth(0)
+        date.setDate(1)
+        date.setHours(0)
+        date.setMinutes(0)
+        date.setSeconds(0)
+        continue
       }
 
-      date.setDate(1);
-      date.setMonth(nextMonth);
-      date.setHours(0);
-      date.setMinutes(0);
-      date.setSeconds(0);
+      date.setDate(1)
+      date.setMonth(nextMonth)
+      date.setHours(0)
+      date.setMinutes(0)
+      date.setSeconds(0)
     }
 
     if (!timeMatch(date.getDate(), cronTrigger[DOM]) || !timeMatch(date.getDay(), cronTrigger[DOW])) {
-      var domLimit = getDomLimit(date.getFullYear(), date.getMonth());
+      var domLimit = getDomLimit(date.getFullYear(), date.getMonth())
 
       do {
-        var nextDom = nextCronTime(date.getDate(), cronTrigger[DOM]);
+        var nextDom = nextCronTime(date.getDate(), cronTrigger[DOM])
         if (nextDom == null)
-          return null;
+          return null
 
         //If the date is in the next month, add month
         if (nextDom <= date.getDate() || nextDom > domLimit) {
-          date.setDate(1);
-          date.setMonth(date.getMonth() + 1);
-          date.setHours(0);
-          date.setMinutes(0);
-          date.setSeconds(0);
-          continue outmost;
+          date.setDate(1)
+          date.setMonth(date.getMonth() + 1)
+          date.setHours(0)
+          date.setMinutes(0)
+          date.setSeconds(0)
+          continue outmost
         }
 
-        date.setDate(nextDom);
-      } while (!timeMatch(date.getDay(), cronTrigger[DOW]));
+        date.setDate(nextDom)
+      } while (!timeMatch(date.getDay(), cronTrigger[DOW]))
 
-      date.setHours(0);
-      date.setMinutes(0);
-      date.setSeconds(0);
+      date.setHours(0)
+      date.setMinutes(0)
+      date.setSeconds(0)
     }
 
     if (!timeMatch(date.getHours(), cronTrigger[HOUR])) {
-      var nextHour = nextCronTime(date.getHours(), cronTrigger[HOUR]);
+      var nextHour = nextCronTime(date.getHours(), cronTrigger[HOUR])
 
       if (nextHour <= date.getHours()) {
-        date.setDate(date.getDate() + 1);
-        date.setHours(nextHour);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        continue;
+        date.setDate(date.getDate() + 1)
+        date.setHours(nextHour)
+        date.setMinutes(0)
+        date.setSeconds(0)
+        continue
       }
 
-      date.setHours(nextHour);
-      date.setMinutes(0);
-      date.setSeconds(0);
+      date.setHours(nextHour)
+      date.setMinutes(0)
+      date.setSeconds(0)
     }
 
     if (!timeMatch(date.getMinutes(), cronTrigger[MIN])) {
-      var nextMinute = nextCronTime(date.getMinutes(), cronTrigger[MIN]);
+      var nextMinute = nextCronTime(date.getMinutes(), cronTrigger[MIN])
 
       if (nextMinute <= date.getMinutes()) {
-        date.setHours(date.getHours() + 1);
-        date.setMinutes(nextMinute);
-        date.setSeconds(0);
-        continue;
+        date.setHours(date.getHours() + 1)
+        date.setMinutes(nextMinute)
+        date.setSeconds(0)
+        continue
       }
 
-      date.setMinutes(nextMinute);
-      date.setSeconds(0);
+      date.setMinutes(nextMinute)
+      date.setSeconds(0)
     }
 
     if (!timeMatch(date.getSeconds(), cronTrigger[SECOND])) {
-      var nextSecond = nextCronTime(date.getSeconds(), cronTrigger[SECOND]);
+      var nextSecond = nextCronTime(date.getSeconds(), cronTrigger[SECOND])
 
       if (nextSecond <= date.getSeconds()) {
-        date.setMinutes(date.getMinutes() + 1);
-        date.setSeconds(nextSecond);
-        continue;
+        date.setMinutes(date.getMinutes() + 1)
+        date.setSeconds(nextSecond)
+        continue
       }
 
-      date.setSeconds(nextSecond);
+      date.setSeconds(nextSecond)
     }
-    break;
+    break
   }
 
-  this.nextTime = date.getTime();
-  return this.nextTime;
-};
+  this.nextTime = date.getTime()
+  return this.nextTime
+}
 
 /**
  * return the next match time of the given value
@@ -163,24 +163,24 @@ pro.nextExcuteTime = function (time) {
  * @return The match value or null if unmatch(it offten means an error occur).
  */
 function nextCronTime(value, cronTime) {
-  value += 1;
+  value += 1
 
   if (typeof(cronTime) == 'number') {
     if (cronTime == -1)
-      return value;
+      return value
     else
-      return cronTime;
+      return cronTime
   } else if (typeof(cronTime) == 'object' && cronTime instanceof Array) {
     if (value <= cronTime[0] || value > cronTime[cronTime.length - 1])
-      return cronTime[0];
+      return cronTime[0]
 
     for (var i = 0; i < cronTime.length; i++)
       if (value <= cronTime[i])
-        return cronTime[i];
+        return cronTime[i]
   }
 
-  logger.warn('Compute next Time error! value :' + value + ' cronTime : ' + cronTime);
-  return null;
+  logger.warn('Compute next Time error! value :' + value + ' cronTime : ' + cronTime)
+  return null
 }
 
 /**
@@ -192,22 +192,22 @@ function nextCronTime(value, cronTime) {
 function timeMatch(value, cronTime) {
   if (typeof(cronTime) == 'number') {
     if (cronTime == -1)
-      return true;
+      return true
     if (value == cronTime)
-      return true;
-    return false;
+      return true
+    return false
   } else if (typeof(cronTime) == 'object' && cronTime instanceof Array) {
     if (value < cronTime[0] || value > cronTime[cronTime.length - 1])
-      return false;
+      return false
 
     for (var i = 0; i < cronTime.length; i++)
       if (value == cronTime[i])
-        return true;
+        return true
 
-    return false;
+    return false
   }
 
-  return null;
+  return null
 }
 
 /**
@@ -216,28 +216,28 @@ function timeMatch(value, cronTime) {
  * @return The array to represent the cronTimer
  */
 pro.decodeTrigger = function (cronTimeStr) {
-  cronTimeStr = cronTimeStr.trim();
-  var cronTimes = cronTimeStr.split(/\s+/);
+  cronTimeStr = cronTimeStr.trim()
+  var cronTimes = cronTimeStr.split(/\s+/)
 
   if (cronTimes.length != 6) {
-    console.log('error');
-    return null;
+    console.log('error')
+    return null
   }
 
   for (var i = 0; i < cronTimes.length; i++) {
-    cronTimes[i] = (this.decodeTimeStr(cronTimes[i], i));
+    cronTimes[i] = (this.decodeTimeStr(cronTimes[i], i))
 
     if (!checkNum(cronTimes[i], Limit[i][0], Limit[i][1])) {
       logger.error('Decode crontime error, value exceed limit!' +
         JSON.stringify({
           cronTime: cronTimes[i],
           limit: Limit[i]
-        }));
-      return null;
+        }))
+      return null
     }
   }
 
-  return cronTimes;
+  return cronTimes
 }
 
 /**
@@ -246,45 +246,45 @@ pro.decodeTrigger = function (cronTimeStr) {
  * @return A sorted array, like [1,2,3]
  */
 pro.decodeTimeStr = function (timeStr, type) {
-  var result = {};
-  var arr = [];
+  var result = {}
+  var arr = []
 
   if (timeStr == '*') {
-    return -1;
+    return -1
   } else if (timeStr.search(',') > 0) {
-    var timeArr = timeStr.split(',');
+    var timeArr = timeStr.split(',')
     for (var i = 0; i < timeArr.length; i++) {
-      var time = timeArr[i];
+      var time = timeArr[i]
       if (time.match(/^\d+-\d+$/)) {
-        decodeRangeTime(result, time);
+        decodeRangeTime(result, time)
       } else if (time.match(/^\d+\/\d+/)) {
-        decodePeriodTime(result, time, type);
+        decodePeriodTime(result, time, type)
       } else if (!isNaN(time)) {
-        var num = Number(time);
-        result[num] = num;
+        var num = Number(time)
+        result[num] = num
       } else
-        return null;
+        return null
     }
   } else if (timeStr.match(/^\d+-\d+$/)) {
-    decodeRangeTime(result, timeStr);
+    decodeRangeTime(result, timeStr)
   } else if (timeStr.match(/^\d+\/\d+/)) {
-    decodePeriodTime(result, timeStr, type);
+    decodePeriodTime(result, timeStr, type)
   } else if (!isNaN(timeStr)) {
-    var num = Number(timeStr);
-    result[num] = num;
+    var num = Number(timeStr)
+    result[num] = num
   } else {
-    return null;
+    return null
   }
 
   for (var key in result) {
-    arr.push(result[key]);
+    arr.push(result[key])
   }
 
   arr.sort(function (a, b) {
-    return a - b;
-  });
+    return a - b
+  })
 
-  return arr;
+  return arr
 }
 
 /**
@@ -293,17 +293,17 @@ pro.decodeTimeStr = function (timeStr, type) {
  * @param timeStr The range string, like 2-5
  */
 function decodeRangeTime(map, timeStr) {
-  var times = timeStr.split('-');
+  var times = timeStr.split('-')
 
-  times[0] = Number(times[0]);
-  times[1] = Number(times[1]);
+  times[0] = Number(times[0])
+  times[1] = Number(times[1])
   if (times[0] > times[1]) {
-    console.log("Error time range");
-    return null;
+    console.log("Error time range")
+    return null
   }
 
   for (var i = times[0]; i <= times[1]; i++) {
-    map[i] = i;
+    map[i] = i
   }
 }
 
@@ -311,19 +311,19 @@ function decodeRangeTime(map, timeStr) {
  * Compute the period timer
  */
 function decodePeriodTime(map, timeStr, type) {
-  var times = timeStr.split('/');
-  var min = Limit[type][0];
-  var max = Limit[type][1];
+  var times = timeStr.split('/')
+  var min = Limit[type][0]
+  var max = Limit[type][1]
 
-  var remind = Number(times[0]);
-  var period = Number(times[1]);
+  var remind = Number(times[0])
+  var period = Number(times[1])
 
   if (period == 0)
-    return;
+    return
 
   for (var i = remind; i <= max; i += period) {
     // if (i % period == remind)
-    map[i] = i;
+    map[i] = i
     // }
   }
 }
@@ -337,17 +337,17 @@ function decodePeriodTime(map, timeStr, type) {
  */
 function checkNum(nums, min, max) {
   if (nums == null)
-    return false;
+    return false
 
   if (nums == -1)
-    return true;
+    return true
 
   for (var i = 0; i < nums.length; i++) {
     if (nums[i] < min || nums[i] > max)
-      return false;
+      return false
   }
 
-  return true;
+  return true
 }
 
 /**
@@ -357,9 +357,9 @@ function checkNum(nums, min, max) {
  * @return The date count of given month
  */
 function getDomLimit(year, month) {
-  var date = new Date(year, month + 1, 0);
+  var date = new Date(year, month + 1, 0)
 
-  return date.getDate();
+  return date.getDate()
 }
 
 /**
@@ -368,7 +368,7 @@ function getDomLimit(year, month) {
  * @return The Cron trigger
  */
 function createTrigger(trigger, job) {
-  return new CronTrigger(trigger, job);
+  return new CronTrigger(trigger, job)
 }
 
-module.exports.createTrigger = createTrigger;
+module.exports.createTrigger = createTrigger

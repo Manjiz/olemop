@@ -1,13 +1,13 @@
-var util = require('util');
+var util = require('util')
 var EventEmitter = require('events')
-var httpServer = require('http').createServer();
-var SioSocket = require('./siosocket');
+var httpServer = require('http').createServer()
+var SioSocket = require('./siosocket')
 
-var PKG_ID_BYTES = 4;
-var PKG_ROUTE_LENGTH_BYTES = 1;
-var PKG_HEAD_BYTES = PKG_ID_BYTES + PKG_ROUTE_LENGTH_BYTES;
+var PKG_ID_BYTES = 4
+var PKG_ROUTE_LENGTH_BYTES = 1
+var PKG_HEAD_BYTES = PKG_ID_BYTES + PKG_ROUTE_LENGTH_BYTES
 
-var curId = 1;
+var curId = 1
 
 /**
  * Connector that manager low level connection and protocol bewteen server and client.
@@ -15,28 +15,28 @@ var curId = 1;
  */
 var Connector = function (port, host, opts) {
   if (!(this instanceof Connector)) {
-    return new Connector(port, host, opts);
+    return new Connector(port, host, opts)
   }
 
-  EventEmitter.call(this);
-  this.port = port;
-  this.host = host;
-  this.opts = opts;
+  EventEmitter.call(this)
+  this.port = port
+  this.host = host
+  this.opts = opts
   // this.heartbeats = opts.heartbeats || true
   // this.closeTimeout = opts.closeTimeout || 60
   this.heartbeatTimeout = opts.heartbeatTimeout || 60000
   this.heartbeatInterval = opts.heartbeatInterval || 25000
 }
 
-util.inherits(Connector, EventEmitter);
+util.inherits(Connector, EventEmitter)
 
-module.exports = Connector;
+module.exports = Connector
 
 /**
  * Start connector to listen the specified port
  */
 Connector.prototype.start = function (cb) {
-  var self = this;
+  var self = this
 
   var sio = require('socket.io')(httpServer, {
     path: '/socket.io',
@@ -48,37 +48,37 @@ Connector.prototype.start = function (cb) {
     ...this.opts
   })
 
-  var port = this.port;
+  var port = this.port
   httpServer.listen(port, function () {
-    console.log('sio Server listening at port %d', port);
-  });
+    console.log('sio Server listening at port %d', port)
+  })
 
   sio.on('connection', function (socket) {
-    var siosocket = new SioSocket(curId++, socket);
-    self.emit('connection', siosocket);
+    var siosocket = new SioSocket(curId++, socket)
+    self.emit('connection', siosocket)
     siosocket.on('closing', function (reason) {
-      siosocket.send({route: 'onKick', reason: reason});
-    });
-  });
+      siosocket.send({route: 'onKick', reason: reason})
+    })
+  })
 
-  process.nextTick(cb);
-};
+  process.nextTick(cb)
+}
 
 /**
  * Stop connector
  */
 Connector.prototype.stop = function (force, cb) {
-  this.wsocket.server.close();
-  process.nextTick(cb);
-};
+  this.wsocket.server.close()
+  process.nextTick(cb)
+}
 
 Connector.encode = Connector.prototype.encode = function (reqId, route, msg) {
   if (reqId) {
-    return composeResponse(reqId, route, msg);
+    return composeResponse(reqId, route, msg)
   } else {
-    return composePush(route, msg);
+    return composePush(route, msg)
   }
-};
+}
 
 /**
  * Decode client message package.
@@ -93,42 +93,42 @@ Connector.encode = Connector.prototype.encode = function (reqId, route, msg) {
  * @return {Object}      message object
  */
 Connector.decode = Connector.prototype.decode = function (msg) {
-  var index = 0;
+  var index = 0
 
-  var id = parseIntField(msg, index, PKG_ID_BYTES);
-  index += PKG_ID_BYTES;
+  var id = parseIntField(msg, index, PKG_ID_BYTES)
+  index += PKG_ID_BYTES
 
-  var routeLen = parseIntField(msg, index, PKG_ROUTE_LENGTH_BYTES);
+  var routeLen = parseIntField(msg, index, PKG_ROUTE_LENGTH_BYTES)
 
-  var route = msg.substr(PKG_HEAD_BYTES, routeLen);
-  var body = msg.substr(PKG_HEAD_BYTES + routeLen);
+  var route = msg.substr(PKG_HEAD_BYTES, routeLen)
+  var body = msg.substr(PKG_HEAD_BYTES + routeLen)
 
   return {
     id: id,
     route: route,
     body: JSON.parse(body)
-  };
-};
+  }
+}
 
 var composeResponse = function (msgId, route, msgBody) {
   return {
     id: msgId,
     body: msgBody
-  };
-};
+  }
+}
 
 var composePush = function (route, msgBody) {
-  return JSON.stringify({route: route, body: msgBody});
-};
+  return JSON.stringify({route: route, body: msgBody})
+}
 
 var parseIntField = function (str, offset, len) {
-  var res = 0;
+  var res = 0
   for (var i=0; i<len; i++) {
     if (i > 0) {
-      res <<= 8;
+      res <<= 8
     }
-    res |= str.charCodeAt(offset + i) & 0xff;
+    res |= str.charCodeAt(offset + i) & 0xff
   }
 
-  return res;
-};
+  return res
+}

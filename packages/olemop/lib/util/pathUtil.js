@@ -1,7 +1,7 @@
-var fs = require('fs');
-var path = require('path');
-var Constants = require('./constants');
-var exp = module.exports;
+var fs = require('fs')
+var path = require('path')
+var Constants = require('./constants')
+var exp = module.exports
 
 /**
  * Get system remote service path
@@ -10,9 +10,9 @@ var exp = module.exports;
  * @returns {string}      path string if the path exist else null
  */
 exp.getSysRemotePath = function (role) {
-  var p = path.join(__dirname, '/../common/remote/', role);
-  return fs.existsSync(p) ? p : null;
-};
+  var p = path.join(__dirname, '/../common/remote/', role)
+  return fs.existsSync(p) ? p : null
+}
 
 /**
  * Get user remote service path
@@ -22,9 +22,9 @@ exp.getSysRemotePath = function (role) {
  * @returns {string}            path string if the path exist else null
  */
 exp.getUserRemotePath = function (appBase, serverType) {
-  var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.REMOTE);
-  return fs.existsSync(p) ? p : null;
-};
+  var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.REMOTE)
+  return fs.existsSync(p) ? p : null
+}
 
 /**
  * Get user remote cron path
@@ -34,9 +34,9 @@ exp.getUserRemotePath = function (appBase, serverType) {
  * @returns {string}            path string if the path exist else null
  */
 exp.getCronPath = function (appBase, serverType) {
-  var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.CRON);
-  return fs.existsSync(p) ? p : null;
-};
+  var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.CRON)
+  return fs.existsSync(p) ? p : null
+}
 
 /**
  * List all the subdirectory names of user remote directory
@@ -46,16 +46,16 @@ exp.getCronPath = function (appBase, serverType) {
  * @return {Array}         all the subdiretory name under servers/
  */
 exp.listUserRemoteDir = function (appBase) {
-  var base = path.join(appBase, '/app/servers/');
-  var files = fs.readdirSync(base);
+  var base = path.join(appBase, '/app/servers/')
+  var files = fs.readdirSync(base)
   return files.filter(function (fn) {
     if (fn.charAt(0) === '.') {
-      return false;
+      return false
     }
 
-    return fs.statSync(path.join(base, fn)).isDirectory();
-  });
-};
+    return fs.statSync(path.join(base, fn)).isDirectory()
+  })
+}
 
 /**
  * Compose remote path record
@@ -66,8 +66,8 @@ exp.listUserRemoteDir = function (appBase) {
  * @return {Object}            remote path record
  */
 exp.remotePathRecord = function (namespace, serverType, path) {
-  return {namespace: namespace, serverType: serverType, path: path};
-};
+  return {namespace: namespace, serverType: serverType, path: path}
+}
 
 /**
  * Get handler path
@@ -77,9 +77,9 @@ exp.remotePathRecord = function (namespace, serverType, path) {
  * @returns {string}            path string if the path exist else null
  */
 exp.getHandlerPath = function (appBase, serverType) {
-  var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.HANDLER);
-  return fs.existsSync(p) ? p : null;
-};
+  var p = path.join(appBase, '/app/servers/', serverType, Constants.DIR.HANDLER)
+  return fs.existsSync(p) ? p : null
+}
 
 /**
  * Get admin script root path.
@@ -88,8 +88,8 @@ exp.getHandlerPath = function (appBase, serverType) {
  * @returns {string}         script path string
  */
 exp.getScriptPath = function (appBase) {
-  return path.join(appBase, Constants.DIR.SCRIPT);
-};
+  return path.join(appBase, Constants.DIR.SCRIPT)
+}
 
 /**
  * Get logs path.
@@ -98,5 +98,5 @@ exp.getScriptPath = function (appBase) {
  * @returns {string}         logs path string
  */
 exp.getLogPath = function (appBase) {
-  return path.join(appBase, Constants.DIR.LOG);
-};
+  return path.join(appBase, Constants.DIR.LOG)
+}

@@ -1,60 +1,60 @@
-var protocol = require('@olemop/protocol');
-var Package = protocol.Package;
-var logger = require('@olemop/logger').getLogger('olemop', __filename);
+var protocol = require('@olemop/protocol')
+var Package = protocol.Package
+var logger = require('@olemop/logger').getLogger('olemop', __filename)
 
-var handlers = {};
+var handlers = {}
 
-var ST_INITED = 0;
-var ST_WAIT_ACK = 1;
-var ST_WORKING = 2;
-var ST_CLOSED = 3;
+var ST_INITED = 0
+var ST_WAIT_ACK = 1
+var ST_WORKING = 2
+var ST_CLOSED = 3
 
 var handleHandshake = function (socket, pkg) {
   if (socket.state !== ST_INITED) {
-    return;
+    return
   }
   try {
-    socket.emit('handshake', JSON.parse(protocol.strdecode(pkg.body)));
+    socket.emit('handshake', JSON.parse(protocol.strdecode(pkg.body)))
   } catch (ex) {
-    socket.emit('handshake', {});
+    socket.emit('handshake', {})
   }
-};
+}
 
 var handleHandshakeAck = function (socket, pkg) {
   if (socket.state !== ST_WAIT_ACK) {
-    return;
+    return
   }
-  socket.state = ST_WORKING;
-  socket.emit('heartbeat');
-};
+  socket.state = ST_WORKING
+  socket.emit('heartbeat')
+}
 
 var handleHeartbeat = function (socket, pkg) {
   if (socket.state !== ST_WORKING) {
-    return;
+    return
   }
-  socket.emit('heartbeat');
-};
+  socket.emit('heartbeat')
+}
 
 var handleData = function (socket, pkg) {
   if (socket.state !== ST_WORKING) {
-    return;
+    return
   }
-  socket.emit('message', pkg);
-};
+  socket.emit('message', pkg)
+}
 
-handlers[Package.TYPE_HANDSHAKE] = handleHandshake;
-handlers[Package.TYPE_HANDSHAKE_ACK] = handleHandshakeAck;
-handlers[Package.TYPE_HEARTBEAT] = handleHeartbeat;
-handlers[Package.TYPE_DATA] = handleData;
+handlers[Package.TYPE_HANDSHAKE] = handleHandshake
+handlers[Package.TYPE_HANDSHAKE_ACK] = handleHandshakeAck
+handlers[Package.TYPE_HEARTBEAT] = handleHeartbeat
+handlers[Package.TYPE_DATA] = handleData
 
 var handle = function (socket, pkg) {
-  var handler = handlers[pkg.type];
+  var handler = handlers[pkg.type]
   if (handler) {
-    handler(socket, pkg);
+    handler(socket, pkg)
   } else {
-    logger.error('could not find handle invalid data package.');
-    socket.disconnect();
+    logger.error('could not find handle invalid data package.')
+    socket.disconnect()
   }
-};
+}
 
-module.exports = handle;
+module.exports = handle

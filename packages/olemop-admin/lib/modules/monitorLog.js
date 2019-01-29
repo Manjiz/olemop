@@ -3,17 +3,17 @@
  * Copyright(c) 2012 fantasyni <fantasyni@163.com>
  * MIT Licensed
  */
-var logger = require('@olemop/logger').getLogger('olemop-admin', __filename);
-var exec = require('child_process').exec;
-var path = require('path');
+var logger = require('@olemop/logger').getLogger('olemop-admin', __filename)
+var exec = require('child_process').exec
+var path = require('path')
 
-var DEFAULT_INTERVAL = 5 * 60;		// in second
+var DEFAULT_INTERVAL = 5 * 60		// in second
 
 module.exports = function (opts) {
-	return new Module(opts);
-};
+	return new Module(opts)
+}
 
-module.exports.moduleId = 'monitorLog';
+module.exports.moduleId = 'monitorLog'
 
 /**
  * Initialize a new 'Module' with the given 'opts'
@@ -24,10 +24,10 @@ module.exports.moduleId = 'monitorLog';
  * @api public
  */
 var Module = function (opts) {
-	opts = opts || {};
-	this.root = opts.path;
-	this.interval = opts.interval || DEFAULT_INTERVAL;
-};
+	opts = opts || {}
+	this.root = opts.path
+	this.interval = opts.interval || DEFAULT_INTERVAL
+}
 
  /**
  * collect monitor data from monitor
@@ -69,42 +69,42 @@ Module.prototype.clientHandler = function (agent, msg, cb) {
 
 //get the latest logs
 var fetchLogs = function (root, msg, callback) {
-	var number = msg.number;
-	var logfile = msg.logfile;
-	var serverId = msg.serverId;
-	var filePath = path.join(root, getLogFileName(logfile, serverId));
+	var number = msg.number
+	var logfile = msg.logfile
+	var serverId = msg.serverId
+	var filePath = path.join(root, getLogFileName(logfile, serverId))
 
-	var endLogs = [];
+	var endLogs = []
 	exec('tail -n ' + number + ' ' + filePath, function (error, output) {
-		var endOut = [];
-		output = output.replace(/^\s+|\s+$/g, "").split(/\s+/);
+		var endOut = []
+		output = output.replace(/^\s+|\s+$/g, "").split(/\s+/)
 
 		for (var i=5; i<output.length; i+=6) {
-			endOut.push(output[i]);
+			endOut.push(output[i])
 		}
 
-		var endLength=endOut.length;
+		var endLength=endOut.length
 		for (var j=0; j<endLength; j++) {
-			var map = {};
-			var json;
+			var map = {}
+			var json
 			try{
-				json = JSON.parse(endOut[j]);
+				json = JSON.parse(endOut[j])
 			} catch (e) {
-				logger.error('the log cannot parsed to json, '+e);
-				continue;
+				logger.error('the log cannot parsed to json, '+e)
+				continue
 			}
-			map.time = json.time;
-			map.route = json.route || json.service;
-			map.serverId = serverId;
-			map.timeUsed = json.timeUsed;
-			map.params = endOut[j];
-			endLogs.push(map);
+			map.time = json.time
+			map.route = json.route || json.service
+			map.serverId = serverId
+			map.timeUsed = json.timeUsed
+			map.params = endOut[j]
+			endLogs.push(map)
 		}
 
-		callback({logfile:logfile,dataArray:endLogs});
-	});
-};
+		callback({logfile:logfile,dataArray:endLogs})
+	})
+}
 
 var getLogFileName = function (logfile, serverId) {
-	return logfile + '-' + serverId + '.log';
-};
+	return logfile + '-' + serverId + '.log'
+}

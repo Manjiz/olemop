@@ -1,14 +1,14 @@
 const cp = require('child_process')
 const olemopUtils = require('@olemop/utils')
 var logger = require('@olemop/logger').getLogger('olemop', __filename)
-var starter = module.exports;
-var util = require('util');
-var utils = require('../util/utils');
-var Constants = require('../util/constants');
-var env = Constants.RESERVED.ENV_DEV;
-var os=require('os');
-var cpus = {};
-var pomelo = require('../pomelo');
+var starter = module.exports
+var util = require('util')
+var utils = require('../util/utils')
+var Constants = require('../util/constants')
+var env = Constants.RESERVED.ENV_DEV
+var os=require('os')
+var cpus = {}
+var pomelo = require('../pomelo')
 
 /**
  * Run all servers
@@ -17,29 +17,29 @@ var pomelo = require('../pomelo');
  * @return {Void}
  */
 starter.runServers = function (app) {
-  var server, servers;
-  var condition = app.startId || app.type;
+  var server, servers
+  var condition = app.startId || app.type
   switch(condition) {
     case Constants.RESERVED.MASTER:
-    break;
+    break
     case Constants.RESERVED.ALL:
-    servers = app.getServersFromConfig();
+    servers = app.getServersFromConfig()
     for (var serverId in servers) {
-      this.run(app, servers[serverId]);
+      this.run(app, servers[serverId])
     }
-    break;
+    break
     default:
-    server = app.getServerFromConfig(condition);
+    server = app.getServerFromConfig(condition)
     if (server) {
-      this.run(app, server);
+      this.run(app, server)
     } else {
-      servers = app.get(Constants.RESERVED.SERVERS)[condition];
+      servers = app.get(Constants.RESERVED.SERVERS)[condition]
       for (var i=0; i<servers.length; i++) {
-        this.run(app, servers[i]);
+        this.run(app, servers[i])
       }
     }
   }
-};
+}
 
 /**
  * Run server
@@ -49,43 +49,43 @@ starter.runServers = function (app) {
  * @return {Void}
  */
 starter.run = function (app, server, cb) {
-  env = app.get(Constants.RESERVED.ENV);
-  var cmd, key;
+  env = app.get(Constants.RESERVED.ENV)
+  var cmd, key
   if (utils.isLocal(server.host)) {
-    var options = [];
+    var options = []
     if (server.args) {
       if (typeof server.args === 'string') {
-        options.push(server.args.trim());
+        options.push(server.args.trim())
       } else {
-        options = options.concat(server.args);
+        options = options.concat(server.args)
       }
     }
-    cmd = app.get(Constants.RESERVED.MAIN);
-    options.push(cmd);
+    cmd = app.get(Constants.RESERVED.MAIN)
+    options.push(cmd)
     options.push(`env=${env}`)
     for (key in server) {
       if (key === Constants.RESERVED.CPU) {
-        cpus[server.id] = server[key];
+        cpus[server.id] = server[key]
       }
       options.push(`${key}=${server[key]}`)
     }
     starter.localrun(process.execPath, null, options, cb)
   } else {
-    cmd = util.format('cd "%s" && "%s"', app.getBase(), process.execPath);
-    var arg = server.args;
+    cmd = util.format('cd "%s" && "%s"', app.getBase(), process.execPath)
+    var arg = server.args
     if (arg !== undefined) {
-      cmd += arg;
+      cmd += arg
     }
-    cmd += util.format(' "%s" env=%s ', app.get(Constants.RESERVED.MAIN), env);
+    cmd += util.format(' "%s" env=%s ', app.get(Constants.RESERVED.MAIN), env)
     for (key in server) {
       if (key === Constants.RESERVED.CPU) {
-        cpus[server.id] = server[key];
+        cpus[server.id] = server[key]
       }
-      cmd += util.format(' %s=%s ', key, server[key]);
+      cmd += util.format(' %s=%s ', key, server[key])
     }
-    starter.sshrun(cmd, server.host, cb);
+    starter.sshrun(cmd, server.host, cb)
   }
-};
+}
 
 /**
  * Bind process with cpu
@@ -98,18 +98,18 @@ starter.run = function (app, server, cb) {
 starter.bindCpu = function (sid, pid, host) {
   if (os.platform() === Constants.PLATFORM.LINUX && cpus[sid] !== undefined) {
     if (utils.isLocal(host)) {
-      var options = [];
-      options.push('-pc');
-      options.push(cpus[sid]);
-      options.push(pid);
-      starter.localrun(Constants.COMMAND.TASKSET, null, options);
+      var options = []
+      options.push('-pc')
+      options.push(cpus[sid])
+      options.push(pid)
+      starter.localrun(Constants.COMMAND.TASKSET, null, options)
     }
     else {
-      var cmd = util.format('taskset -pc "%s" "%s"', cpus[sid], pid);
-      starter.sshrun(cmd, host, null);
+      var cmd = util.format('taskset -pc "%s" "%s"', cpus[sid], pid)
+      starter.sshrun(cmd, host, null)
     }
   }
-};
+}
 
 /**
  * Kill application in all servers
@@ -118,31 +118,31 @@ starter.bindCpu = function (sid, pid, host) {
  * @param {string} serverIds array of serverId
  */
 starter.kill = function (pids, servers) {
-  var cmd;
+  var cmd
   for (var i = 0; i < servers.length; i++) {
-    var server = servers[i];
+    var server = servers[i]
     if (utils.isLocal(server.host)) {
-      var options = [];
+      var options = []
       if (os.platform() === Constants.PLATFORM.WIN) {
-        cmd = Constants.COMMAND.TASKKILL;
-        options.push('/pid');
-        options.push('/f');
+        cmd = Constants.COMMAND.TASKKILL
+        options.push('/pid')
+        options.push('/f')
       } else {
-        cmd = Constants.COMMAND.KILL;
-        options.push(-9);
+        cmd = Constants.COMMAND.KILL
+        options.push(-9)
       }
-      options.push(pids[i]);
-      starter.localrun(cmd,null,options);
+      options.push(pids[i])
+      starter.localrun(cmd,null,options)
     } else {
       if (os.platform() === Constants.PLATFORM.WIN) {
-        cmd = util.format('taskkill /pid %s /f', pids[i]);
+        cmd = util.format('taskkill /pid %s /f', pids[i])
       } else {
-        cmd = util.format('kill -9 %s', pids[i]);
+        cmd = util.format('kill -9 %s', pids[i])
       }
-      starter.sshrun(cmd, server.host);
+      starter.sshrun(cmd, server.host)
     }
   }
-};
+}
 
 /**
  * Use ssh to run command.

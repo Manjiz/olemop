@@ -63,7 +63,7 @@ The relations of the components is as below:
 ##Usage
 
 ```javascript
-var admin = require("pomelo-admin");
+var admin = require("pomelo-admin")
 ```
 
 Create a consoleService instance in master process.
@@ -71,13 +71,13 @@ Create a consoleService instance in master process.
 ```javascript
 var masterConsole = admin.createMasterConsole({
     port: masterPort
-});
+})
 ```
 
 Register an admin module.
 
 ```javascript
-masterConsole.register(moduleId, module);
+masterConsole.register(moduleId, module)
 ```
 
 Start masterConsole.
@@ -85,7 +85,7 @@ Start masterConsole.
 ```javascript
 masterConsole.start(function (err) {
   // start servers
-});
+})
 ```
 
 Create a consoleService instance in monitor process.
@@ -97,7 +97,7 @@ var monitorConsole = admin.createMonitorConsole({
     host: masterInfo.host,
     port: masterInfo.port,
     info: serverInfo
-});
+})
 ```
 
 ##Customized modules
@@ -108,41 +108,41 @@ Developers can customize modules to collect and export additional status as they
 
 ```javascript
 var Module = function (app, opts) {
-  opts = opts || {};
+  opts = opts || {}
   this.type = opts.type || 'pull';  // pull or push
   this.interval = opts.interval || 5; // pull or push interval
-};
+}
 
-Module.moduleId = 'helloPomelo';
+Module.moduleId = 'helloPomelo'
 
-module.exports = Module;
+module.exports = Module
 
 Module.prototype.monitorHandler = function (agent, msg) {
-  var word = agent.id + ' hello pomelo';
+  var word = agent.id + ' hello pomelo'
   // notify admin messages to master
-  agent.notify(Module.moduleId, {serverId: agent.id, body: word});
-};
+  agent.notify(Module.moduleId, {serverId: agent.id, body: word})
+}
 
 Module.prototype.masterHandler = function (agent, msg) {
   // if no message, then notify all monitors to fetch datas
   if (!msg) {
-    agent.notifyAll(Module.moduleId);
-    return;
+    agent.notifyAll(Module.moduleId)
+    return
   }
   // collect data from monitor
-  var data = agent.get(Module.moduleId);
+  var data = agent.get(Module.moduleId)
   if (!data) {
-    data = {};
-    agent.set(Module.moduleId, data);
+    data = {}
+    agent.set(Module.moduleId, data)
   }
 
-  data[msg.serverId] = msg;
-};
+  data[msg.serverId] = msg
+}
 
 Module.prototype.clientHandler = function (agent, msg, cb) {
   // deal with client request,directly return data cached in master
-  cb(null, agent.get(Module.moduleId) || {});
-};
+  cb(null, agent.get(Module.moduleId) || {})
+}
 ```
 
 ###Register customized modules
@@ -152,8 +152,8 @@ write in app.js which is in your project's root directory
 
 ```javascript
 app.configure('production|development', function () {
-  app.registerAdmin('helloPomelo',new helloPomelo());
-});
+  app.registerAdmin('helloPomelo',new helloPomelo())
+})
 ```
 
 ##User level control
@@ -201,9 +201,9 @@ in master server
 ```javascript
 app.set('adminAuthUser', function (msg, cb){
   if (auth success) {
-    cb(user);
+    cb(user)
   } else {
-    cb(null);
+    cb(null)
   }
 })
 ```
@@ -216,9 +216,9 @@ in master server
 ```javascript
 app.set('adminAuthServerMaster', function (msg, cb){
   if (auth success) {
-    cb('ok');
+    cb('ok')
   } else {
-    cb('bad');
+    cb('bad')
   }
 })
 ```
@@ -227,9 +227,9 @@ in monitor server
 ```javascript
 app.set('adminAuthServerMonitor', function (msg, cb){
   if (auth success) {
-    cb('ok');
+    cb('ok')
   } else {
-    cb('bad');
+    cb('bad')
   }
 })
 ```
@@ -260,6 +260,6 @@ when using in pomelo, you should fill all your servers with type:token
 ```javascript
 app.configure('development', function () {
   // enable the system monitor modules
-  app.enable('systemMonitor');
-});
+  app.enable('systemMonitor')
+})
 ```

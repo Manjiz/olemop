@@ -1,24 +1,24 @@
-var async = require('async');
+var async = require('async')
 const logUtil = require('./logUtil')
-var utils = require('./utils');
-var path = require('path');
-var fs = require('fs');
-var Constants = require('./constants');
-var starter = require('../master/starter');
-var logger = require('@olemop/logger').getLogger('olemop', __filename);
+var utils = require('./utils')
+var path = require('path')
+var fs = require('fs')
+var Constants = require('./constants')
+var starter = require('../master/starter')
+var logger = require('@olemop/logger').getLogger('olemop', __filename)
 
 /**
  * Initialize application configuration.
  */
 exports.defaultConfiguration = function (app) {
-  var args = parseArgs(process.argv);
-  setupEnv(app, args);
-  loadMaster(app);
-  loadServers(app);
-  processArgs(app, args);
-  configLogger(app);
-  loadLifecycle(app);
-};
+  var args = parseArgs(process.argv)
+  setupEnv(app, args)
+  loadMaster(app)
+  loadServers(app)
+  processArgs(app, args)
+  configLogger(app)
+  loadLifecycle(app)
+}
 
 /**
  * Start servers by type.
@@ -26,49 +26,49 @@ exports.defaultConfiguration = function (app) {
 exports.startByType = function (app, cb) {
   if (app.startId) {
     if (app.startId === Constants.RESERVED.MASTER) {
-      utils.invokeCallback(cb);
+      utils.invokeCallback(cb)
     } else {
-      starter.runServers(app);
+      starter.runServers(app)
     }
   } else {
     if (app.type && app.type !== Constants.RESERVED.ALL && app.type !== Constants.RESERVED.MASTER) {
-      starter.runServers(app);
+      starter.runServers(app)
     } else {
-      utils.invokeCallback(cb);
+      utils.invokeCallback(cb)
     }
   }
-};
+}
 
 /**
  * Load default components for application.
  */
 exports.loadDefaultComponents = function (app) {
-  var pomelo = require('../pomelo');
+  var pomelo = require('../pomelo')
   // load system default components
   if (app.serverType === Constants.RESERVED.MASTER) {
-    app.load(pomelo.master, app.get('masterConfig'));
+    app.load(pomelo.master, app.get('masterConfig'))
   } else {
-    app.load(pomelo.proxy, app.get('proxyConfig'));
+    app.load(pomelo.proxy, app.get('proxyConfig'))
     if (app.getCurServer().port) {
-      app.load(pomelo.remote, app.get('remoteConfig'));
+      app.load(pomelo.remote, app.get('remoteConfig'))
     }
     if (app.isFrontend()) {
-      app.load(pomelo.connection, app.get('connectionConfig'));
-      app.load(pomelo.connector, app.get('connectorConfig'));
-      app.load(pomelo.session, app.get('sessionConfig'));
+      app.load(pomelo.connection, app.get('connectionConfig'))
+      app.load(pomelo.connector, app.get('connectorConfig'))
+      app.load(pomelo.session, app.get('sessionConfig'))
       // compatible for schedulerConfig
       if (app.get('schedulerConfig')) {
-        app.load(pomelo.pushScheduler, app.get('schedulerConfig'));
+        app.load(pomelo.pushScheduler, app.get('schedulerConfig'))
       } else {
-        app.load(pomelo.pushScheduler, app.get('pushSchedulerConfig'));
+        app.load(pomelo.pushScheduler, app.get('pushSchedulerConfig'))
       }
     }
-    app.load(pomelo.backendSession, app.get('backendSessionConfig'));
-    app.load(pomelo.channel, app.get('channelConfig'));
-    app.load(pomelo.server, app.get('serverConfig'));
+    app.load(pomelo.backendSession, app.get('backendSessionConfig'))
+    app.load(pomelo.channel, app.get('channelConfig'))
+    app.load(pomelo.server, app.get('serverConfig'))
   }
-  app.load(pomelo.monitor, app.get('monitorConfig'));
-};
+  app.load(pomelo.monitor, app.get('monitorConfig'))
+}
 
 /**
  * Stop components.
@@ -80,19 +80,19 @@ exports.loadDefaultComponents = function (app) {
  */
 exports.stopComps = function (comps, index, force, cb) {
   if (index >= comps.length) {
-    utils.invokeCallback(cb);
-    return;
+    utils.invokeCallback(cb)
+    return
   }
-  var comp = comps[index];
+  var comp = comps[index]
   if (typeof comp.stop === 'function') {
     comp.stop(force, function () {
       // ignore any error
-      exports.stopComps(comps, index + 1, force, cb);
-    });
+      exports.stopComps(comps, index + 1, force, cb)
+    })
   } else {
-    exports.stopComps(comps, index + 1, force, cb);
+    exports.stopComps(comps, index + 1, force, cb)
   }
-};
+}
 
 /**
  * Apply command to loaded components.
@@ -126,64 +126,64 @@ exports.optComponents = function (comps, method, cb) {
  * Load server info from config/servers.json.
  */
 var loadServers = function (app) {
-  app.loadConfigBaseApp(Constants.RESERVED.SERVERS, Constants.FILEPATH.SERVER);
-  var servers = app.get(Constants.RESERVED.SERVERS);
-  var serverMap = {}, slist, i, l, server;
+  app.loadConfigBaseApp(Constants.RESERVED.SERVERS, Constants.FILEPATH.SERVER)
+  var servers = app.get(Constants.RESERVED.SERVERS)
+  var serverMap = {}, slist, i, l, server
   for (var serverType in servers) {
-    slist = servers[serverType];
+    slist = servers[serverType]
     for (i = 0, l = slist.length; i < l; i++) {
-      server = slist[i];
-      server.serverType = serverType;
+      server = slist[i]
+      server.serverType = serverType
       if (server[Constants.RESERVED.CLUSTER_COUNT]) {
-        utils.loadCluster(app, server, serverMap);
-        continue;
+        utils.loadCluster(app, server, serverMap)
+        continue
       }
-      serverMap[server.id] = server;
+      serverMap[server.id] = server
       if (server.wsPort) {
-        logger.warn('wsPort is deprecated, use clientPort in frontend server instead, server: %j', server);
+        logger.warn('wsPort is deprecated, use clientPort in frontend server instead, server: %j', server)
       }
     }
   }
-  app.set(Constants.KEYWORDS.SERVER_MAP, serverMap);
-};
+  app.set(Constants.KEYWORDS.SERVER_MAP, serverMap)
+}
 
 /**
  * Load master info from config/master.json.
  */
 var loadMaster = function (app) {
-  app.loadConfigBaseApp(Constants.RESERVED.MASTER, Constants.FILEPATH.MASTER);
-  app.master = app.get(Constants.RESERVED.MASTER);
-};
+  app.loadConfigBaseApp(Constants.RESERVED.MASTER, Constants.FILEPATH.MASTER)
+  app.master = app.get(Constants.RESERVED.MASTER)
+}
 
 /**
  * Process server start command
  */
 var processArgs = function (app, args) {
-  var serverType = args.serverType || Constants.RESERVED.MASTER;
-  var serverId = args.id || app.getMaster().id;
-  var mode = args.mode || Constants.RESERVED.CLUSTER;
-  var masterha = args.masterha || 'false';
-  var type = args.type || Constants.RESERVED.ALL;
-  var startId = args.startId;
+  var serverType = args.serverType || Constants.RESERVED.MASTER
+  var serverId = args.id || app.getMaster().id
+  var mode = args.mode || Constants.RESERVED.CLUSTER
+  var masterha = args.masterha || 'false'
+  var type = args.type || Constants.RESERVED.ALL
+  var startId = args.startId
 
-  app.set(Constants.RESERVED.MAIN, args.main, true);
-  app.set(Constants.RESERVED.SERVER_TYPE, serverType, true);
-  app.set(Constants.RESERVED.SERVER_ID, serverId, true);
-  app.set(Constants.RESERVED.MODE, mode, true);
-  app.set(Constants.RESERVED.TYPE, type, true);
+  app.set(Constants.RESERVED.MAIN, args.main, true)
+  app.set(Constants.RESERVED.SERVER_TYPE, serverType, true)
+  app.set(Constants.RESERVED.SERVER_ID, serverId, true)
+  app.set(Constants.RESERVED.MODE, mode, true)
+  app.set(Constants.RESERVED.TYPE, type, true)
   if (startId) {
-    app.set(Constants.RESERVED.STARTID, startId, true);
+    app.set(Constants.RESERVED.STARTID, startId, true)
   }
 
   if (masterha === 'true') {
-    app.master = args;
-    app.set(Constants.RESERVED.CURRENT_SERVER, args, true);
+    app.master = args
+    app.set(Constants.RESERVED.CURRENT_SERVER, args, true)
   } else if (serverType !== Constants.RESERVED.MASTER) {
-    app.set(Constants.RESERVED.CURRENT_SERVER, args, true);
+    app.set(Constants.RESERVED.CURRENT_SERVER, args, true)
   } else {
-    app.set(Constants.RESERVED.CURRENT_SERVER, app.getMaster(), true);
+    app.set(Constants.RESERVED.CURRENT_SERVER, app.getMaster(), true)
   }
-};
+}
 
 /**
  * Setup enviroment.
@@ -197,7 +197,7 @@ const setupEnv = (app, args) => {
  */
 const configLogger = function (app, logger) {
   if (process.env.POMELO_LOGGER !== 'off') {
-    var env = app.get(Constants.RESERVED.ENV);
+    var env = app.get(Constants.RESERVED.ENV)
     var originPath = path.join(app.getBase(), Constants.FILEPATH.LOG)
     var presentPath = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG))
     var present2Path = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, `${path.basename(Constants.FILEPATH.LOG, '.json')}.${env}.json`)
@@ -208,7 +208,7 @@ const configLogger = function (app, logger) {
     } else if (fs.existsSync(present2Path)) {
       logUtil.configure(app, present2Path, logger)
     } else {
-      logger.error('logger file path configuration is error.');
+      logger.error('logger file path configuration is error.')
     }
   }
 }
@@ -223,43 +223,43 @@ exports.configLogger = configLogger
  * @return Object argsMap map of arguments
  */
 var parseArgs = function (args) {
-  var argsMap = {};
-  var mainPos = 1;
+  var argsMap = {}
+  var mainPos = 1
 
   while (args[mainPos].indexOf('--') > 0) {
-    mainPos++;
+    mainPos++
   }
-  argsMap.main = args[mainPos];
+  argsMap.main = args[mainPos]
 
   for (var i = (mainPos + 1); i < args.length; i++) {
-    var arg = args[i];
-    var sep = arg.indexOf('=');
-    var key = arg.slice(0, sep);
-    var value = arg.slice(sep + 1);
+    var arg = args[i]
+    var sep = arg.indexOf('=')
+    var key = arg.slice(0, sep)
+    var value = arg.slice(sep + 1)
     if (!isNaN(Number(value)) && (value.indexOf('.') < 0)) {
-      value = Number(value);
+      value = Number(value)
     }
-    argsMap[key] = value;
+    argsMap[key] = value
   }
 
-  return argsMap;
-};
+  return argsMap
+}
 
 /**
  * Load lifecycle file.
  *
  */
 var loadLifecycle = function (app) {
-  var filePath = path.join(app.getBase(), Constants.FILEPATH.SERVER_DIR, app.serverType, Constants.FILEPATH.LIFECYCLE);
+  var filePath = path.join(app.getBase(), Constants.FILEPATH.SERVER_DIR, app.serverType, Constants.FILEPATH.LIFECYCLE)
   if (!fs.existsSync(filePath)) {
-    return;
+    return
   }
-  var lifecycle = require(filePath);
+  var lifecycle = require(filePath)
   for (var key in lifecycle) {
     if (typeof lifecycle[key] === 'function') {
-      app.lifecycleCbs[key] = lifecycle[key];
+      app.lifecycleCbs[key] = lifecycle[key]
     } else {
-      logger.warn('lifecycle.js in %s is error format.', filePath);
+      logger.warn('lifecycle.js in %s is error format.', filePath)
     }
   }
-};
+}

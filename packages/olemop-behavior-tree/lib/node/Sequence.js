@@ -24,7 +24,7 @@ class Sequence extends Composite {
     for (; this.index < this.children.length; this.index++) {
       res = this.children[this.index].doAction()
       if (res === bt.RES_SUCCESS) {
-        continue;
+        continue
       } else if (res === bt.RES_WAIT) {
         //return to parent directly if wait
         return res

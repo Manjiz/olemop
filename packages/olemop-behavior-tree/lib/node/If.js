@@ -23,7 +23,7 @@ class If extends Node {
   /**
    * Move the current mob into patrol module and remove it from ai module.
    *
-   * @returns {number} ai.RES_SUCCESS if everything ok;
+   * @returns {number} ai.RES_SUCCESS if everything ok
    *                  ai.RES_FAIL if any error.
    */
   doAction () {

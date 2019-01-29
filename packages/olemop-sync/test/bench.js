@@ -1,8 +1,8 @@
 // bench for data-snyc
 
-var MemDatabase = require('../lib/dbsync');
-var db = null;
-var assert = require('assert');
+var MemDatabase = require('../lib/dbsync')
+var db = null
+var assert = require('assert')
 
 var best = {writes: 0, hwrites:0, jwrites:0, reads: 0, hreads: 0, jreads: 0 }
 , avg = {writes: 0, writesCnt: 0, hwrites: 0, hwritesCnt: 0, jwrites: 0, jwritesCnt: 0
@@ -45,39 +45,39 @@ var objects = [
         gets(obj, num, function () {
           hsets(obj, num, function () {
             hgets(obj, num, function () {
-              console.log('');
-              cb();
-            });
-          });
+              console.log('')
+              cb()
+            })
+          })
         })
       })
       break
     case 'sets':
       sets(obj, num, function () {
-        console.log('');
-        cb();
+        console.log('')
+        cb()
       })
       break
     case 'gets':
       gets(obj, num, function () {
-        console.log('');
-        cb();
+        console.log('')
+        cb()
       })
       break
     case 'hsets':
       hsets(obj, num, function () {
-        console.log('');
-        cb();
+        console.log('')
+        cb()
       })
       break
     case 'hgets':
       hgets(obj, num, function () {
-        console.log('');
-        cb();
+        console.log('')
+        cb()
       })
       break
     default:
-      cb();
+      cb()
       break
     }
   }
@@ -87,7 +87,7 @@ var objects = [
     , clients = 0
     , timer = new Date()
     for (var i=num; i--; ) {
-      var res = db.set(i, obj);
+      var res = db.set(i, obj)
       if (res) {
         done++
       }
@@ -97,7 +97,7 @@ var objects = [
         avg.writes += result
         avg.writesCnt += 1
         console.log('sets writes:', result.toFixed(2) + '/s')
-        cb();
+        cb()
       }
     }
   }
@@ -108,7 +108,7 @@ var objects = [
     , timer = new Date()
 
     for (var i=num; i--; ) {
-      var data = db.get(i);
+      var data = db.get(i)
       if (data) {
         done++
       }
@@ -118,7 +118,7 @@ var objects = [
         avg.reads += result
         avg.readsCnt += 1
         console.log('gets reads:', result.toFixed(2) + '/s')
-        cb();
+        cb()
       }
 
     }
@@ -150,7 +150,7 @@ var objects = [
     , clients = 0
     , timer = new Date()
     for (var i=num; i--; ) {
-      var res = db.hget('hkey','num');
+      var res = db.hget('hkey','num')
       if (res) {
         done++
       }
@@ -166,8 +166,8 @@ var objects = [
   }
 
 
-  var scenario = [ ['all', 1000] , ['all', 2000] ,	['sets', 5000] , ['sets', 10000] , ['gets', 5000] , ['gets', 10000] ,	['hsets', 5000] ,	['hgets', 10000] ];
-  var scenarioLen = scenario.length;
+  var scenario = [ ['all', 1000] , ['all', 2000] ,	['sets', 5000] , ['sets', 10000] , ['gets', 5000] , ['gets', 10000] ,	['hsets', 5000] ,	['hgets', 10000] ]
+  var scenarioLen = scenario.length
 
   var next = function (i, o) {
     if (i < scenarioLen) {
@@ -204,20 +204,20 @@ var objects = [
     console.log('writes...')
     for (var i=num; i--; ) {
       if (db.set(i, '1234567890')) {
-        done++;
+        done++
       }
     }
     if (done===num) {
       done = 0
       console.log('reads...')
       for (var i=num; i--; ) {
-        var res = db.get(i);
+        var res = db.get(i)
         if (res) {
-          done++;
-          var data = res;
+          done++
+          var data = res
           assert.equal(data, '1234567890', 'Consistency error!')
           if (done===num) {
-            cb();
+            cb()
           }
         }
       }
@@ -230,7 +230,7 @@ var objects = [
 
     var cntincr = 0
     for (var i=50; i--; ) {
-      var number = db.incr('incr');
+      var number = db.incr('incr')
       cntincr++
         if (cntincr == 50) {
           console.log('incr test:', number)
@@ -254,7 +254,7 @@ var objects = [
         cntmass++
     }
     if (cntmass===50) {
-      var data = db.get('mass');
+      var data = db.get('mass')
       console.log('mass:', data)
       cnt++
         if (cnt === max) cb()
@@ -268,8 +268,8 @@ var objects = [
       console.log('benchmark starting...')
       console.log('')
       next(0, 0)
-    });
+    })
   }
 
-  var db = new MemDatabase();
-  start(db);
+  var db = new MemDatabase()
+  start(db)

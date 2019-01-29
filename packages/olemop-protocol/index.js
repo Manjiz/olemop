@@ -1,1 +1,1 @@
-module.exports = require('./lib/protocol');
+module.exports = require('./lib/protocol')

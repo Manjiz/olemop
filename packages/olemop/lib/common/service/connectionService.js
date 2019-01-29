@@ -3,15 +3,15 @@
  * record connection, login count and list
  */
 var Service = function (app) {
-  this.serverId = app.getServerId();
-  this.connCount = 0;
-  this.loginedCount = 0;
-  this.logined = {};
-};
+  this.serverId = app.getServerId()
+  this.connCount = 0
+  this.loginedCount = 0
+  this.logined = {}
+}
 
-module.exports = Service;
+module.exports = Service
 
-var pro = Service.prototype;
+var pro = Service.prototype
 
 
 /**
@@ -22,11 +22,11 @@ var pro = Service.prototype;
  */
 pro.addLoginedUser = function (uid, info) {
   if (!this.logined[uid]) {
-    this.loginedCount++;
+    this.loginedCount++
   }
-  info.uid = uid;
-  this.logined[uid] = info;
-};
+  info.uid = uid
+  this.logined[uid] = info
+}
 
 /**
  * Update user info.
@@ -34,24 +34,24 @@ pro.addLoginedUser = function (uid, info) {
  * @param info {Object} info for update.
  */
 pro.updateUserInfo = function (uid, info) {
-    var user = this.logined[uid];
+    var user = this.logined[uid]
     if (!user) {
-        return;
+        return
     }
 
     for (var p in info) {
         if (info.hasOwnProperty(p) && typeof info[p] !== 'function') {
-            user[p] = info[p];
+            user[p] = info[p]
         }
     }
-};
+}
 
 /**
  * Increase connection count
  */
 pro.increaseConnectionCount = function () {
-  this.connCount++;
-};
+  this.connCount++
+}
 
 /**
  * Remote logined user
@@ -60,10 +60,10 @@ pro.increaseConnectionCount = function () {
  */
 pro.removeLoginedUser = function (uid) {
   if (this.logined[uid]) {
-    this.loginedCount--;
+    this.loginedCount--
   }
-  delete this.logined[uid];
-};
+  delete this.logined[uid]
+}
 
 /**
  * Decrease connection count
@@ -72,12 +72,12 @@ pro.removeLoginedUser = function (uid) {
  */
 pro.decreaseConnectionCount = function (uid) {
   if (this.connCount) {
-    this.connCount--;
+    this.connCount--
   }
   if (uid) {
-    this.removeLoginedUser(uid);
+    this.removeLoginedUser(uid)
   }
-};
+}
 
 /**
  * Get statistics info
@@ -85,10 +85,10 @@ pro.decreaseConnectionCount = function (uid) {
  * @return {Object} statistics info
  */
 pro.getStatisticsInfo = function () {
-  var list = [];
+  var list = []
   for (var uid in this.logined) {
-    list.push(this.logined[uid]);
+    list.push(this.logined[uid])
   }
 
-  return {serverId: this.serverId, totalConnCount: this.connCount, loginedCount: this.loginedCount, loginedList: list};
-};
+  return {serverId: this.serverId, totalConnCount: this.connCount, loginedCount: this.loginedCount, loginedList: list}
+}

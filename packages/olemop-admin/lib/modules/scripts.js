@@ -3,30 +3,30 @@
  * Copyright(c) 2012 fantasyni <fantasyni@163.com>
  * MIT Licensed
  */
-var monitor = require('@olemop/monitor');
-var logger = require('@olemop/logger').getLogger('olemop-admin', __filename);
-var monitor = require('@olemop/monitor');
-var vm = require('vm');
-var fs = require('fs');
-var util = require('util');
-var path = require('path');
+var monitor = require('@olemop/monitor')
+var logger = require('@olemop/logger').getLogger('olemop-admin', __filename)
+var monitor = require('@olemop/monitor')
+var vm = require('vm')
+var fs = require('fs')
+var util = require('util')
+var path = require('path')
 
 module.exports = function (opts) {
-    return new Module(opts);
-};
+    return new Module(opts)
+}
 
-module.exports.moduleId = "scripts";
+module.exports.moduleId = "scripts"
 
 var Module = function (opts) {
-    this.app = opts.app;
-    this.root = opts.path;
+    this.app = opts.app
+    this.root = opts.path
     this.commands = {
         'list': list,
         'get': get,
         'save': save,
         'run': run
-    };
-};
+    }
+}
 
 Module.prototype.monitorHandler = function (agent, msg, cb) {
     var context = {
@@ -36,96 +36,96 @@ Module.prototype.monitorHandler = function (agent, msg, cb) {
         fs: require('fs'),
         process: process,
         util: util
-    };
+    }
     try {
-        vm.runInNewContext(msg.script, context);
+        vm.runInNewContext(msg.script, context)
 
-        var result = context.result;
+        var result = context.result
         if (!result) {
-            cb(null, "script result should be assigned to result value to script module context");
+            cb(null, "script result should be assigned to result value to script module context")
         } else {
-            cb(null, result);
+            cb(null, result)
         }
     } catch (e) {
-        cb(null, e.toString());
+        cb(null, e.toString())
     }
 
-    //cb(null, vm.runInContext(msg.script, context));
-};
+    //cb(null, vm.runInContext(msg.script, context))
+}
 
 Module.prototype.clientHandler = function (agent, msg, cb) {
-    var fun = this.commands[msg.command];
+    var fun = this.commands[msg.command]
     if (!fun || typeof fun !== 'function') {
-        cb('unknown command:' + msg.command);
-        return;
+        cb('unknown command:' + msg.command)
+        return
     }
 
-    fun(this, agent, msg, cb);
-};
+    fun(this, agent, msg, cb)
+}
 
 /**
  * List server id and scripts file name
  */
 var list = function (scriptModule, agent, msg, cb) {
-    var servers = [];
-    var scripts = [];
-    var idMap = agent.idMap;
+    var servers = []
+    var scripts = []
+    var idMap = agent.idMap
 
     for (var sid in idMap) {
-        servers.push(sid);
+        servers.push(sid)
     }
 
     fs.readdir(scriptModule.root, function (err, filenames) {
         if (err) {
-            filenames = [];
+            filenames = []
         }
         for (var i = 0, l = filenames.length; i < l; i++) {
-            scripts.push(filenames[i]);
+            scripts.push(filenames[i])
         }
 
         cb(null, {
             servers: servers,
             scripts: scripts
-        });
-    });
-};
+        })
+    })
+}
 
 /**
  * Get the content of the script file
  */
 var get = function (scriptModule, agent, msg, cb) {
-    var filename = msg.filename;
+    var filename = msg.filename
     if (!filename) {
-        cb('empty filename');
-        return;
+        cb('empty filename')
+        return
     }
 
     fs.readFile(path.join(scriptModule.root, filename), 'utf-8', function (err, data) {
         if (err) {
-            logger.error('fail to read script file:' + filename + ', ' + err.stack);
-            cb('fail to read script with name:' + filename);
+            logger.error('fail to read script file:' + filename + ', ' + err.stack)
+            cb('fail to read script with name:' + filename)
         }
 
-        cb(null, data);
-    });
-};
+        cb(null, data)
+    })
+}
 
 /**
  * Save a script file that posted from admin console
  */
 var save = function (scriptModule, agent, msg, cb) {
-    var filepath = path.join(scriptModule.root, msg.filename);
+    var filepath = path.join(scriptModule.root, msg.filename)
 
     fs.writeFile(filepath, msg.body, function (err) {
         if (err) {
-            logger.error('fail to write script file:' + msg.filename + ', ' + err.stack);
-            cb('fail to write script file:' + msg.filename);
-            return;
+            logger.error('fail to write script file:' + msg.filename + ', ' + err.stack)
+            cb('fail to write script file:' + msg.filename)
+            return
         }
 
-        cb();
-    });
-};
+        cb()
+    })
+}
 
 /**
  * Run the script on the specified server
@@ -133,9 +133,9 @@ var save = function (scriptModule, agent, msg, cb) {
 var run = function (scriptModule, agent, msg, cb) {
     agent.request(msg.serverId, module.exports.moduleId, msg, function (err, res) {
         if (err) {
-            logger.error('fail to run script for ' + err.stack);
-            return;
+            logger.error('fail to run script for ' + err.stack)
+            return
         }
-        cb(null, res);
-    });
-};
+        cb(null, res)
+    })
+}

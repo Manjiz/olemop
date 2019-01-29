@@ -9,4 +9,4 @@ module.exports = {
 	REMOVE_CRONS: 'remove_crons',
 	START_SERVER: 'start_server',
 	START_ALL: 'start_all'
-};
+}

@@ -1,4 +1,4 @@
-var tc = module.exports;
+var tc = module.exports
 
 tc['area.playerHandler.enterScene'] = {
     map : {
@@ -20,13 +20,13 @@ tc['area.playerHandler.enterScene'] = {
           ]}
         ]
     }
-};
+}
 
 tc.onMove = {
     'entityId':14,
     'path' : [{'x':128,'y':796},{'x':677,'y':895}],
     'speed':160
-};
+}
 
 tc.onUpgrade = {
     id:32726,
@@ -52,4 +52,4 @@ tc.onUpgrade = {
     dodgeRate:13,
     nextLevelExp:114,
     skillPoint:3
-};
+}

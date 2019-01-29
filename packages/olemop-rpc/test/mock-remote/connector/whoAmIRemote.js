@@ -4,7 +4,7 @@
 module.exports = function(app) {
   return {
     doService: function(cb) {
-      cb(null, app.id);
+      cb(null, app.id)
     }
-  };
-};
+  }
+}

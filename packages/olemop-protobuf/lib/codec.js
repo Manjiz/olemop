@@ -32,37 +32,37 @@ Encoder.encodeUInt32 = function (num) {
  * @return {[array]} A byte array represent the integer
  */
 Encoder.encodeSInt32 = function (num){
-	var n = parseInt(num);
+	var n = parseInt(num)
 	if (isNaN(n)){
-		return null;
+		return null
 	}
-	n = n<0?(Math.abs(n)*2-1):n*2;
+	n = n<0?(Math.abs(n)*2-1):n*2
 
-	return Encoder.encodeUInt32(n);
-};
+	return Encoder.encodeUInt32(n)
+}
 
 Encoder.decodeUInt32 = function (bytes){
-	var n = 0;
+	var n = 0
 
 	for (var i = 0; i < bytes.length; i++){
-		var m = parseInt(bytes[i]);
-		n = n + ((m & 0x7f) * Math.pow(2,(7*i)));
+		var m = parseInt(bytes[i])
+		n = n + ((m & 0x7f) * Math.pow(2,(7*i)))
 		if (m < 128){
-			return n;
+			return n
 		}
 	}
 
-	return n;
-};
+	return n
+}
 
 
 Encoder.decodeSInt32 = function (bytes){
-	var n = this.decodeUInt32(bytes);
-	var flag = ((n%2) === 1)?-1:1;
+	var n = this.decodeUInt32(bytes)
+	var flag = ((n%2) === 1)?-1:1
 
-	n = ((n%2 + n)/2)*flag;
+	n = ((n%2 + n)/2)*flag
 
-	return n;
-};
+	return n
+}
 
 module.exports = Encoder
