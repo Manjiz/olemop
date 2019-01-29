@@ -6,7 +6,7 @@
 
 ## 安装
 
-```
+```bash
 npm install @olemop/rpc
 ```
 

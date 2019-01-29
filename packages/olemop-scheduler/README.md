@@ -3,7 +3,7 @@
 
 As a schedule tool, it support two kinds of trigger: A simple trigger which use a js object and  a Cron time trigger which use a Cron time string.
 ##Installation
-```
+```bash
 npm install @olemop/scheduler
 ```
 ##Schedule simple Job

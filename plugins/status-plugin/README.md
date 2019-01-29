@@ -4,7 +4,7 @@
 
 ## Installation
 
-```
+```bash
 npm install @olemop/status-plugin
 ```
 
@@ -71,7 +71,7 @@ Return:
 
 ## Notice
 
-status plugin use redis as a default persistent storage, you can change it with your own implementation. 
+status plugin use redis as a default persistent storage, you can change it with your own implementation.
 
 ```javascript
 const status = require('@olemop/status-plugin')

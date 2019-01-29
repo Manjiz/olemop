@@ -4,7 +4,7 @@ sync plugin for olemop
 
 # Installation
 
-```
+```bash
 npm install @olemop/plugin-sync
 ```
 

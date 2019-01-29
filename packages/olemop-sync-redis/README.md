@@ -19,7 +19,7 @@ Data sync features include timer sync,set,get,mset,mget,hset,hget,incr,decr,flus
 
 ## Installation
 
-```
+```bash
 npm install @olemop/sync-redis
 ```
 
