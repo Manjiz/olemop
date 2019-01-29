@@ -46,8 +46,8 @@ pro.excuteTime = function () {
  * @return The nearest valid time after the given time point
  */
 pro.nextExcuteTime = function (time) {
-  //add 1s to the time so it must be the next time
-  time = !!time ? time : this.nextTime;
+  // add 1s to the time so it must be the next time
+  time = time || this.nextTime;
   time += 1000;
 
   var cronTrigger = this.trigger;

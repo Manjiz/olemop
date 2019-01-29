@@ -297,7 +297,7 @@
     var uInt8Array = new Uint8Array(buffer);
     var offset = 0;
 
-    if (!!protos){
+    if (protos){
       offset = encodeMsg(uInt8Array, offset, protos, msg);
       if (offset > 0){
         return uInt8Array.subarray(0, offset);
@@ -328,7 +328,7 @@
         case 'optional' :
           if (typeof(msg[name]) !== 'undefined'){
             var message = protos.__messages[proto.type] || MsgEncoder.protos['message ' + proto.type];
-            if (!!message && !checkMsg(msg[name], message)){
+            if (message && !checkMsg(msg[name], message)){
               console.warn('inner proto error! name: %j, proto: %j, msg: %j', name, proto, msg);
               return false;
             }
@@ -337,7 +337,7 @@
         case 'repeated' :
           //Check nest message in repeated elements
           var message = protos.__messages[proto.type] || MsgEncoder.protos['message ' + proto.type];
-          if (!!msg[name] && !!message){
+          if (msg[name] && message){
             for (var i = 0; i < msg[name].length; i++){
               if (!checkMsg(msg[name][i], message)){
                 return false;
@@ -353,7 +353,7 @@
 
   function encodeMsg(buffer, offset, protos, msg){
     for (var name in msg){
-      if (!!protos[name]){
+      if (protos[name]){
         var proto = protos[name];
 
         switch(proto.option){
@@ -402,7 +402,7 @@
       break;
       default :
         var message = protos.__messages[type] || MsgEncoder.protos['message ' + type];
-        if (!!message){
+        if (message){
           //Use a tmp buffer to build an internal msg
           var tmpBuffer = new ArrayBuffer(codec.byteLength(JSON.stringify(value))*2);
           var length = 0;
@@ -477,7 +477,7 @@
   };
 
   MsgDecoder.setProtos = function (protos){
-    if (!!protos){
+    if (protos){
       this.protos = protos;
     }
   };
@@ -488,7 +488,7 @@
     buffer = buf;
     offset = 0;
 
-    if (!!protos){
+    if (protos){
       return decodeMsg({}, protos, buffer.length);
     }
 
@@ -573,7 +573,7 @@
         return str;
       default :
         var message = protos && (protos.__messages[type] || MsgDecoder.protos['message ' + type]);
-        if (!!message){
+        if (message){
           var length = codec.decodeUInt32(getBytes());
           var msg = {};
           decodeMsg(msg, message, offset+length);

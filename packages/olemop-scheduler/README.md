@@ -99,7 +99,9 @@ Cron trigger has 7 fiels, the format is very like the cronTab in linux, only add
 ### Exampe of cron tirggers
 
 "0/2 0 8 * * 6"    Fire at every Satuaday at every even seconds of 08:00
+
 "0 30 10 1 4 *"      Fire at 10:30 on 1st of March
+
 "15 15 15 10 10 *"   Fire at Octorber 10th, at 15:15:15.
 
 ### Special characters

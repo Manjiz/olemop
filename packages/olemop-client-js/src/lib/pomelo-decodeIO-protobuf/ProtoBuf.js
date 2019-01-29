@@ -3278,13 +3278,13 @@ function loadProtoBuf(ByteBuffer) {
                         var path = require("path");
                         filename = path.resolve(filename);
                     }
-                    if (!!this.files[filename]) {
+                    if (this.files[filename]) {
                         this.reset();
                         return this; // Skip duplicate imports
                     }
                     this.files[filename] = true;
                 }
-                if (!!json['imports'] && json['imports'].length > 0) {
+                if (json['imports'] && json['imports'].length > 0) {
                     var importRoot, delim = '/', resetRoot = false;
                     if (typeof filename === 'object') { // If an import root is specified, override
                         this.importRoot = filename["root"]; resetRoot = true; // ... and reset afterwards
@@ -3341,23 +3341,23 @@ function loadProtoBuf(ByteBuffer) {
                         this.importRoot = null;
                     }
                 }
-                if (!!json['messages']) {
-                    if (!!json['package']) this.define(json['package'], json["options"]);
+                if (json['messages']) {
+                    if (json['package']) this.define(json['package'], json["options"]);
                     this.create(json['messages']);
                     this.reset();
                 }
-                if (!!json['enums']) {
-                    if (!!json['package']) this.define(json['package'], json["options"]);
+                if (json['enums']) {
+                    if (json['package']) this.define(json['package'], json["options"]);
                     this.create(json['enums']);
                     this.reset();
                 }
-                if (!!json['services']) {
-                    if (!!json['package']) this.define(json['package'], json["options"]);
+                if (json['services']) {
+                    if (json['package']) this.define(json['package'], json["options"]);
                     this.create(json['services']);
                     this.reset();
                 }
-                if (!!json['extends']) {
-                    if (!!json['package']) this.define(json['package'], json["options"]);
+                if (json['extends']) {
+                    if (json['package']) this.define(json['package'], json["options"]);
                     this.create(json['extends']);
                     this.reset();
                 }

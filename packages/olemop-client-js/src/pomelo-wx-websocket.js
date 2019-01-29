@@ -161,10 +161,10 @@ var connect = function (params, url, cb) {
         serverProtos = protos.server || {};
         clientProtos = protos.client || {};
 
-        if (!!protobuf) {
+        if (protobuf) {
           protobuf.init({encoderProtos: clientProtos, decoderProtos: serverProtos});
         }
-        if (!!decodeIO_protobuf) {
+        if (decodeIO_protobuf) {
           decodeIO_encoder = decodeIO_protobuf.loadJson(clientProtos);
           decodeIO_decoder = decodeIO_protobuf.loadJson(serverProtos);
         }
@@ -175,7 +175,7 @@ var connect = function (params, url, cb) {
       handshakeBuffer.sys.protoVersion = protoVersion;
 
       var onopen = function (event) {
-        if (!!reconnect) {
+        if (reconnect) {
           pomelo.emit('reconnect');
         }
         reset();
@@ -197,7 +197,7 @@ var connect = function (params, url, cb) {
         pomelo.emit('close',event);
         pomelo.emit('disconnect', event);
         // console.error('socket close: ', event);
-        if (!!params.reconnect && reconnectAttempts < maxReconnectAttempts) {
+        if (params.reconnect && reconnectAttempts < maxReconnectAttempts) {
           reconnect = true;
           reconnectAttempts++;
           reconncetTimer = setTimeout(function () {
@@ -475,10 +475,10 @@ var initData = function (data) {
     // window.localStorage.setItem('protos', JSON.stringify(protos));
     wx.setStorage({ key: 'protos', data: JSON.stringify(protos) })
 
-    if (!!protobuf) {
+    if (protobuf) {
       protobuf.init({encoderProtos: protos.client, decoderProtos: protos.server});
     }
-    if (!!decodeIO_protobuf) {
+    if (decodeIO_protobuf) {
       decodeIO_encoder = decodeIO_protobuf.loadJson(clientProtos);
       decodeIO_decoder = decodeIO_protobuf.loadJson(serverProtos);
     }

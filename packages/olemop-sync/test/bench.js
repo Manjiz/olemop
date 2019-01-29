@@ -109,7 +109,7 @@ var objects = [
 
     for (var i=num; i--; ) {
       var data = db.get(i);
-      if (!!data) {
+      if (data) {
         done++
       }
       if (done === num) {
@@ -131,7 +131,7 @@ var objects = [
 
     for (var i=num; i--; ) {
       var res = db.hset('hkey','num',num)
-      if (!!res) {
+      if (res) {
         done++
       }
       if (done === num) {
@@ -151,7 +151,7 @@ var objects = [
     , timer = new Date()
     for (var i=num; i--; ) {
       var res = db.hget('hkey','num');
-      if (!!res) {
+      if (res) {
         done++
       }
       if (done === num) {
@@ -212,7 +212,7 @@ var objects = [
       console.log('reads...')
       for (var i=num; i--; ) {
         var res = db.get(i);
-        if (!!res) {
+        if (res) {
           done++;
           var data = res;
           assert.equal(data, '1234567890', 'Consistency error!')

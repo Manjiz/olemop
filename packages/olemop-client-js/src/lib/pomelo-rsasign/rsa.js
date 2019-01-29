@@ -1822,7 +1822,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          * @example
          *
          *     var processedData = bufferedBlockAlgorithm._process();
-         *     var processedData = bufferedBlockAlgorithm._process(!!'flush');
+         *     var processedData = bufferedBlockAlgorithm._process('flush');
          */
         _process: function (doFlush) {
             // Shortcuts

@@ -30,7 +30,7 @@ Encoder.encode = function (route, msg){
 	var buffer = new Buffer(length);
 	var offset = 0;
 
-	if (!!protos){
+	if (protos){
 		offset = encodeMsg(buffer, offset, protos, msg);
 		if (offset > 0){
 			return buffer.slice(0, offset);
@@ -62,7 +62,7 @@ function checkMsg(msg, protos){
 			case 'optional' :
 				if (typeof(msg[name]) !== 'undefined'){
 					var message = protos.__messages[proto.type] || Encoder.protos['message ' + proto.type];
-					if (!!message && !checkMsg(msg[name], message)){
+					if (message && !checkMsg(msg[name], message)){
 						console.warn('inner proto error! name: %j, proto: %j, msg: %j', name, proto, msg);
 						return false;
 					}
@@ -71,7 +71,7 @@ function checkMsg(msg, protos){
 			case 'repeated' :
 				//Check nest message in repeated elements
 				var message = protos.__messages[proto.type] || Encoder.protos['message ' + proto.type];
-				if (!!msg[name] && !!message){
+				if (msg[name] && message){
 					for (var i = 0; i < msg[name].length; i++){
 						if (!checkMsg(msg[name][i], message)){
 							return false;
@@ -87,7 +87,7 @@ function checkMsg(msg, protos){
 
 function encodeMsg(buffer, offset, protos, msg){
 	for (var name in msg){
-		if (!!protos[name]){
+		if (protos[name]){
 			var proto = protos[name];
 
 			switch(proto.option){
@@ -97,7 +97,7 @@ function encodeMsg(buffer, offset, protos, msg){
 					offset = encodeProp(msg[name], proto.type, offset, buffer, protos);
 				break;
 				case 'repeated' :
-					if (!!msg[name] && msg[name].length > 0){
+					if (msg[name] && msg[name].length > 0){
 						offset = encodeArray(msg[name], proto, offset, buffer, protos);
 					}
 				break;
@@ -138,7 +138,7 @@ function encodeProp(value, type, offset, buffer, protos){
 		break;
 		default :
 			var message = protos.__messages[type] || Encoder.protos['message ' + type];
-			if (!!message){
+			if (message){
 				//Use a tmp buffer to build an internal msg
 				var tmpBuffer = new Buffer(Buffer.byteLength(JSON.stringify(value))*2);
 				length = 0;

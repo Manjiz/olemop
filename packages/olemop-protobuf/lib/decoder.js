@@ -11,7 +11,7 @@ Decoder.init = function (protos){
 };
 
 Decoder.setProtos = function (protos){
-	if (!!protos){
+	if (protos){
 		this.protos = protos;
 	}
 };
@@ -22,7 +22,7 @@ Decoder.decode = function (route, buf){
 	buffer = buf;
 	offset = 0;
 
-	if (!!protos){
+	if (protos){
 		return decodeMsg({}, protos, buffer.length);
 	}
 

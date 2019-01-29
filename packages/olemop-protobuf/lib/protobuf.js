@@ -31,7 +31,7 @@ Protobuf.encode2Bytes = function (key, msg){
 Protobuf.encodeStr = function (key, msg, code){
 	code = code || 'base64';
 	var buffer = Protobuf.encode(key, msg);
-	return !!buffer?buffer.toString(code):buffer;
+	return buffer ? buffer.toString(code) : buffer
 };
 
 Protobuf.decode = function (key, msg){
@@ -42,7 +42,7 @@ Protobuf.decodeStr = function (key, str, code){
 	code = code || 'base64';
 	var buffer = new Buffer(str, code);
 
-	return !!buffer?Protobuf.decode(key, buffer):buffer;
+	return buffer ? Protobuf.decode(key, buffer) : buffer
 };
 
 Protobuf.parse = function (json){

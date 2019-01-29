@@ -66,7 +66,7 @@ ConsoleService.prototype.start = function (cb) {
 	if (this.master) {
 		var self = this;
 		this.agent.listen(this.port, function (err) {
-			if (!!err) {
+			if (err) {
 				utils.invokeCallback(cb, err);
 				return;
 			}

@@ -19,7 +19,7 @@ var logger = require('log4js').getLogger(__filename);
 var lateCount = 0;
 
 var Job = function (trigger, jobFunc, jobData){
-  this.data = (!!jobData)?jobData:null;
+  this.data = jobData ? jobData : null
   this.func = jobFunc;
 
   if (typeof(trigger) == 'string'){

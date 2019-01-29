@@ -78,7 +78,7 @@ function excuteJob(){
   var job = peekNextJob();
   var nextJob;
 
-  while(!!job && (job.excuteTime()-Date.now())<accuracy){
+  while(job && job.excuteTime() - Date.now() < accuracy){
     job.run();
     queue.pop();
 
@@ -115,7 +115,7 @@ function peekNextJob(){
     if (!job) queue.pop();
   }while(!job && queue.size() > 0);
 
-  return (!!job)?job:null;
+  return job ? job : null
 }
 
 /**
@@ -130,7 +130,7 @@ function getNextJob(){
     job = map[id];
   }
 
-  return (!!job)?job:null;
+  return job ? job : null
 }
 
 function comparator(e1, e2){

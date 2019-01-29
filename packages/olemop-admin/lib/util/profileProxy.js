@@ -94,7 +94,7 @@ pro.getProfile = function (id, params, clientId, agent) {
 	if (!profile || !profile.finish) {
 		var timerId = setInterval(function () {
 			profile = self.profiles[params.type][params.uid];
-			if (!!profile) {
+			if (profile) {
 				clearInterval(timerId);
 				self.asyncGet(id, params, profile, clientId, agent);
 			}

@@ -203,9 +203,9 @@ function loadByteBuffer(Long) {
                 return ByteBuffer.prototype.clone.call(buffer); // Also makes ByteBuffer-like a ByteBuffer
             }
             // Wrap any object that is or contains an ArrayBuffer
-            if (!!buffer["array"]) {
+            if (buffer["array"]) {
                 buffer = buffer["array"];
-            } else if (!!buffer["buffer"]) {
+            } else if (buffer["buffer"]) {
                 buffer = buffer["buffer"];
             }
             if (!(buffer instanceof ArrayBuffer)) {
