@@ -10,7 +10,7 @@
 // This software is licensed under the terms of the MIT License.
 // http://kjur.github.com/jsrsasign/license/
 //
-// The above copyright and license notice shall be 
+// The above copyright and license notice shall be
 // included in all copies or substantial portions of the Software.
 //
 // Depends on:
@@ -24,9 +24,9 @@
 //   f('3080....0000', 2) ... 80 ... -1
 //
 //   Requirements:
-//   - ASN.1 type octet length MUST be 1. 
+//   - ASN.1 type octet length MUST be 1.
 //     (i.e. ASN.1 primitives like SET, SEQUENCE, INTEGER, OCTETSTRING ...)
-//   - 
+//   -
 
 /**
  * @fileOverview
@@ -54,9 +54,12 @@ function parseBigInt(str, r) {
 function _asnhex_getByteLengthOfL_AtObj(s, pos) {
   if (s.substring(pos + 2, pos + 3) != '8') return 1
   var i = parseInt(s.substring(pos + 3, pos + 4))
-  if (i == 0) return -1 		// length octet '80' indefinite length
-  if (0 < i && i < 10) return i + 1	// including '8?' octet
-  return -2				// malformed format
+  // length octet '80' indefinite length
+  if (i == 0) return -1
+  // including '8?' octet
+  if (0 < i && i < 10) return i + 1
+  // malformed format
+  return -2
 }
 
 

@@ -1,7 +1,9 @@
 var logger = require('@olemop/logger').getLogger('olemop-admin', 'test_module')
 
-var DEFAULT_INTERVAL = 5 // in second
-var DEFAULT_DELAY = 1 // in second
+// in second
+var DEFAULT_INTERVAL = 5
+// in second
+var DEFAULT_DELAY = 1
 
 module.exports = function (opts) {
 	return new Module(opts)

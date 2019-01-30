@@ -104,7 +104,8 @@ function am3(i,x,w,j,c,n) {
 // } else if (j_lm && (navigator.appName != "Netscape")) {
 //	BigInteger.prototype.am = am1
 //	dbits = 26
-// } else { // Mozilla/Netscape seems to prefer am3
+// // Mozilla/Netscape seems to prefer am3
+// } else {
 //	BigInteger.prototype.am = am3
 //	dbits = 28
 // }
@@ -167,7 +168,8 @@ function bnpFromString(s,b) {
   var k
   if (b == 16) k = 4
   else if (b == 8) k = 3
-  else if (b == 256) k = 8 // byte array
+  // byte array
+  else if (b == 256) k = 8
   else if (b == 2) k = 1
   else if (b == 32) k = 5
   else if (b == 4) k = 2
@@ -406,7 +408,8 @@ function bnpDivRemTo(m,q,r) {
   }
   if (r == null) r = nbi()
   var y = nbi(), ts = this.s, ms = m.s
-  var nsh = this.DB-nbits(pm[pm.t-1])	// normalize modulus
+  // normalize modulus
+  var nsh = this.DB-nbits(pm[pm.t-1])
   if (nsh > 0) { pm.lShiftTo(nsh,y); pt.lShiftTo(nsh,r); }
   else { pm.copyTo(y); pt.copyTo(r); }
   var ys = y.t
@@ -421,12 +424,14 @@ function bnpDivRemTo(m,q,r) {
     r.subTo(t,r)
   }
   BigInteger.ONE.dlShiftTo(ys,t)
-  t.subTo(y,y)	// "negative" y so we can replace sub with am later
+  // "negative" y so we can replace sub with am later
+  t.subTo(y,y)
   while (y.t < ys) y[y.t++] = 0
   while (--j >= 0) {
     // Estimate quotient digit
     var qd = (r[--i]==y0)?this.DM:Math.floor(r[i]*d1+(r[i-1]+e)*d2)
-    if ((r[i]+=y.am(0,qd,r,j,0,ys)) < qd) {	// Try it out
+    // Try it out
+    if ((r[i]+=y.am(0,qd,r,j,0,ys)) < qd) {
       y.dlShiftTo(j,t)
       r.subTo(t,r)
       while (r[i] < --qd) r.subTo(t,r)
@@ -438,7 +443,8 @@ function bnpDivRemTo(m,q,r) {
   }
   r.t = ys
   r.clamp()
-  if (nsh > 0) r.rShiftTo(nsh,r)	// Denormalize remainder
+  // Denormalize remainder
+  if (nsh > 0) r.rShiftTo(nsh,r)
   if (ts < 0) BigInteger.ZERO.subTo(r,r)
 }
 
@@ -481,13 +487,18 @@ function bnpInvDigit() {
   if (this.t < 1) return 0
   var x = this[0]
   if ((x&1) == 0) return 0
-  var y = x&3		// y == 1/x mod 2^2
-  y = (y*(2-(x&0xf)*y))&0xf	// y == 1/x mod 2^4
-  y = (y*(2-(x&0xff)*y))&0xff	// y == 1/x mod 2^8
-  y = (y*(2-(((x&0xffff)*y)&0xffff)))&0xffff	// y == 1/x mod 2^16
+  // y == 1/x mod 2^2
+  var y = x&3
+  // y == 1/x mod 2^4
+  y = (y*(2-(x&0xf)*y))&0xf
+  // y == 1/x mod 2^8
+  y = (y*(2-(x&0xff)*y))&0xff
+  // y == 1/x mod 2^16
+  y = (y*(2-(((x&0xffff)*y)&0xffff)))&0xffff
   // last step - calculate inverse mod DV directly
   // assumes 16 < DB <= 32 and assumes ability to handle 48-bit ints
-  y = (y*(2-x*y%this.DV))%this.DV		// y == 1/x mod 2^dbits
+  // y == 1/x mod 2^dbits
+  y = (y*(2-x*y%this.DV))%this.DV
   // we really want the negative inverse, and -DV < y < DV
   return (y>0)?this.DV-y:-y
 }
@@ -521,7 +532,8 @@ function montRevert(x) {
 
 // x = x/R mod m (HAC 14.32)
 function montReduce(x) {
-  while (x.t <= this.mt2)	// pad x so am has enough room later
+  // pad x so am has enough room later
+  while (x.t <= this.mt2)
     x[x.t++] = 0
   for (var i = 0; i < this.m.t; ++i) {
     // faster way of calculating u0 = x[i]*mp mod DV
@@ -692,9 +704,11 @@ if ("number" == typeof b) {
  if (a < 2) this.fromInt(1)
  else {
    this.fromNumber(a,c)
-   if (!this.testBit(a-1))	// force MSB set
+   // force MSB set
+   if (!this.testBit(a-1))
      this.bitwiseTo(BigInteger.ONE.shiftLeft(a-1),op_or,this)
-   if (this.isEven()) this.dAddOffset(1,0) // force odd
+     // force odd
+   if (this.isEven()) this.dAddOffset(1,0)
    while (!this.isProbablePrime(b)) {
      this.dAddOffset(2,0)
      if (this.bitLength() > a) this.subTo(BigInteger.ONE.shiftLeft(a-1),this)
@@ -949,7 +963,8 @@ function bnPow(e) { return this.exp(e,new NullExp()); }
 // "this" should be the larger one if appropriate.
 function bnpMultiplyLowerTo(a,n,r) {
 var i = Math.min(this.t+a.t,n)
-r.s = 0 // assumes a,this >= 0
+// assumes a,this >= 0
+r.s = 0
 r.t = i
 while (i > 0) r[--i] = 0
 var j
@@ -963,7 +978,8 @@ r.clamp()
 function bnpMultiplyUpperTo(a,n,r) {
 --n
 var i = r.t = this.t+a.t-n
-r.s = 0 // assumes a,this >= 0
+// assumes a,this >= 0
+r.s = 0
 while (--i >= 0) r[i] = 0
 for (i = Math.max(n-this.t,0); i < a.t; ++i)
  r[this.t+i-n] = this.am(n-i,a[i],r,0,0,this.t+i-n)
@@ -1053,7 +1069,8 @@ while (j >= 0) {
  n = k
  while ((w&1) == 0) { w >>= 1; --n; }
  if ((i -= n) < 0) { i += this.DB; --j; }
- if (is1) {	// ret == 1, don't bother squaring or multiplying it
+ // ret == 1, don't bother squaring or multiplying it
+ if (is1) {
    g[w].copyTo(r)
    is1 = false
  }

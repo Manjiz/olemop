@@ -115,11 +115,13 @@ const doSend = (socket, dataObj) => {
 const Acceptor = function (opts, cb) {
   EventEmitter.call(this)
   this.bufferMsg = opts.bufferMsg
-  this.interval = opts.interval // flush interval in ms
+  // flush interval in ms
+  this.interval = opts.interval
   this.rpcDebugLog = opts.rpcDebugLog
   this.rpcLogger = opts.rpcLogger
   this.whitelist = opts.whitelist
-  this._interval = null // interval object
+  // interval object
+  this._interval = null
   this.sockets = {}
   this.msgQueues = {}
   this.cb = cb

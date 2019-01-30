@@ -48,7 +48,8 @@ function scheduleJob(trigger, jobFunc, jobData) {
  */
 function cancelJob(id) {
   var curJob = queue.peek()
-  if (curJob && id === curJob.id) { // to avoid queue.peek() is null
+  // to avoid queue.peek() is null
+  if (curJob && id === curJob.id) {
     queue.pop()
     delete map[id]
 

@@ -14,9 +14,12 @@ var Constants = require('../util/constants')
 var FilterService = require('../common/service/filterService')
 var HandlerService = require('../common/service/handlerService')
 
-var ST_INITED = 0    // server inited
-var ST_STARTED = 1   // server started
-var ST_STOPED = 2    // server stoped
+// server inited
+var ST_INITED = 0
+// server started
+var ST_STARTED = 1
+// server stoped
+var ST_STOPED = 2
 
 /**
  * Server factory function.
@@ -383,7 +386,7 @@ var doHandle = function (server, msg, session, routeRecord, cb) {
 
       response(false, self, err, msg, session, resp, opts, cb)
     })
-  }  // end of handle
+  }
 
   beforeFilter(false, server, msg, session, handle)
 }

@@ -189,8 +189,10 @@ ChannelService.prototype.broadcast = (stype, route, msg, opts, cb) => {
  */
 var Channel = function (name, service) {
   this.name = name
-  this.groups = {}       // group map for uids. key: sid, value: [uid]
-  this.records = {}      // member records. key: uid
+  // group map for uids. key: sid, value: [uid]
+  this.groups = {}
+  // member records. key: uid
+  this.records = {}
   this.__channelService__ = service
   this.state = ST_INITED
   this.userAmount =0
@@ -232,7 +234,8 @@ Channel.prototype.leave = function (uid, sid) {
     delete this.records[uid]
     this.userAmount = this.userAmount-1
   }
-  if (this.userAmount<0) this.userAmount=0// robust
+  // robust
+  if (this.userAmount<0) this.userAmount=0
   removeFromStore(this.__channelService__, genKey(this.__channelService__, this.name), genValue(sid, uid))
   if (this.groups[sid] && this.groups[sid].length === 0) {
     delete this.groups[sid]

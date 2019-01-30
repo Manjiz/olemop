@@ -9,7 +9,8 @@ var Service = function (app, opts) {
   opts = opts || {}
   this.app = app
   this.flushInterval = opts.flushInterval || DEFAULT_FLUSH_INTERVAL
-  this.sessions = {}   // sid -> msg queue
+  // sid -> msg queue
+  this.sessions = {}
   this.tid = null
 }
 

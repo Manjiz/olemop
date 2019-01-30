@@ -58,7 +58,8 @@ function hex2b64(h) {
 function b64tohex(s) {
   var ret = ''
   var i
-  var k = 0 // b64 state, 0-3
+  // b64 state, 0-3
+  var k = 0
   var slop
   for (i = 0; i < s.length; ++i) {
     if (s.charAt(i) == b64pad) break

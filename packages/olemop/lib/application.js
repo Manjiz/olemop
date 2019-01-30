@@ -25,10 +25,14 @@ var Application = module.exports = {}
 /**
  * Application states
  */
-var STATE_INITED  = 1  // app has inited
-var STATE_START = 2  // app start
-var STATE_STARTED = 3  // app has started
-var STATE_STOPED  = 4  // app has stoped
+// app has inited
+var STATE_INITED  = 1
+// app start
+var STATE_START = 2
+// app has started
+var STATE_STARTED = 3
+// app has stoped
+var STATE_STOPED  = 4
 
 /**
  * Initialize the server.
@@ -37,26 +41,40 @@ var STATE_STOPED  = 4  // app has stoped
  */
 Application.init = function (opts) {
   opts = opts || {}
-  this.loaded = []       // loaded component list
-  this.components = {}   // name -> component map
-  this.settings = {}     // collection keep set/get
+  // loaded component list
+  this.loaded = []
+  // name -> component map
+  this.components = {}
+  // collection keep set/get
+  this.settings = {}
   var base = opts.base || path.dirname(require.main.filename)
   this.set(Constants.RESERVED.BASE, base, true)
-  this.event = new EventEmitter()  // event object to sub/pub events
+  // event object to sub/pub events
+  this.event = new EventEmitter()
 
   // current server info
-  this.serverId = null   // current server id
-  this.serverType = null // current server type
-  this.curServer = null  // current server info
-  this.startTime = null // current server start time
+  // current server id
+  this.serverId = null
+  // current server type
+  this.serverType = null
+  // current server info
+  this.curServer = null
+  // current server start time
+  this.startTime = null
 
   // global server infos
-  this.master = null         // master server info
-  this.servers = {}          // current global server info maps, id -> info
-  this.serverTypeMaps = {}   // current global type maps, type -> [info]
-  this.serverTypes = []      // current global server type list
-  this.lifecycleCbs = {}     // current server custom lifecycle callbacks
-  this.clusterSeq = {}       // cluster id seqence
+  // master server info
+  this.master = null
+  // current global server info maps, id -> info
+  this.servers = {}
+  // current global type maps, type -> [info]
+  this.serverTypeMaps = {}
+  // current global server type list
+  this.serverTypes = []
+  // current server custom lifecycle callbacks
+  this.lifecycleCbs = {}
+  // cluster id seqence
+  this.clusterSeq = {}
 
   appUtil.defaultConfiguration(this)
 
@@ -454,12 +472,16 @@ Application.stop = function (force) {
  * Example:
  *
  *  app.set('key1', 'value1')
- *  app.get('key1')  // 'value1'
- *  app.key1         // undefined
+ *  // 'value1'
+ *  app.get('key1')
+ *  // undefined
+ *  app.key1
  *
  *  app.set('key2', 'value2', true)
- *  app.get('key2')  // 'value2'
- *  app.key2         // 'value2'
+ *  // 'value2'
+ *  app.get('key2')
+ *  // 'value2'
+ *  app.key2
  *
  * @param {string} setting the setting of application
  * @param {string} val the setting's value

@@ -5,8 +5,10 @@ var logger = require('@olemop/logger').getLogger('olemop', __filename)
  * Register and fire before and after filters.
  */
 var Service = function () {
-  this.befores = []    // before filters
-  this.afters = []     // after filters
+  // before filters
+  this.befores = []
+  // after filters
+  this.afters = []
 }
 
 module.exports = Service
@@ -60,7 +62,7 @@ Service.prototype.beforeFilter = function (msg, session, cb) {
       logger.error('meet invalid before filter, handler or handler.before should be function.')
       next(new Error('invalid before filter.'))
     }
-  } // end of next
+  }
 
   next()
 }
@@ -94,7 +96,7 @@ Service.prototype.afterFilter = function (err, msg, session, resp, cb) {
       logger.error('meet invalid after filter, handler or handler.after should be function.')
       next(new Error('invalid after filter.'))
     }
-  } // end of next
+  }
 
   next(err)
 }

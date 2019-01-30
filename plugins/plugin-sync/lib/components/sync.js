@@ -9,8 +9,10 @@ let instance = null
 /**
  * Sync states
  */
-const STATE_STARTED = 1    // sync has started
-const STATE_STOPED  = 2    // sync has stoped
+// sync has started
+const STATE_STARTED = 1
+// sync has stoped
+const STATE_STOPED  = 2
 
 /**
  * Init sync

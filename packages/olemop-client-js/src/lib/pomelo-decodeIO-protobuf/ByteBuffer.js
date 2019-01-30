@@ -191,8 +191,9 @@ function loadByteBuffer(Long) {
             var b
             // Wrap Buffer
             if (Buffer && Buffer.isBuffer(buffer)) {
-                b = new Uint8Array(buffer).buffer // noop on node <= 0.8
-                buffer = (b === buffer) ? b2ab(buffer) : b
+              // noop on node <= 0.8
+              b = new Uint8Array(buffer).buffer
+              buffer = (b === buffer) ? b2ab(buffer) : b
             }
             // Refuse to wrap anything that's null or not an object
             if (buffer === null || typeof buffer !== 'object') {
@@ -200,7 +201,8 @@ function loadByteBuffer(Long) {
             }
             // Wrap ByteBuffer by cloning (preserve offsets)
             if (ByteBuffer.isByteBuffer(buffer)) {
-                return ByteBuffer.prototype.clone.call(buffer) // Also makes ByteBuffer-like a ByteBuffer
+              // Also makes ByteBuffer-like a ByteBuffer
+              return ByteBuffer.prototype.clone.call(buffer)
             }
             // Wrap any object that is or contains an ArrayBuffer
             if (buffer["array"]) {
@@ -249,7 +251,8 @@ function loadByteBuffer(Long) {
          */
         ByteBuffer.prototype.resize = function (capacity) {
             if (capacity < 1) return false
-            if (this.array === null) { // Silently recreate
+            // Silently recreate
+            if (this.array === null) {
                 this.array = new ArrayBuffer(capacity)
                 this.view = new DataView(this.array)
             }
@@ -435,11 +438,13 @@ function loadByteBuffer(Long) {
             }
             if (this.offset === this.length) {
                 this.array = new ArrayBuffer(0)
-                this.view = null // A DataView on a zero-length AB would throw
+                // A DataView on a zero-length AB would throw
+                this.view = null
                 return this
             }
             if (this.offset === 0 && this.length === this.array.byteLength) {
-                return this // Already compacted
+              // Already compacted
+              return this
             }
             var srcView = new Uint8Array(this.array)
             var dst = new ArrayBuffer(this.length-this.offset)
@@ -514,13 +519,15 @@ function loadByteBuffer(Long) {
                 throw(new Error(src+" cannot be appended to "+this+": Already destroyed"))
             }
             var n = src.length - src.offset
-            if (n == 0) return this // Nothing to append
+            // Nothing to append
+            if (n == 0) return this
             if (n < 0) {
                 src = src.clone().flip()
                 n = src.length - src.offset
             }
             offset = typeof offset !== 'undefined' ? offset : (this.offset+=n)-n
-            this.ensureCapacity(offset+n) // Reinitializes if required
+            // Reinitializes if required
+            this.ensureCapacity(offset+n)
             var srcView = new Uint8Array(src.array)
             var dstView = new Uint8Array(this.array)
             dstView.set(srcView.subarray(src.offset, src.length), offset)
@@ -545,7 +552,8 @@ function loadByteBuffer(Long) {
                 throw(src+" cannot be prepended to "+this+": Already destroyed")
             }
             var n = src.length - src.offset
-            if (n == 0) return this // Nothing to prepend
+            // Nothing to prepend
+            if (n == 0) return this
             if (n < 0) {
                 src = src.clone().flip()
                 n = src.length - src.offset
@@ -1095,7 +1103,8 @@ function loadByteBuffer(Long) {
                 }
                 ++count
             } while (b & 0x80)
-            value = value | 0 // Make sure to discard the higher order bits
+            // Make sure to discard the higher order bits
+            value = value | 0
             if (advance) {
                 this.offset += count
                 return value
@@ -1790,7 +1799,8 @@ function loadByteBuffer(Long) {
             var advance = typeof offset === 'undefined'
             offset = typeof offset !== 'undefined' ? offset : this.offset
             var start = offset
-            var encLen = ByteBuffer.calculateUTF8String(str) // See [1]
+            // See [1]
+            var encLen = ByteBuffer.calculateUTF8String(str)
             this.ensureCapacity(offset+encLen)
             for (var i=0, j=str.length; i<j; ++i) {
                 // [1] Does not throw since JS strings are already UTF8 encoded
@@ -1846,7 +1856,8 @@ function loadByteBuffer(Long) {
             var advance = typeof offset === 'undefined'
             offset = typeof offset !== 'undefined' ? offset : this.offset
             var dec, result = '', start = offset
-            length = offset + length // Limit
+            // Limit
+            length = offset + length
             while (offset < length) {
                 dec = ByteBuffer.decodeUTF8Char(this, offset)
                 offset += dec["length"]
@@ -2246,8 +2257,9 @@ function loadByteBuffer(Long) {
             }
             var copied = false
             if (b.offset > 0 || b.length < b.array.byteLength) {
-                b.compact() // Will always create a new backing buffer because of the above condition
-                copied = true
+              // Will always create a new backing buffer because of the above condition
+              b.compact()
+              copied = true
             }
             return forceCopy && !copied ? b.copy().array : b.array
         }

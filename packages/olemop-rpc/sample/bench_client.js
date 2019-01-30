@@ -52,7 +52,8 @@ var times = 0
 var mock_data_1 = 'hello'
 var mock_data_2 = 'hello'
 
-var num_repeat = 200 // 100 200 300 400 800
+// 100 200 300 400 800
+var num_repeat = 200
 
 for (var i = 0; i < num_repeat; i++) {
   mock_data_2 += mock_data_1

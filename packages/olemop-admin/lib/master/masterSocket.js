@@ -36,7 +36,7 @@ MasterSocket.prototype.onRegister = function (msg) {
 			self.registered = true
 		})
 		return
-	} // end of if (serverType === 'client')
+	}
 
 	if (serverType == Constants.TYPE_MONITOR) {
 		if (!serverId) {
@@ -57,7 +57,7 @@ MasterSocket.prototype.onRegister = function (msg) {
 
 		this.repushQosMessage(serverId)
 		return
-	} // end of if (serverType === 'monitor')
+	}
 
 	this.agent.doSend(socket, 'register', {
 		code: protocol.PRO_FAIL,

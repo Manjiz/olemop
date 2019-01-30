@@ -23,7 +23,8 @@ var Monitor = function (app, opts) {
     port: this.masterInfo.port,
     info: this.serverInfo,
     env: this.app.get(Constants.RESERVED.ENV),
-    authServer: app.get('adminAuthServerMonitor') // auth server function
+    // auth server function
+    authServer: app.get('adminAuthServerMonitor')
   })
 }
 

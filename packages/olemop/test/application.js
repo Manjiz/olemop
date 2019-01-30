@@ -14,7 +14,8 @@ describe('application test', function () {
   describe('#init', function () {
     it('should init the app instance', function () {
       app.init({base: mockBase})
-      app.state.should.equal(1)  // magic number from application.js
+      // magic number from application.js
+      app.state.should.equal(1)
     })
   })
 

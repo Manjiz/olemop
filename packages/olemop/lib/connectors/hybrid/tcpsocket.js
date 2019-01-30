@@ -7,9 +7,12 @@ var logger = require('@olemop/logger').getLogger('olemop', __filename)
 /**
  * Work states
  */
-var ST_HEAD = 1      // wait for head
-var ST_BODY = 2      // wait for body
-var ST_CLOSED = 3    // closed
+// wait for head
+var ST_HEAD = 1
+// wait for body
+var ST_BODY = 2
+// closed
+var ST_CLOSED = 3
 
 /**
  * Tcp socket wrapper with package compositing.

@@ -6,8 +6,10 @@
 var monitor = require('@olemop/monitor')
 var logger = require('@olemop/logger').getLogger('olemop-admin', __filename)
 
-var DEFAULT_INTERVAL = 5 * 60		// in second
-var DEFAULT_DELAY = 10						// in second
+// in second
+var DEFAULT_INTERVAL = 5 * 60
+// in second
+var DEFAULT_DELAY = 10
 
 module.exports = function (opts) {
 	return new Module(opts)

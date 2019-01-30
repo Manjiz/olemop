@@ -9,7 +9,8 @@ var ST_INITED = 1
 var ST_CONNECTED = 2
 var ST_REGISTERED = 3
 var ST_CLOSED = 4
-var STATUS_INTERVAL = 5 * 1000 // 60 seconds
+// 60 seconds
+var STATUS_INTERVAL = 5 * 1000
 
 /**
  * MonitorAgent Constructor

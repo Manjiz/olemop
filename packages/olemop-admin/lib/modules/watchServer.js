@@ -89,8 +89,9 @@ Module.prototype.monitorHandler = function (agent, msg, cb) {
 Module.prototype.clientHandler = function (agent, msg, cb) {
 	var comd = msg['comd']
 	var context = msg['context']
-	var param = msg['param']
-	var app = this.app // master app
+  var param = msg['param']
+  // master app
+	var app = this.app
 
 	if (!comd || !context) {
 		cb('lack of comd or context param')

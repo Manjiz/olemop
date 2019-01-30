@@ -20,13 +20,13 @@ utils.invokeCallback = function (cb) {
 utils.format = function (date, format) {
     format = format || 'MM-dd-hhmm'
     var o = {
-        "M+": date.getMonth() + 1, //month
-        "d+": date.getDate(), //day
-        "h+": date.getHours(), //hour
-        "m+": date.getMinutes(), //minute
-        "s+": date.getSeconds(), //second
-        "q+": Math.floor((date.getMonth() + 3) / 3), //quarter
-        "S": date.getMilliseconds() //millisecond
+        "M+": date.getMonth() + 1,
+        "d+": date.getDate(),
+        "h+": date.getHours(),
+        "m+": date.getMinutes(),
+        "s+": date.getSeconds(),
+        "q+": Math.floor((date.getMonth() + 3) / 3),
+        "S": date.getMilliseconds()
     }
 
     if (/(y+)/.test(format)) {

@@ -172,9 +172,10 @@ var objects = [
   var next = function (i, o) {
     if (i < scenarioLen) {
       bench(objects[o], scenario[i][0], scenario[i][1], function () {
+        // give some time for the hd to breath
         setTimeout(function () {
           next(++i, o)
-        }, scenario[i][1] / 3) // give some time for the hd to breath
+        }, scenario[i][1] / 3)
       })
     } else {
       o++

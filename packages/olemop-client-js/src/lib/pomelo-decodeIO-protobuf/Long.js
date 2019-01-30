@@ -145,7 +145,8 @@ var Long = function (low, high, unsigned) {
         if (str === "NaN" || str === "Infinity" || str === "+Infinity" || str === "-Infinity") {
             return Long.ZERO
         }
-        if (typeof unsigned === 'number') { // For goog.math.Long compatibility
+        // For goog.math.Long compatibility
+        if (typeof unsigned === 'number') {
             radix = unsigned
             unsigned = false
         }
@@ -315,7 +316,8 @@ var Long = function (low, high, unsigned) {
             return '0'
         }
         var rem
-        if (this.isNegative()) { // Unsigned Longs are never negative
+        // Unsigned Longs are never negative
+        if (this.isNegative()) {
             if (this.equals(Long.MIN_SIGNED_VALUE)) {
                 // We need to change the Long value before it can be negated, so we remove
                 // the bottom-most digit in this base and then recurse to do the rest.
@@ -387,7 +389,8 @@ var Long = function (low, high, unsigned) {
      * @expose
      */
     Long.prototype.getNumBitsAbs = function () {
-        if (this.isNegative()) { // Unsigned Longs are never negative
+      // Unsigned Longs are never negative
+        if (this.isNegative()) {
             if (this.equals(Long.MIN_SIGNED_VALUE)) {
                 return 64
             } else {
@@ -654,7 +657,8 @@ var Long = function (low, high, unsigned) {
         }
         if (this.equals(Long.MIN_SIGNED_VALUE)) {
             if (other.equals(Long.ONE) || other.equals(Long.NEG_ONE)) {
-                return min  // recall that -MIN_VALUE == MIN_VALUE
+              // recall that -MIN_VALUE == MIN_VALUE
+              return min
             } else if (other.equals(Long.MIN_VALUE)) {
                 return Long.ONE
             } else {

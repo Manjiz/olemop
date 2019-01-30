@@ -14,8 +14,10 @@ var Command = function (opts) {
   this.disconnectOnTimeout = opts.disconnectOnTimeout
 
   if (opts.heartbeat) {
-    this.heartbeat = opts.heartbeat * 1000 // heartbeat interval
-    this.timeout = opts.timeout * 1000 || this.heartbeat * 2      // max heartbeat message timeout
+    // heartbeat interval
+    this.heartbeat = opts.heartbeat * 1000
+    // max heartbeat message timeout
+    this.timeout = opts.timeout * 1000 || this.heartbeat * 2
     this.disconnectOnTimeout = true
   }
 

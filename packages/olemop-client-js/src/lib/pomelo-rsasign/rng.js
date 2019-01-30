@@ -62,7 +62,8 @@ if (rng_pool == null) {
       rng_pool[rng_pptr++] = z.charCodeAt(t) & 255
   }
   */
-  while (rng_pptr < rng_psize) {  // extract some randomness from Math.random()
+  // extract some randomness from Math.random()
+  while (rng_pptr < rng_psize) {
     t = Math.floor(65536 * Math.random())
     rng_pool[rng_pptr++] = t >>> 8
     rng_pool[rng_pptr++] = t & 255

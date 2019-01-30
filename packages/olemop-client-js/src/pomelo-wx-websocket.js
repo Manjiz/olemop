@@ -31,7 +31,8 @@ if (typeof Object.create !== 'function') {
 }
 
 var root = window
-var pomelo = Object.create(EventEmitter.prototype) // object extend from object
+// object extend from object
+var pomelo = Object.create(EventEmitter.prototype)
 root.pomelo = pomelo
 var socket = null
 var reqId = 0
@@ -39,8 +40,10 @@ var callbacks = {}
 var handlers = {}
 // Map from request id to route
 var routeMap = {}
-var dict = {}    // route string to code
-var abbrs = {}   // code to route string
+// route string to code
+var dict = {}
+// code to route string
+var abbrs = {}
 var serverProtos = {}
 var clientProtos = {}
 var protoVersion = 0
@@ -48,7 +51,8 @@ var protoVersion = 0
 var heartbeatInterval = 0
 var heartbeatTimeout = 0
 var nextHeartbeatTimeout = 0
-var gapThreshold = 100   // heartbeat gap threashold
+// heartbeat gap threashold
+var gapThreshold = 100
 var heartbeatId = null
 var heartbeatTimeoutId = null
 var handshakeCallback = null
@@ -433,8 +437,10 @@ var deCompose = function (msg) {
 
 var handshakeInit = function (data) {
   if (data.sys && data.sys.heartbeat) {
-    heartbeatInterval = data.sys.heartbeat * 1000   // heartbeat interval
-    heartbeatTimeout = heartbeatInterval * 2        // max heartbeat timeout
+    // heartbeat interval
+    heartbeatInterval = data.sys.heartbeat * 1000
+    // max heartbeat timeout
+    heartbeatTimeout = heartbeatInterval * 2
   } else {
     heartbeatInterval = 0
     heartbeatTimeout = 0

@@ -65,7 +65,8 @@ function byte2Hex(b) {
 
 // PKCS#1 (type 2, random) pad input string s to n bytes, and return a bigint
 function pkcs1pad2(s, n) {
-	if (n < s.length + 11) { // TODO: fix for utf-8
+  // TODO: fix for utf-8
+	if (n < s.length + 11) {
 		throw new Error("Message too long for RSA (n=" + n + ", l=" + s.length
 				+ ")")
 		return null
@@ -73,8 +74,9 @@ function pkcs1pad2(s, n) {
 	var ba = new Array()
 	var i = s.length - 1
 	while (i >= 0 && n > 0) {
-		var c = s.charCodeAt(i--)
-		if (c < 128) { // encode using utf-8
+    var c = s.charCodeAt(i--)
+    // encode using utf-8
+		if (c < 128) {
 			ba[--n] = c
 		} else if ((c > 127) && (c < 2048)) {
 			ba[--n] = (c & 63) | 128
@@ -87,8 +89,9 @@ function pkcs1pad2(s, n) {
 	}
 	ba[--n] = 0
 	var rng = new SecureRandom()
-	var x = new Array()
-	while (n > 2) { // random non-zero pad
+  var x = new Array()
+  // random non-zero pad
+	while (n > 2) {
 		x[0] = 0
 		while (x[0] == 0)
 			rng.nextBytes(x)
@@ -165,7 +168,8 @@ function pkcs1unpad2(d, n) {
 		var c = b[i] & 255
 		ret.push(c)
     // This will need to be tested more, but Node doesn't like all of this!
-    // if (c < 128) { // utf-8 decode
+    // // utf-8 decode
+    // if (c < 128) {
 		// ret += String.fromCharCode(c)
 		// } else if ((c > 191) && (c < 224)) {
 		// 	 ret += String.fromCharCode(((c & 31) << 6) | (b[i + 1] & 63))
@@ -279,8 +283,9 @@ function RSADecrypt(ctext) {
 function baToString(b) {
 	var ret = ''
 	for (var i=0; i < b.length; i++) {
-		var c = b[i] & 255
-		if (c < 128) { // utf-8 decode
+    var c = b[i] & 255
+    // utf-8 decode
+		if (c < 128) {
 			ret += String.fromCharCode(c)
 		} else if ((c > 191) && (c < 224)) {
 			ret += String.fromCharCode(((c & 31) << 6) | (b[i + 1] & 63))
@@ -351,7 +356,8 @@ _RSASIGN_HASHHEXFUNC['sha1'] =      function (s) { var sha = crypto.createHash('
 _RSASIGN_HASHHEXFUNC['sha256'] =    function (s) { var sha = crypto.createHash('sha256'); sha.update(s); var out = sha.digest('hex'); return out;}
 _RSASIGN_HASHHEXFUNC['sha512'] =    function (s) { var sha = crypto.createHash('sha512'); sha.update(s); var out = sha.digest('hex'); return out;}
 _RSASIGN_HASHHEXFUNC['md5'] =       function (s) { var sha = crypto.createHash('md5'); sha.update(s); var out = sha.digest('hex'); return out;}
-_RSASIGN_HASHHEXFUNC['ripemd160'] = function (s) {return hex_rmd160(s);}   // http://pajhome.org.uk/crypt/md5/md5.html
+// http://pajhome.org.uk/crypt/md5/md5.html
+_RSASIGN_HASHHEXFUNC['ripemd160'] = function (s) {return hex_rmd160(s);}
 */
 
 
@@ -362,8 +368,10 @@ _RSASIGN_HASHHEXFUNC['sha512'] =    function (s) {return KJUR.crypto.Util.sha512
 _RSASIGN_HASHHEXFUNC['md5'] =       function (s) {return KJUR.crypto.Util.md5(s);}
 _RSASIGN_HASHHEXFUNC['ripemd160'] = function (s) {return KJUR.crypto.Util.ripemd160(s);}
 
-// _RSASIGN_HASHHEXFUNC['sha1'] =   function (s) {return sha1.hex(s);}   // http://user1.matsumoto.ne.jp/~goma/js/hash.html
-// _RSASIGN_HASHHEXFUNC['sha256'] = function (s) {return sha256.hex;}    // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+// // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+// _RSASIGN_HASHHEXFUNC['sha1'] =   function (s) {return sha1.hex(s);}
+// // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+// _RSASIGN_HASHHEXFUNC['sha256'] = function (s) {return sha256.hex;}
 
 var _RE_HEXDECONLY = new RegExp('')
 _RE_HEXDECONLY.compile("[^0-9a-f]", "gi")
@@ -563,7 +571,8 @@ function _rsapem_readPrivateKeyFromASN1HexString(keyHex) {
  */
 function _rsapem_readPrivateKeyFromPEMString(keyPEM) {
   var keyB64 = _rsapem_pemToBase64(keyPEM)
-  var keyHex = B64.b64tohex(keyB64) // depends base64.js
+  // depends base64.js
+  var keyHex = B64.b64tohex(keyB64)
   var a = _rsapem_getHexValueArrayOfChildrenFromHex(keyHex)
   this.setPrivateEx(a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8])
 }
@@ -715,10 +724,12 @@ KJUR.crypto.Util = new function () {
      * @returns {string} hexadecimal string of PKCS#1 padded DigestInfo
      */
     this.getPaddedDigestInfoHex = function (hHash, alg, keySize) {
-	var hDigestInfo = this.getDigestInfoHex(hHash, alg)
-	var pmStrLen = keySize / 4 // minimum PM length
+  var hDigestInfo = this.getDigestInfoHex(hHash, alg)
+  // minimum PM length
+	var pmStrLen = keySize / 4
 
-	if (hDigestInfo.length + 22 > pmStrLen) // len(0001+ff(*8)+00+hDigestInfo)=22
+  // len(0001+ff(*8)+00+hDigestInfo)=22
+	if (hDigestInfo.length + 22 > pmStrLen)
 	    throw "key is too short for SigAlg: keylen=" + keySize + "," + alg
 
 	var hHead = "0001"
@@ -833,7 +844,8 @@ KJUR.crypto.Util = new function () {
  * // SJCL(Stanford JavaScript Crypto Library) provider sample
  * &lt;script src="http://bitwiseshiftleft.github.io/sjcl/sjcl.js"&gt;&lt;/script&gt
  * &lt;script src="crypto-1.0.js"&gt;&lt;/script&gt
- * var md = new KJUR.crypto.MessageDigest({alg: "sha256", prov: "sjcl"}) // sjcl supports sha256 only
+ * // sjcl supports sha256 only
+ * var md = new KJUR.crypto.MessageDigest({alg: "sha256", prov: "sjcl"})
  * md.updateString('aaa')
  * var mdHex = md.digest()
  */
@@ -1033,24 +1045,28 @@ KJUR.crypto.MessageDigest = function (params) {
  * var isValid = sig2.verify(hSigVal)
  */
 KJUR.crypto.Signature = function (params) {
-    var prvKey = null // RSAKey for signing
-    var pubKey = null // RSAKey for verifying
+  // RSAKey for signing
+  var prvKey = null
+  // RSAKey for verifying
+  var pubKey = null
 
-    var md = null // KJUR.crypto.MessageDigest object
-    var sig = null
-    var algName = null
-    var provName = null
-    var algProvName = null
-    var mdAlgName = null
-    var pubkeyAlgName = null
-    var state = null
+  // KJUR.crypto.MessageDigest object
+  var md = null
+  var sig = null
+  var algName = null
+  var provName = null
+  var algProvName = null
+  var mdAlgName = null
+  var pubkeyAlgName = null
+  var state = null
 
-    var sHashHex = null // hex hash value for hex
-    var hDigestInfo = null
-    var hPaddedDigestInfo = null
-    var hSign = null
+  // hex hash value for hex
+  var sHashHex = null
+  var hDigestInfo = null
+  var hPaddedDigestInfo = null
+  var hSign = null
 
-    this._setAlgNames = function () {
+  this._setAlgNames = function () {
 	if (this.algName.match(/^(.+)with(.+)$/)) {
 	    this.mdAlgName = RegExp.$1.toLowerCase()
 	    this.pubkeyAlgName = RegExp.$2.toLowerCase()

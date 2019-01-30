@@ -68,7 +68,8 @@ describe('tcp mailbox test', function () {
       var server = {
         id: "area-server-1",
         host: "127.0.0.1",
-        port: -1000  // invalid port
+        // invalid port
+        port: -1000
       }
 
       var mailbox = Mailbox.create(server)

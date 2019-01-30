@@ -85,7 +85,7 @@ describe('console service', function () {
 				should.exist(resp)
 				resp.should.eql(msg2)
 			})
-		})		// end of flow.exec
+		})
 
 		setTimeout(function () {
 			req1Count.should.equal(1)
@@ -137,7 +137,7 @@ describe('console service', function () {
 		function (err) {
 			should.not.exist(err)
 			monitorConsole.agent.notify(moduleId, orgMsg)
-		})		// end of flow.exec
+		})
 
 		setTimeout(function () {
 			reqCount.should.equal(1)
@@ -192,7 +192,7 @@ describe('console service', function () {
 			monitorConsole.disable(moduleId)
 			monitorConsole.agent.notify(moduleId, orgMsg)
 			masterConsole.agent.notifyById(monitorId, moduleId, orgMsg)
-		})		// end of flow.exec
+		})
 
 		setTimeout(function () {
 			monitorConsole.stop()
@@ -219,7 +219,7 @@ describe('console service', function () {
 				should.exist(err)
 				should.not.exist(resp)
 			})
-		})		// end of flow.exec
+		})
 
 		setTimeout(function () {
 			masterConsole.stop()

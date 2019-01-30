@@ -185,7 +185,8 @@ OutBuffer.prototype.writeObject = function (obj) {
 OutBuffer.prototype.ensureCapacity = function (len) {
 	const minCapacity = this.offset + len
 	if (minCapacity > this.buf.length) {
-		this.grow(minCapacity) // double grow
+    // double grow
+		this.grow(minCapacity)
 	}
 }
 
@@ -197,8 +198,9 @@ OutBuffer.prototype.grow = function (minCapacity) {
 	}
 
 	if (newCapacity < 0 && minCapacity < 0) {
-		throw new Error('OutOfMemoryError')
-		// newCapacity = 0x7fffffff // Integer.MAX_VALUE
+    throw new Error('OutOfMemoryError')
+    // Integer.MAX_VALUE
+		// newCapacity = 0x7fffffff
 	}
 
 	const newBuf = new Buffer(newCapacity)

@@ -86,17 +86,17 @@ MasterAgent.prototype.listen = function (port, cb) {
     socket.on('register', function (msg) {
       // register a new connection
       masterSocket.onRegister(msg)
-    }) // end of on 'register'
+    })
 
     // message from monitor
     socket.on('monitor', function (msg) {
       masterSocket.onMonitor(msg)
-    }) // end of on 'monitor'
+    })
 
     // message from client
     socket.on('client', function (msg) {
       masterSocket.onClient(msg)
-    }) // end of on 'client'
+    })
 
     socket.on('reconnect', function (msg) {
       masterSocket.onReconnect(msg)
@@ -113,8 +113,8 @@ MasterAgent.prototype.listen = function (port, cb) {
     socket.on('error', function (err) {
       masterSocket.onError(err)
     })
-  }) // end of on 'connection'
-} // end of listen
+  })
+}
 
 /**
  * close master agent
@@ -434,7 +434,8 @@ var removeConnection = function (agent, id, type, info) {
     if (!record) {
       return
     }
-    var _info = record['info'] // info {host, port}
+    // info {host, port}
+    var _info = record['info']
     if (utils.compareServer(_info, info)) {
       delete agent.idMap[id]
       var list = agent.typeMap[type]

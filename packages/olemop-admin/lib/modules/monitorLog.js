@@ -7,7 +7,8 @@ var logger = require('@olemop/logger').getLogger('olemop-admin', __filename)
 var exec = require('child_process').exec
 var path = require('path')
 
-var DEFAULT_INTERVAL = 5 * 60		// in second
+// in second
+var DEFAULT_INTERVAL = 5 * 60
 
 module.exports = function (opts) {
 	return new Module(opts)
