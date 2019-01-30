@@ -1,6 +1,6 @@
 {
   "name": "@olemop/plugin-sync",
-  "version": "0.0.48",
+  "version": "0.0.49",
   "private": false,
   "dependencies": {
     "@olemop/sync": "^0.0.48"

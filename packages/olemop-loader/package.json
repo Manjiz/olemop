@@ -1,6 +1,6 @@
 {
   "name": "@olemop/loader",
-  "version": "0.0.47",
+  "version": "0.0.49",
   "main": "lib/loader",
   "scripts": {
     "test": "jest"
