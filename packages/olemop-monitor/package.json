@@ -1,7 +1,7 @@
 {
   "name": "@olemop/monitor",
   "description": "monitor the operating-system and process information",
-  "version": "0.0.47",
+  "version": "0.0.48",
   "publishConfig": {
     "access": "public"
   }

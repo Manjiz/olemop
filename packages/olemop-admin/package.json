@@ -1,11 +1,11 @@
 {
   "name": "@olemop/admin",
-  "version": "0.0.47",
+  "version": "0.0.48",
   "private": false,
   "dependencies": {
-    "@olemop/logger": "^0.0.47",
-    "@olemop/monitor": "^0.0.47",
-    "@olemop/scheduler": "^0.0.47",
+    "@olemop/logger": "^0.0.48",
+    "@olemop/monitor": "^0.0.48",
+    "@olemop/scheduler": "^0.0.48",
     "mqtt-connection": "3.0.0"
   },
   "devDependencies": {
