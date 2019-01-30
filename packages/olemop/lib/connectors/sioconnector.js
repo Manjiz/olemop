@@ -38,15 +38,14 @@ module.exports = Connector
 Connector.prototype.start = function (cb) {
   var self = this
 
-  var sio = require('socket.io')(httpServer, {
+  var sio = require('socket.io')(httpServer, Object.assign({
     path: '/socket.io',
     pingTimeout: this.heartbeatTimeout,
     pingInterval: this.heartbeatInterval,
     transports: !this.opts && [
       'websocket', 'polling-xhr', 'polling-jsonp', 'polling'
-    ],
-    ...this.opts
-  })
+    ]
+  }, this.opts))
 
   var port = this.port
   httpServer.listen(port, function () {

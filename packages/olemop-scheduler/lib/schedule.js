@@ -3,14 +3,10 @@
  */
 var PriorityQueue = require('./priorityQueue')
 var Job = require('./job.js')
-var timerCount = 0
-
-var logger = require('log4js').getLogger(__filename)
 
 var map = {}
 var queue = PriorityQueue.createPriorityQueue(comparator)
 
-var jobId = 0
 var timer
 
 // The accuracy of the scheduler, it will affect the performance when the schedule tasks are
@@ -77,7 +73,6 @@ function setTimer(job) {
  */
 function excuteJob() {
   var job = peekNextJob()
-  var nextJob
 
   while (job && job.excuteTime() - Date.now() < accuracy) {
     job.run()
