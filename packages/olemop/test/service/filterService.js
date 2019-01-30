@@ -32,7 +32,7 @@ var blackholdFilter = {
   after: function () {}
 }
 
-var MockSession = function(){
+var MockSession = function() {
   this.beforeCount1 = 0
   this.afterCount1 = 0
   this.beforeCount2 = 0

@@ -3,7 +3,7 @@ var fs = require('fs')
 var HeapProfileType = 'HEAP'
 var CPUProfileType = 'CPU'
 
-var Proxy = function (){
+var Proxy = function () {
 	this.profiles = {
 		HEAP: {},
 		CPU: {}
@@ -133,11 +133,11 @@ pro.clearProfiles = function (id, params) {
 	// profiler.deleteAllProfiles()
 }
 
-pro.sendResult = function (id, res, clientId, agent){
+pro.sendResult = function (id, res, clientId, agent) {
 	agent.notifyClient(clientId, 'profiler', JSON.stringify({id: id, result: res}))
 }
 
-pro.sendEvent = function (res, clientId, agent){
+pro.sendEvent = function (res, clientId, agent) {
 	agent.notifyClient(clientId, 'profiler', JSON.stringify(res))
 }
 
@@ -158,7 +158,7 @@ pro.stop = function (id, params, clientId, agent) {
 pro.stopCallBack = function (res, clientId, agent) {
 	var uid = res.msg.uid
 	var profiler = this.profiles[CPUProfileType][uid]
-	if (!profiler || profiler.finish){
+	if (!profiler || profiler.finish) {
 		profiler = {}
 		profiler.data = null
 		profiler.finish = true

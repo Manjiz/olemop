@@ -104,7 +104,7 @@ var loadHandlers = function (app, serverType, handlerMap) {
 
 var watchHandlers = function (app, handlerMap) {
   var p = pathUtil.getHandlerPath(app.getBase(), app.serverType)
-  if (p){
+  if (p) {
     fs.watch(p, function (event, name) {
       if (event === 'change') {
         handlerMap[app.serverType] = Loader.load(p, app)

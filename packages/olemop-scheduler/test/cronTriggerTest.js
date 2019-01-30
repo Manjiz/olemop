@@ -7,7 +7,7 @@ var DOM = 3
 var MONTH = 4
 var DOW = 5
 
-function decoderTest(){
+function decoderTest() {
   var result = []
 
   result.push(cronTrigger.decodeTrigger('12    2 3,4,5 4 5 1'))
@@ -18,7 +18,7 @@ function decoderTest(){
   console.log(result)
 }
 
-function nextTimeTest(count){
+function nextTimeTest(count) {
   var timer = cronTrigger.decodeTrigger('0 0 0 1 0 2-5')
 
 
@@ -45,7 +45,7 @@ function nextTimeTest(count){
  console.log("second run time:" + r2)
 }
 
-function nextExcuteTimeTest(time, cronTrigger){
+function nextExcuteTimeTest(time, cronTrigger) {
   var next = new Date(time + 1000)
 
   while (true)
@@ -100,22 +100,22 @@ function nextExcuteTimeTest(time, cronTrigger){
   return next
 }
 
-function getDomLimitTest(y1,y2,m1,m2){
+function getDomLimitTest(y1,y2,m1,m2) {
   for(var year = y1; year <= y2; year++)
-    for(var month = m1; month <= m2; month++){
+    for(var month = m1; month <= m2; month++) {
       console.log(year + "." + (month +1)+ " limit : " + cronTrigger.getDomLimit(year,month))
     }
 }
 
-function timeMatch(value, cronTime){
+function timeMatch(value, cronTime) {
 //  console.log("match value " + value + ' cronTime ' + cronTime)
-  if(typeof(cronTime) == 'number'){
+  if(typeof(cronTime) == 'number') {
     if(cronTime == -1)
       return true
     if(value == cronTime)
       return true
     return false
-  }else if(typeof(cronTime) == 'object' && cronTime instanceof Array){
+  }else if(typeof(cronTime) == 'object' && cronTime instanceof Array) {
     if(value < cronTime[0] || value > cronTime[cronTime.length -1])
       return false
 
@@ -129,7 +129,7 @@ function timeMatch(value, cronTime){
   return null
 }
 
-function test(){
+function test() {
   nextTimeTest(100)
  // getDomLimitTest(1800,2002,1,1)
 }

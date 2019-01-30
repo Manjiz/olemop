@@ -54,7 +54,7 @@ var composeResponse = function (server, msgId, route, msgBody) {
 }
 
 var composePush = function (server, route, msgBody) {
-  if (!route || !msgBody){
+  if (!route || !msgBody) {
     return null
   }
   msgBody = encodeBody(server, route, msgBody)

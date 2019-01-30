@@ -19,7 +19,7 @@ pro.loadModules = function (self, consoleService) {
   }
 
   var modules = []
-  for (var m in _modules){
+  for (var m in _modules) {
     modules.push(_modules[m])
   }
 

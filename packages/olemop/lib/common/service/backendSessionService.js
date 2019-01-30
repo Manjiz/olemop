@@ -321,9 +321,9 @@ var BackendSessionCB = function (service, cb, err, sinfo) {
     return
   }
   var sessions = []
-  if (Array.isArray(sinfo)){
+  if (Array.isArray(sinfo)) {
       // #getByUid
-      for (var i = 0,k = sinfo.length;i<k;i++){
+      for (var i = 0,k = sinfo.length;i<k;i++) {
           sessions.push(service.create(sinfo[i]))
       }
   }

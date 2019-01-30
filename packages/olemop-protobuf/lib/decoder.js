@@ -6,43 +6,43 @@ var Decoder = module.exports
 var buffer
 var offset = 0
 
-Decoder.init = function (protos){
+Decoder.init = function (protos) {
 	this.protos = protos || {}
 }
 
-Decoder.setProtos = function (protos){
-	if (protos){
+Decoder.setProtos = function (protos) {
+	if (protos) {
 		this.protos = protos
 	}
 }
 
-Decoder.decode = function (route, buf){
+Decoder.decode = function (route, buf) {
 	var protos = this.protos[route]
 
 	buffer = buf
 	offset = 0
 
-	if (protos){
+	if (protos) {
 		return decodeMsg({}, protos, buffer.length)
 	}
 
 	return null
 }
 
-function decodeMsg(msg, protos, length){
-	while(offset<length){
+function decodeMsg(msg, protos, length) {
+	while(offset<length) {
 		var head = getHead()
 		var type = head.type
 		var tag = head.tag
 		var name = protos.__tags[tag]
 
-		switch(protos[name].option){
+		switch(protos[name].option) {
 			case 'optional' :
 			case 'required' :
 				msg[name] = decodeProp(protos[name].type, protos)
 			break
 			case 'repeated' :
-				if (!msg[name]){
+				if (!msg[name]) {
 					msg[name] = []
 				}
 				decodeArray(msg[name], protos[name].type, protos)
@@ -56,13 +56,13 @@ function decodeMsg(msg, protos, length){
 /**
  * Test if the given msg is finished
  */
-function isFinish(msg, protos){
+function isFinish(msg, protos) {
 	return (!protos.__tags[peekHead().tag])
 }
 /**
  * Get property head from protobuf
  */
-function getHead(){
+function getHead() {
 	var tag = codec.decodeUInt32(getBytes())
 
 	return {
@@ -74,7 +74,7 @@ function getHead(){
 /**
  * Get tag head without move the offset
  */
-function peekHead(){
+function peekHead() {
 	var tag = codec.decodeUInt32(peekBytes())
 
 	return {
@@ -83,8 +83,8 @@ function peekHead(){
 	}
 }
 
-function decodeProp(type, protos){
-	switch(type){
+function decodeProp(type, protos) {
+	switch(type) {
 		case 'uInt32':
 			return codec.decodeUInt32(getBytes())
 		case 'int32' :
@@ -107,7 +107,7 @@ function decodeProp(type, protos){
 			return str
 		default :
 			var message = protos && (protos.__messages[type] || Decoder.protos['message ' + type])
-			if (message){
+			if (message) {
 				var length = codec.decodeUInt32(getBytes())
 				var msg = {}
 				decodeMsg(msg, message, offset+length)
@@ -117,11 +117,11 @@ function decodeProp(type, protos){
 	}
 }
 
-function decodeArray(array, type, protos){
-	if (util.isSimpleType(type)){
+function decodeArray(array, type, protos) {
+	if (util.isSimpleType(type)) {
 		var length = codec.decodeUInt32(getBytes())
 
-		for (var i = 0; i < length; i++){
+		for (var i = 0; i < length; i++) {
 			array.push(decodeProp(type))
 		}
 	}else{
@@ -129,7 +129,7 @@ function decodeArray(array, type, protos){
 	}
 }
 
-function getBytes(flag){
+function getBytes(flag) {
 	var bytes = []
 	var pos = offset
 	flag = flag || false
@@ -141,12 +141,12 @@ function getBytes(flag){
 		pos++
 	}while(b >= 128)
 
-	if (!flag){
+	if (!flag) {
 		offset = pos
 	}
 	return bytes
 }
 
-function peekBytes(){
+function peekBytes() {
 	return getBytes(true)
 }

@@ -53,7 +53,7 @@ Server.prototype.start = function (cb) {
     }
   })
 
-  this.masterConsole.on('reconnect', function (info){
+  this.masterConsole.on('reconnect', function (info) {
     self.app.addServers([info])
   })
 

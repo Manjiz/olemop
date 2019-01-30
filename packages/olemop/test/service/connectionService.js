@@ -111,7 +111,7 @@ describe('connection service test', function () {
     })
   })
 
-  it('should getStatisticsInfo',  function(done){
+  it('should getStatisticsInfo',  function(done) {
     var service = new ConnectionService(mockApp)
     var uid1 = 'uid1', uid2 = 'uid2'
     var info1 = 'msg1', info2 = 'msg2'

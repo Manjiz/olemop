@@ -18,7 +18,7 @@ Service.prototype.name = 'filter'
  *
  * @param filter {Object|Function} filter instance or filter function.
  */
-Service.prototype.before = function (filter){
+Service.prototype.before = function (filter) {
   this.befores.push(filter)
 }
 
@@ -27,7 +27,7 @@ Service.prototype.before = function (filter){
  *
  * @param filter {Object|Function} filter instance or filter function.
  */
-Service.prototype.after = function (filter){
+Service.prototype.after = function (filter) {
   this.afters.unshift(filter)
 }
 

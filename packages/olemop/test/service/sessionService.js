@@ -195,8 +195,8 @@ describe('session service test', function () {
       var sid2 = 2, fid2 = 'frontend-server-1'
 
       var socket = {
-        emit: function(){},
-        disconnect: function(){}
+        emit: function() {},
+        disconnect: function() {}
       }
       var uid = 'changchang'
       var eventCount = 0
@@ -231,8 +231,8 @@ describe('session service test', function () {
       var sid2 = 2, fid2 = 'frontend-server-1'
 
       var socket = {
-        emit: function(){},
-        disconnect: function(){}
+        emit: function() {},
+        disconnect: function() {}
       }
       var uid = 'changchang'
       var eventCount = 0
@@ -275,8 +275,8 @@ describe('session service test', function () {
       var service = new SessionService()
       var sid = 1, fid = 'frontend-server-1'
       var socket = {
-        emit: function(){},
-        disconnect: function(){}
+        emit: function() {},
+        disconnect: function() {}
       }
       var eventCount = 0
 

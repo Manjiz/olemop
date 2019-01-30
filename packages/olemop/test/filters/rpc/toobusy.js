@@ -8,11 +8,11 @@ var mockData = {
 }
 
 
-describe('#toobusyFilter',function(){
-  it("should no callback for toobusy",function(done){
+describe('#toobusyFilter',function() {
+  it("should no callback for toobusy",function(done) {
     function load() {
       var callbackInvoked = false
-      toobusyFilter.before(mockData.serverId,mockData.msg,mockData.opts,function(serverId,msg,opts){
+      toobusyFilter.before(mockData.serverId,mockData.msg,mockData.opts,function(serverId,msg,opts) {
         callbackInvoked = true
       })
 

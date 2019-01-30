@@ -5,7 +5,7 @@ var should = require('should')
 var WAIT_TIME = 1000
 var mockBase = process.cwd() + '/test'
 
-describe('application test', function(){
+describe('application test', function() {
   afterEach(function () {
     app.state = 0
     app.settings = {}
@@ -371,7 +371,7 @@ describe('application test', function(){
         },
         do2: function(cb) {
           console.log('handler2')
-          if(flag < 3){
+          if(flag < 3) {
             flag ++
             cb(new Error('error'))
           } else {

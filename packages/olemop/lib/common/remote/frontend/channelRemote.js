@@ -20,7 +20,7 @@ const Remote = function (app) {
  * @param  {Function} cb    callback function
  */
 Remote.prototype.pushMessage = function (route, msg, uids, opts, cb) {
-  if (!msg){
+  if (!msg) {
     logger.error('Can not send empty message! route : %j, compressed msg : %j', route, msg)
     utils.invokeCallback(cb, new Error('can not send empty message.'))
     return

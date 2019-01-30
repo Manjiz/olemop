@@ -31,7 +31,7 @@
  * and disclaimer.
  */
 
-(function (){
+(function () {
 
 var BigInteger = require("./jsbn.js")
 var SecureRandom = require("./rng.js")
@@ -347,23 +347,23 @@ _RSASIGN_DIHEAD['ripemd160'] = "3021300906052b2403020105000414"
  */
 /*
 var _RSASIGN_HASHHEXFUNC = []
-_RSASIGN_HASHHEXFUNC['sha1'] =      function (s){ var sha = crypto.createHash('sha1'); sha.update(s); var out = sha.digest('hex'); return out;}
-_RSASIGN_HASHHEXFUNC['sha256'] =    function (s){ var sha = crypto.createHash('sha256'); sha.update(s); var out = sha.digest('hex'); return out;}
-_RSASIGN_HASHHEXFUNC['sha512'] =    function (s){ var sha = crypto.createHash('sha512'); sha.update(s); var out = sha.digest('hex'); return out;}
-_RSASIGN_HASHHEXFUNC['md5'] =       function (s){ var sha = crypto.createHash('md5'); sha.update(s); var out = sha.digest('hex'); return out;}
-_RSASIGN_HASHHEXFUNC['ripemd160'] = function (s){return hex_rmd160(s);}   // http://pajhome.org.uk/crypt/md5/md5.html
+_RSASIGN_HASHHEXFUNC['sha1'] =      function (s) { var sha = crypto.createHash('sha1'); sha.update(s); var out = sha.digest('hex'); return out;}
+_RSASIGN_HASHHEXFUNC['sha256'] =    function (s) { var sha = crypto.createHash('sha256'); sha.update(s); var out = sha.digest('hex'); return out;}
+_RSASIGN_HASHHEXFUNC['sha512'] =    function (s) { var sha = crypto.createHash('sha512'); sha.update(s); var out = sha.digest('hex'); return out;}
+_RSASIGN_HASHHEXFUNC['md5'] =       function (s) { var sha = crypto.createHash('md5'); sha.update(s); var out = sha.digest('hex'); return out;}
+_RSASIGN_HASHHEXFUNC['ripemd160'] = function (s) {return hex_rmd160(s);}   // http://pajhome.org.uk/crypt/md5/md5.html
 */
 
 
 var _RSASIGN_HASHHEXFUNC = []
-_RSASIGN_HASHHEXFUNC['sha1'] =      function (s){return KJUR.crypto.Util.sha1(s);}
-_RSASIGN_HASHHEXFUNC['sha256'] =    function (s){return KJUR.crypto.Util.sha256(s);}
-_RSASIGN_HASHHEXFUNC['sha512'] =    function (s){return KJUR.crypto.Util.sha512(s);}
-_RSASIGN_HASHHEXFUNC['md5'] =       function (s){return KJUR.crypto.Util.md5(s);}
-_RSASIGN_HASHHEXFUNC['ripemd160'] = function (s){return KJUR.crypto.Util.ripemd160(s);}
+_RSASIGN_HASHHEXFUNC['sha1'] =      function (s) {return KJUR.crypto.Util.sha1(s);}
+_RSASIGN_HASHHEXFUNC['sha256'] =    function (s) {return KJUR.crypto.Util.sha256(s);}
+_RSASIGN_HASHHEXFUNC['sha512'] =    function (s) {return KJUR.crypto.Util.sha512(s);}
+_RSASIGN_HASHHEXFUNC['md5'] =       function (s) {return KJUR.crypto.Util.md5(s);}
+_RSASIGN_HASHHEXFUNC['ripemd160'] = function (s) {return KJUR.crypto.Util.ripemd160(s);}
 
-// _RSASIGN_HASHHEXFUNC['sha1'] =   function (s){return sha1.hex(s);}   // http://user1.matsumoto.ne.jp/~goma/js/hash.html
-// _RSASIGN_HASHHEXFUNC['sha256'] = function (s){return sha256.hex;}    // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+// _RSASIGN_HASHHEXFUNC['sha1'] =   function (s) {return sha1.hex(s);}   // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+// _RSASIGN_HASHHEXFUNC['sha256'] = function (s) {return sha256.hex;}    // http://user1.matsumoto.ne.jp/~goma/js/hash.html
 
 var _RE_HEXDECONLY = new RegExp('')
 _RE_HEXDECONLY.compile("[^0-9a-f]", "gi")

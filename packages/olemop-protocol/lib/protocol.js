@@ -42,17 +42,17 @@
     } else {
       var byteArray = new ByteArray(str.length * 3)
       var offset = 0
-      for (var i = 0; i < str.length; i++){
+      for (var i = 0; i < str.length; i++) {
         var charCode = str.charCodeAt(i)
         var codes = null
-        if (charCode <= 0x7f){
+        if (charCode <= 0x7f) {
           codes = [charCode]
-        }else if (charCode <= 0x7ff){
+        }else if (charCode <= 0x7ff) {
           codes = [0xc0|(charCode>>6), 0x80|(charCode & 0x3f)]
         }else{
           codes = [0xe0|(charCode>>12), 0x80|((charCode & 0xfc0)>>6), 0x80|(charCode & 0x3f)]
         }
-        for (var j = 0; j < codes.length; j++){
+        for (var j = 0; j < codes.length; j++) {
           byteArray[offset] = codes[j]
           ++offset
         }
@@ -78,11 +78,11 @@
       var offset = 0
       var charCode = 0
       var end = bytes.length
-      while(offset < end){
-        if (bytes[offset] < 128){
+      while(offset < end) {
+        if (bytes[offset] < 128) {
           charCode = bytes[offset]
           offset += 1
-        }else if (bytes[offset] < 224){
+        }else if (bytes[offset] < 224) {
           charCode = ((bytes[offset] & 0x1f)<<6) + (bytes[offset+1] & 0x3f)
           offset += 2
         }else{
@@ -117,7 +117,7 @@
    * @param  {ByteArray} body   body content in bytes
    * @return {ByteArray}        new byte array that contains encode result
    */
-  Package.encode = function (type, body){
+  Package.encode = function (type, body) {
     var length = body ? body.length : 0
     var buffer = new ByteArray(PKG_HEAD_BYTES + length)
     var index = 0
@@ -138,7 +138,7 @@
    * @param  {ByteArray} buffer byte array containing package content
    * @return {Object}           {type: package type, buffer: body byte array}
    */
-  Package.decode = function (buffer){
+  Package.decode = function (buffer) {
     var offset = 0
     var bytes = new ByteArray(buffer)
     var length = 0
@@ -166,14 +166,14 @@
    * @param  {Buffer} msg           message body bytes
    * @return {Buffer}               encode result
    */
-  Message.encode = function (id, type, compressRoute, route, msg, compressGzip){
+  Message.encode = function (id, type, compressRoute, route, msg, compressGzip) {
     // caculate message max length
     var idBytes = msgHasId(type) ? caculateMsgIdBytes(id) : 0
     var msgLen = MSG_FLAG_BYTES + idBytes
 
     if (msgHasRoute(type)) {
       if (compressRoute) {
-        if (typeof route !== 'number'){
+        if (typeof route !== 'number') {
           throw new Error('error flag for number route!')
         }
         msgLen += MSG_ROUTE_CODE_BYTES
@@ -281,7 +281,7 @@
       src.copy(dest, doffset, soffset, soffset + length)
     } else {
       // Uint8Array
-      for (var index=0; index<length; index++){
+      for (var index=0; index<length; index++) {
         dest[doffset++] = src[soffset++]
       }
     }
@@ -325,7 +325,7 @@
       var tmp = id % 128
       var next = Math.floor(id/128)
 
-      if (next !== 0){
+      if (next !== 0) {
         tmp = tmp + 128
       }
       buffer[offset++] = tmp
@@ -338,7 +338,7 @@
 
   var encodeMsgRoute = function (compressRoute, route, buffer, offset) {
     if (compressRoute) {
-      if (route > MSG_ROUTE_CODE_MAX){
+      if (route > MSG_ROUTE_CODE_MAX) {
         throw new Error('route number is overflow')
       }
 

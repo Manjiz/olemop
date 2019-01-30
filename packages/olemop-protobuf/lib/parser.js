@@ -5,9 +5,9 @@ var Parser = module.exports
  * @param  {[Object]} protos Original protos, in a js map.
  * @return {[Object]} The presed result, a js object represent all the meta data of the given protos.
  */
-Parser.parse = function (protos){
+Parser.parse = function (protos) {
 	var maps = {}
-	for (var key in protos){
+	for (var key in protos) {
 		maps[key] = parseObject(protos[key])
 	}
 
@@ -19,18 +19,18 @@ Parser.parse = function (protos){
  * @param  {[Object]} obj The origin proto need to parse.
  * @return {[Object]} The parsed result, a js object.
  */
-function parseObject(obj){
+function parseObject(obj) {
 	var proto = {}
 	var nestProtos = {}
 	var tags = {}
 
-	for (var name in obj){
+	for (var name in obj) {
 		var tag = obj[name]
 		var params = name.split(' ')
 
-		switch(params[0]){
+		switch(params[0]) {
 			case 'message':
-				if (params.length !== 2){
+				if (params.length !== 2) {
 					continue
 				}
 				nestProtos[params[1]] = parseObject(tag)
@@ -39,7 +39,7 @@ function parseObject(obj){
 			case 'optional':
 			case 'repeated':{
 				// params length should be 3 and tag can't be duplicated
-				if (params.length !== 3 || !!tags[tag]){
+				if (params.length !== 3 || !!tags[tag]) {
 					continue
 				}
 				proto[params[2]] = {

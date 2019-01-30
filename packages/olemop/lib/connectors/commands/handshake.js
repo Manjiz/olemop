@@ -50,7 +50,7 @@ Command.prototype.handle = function (socket, msg) {
 
   if (this.useDict) {
     var dictVersion = pomelo.app.components.__dictionary__.getVersion()
-    if (!msg.sys.dictVersion || msg.sys.dictVersion !== dictVersion){
+    if (!msg.sys.dictVersion || msg.sys.dictVersion !== dictVersion) {
 
       // may be deprecated in future
       opts.dict = pomelo.app.components.__dictionary__.getDict()
@@ -64,7 +64,7 @@ Command.prototype.handle = function (socket, msg) {
 
   if (this.useProtobuf) {
     var protoVersion = pomelo.app.components.__protobuf__.getVersion()
-    if (!msg.sys.protoVersion || msg.sys.protoVersion !== protoVersion){
+    if (!msg.sys.protoVersion || msg.sys.protoVersion !== protoVersion) {
       opts.protos = pomelo.app.components.__protobuf__.getProtos()
     }
     opts.useProto = true

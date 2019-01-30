@@ -16,7 +16,7 @@ Encoder.encodeUInt32 = function (num) {
 		var tmp = n % 128
 		var next = Math.floor(n/128)
 
-		if (next !== 0){
+		if (next !== 0) {
 			tmp = tmp + 128
 		}
 		result.push(tmp)
@@ -31,9 +31,9 @@ Encoder.encodeUInt32 = function (num) {
  * @param  {[sInt32]} num  The sInt32 need to encode
  * @return {[array]} A byte array represent the integer
  */
-Encoder.encodeSInt32 = function (num){
+Encoder.encodeSInt32 = function (num) {
 	var n = parseInt(num)
-	if (isNaN(n)){
+	if (isNaN(n)) {
 		return null
 	}
 	n = n<0?(Math.abs(n)*2-1):n*2
@@ -41,13 +41,13 @@ Encoder.encodeSInt32 = function (num){
 	return Encoder.encodeUInt32(n)
 }
 
-Encoder.decodeUInt32 = function (bytes){
+Encoder.decodeUInt32 = function (bytes) {
 	var n = 0
 
-	for (var i = 0; i < bytes.length; i++){
+	for (var i = 0; i < bytes.length; i++) {
 		var m = parseInt(bytes[i])
 		n = n + ((m & 0x7f) * Math.pow(2,(7*i)))
-		if (m < 128){
+		if (m < 128) {
 			return n
 		}
 	}
@@ -56,7 +56,7 @@ Encoder.decodeUInt32 = function (bytes){
 }
 
 
-Encoder.decodeSInt32 = function (bytes){
+Encoder.decodeSInt32 = function (bytes) {
 	var n = this.decodeUInt32(bytes)
 	var flag = ((n%2) === 1)?-1:1
 

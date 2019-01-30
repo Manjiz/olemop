@@ -162,7 +162,7 @@ var stop = function (app, agent, msg, cb) {
   } else {
     var servers = app.getServers()
     var serverIds = []
-    for (var i in servers){
+    for (var i in servers) {
         serverIds.push(i)
     }
     app.set(Constants.RESERVED.STOP_SERVERS, serverIds)

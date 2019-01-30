@@ -20,7 +20,7 @@ var accuracy = 10
 /**
  * Schedule a new Job
  */
-function scheduleJob(trigger, jobFunc, jobData){
+function scheduleJob(trigger, jobFunc, jobData) {
   var job = Job.createJob(trigger, jobFunc, jobData)
   var excuteTime = job.excuteTime()
   var id = job.id
@@ -32,7 +32,7 @@ function scheduleJob(trigger, jobFunc, jobData){
   }
 
   var curJob = queue.peek()
-  if (!curJob || excuteTime < curJob.time){
+  if (!curJob || excuteTime < curJob.time) {
     queue.offer(element)
     setTimer(job)
 
@@ -46,9 +46,9 @@ function scheduleJob(trigger, jobFunc, jobData){
 /**
  * Cancel Job
  */
-function cancelJob(id){
+function cancelJob(id) {
   var curJob = queue.peek()
-  if (curJob && id === curJob.id){ // to avoid queue.peek() is null
+  if (curJob && id === curJob.id) { // to avoid queue.peek() is null
     queue.pop()
     delete map[id]
 
@@ -65,7 +65,7 @@ function cancelJob(id){
  * @param job The job need to schedule
  * @return void
  */
-function setTimer(job){
+function setTimer(job) {
   clearTimeout(timer)
 
   timer = setTimeout(excuteJob, job.excuteTime()-Date.now())
@@ -74,17 +74,17 @@ function setTimer(job){
 /**
  * The function used to ran the schedule job, and setTimeout for next running job
  */
-function excuteJob(){
+function excuteJob() {
   var job = peekNextJob()
   var nextJob
 
-  while(job && job.excuteTime() - Date.now() < accuracy){
+  while(job && job.excuteTime() - Date.now() < accuracy) {
     job.run()
     queue.pop()
 
     var nextTime = job.nextTime()
 
-    if (nextTime === null){
+    if (nextTime === null) {
       delete map[job.id]
     }else{
       queue.offer({id:job.id, time: nextTime})
@@ -104,7 +104,7 @@ function excuteJob(){
  * Return, but not remove the next valid job
  * @return Next valid job
  */
-function peekNextJob(){
+function peekNextJob() {
   if (queue.size() <= 0)
     return null
 
@@ -122,10 +122,10 @@ function peekNextJob(){
  * Return and remove the next valid job
  * @return Next valid job
  */
-function getNextJob(){
+function getNextJob() {
   var job = null
 
-  while(!job && queue.size() > 0){
+  while(!job && queue.size() > 0) {
     var id = queue.pop().id
     job = map[id]
   }
@@ -133,7 +133,7 @@ function getNextJob(){
   return job ? job : null
 }
 
-function comparator(e1, e2){
+function comparator(e1, e2) {
   return e1.time > e2.time
 }
 

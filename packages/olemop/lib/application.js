@@ -424,7 +424,7 @@ Application.stop = function (force) {
     process.exit(0)
   }, Constants.TIME.TIME_WAIT_STOP)
 
-  var cancelShutDownTimer =function (){
+  var cancelShutDownTimer =function () {
       if (self.stopTimer) {
         clearTimeout(self.stopTimer)
       }
@@ -541,15 +541,15 @@ Application.disable = function (setting) {
  *
  * Examples:
  *
- *  app.configure(function (){
+ *  app.configure(function () {
  *    // executed for all envs and server types
  *  })
  *
- *  app.configure('development', function (){
+ *  app.configure('development', function () {
  *    // executed development env
  *  })
  *
- *  app.configure('development', 'connector', function (){
+ *  app.configure('development', 'connector', function () {
  *    // executed for development env and connector server type
  *  })
  *
@@ -602,7 +602,7 @@ Application.registerAdmin = function (moduleId, module, opts) {
     }
   }
 
-  if (!moduleId){
+  if (!moduleId) {
     return
   }
 
@@ -875,7 +875,7 @@ Application.removeServers = function (ids) {
  * @memberOf Application
  */
 Application.replaceServers = function (servers) {
-  if (!servers){
+  if (!servers) {
     return
   }
 
@@ -883,7 +883,7 @@ Application.replaceServers = function (servers) {
   this.serverTypeMaps = {}
   this.serverTypes = []
   var serverArray = []
-  for (var id in servers){
+  for (var id in servers) {
     var server = servers[id]
     var serverType = server[Constants.RESERVED.SERVER_TYPE]
     var slist = this.serverTypeMaps[serverType]

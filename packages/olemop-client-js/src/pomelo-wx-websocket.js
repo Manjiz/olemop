@@ -109,10 +109,10 @@ var defaultDecode = pomelo.decode = function (data) {
   // probuff decode
   var msg = Message.decode(data)
 
-  if (msg.id > 0){
+  if (msg.id > 0) {
     msg.route = routeMap[msg.id]
     delete routeMap[msg.id]
-    if (!msg.route){
+    if (!msg.route) {
       return
     }
   }
@@ -414,7 +414,7 @@ var deCompose = function (msg) {
 
   // Decompose route from dict
   if (msg.compressRoute) {
-    if (!abbrs[route]){
+    if (!abbrs[route]) {
       return {}
     }
 

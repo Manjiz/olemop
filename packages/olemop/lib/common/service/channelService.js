@@ -228,7 +228,7 @@ Channel.prototype.leave = function (uid, sid) {
     return false
   }
   var res = deleteFrom(uid, sid, this.groups[sid])
-  if (res){
+  if (res) {
     delete this.records[uid]
     this.userAmount = this.userAmount-1
   }

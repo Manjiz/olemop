@@ -104,7 +104,7 @@ var list = function (agent, msg, cb) {
 	var servers = []
 	var idMap = agent.idMap
 
-	for (var sid in idMap){
+	for (var sid in idMap) {
 		servers.push(sid)
 	}
 	cb(null, servers)

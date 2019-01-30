@@ -21,7 +21,7 @@ const SimpleTrigger = function (trigger, job) {
 /**
  * Get the current excuteTime of rigger
  */
-SimpleTrigger.prototype.excuteTime = function (){
+SimpleTrigger.prototype.excuteTime = function () {
   return this.nextTime
 }
 
@@ -29,7 +29,7 @@ SimpleTrigger.prototype.excuteTime = function (){
  * Get the next excuteTime of the trigger, and set the trigger's excuteTime
  * @return Next excute time
  */
-SimpleTrigger.prototype.nextExcuteTime = function (){
+SimpleTrigger.prototype.nextExcuteTime = function () {
   const period = this.period
 
   if ((this.count > 0 && this.count <= this.job.runTime) || period <= 0)
@@ -37,7 +37,7 @@ SimpleTrigger.prototype.nextExcuteTime = function (){
 
   this.nextTime += period
 
-  if (SKIP_OLD_JOB && this.nextTime < Date.now()){
+  if (SKIP_OLD_JOB && this.nextTime < Date.now()) {
     this.nextTime += Math.floor((Date.now()-this.nextTime)/period) * period
   }
 
@@ -47,7 +47,7 @@ SimpleTrigger.prototype.nextExcuteTime = function (){
 /**
  * Create Simple trigger
  */
-function createTrigger(trigger, job){
+function createTrigger(trigger, job) {
   return new SimpleTrigger(trigger, job)
 }
 

@@ -2549,7 +2549,7 @@ function loadProtoBuf(ByteBuffer) {
                 }
 
                 // Length-delimited string
-                if (this.type == ProtoBuf.TYPES["string"]){
+                if (this.type == ProtoBuf.TYPES["string"]) {
                     return buffer.readVString()
                 }
 
