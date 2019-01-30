@@ -54,7 +54,7 @@ describe('path util test', function () {
       var p = pathUtil.listUserRemoteDir(mockBase)
       should.exist(p)
       expectNames.length.should.equal(p.length)
-      for(var i=0, l=expectNames.length; i<l; i++) {
+      for (var i=0, l=expectNames.length; i<l; i++) {
         p.should.include(expectNames[i])
       }
     })

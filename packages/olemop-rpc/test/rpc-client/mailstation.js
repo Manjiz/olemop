@@ -31,11 +31,11 @@ var msg = {
 describe('mail station', function () {
   var gateways = []
 
-  before(function(done) {
+  before(function (done) {
     gateways = []
     // start remote logger
     var item, opts
-    for(var i=0, l=serverList.length; i<l; i++) {
+    for (var i=0, l=serverList.length; i<l; i++) {
       item = serverList[i]
       opts = {
         paths: records,
@@ -50,20 +50,20 @@ describe('mail station', function () {
     done()
   })
 
-  after(function(done) {
+  after(function (done) {
     // stop remote servers
-    for(var i=0; i<gateways.length; i++) {
+    for (var i=0; i<gateways.length; i++) {
       gateways[i].stop()
     }
     done()
   })
 
   describe('#create', function () {
-    it('should be ok for pass an empty opts to the factory method', function(done) {
+    it('should be ok for pass an empty opts to the factory method', function (done) {
       var station = MailStation.create()
       should.exist(station)
 
-      station.start(function(err) {
+      station.start(function (err) {
         should.not.exist(err)
         station.stop()
         done()
@@ -74,7 +74,7 @@ describe('mail station', function () {
 
     it('should change the default mailbox by pass the mailboxFactory to the create function', function () {
       var mailboxFactory = {
-        create: function(opts, cb) {
+        create: function (opts, cb) {
           return null
         }
       }
@@ -97,12 +97,12 @@ describe('mail station', function () {
       should.exist(station)
 
       var i, l
-      for(i=0, l=serverList.length; i<l; i++) {
+      for (i=0, l=serverList.length; i<l; i++) {
         station.addServer(serverList[i])
       }
 
       var servers = station.servers, item, server
-      for(i=0, l=serverList.length; i<l; i++) {
+      for (i=0, l=serverList.length; i<l; i++) {
         item = serverList[i]
         server = servers[item.id]
         should.exist(server)
@@ -112,18 +112,18 @@ describe('mail station', function () {
   })
 
   describe('#dispatch', function () {
-    it('should send request to the right remote server and get the response from callback function', function(done) {
+    it('should send request to the right remote server and get the response from callback function', function (done) {
       var callbackCount = 0
       var count = 0
       var station = MailStation.create()
       should.exist(station)
 
-      for(var i=0, l=serverList.length; i<l; i++) {
+      for (var i=0, l=serverList.length; i<l; i++) {
         station.addServer(serverList[i])
       }
 
-      var func = function(id) {
-        return function(err, remoteId) {
+      var func = function (id) {
+        return function (err, remoteId) {
           should.exist(remoteId)
           remoteId.should.equal(id)
           callbackCount++
@@ -131,9 +131,9 @@ describe('mail station', function () {
       }
       var tracer = new Tracer(null, false)
 
-      station.start(function(err) {
+      station.start(function (err) {
         var item
-        for(var i=0, l=serverList.length; i<l; i++) {
+        for (var i=0, l=serverList.length; i<l; i++) {
           count++
           item = serverList[i]
           station.dispatch(tracer, item.id, msg, null, func(item.id))
@@ -146,18 +146,18 @@ describe('mail station', function () {
       }, WAIT_TIME)
     })
 
-    it('should send request to the right remote server and get the response from callback function', function(done) {
+    it('should send request to the right remote server and get the response from callback function', function (done) {
       var callbackCount = 0
       var count = 0
       var station = MailStation.create()
       should.exist(station)
 
-      for(var i=0, l=serverList.length; i<l; i++) {
+      for (var i=0, l=serverList.length; i<l; i++) {
         station.addServer(serverList[i])
       }
 
-      var func = function(id) {
-        return function(err, remoteId) {
+      var func = function (id) {
+        return function (err, remoteId) {
           should.exist(remoteId)
           remoteId.should.equal(id)
           callbackCount++
@@ -166,9 +166,9 @@ describe('mail station', function () {
 
       var tracer = new Tracer(null, false)
 
-      station.start(function(err) {
+      station.start(function (err) {
         var item
-        for(var i=0, l=serverList.length; i<l; i++) {
+        for (var i=0, l=serverList.length; i<l; i++) {
           count++
           item = serverList[i]
           station.dispatch(tracer, item.id, msg, null, func(item.id))
@@ -181,23 +181,23 @@ describe('mail station', function () {
       }, WAIT_TIME)
     })
 
-    it('should update the mailbox map by add server after start', function(done) {
+    it('should update the mailbox map by add server after start', function (done) {
       var callbackCount = 0
       var count = 0
       var station = MailStation.create()
       should.exist(station)
 
-      for(var i=0, l=serverList.length; i<l; i++) {
+      for (var i=0, l=serverList.length; i<l; i++) {
         station.addServer(serverList[i])
       }
 
       var tracer = new Tracer(null, false)
 
-      station.start(function(err) {
+      station.start(function (err) {
         // add area server
         var item = serverList[0]
         station.addServer(item)
-        station.dispatch(tracer, item.id, msg, null, function(err, remoteId) {
+        station.dispatch(tracer, item.id, msg, null, function (err, remoteId) {
           should.exist(remoteId)
           remoteId.should.equal(item.id)
           callbackCount++
@@ -210,7 +210,7 @@ describe('mail station', function () {
       }, WAIT_TIME)
     })
 
-    it('should emit error info and forward message to blackhole if fail to connect to remote server in lazy connect mode', function(done) {
+    it('should emit error info and forward message to blackhole if fail to connect to remote server in lazy connect mode', function (done) {
       // mock data
       var serverId = 'invalid-server-id'
       var server = {id: serverId, type: 'invalid-server', host: 'localhost', port: 1234}
@@ -229,9 +229,9 @@ describe('mail station', function () {
 
       var tracer = new Tracer(null, false)
 
-      station.start(function(err) {
+      station.start(function (err) {
         should.exist(station)
-        station.dispatch(tracer, serverId, msg, null, function(err) {
+        station.dispatch(tracer, serverId, msg, null, function (err) {
           should.exist(err)
           'message was forward to blackhole.'.should.equal(err.message)
           callbackCount++
@@ -247,12 +247,12 @@ describe('mail station', function () {
   })
 
   describe('#close', function () {
-    it('should emit a close event for each mailbox close', function(done) {
+    it('should emit a close event for each mailbox close', function (done) {
       var closeEventCount = 0, i, l
       var remoteIds = []
       var mailboxIds = []
 
-      for(i=0, l=serverList.length; i<l; i++) {
+      for (i=0, l=serverList.length; i<l; i++) {
         remoteIds.push(serverList[i].id)
       }
       remoteIds.sort()
@@ -260,12 +260,12 @@ describe('mail station', function () {
       var station = MailStation.create()
       should.exist(station)
 
-      for(i=0, l=serverList.length; i<l; i++) {
+      for (i=0, l=serverList.length; i<l; i++) {
         station.addServer(serverList[i])
       }
 
-      var func = function(id) {
-        return function(err, remoteId) {
+      var func = function (id) {
+        return function (err, remoteId) {
           should.exist(remoteId)
           remoteId.should.equal(id)
         }
@@ -273,10 +273,10 @@ describe('mail station', function () {
 
       var tracer = new Tracer(null, false)
 
-      station.start(function(err) {
+      station.start(function (err) {
         // invoke the lazy connect
         var item
-        for(var i=0, l=serverList.length; i<l; i++) {
+        for (var i=0, l=serverList.length; i<l; i++) {
           item = serverList[i]
           station.dispatch(tracer, item.id, msg, null, func(item.id))
         }
@@ -298,28 +298,28 @@ describe('mail station', function () {
       }, WAIT_TIME)
     })
 
-    it('should return an error when try to dispatch message by a closed station', function(done) {
+    it('should return an error when try to dispatch message by a closed station', function (done) {
       var errorEventCount = 0
       var i, l
 
       var station = MailStation.create()
       should.exist(station)
 
-      for(i=0, l=serverList.length; i<l; i++) {
+      for (i=0, l=serverList.length; i<l; i++) {
         station.addServer(serverList[i])
       }
 
-      var func = function(err, remoteId, attach) {
+      var func = function (err, remoteId, attach) {
         should.exist(err)
         errorEventCount++
       }
 
       var tracer = new Tracer(null, false)
 
-      station.start(function(err) {
+      station.start(function (err) {
         station.stop()
         var item
-        for(i=0, l=serverList.length; i<l; i++) {
+        for (i=0, l=serverList.length; i<l; i++) {
           item = serverList[i]
           station.dispatch(tracer, item.id, msg, null, func)
         }
@@ -332,7 +332,7 @@ describe('mail station', function () {
   })
 
   describe('#filters', function () {
-    it('should invoke filters in turn', function(done) {
+    it('should invoke filters in turn', function (done) {
       var preFilterCount = 0
       var afterFilterCount = 0
       var sid = 'connector-server-1'
@@ -341,14 +341,14 @@ describe('mail station', function () {
       var station = MailStation.create()
       should.exist(station)
 
-      for(var i=0, l=serverList.length; i<l; i++) {
+      for (var i=0, l=serverList.length; i<l; i++) {
         station.addServer(serverList[i])
       }
 
       var tracer = new Tracer(null, false)
 
-      station.start(function(err) {
-        station.before(function(fsid, fmsg, fopts, next) {
+      station.start(function (err) {
+        station.before(function (fsid, fmsg, fopts, next) {
           preFilterCount.should.equal(0)
           afterFilterCount.should.equal(0)
           fsid.should.equal(sid)
@@ -358,7 +358,7 @@ describe('mail station', function () {
           next(fsid, fmsg, fopts)
         })
 
-        station.before(function(fsid, fmsg, fopts, next) {
+        station.before(function (fsid, fmsg, fopts, next) {
           preFilterCount.should.equal(1)
           afterFilterCount.should.equal(0)
           fsid.should.equal(sid)
@@ -368,7 +368,7 @@ describe('mail station', function () {
           next(fsid, fmsg, fopts)
         })
 
-        station.after(function(fsid, fmsg, fopts, next) {
+        station.after(function (fsid, fmsg, fopts, next) {
           preFilterCount.should.equal(2)
           afterFilterCount.should.equal(0)
           fsid.should.equal(sid)
@@ -378,7 +378,7 @@ describe('mail station', function () {
           next(fsid, fmsg, fopts)
         })
 
-        station.after(function(fsid, fmsg, fopts, next) {
+        station.after(function (fsid, fmsg, fopts, next) {
           preFilterCount.should.equal(2)
           afterFilterCount.should.equal(1)
           fsid.should.equal(sid)

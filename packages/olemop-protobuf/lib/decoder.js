@@ -30,7 +30,7 @@ Decoder.decode = function (route, buf) {
 }
 
 function decodeMsg(msg, protos, length) {
-	while(offset<length) {
+	while (offset<length) {
 		var head = getHead()
 		var type = head.type
 		var tag = head.tag
@@ -139,7 +139,7 @@ function getBytes(flag) {
 		var b = buffer.readUInt8(pos)
 		bytes.push(b)
 		pos++
-	}while(b >= 128)
+	}while (b >= 128)
 
 	if (!flag) {
 		offset = pos

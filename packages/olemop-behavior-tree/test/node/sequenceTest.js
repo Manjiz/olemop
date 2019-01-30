@@ -2,7 +2,7 @@ var should = require('should')
 var bt = require('../../')
 var Sequence = bt.Sequence
 
-var SNode = function(bb) {
+var SNode = function (bb) {
   this.blackboard = bb
 }
 SNode.prototype = {
@@ -12,7 +12,7 @@ SNode.prototype = {
   }
 }
 
-var FNode = function(bb) {
+var FNode = function (bb) {
   this.blackboard = bb
 }
 FNode.prototype = {
@@ -22,12 +22,12 @@ FNode.prototype = {
   }
 }
 
-var WNode = function(bb) {
+var WNode = function (bb) {
   this.blackboard = bb
 }
 WNode.prototype = {
   doAction: function () {
-    if(this.blackboard.wcount < 2) {
+    if (this.blackboard.wcount < 2) {
       this.blackboard.wcount++
       return bt.RES_WAIT
     } else {

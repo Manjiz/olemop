@@ -34,7 +34,7 @@ pro.offer = function (element) {
 
   var pos = this._tailPos-1
 
-  while(pos > 0) {
+  while (pos > 0) {
     var parentPos = (pos%2==0)?(pos/2-1):(pos-1)/2
     if (compare(queue[parentPos], element)) {
       queue[pos] = queue[parentPos]
@@ -69,7 +69,7 @@ pro.pop = function () {
   queue[pos] = tail
   this._tailPos--
 
-  while(left < this._tailPos) {
+  while (left < this._tailPos) {
     if (right<this._tailPos && compare(queue[left], queue[right]) && compare(queue[pos], queue[right])) {
       queue[pos] = queue[right]
       queue[right] = tail

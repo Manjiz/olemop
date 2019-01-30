@@ -7,10 +7,10 @@ var mockData = {
   opts : {}
 }
 
-describe('#rpcLogFilter',function() {
-  it("should do after filter by before filter",function(done) {
-    rpcLogFilter.before(mockData.serverId,mockData.msg,mockData.opts,function(serverId,msg,opts) {
-      rpcLogFilter.after(serverId,msg,opts,function(serverId,msg,opts) {
+describe('#rpcLogFilter',function () {
+  it("should do after filter by before filter",function (done) {
+    rpcLogFilter.before(mockData.serverId,mockData.msg,mockData.opts,function (serverId,msg,opts) {
+      rpcLogFilter.after(serverId,msg,opts,function (serverId,msg,opts) {
         should.exist(opts.__start_time__)
         done()
       })

@@ -6,7 +6,7 @@ var mockApp = {
     serverId: 'connector-server-1'
   },
 
-  get: function(key) {
+  get: function (key) {
     return this.settings[key]
   },
 
@@ -111,7 +111,7 @@ describe('connection service test', function () {
     })
   })
 
-  it('should getStatisticsInfo',  function(done) {
+  it('should getStatisticsInfo',  function (done) {
     var service = new ConnectionService(mockApp)
     var uid1 = 'uid1', uid2 = 'uid2'
     var info1 = 'msg1', info2 = 'msg2'

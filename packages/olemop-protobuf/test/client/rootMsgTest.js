@@ -7,14 +7,14 @@ var util = require('../../lib/util')
 var should = require('should')
 var tc = require('../rootMsgTC')
 
-describe('msgEncoderTest', function() {
+describe('msgEncoderTest', function () {
 
 	var protos = parser.parse(require('../rootMsg.json'))
 
 	protobuf.init({encoderProtos:protos, decoderProtos:protos})
 
-	describe('protobufTest', function() {
-		for(var route in tc) {
+	describe('protobufTest', function () {
+		for (var route in tc) {
 			var msg = tc[route]
 
 			console.log('====================')

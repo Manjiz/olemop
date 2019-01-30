@@ -33,7 +33,7 @@ describe('client', function () {
     gateways = []
     // start remote servers
     var item, opts, gateway
-    for(var i=0, l=serverList.length; i<l; i++) {
+    for (var i=0, l=serverList.length; i<l; i++) {
       item = serverList[i]
       opts = {
         paths: records,
@@ -50,7 +50,7 @@ describe('client', function () {
 
   after(function (done) {
     // stop remote servers
-    for(var i=0; i<gateways.length; i++) {
+    for (var i=0; i<gateways.length; i++) {
       gateways[i].stop()
     }
     done()
@@ -77,7 +77,7 @@ describe('client', function () {
       client.addProxies(records)
 
       var proxies = client.proxies, item
-      for(var i=0, l=records.length; i<l; i++) {
+      for (var i=0, l=records.length; i<l; i++) {
         item = records[i]
         proxies.should.have.property(item.namespace)
         proxies[item.namespace].should.have.property(item.serverType)

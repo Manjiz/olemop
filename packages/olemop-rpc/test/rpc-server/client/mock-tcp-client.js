@@ -15,7 +15,7 @@ util.inherits(Client, EventEmitter)
 
 var pro = Client.prototype
 
-pro.connect = function(host, port, cb) {
+pro.connect = function (host, port, cb) {
   this.socket = net.connect({port: port, host: host}, function () {
     utils.invokeCallback(cb)
   })
@@ -29,7 +29,7 @@ pro.connect = function(host, port, cb) {
     var cb = this.requests[pkg.id]
     delete this.requests[pkg.id]
 
-    if(!cb) {
+    if (!cb) {
       return
     }
 
@@ -37,7 +37,7 @@ pro.connect = function(host, port, cb) {
   })
 }
 
-pro.send = function(msg, cb) {
+pro.send = function (msg, cb) {
   var id = this.curId++
   this.requests[id] = cb
   this.socket.write(this.composer.compose(JSON.stringify({id: id, msg: msg})))
@@ -47,6 +47,6 @@ pro.close = function () {
   this.socket.end()
 }
 
-module.exports.create = function(opts) {
+module.exports.create = function (opts) {
   return new Client()
 }

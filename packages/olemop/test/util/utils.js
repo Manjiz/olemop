@@ -6,7 +6,7 @@ describe('utils test', function () {
     it('should invoke the function with the parameters', function () {
       var p1 = 1, p2 = 'str'
 
-      var func = function(arg1, arg2) {
+      var func = function (arg1, arg2) {
         p1.should.equal(arg1)
         p2.should.equal(arg2)
       }
@@ -152,10 +152,10 @@ describe('utils test', function () {
 
   describe('#ping', function () {
     it('should ping server', function () {
-      utils.ping('127.0.0.1', function(flag) {
+      utils.ping('127.0.0.1', function (flag) {
         flag.should.be.true
       })
-      utils.ping('111.111.111.111', function(flag) {
+      utils.ping('111.111.111.111', function (flag) {
         flag.should.be.false
       })
     })

@@ -60,7 +60,7 @@ function nbi() { return new BigInteger(null) }
 // max digit bits should be 26 because
 // max internal value = 2*dvalue^2-2*dvalue (< 2^53)
 function am1(i,x,w,j,c,n) {
-  while(--n >= 0) {
+  while (--n >= 0) {
     var v = x*this[i++]+w[j]+c
     c = Math.floor(v/0x4000000)
     w[j++] = v&0x3ffffff
@@ -72,7 +72,7 @@ function am1(i,x,w,j,c,n) {
 // on values up to 2*hdvalue^2-hdvalue-1 (< 2^31)
 function am2(i,x,w,j,c,n) {
   var xl = x&0x7fff, xh = x>>15
-  while(--n >= 0) {
+  while (--n >= 0) {
     var l = this[i]&0x7fff
     var h = this[i++]>>15
     var m = xh*l+h*xl
@@ -86,7 +86,7 @@ function am2(i,x,w,j,c,n) {
 // browsers slow down when dealing with 32-bit numbers.
 function am3(i,x,w,j,c,n) {
   var xl = x&0x3fff, xh = x>>14
-  while(--n >= 0) {
+  while (--n >= 0) {
     var l = this[i]&0x3fff
     var h = this[i++]>>14
     var m = xh*l+h*xl
@@ -178,7 +178,7 @@ function bnpFromString(s,b) {
   this.t = 0
   this.s = 0
   var i = s.length, mi = false, sh = 0
-  while(--i >= 0) {
+  while (--i >= 0) {
     var x = (k==8)?s[i]&0xff:intAt(s,i)
     if (x < 0) {
       if (s.charAt(i) == "-") mi = true
@@ -207,7 +207,7 @@ function bnpFromString(s,b) {
 // (protected) clamp off excess high words
 function bnpClamp() {
   var c = this.s&this.DM
-  while(this.t > 0 && this[this.t-1] == c) --this.t
+  while (this.t > 0 && this[this.t-1] == c) --this.t
 }
 
 // (public) return string representation in given radix
@@ -227,7 +227,7 @@ function bnToString(b) {
       m = true
       r = int2char(d)
     }
-    while(i >= 0) {
+    while (i >= 0) {
       if (p < k) {
         d = (this[i]&((1<<p)-1))<<(k-p)
         d |= this[--i]>>(p+=this.DB-k)
@@ -258,7 +258,7 @@ function bnCompareTo(a) {
   var i = this.t
   r = i-a.t
   if (r != 0) return (this.s<0)?-r:r
-  while(--i >= 0) if ((r=this[i]-a[i]) != 0) return r
+  while (--i >= 0) if ((r=this[i]-a[i]) != 0) return r
   return 0
 }
 
@@ -333,14 +333,14 @@ function bnpRShiftTo(n,r) {
 // (protected) r = this - a
 function bnpSubTo(a,r) {
   var i = 0, c = 0, m = Math.min(a.t,this.t)
-  while(i < m) {
+  while (i < m) {
     c += this[i]-a[i]
     r[i++] = c&this.DM
     c >>= this.DB
   }
   if (a.t < this.t) {
     c -= a.s
-    while(i < this.t) {
+    while (i < this.t) {
       c += this[i]
       r[i++] = c&this.DM
       c >>= this.DB
@@ -349,7 +349,7 @@ function bnpSubTo(a,r) {
   }
   else {
     c += this.s
-    while(i < a.t) {
+    while (i < a.t) {
       c -= a[i]
       r[i++] = c&this.DM
       c >>= this.DB
@@ -369,7 +369,7 @@ function bnpMultiplyTo(a,r) {
   var x = this.abs(), y = a.abs()
   var i = x.t
   r.t = i+y.t
-  while(--i >= 0) r[i] = 0
+  while (--i >= 0) r[i] = 0
   for (i = 0; i < y.t; ++i) r[i+x.t] = x.am(0,y[i],r,i,0,x.t)
   r.s = 0
   r.clamp()
@@ -380,7 +380,7 @@ function bnpMultiplyTo(a,r) {
 function bnpSquareTo(r) {
   var x = this.abs()
   var i = r.t = 2*x.t
-  while(--i >= 0) r[i] = 0
+  while (--i >= 0) r[i] = 0
   for (i = 0; i < x.t-1; ++i) {
     var c = x.am(i,x[i],r,2*i,0,1)
     if ((r[i+x.t]+=x.am(i+1,2*x[i],r,2*i+1,c,x.t-i-1)) >= x.DV) {
@@ -422,14 +422,14 @@ function bnpDivRemTo(m,q,r) {
   }
   BigInteger.ONE.dlShiftTo(ys,t)
   t.subTo(y,y)	// "negative" y so we can replace sub with am later
-  while(y.t < ys) y[y.t++] = 0
-  while(--j >= 0) {
+  while (y.t < ys) y[y.t++] = 0
+  while (--j >= 0) {
     // Estimate quotient digit
     var qd = (r[--i]==y0)?this.DM:Math.floor(r[i]*d1+(r[i-1]+e)*d2)
     if ((r[i]+=y.am(0,qd,r,j,0,ys)) < qd) {	// Try it out
       y.dlShiftTo(j,t)
       r.subTo(t,r)
-      while(r[i] < --qd) r.subTo(t,r)
+      while (r[i] < --qd) r.subTo(t,r)
     }
   }
   if (q != null) {
@@ -521,7 +521,7 @@ function montRevert(x) {
 
 // x = x/R mod m (HAC 14.32)
 function montReduce(x) {
-  while(x.t <= this.mt2)	// pad x so am has enough room later
+  while (x.t <= this.mt2)	// pad x so am has enough room later
     x[x.t++] = 0
   for (var i = 0; i < this.m.t; ++i) {
     // faster way of calculating u0 = x[i]*mp mod DV
@@ -531,7 +531,7 @@ function montReduce(x) {
     j = i+this.m.t
     x[j] += this.m.am(0,u0,x,i,0,this.m.t)
     // propagate carry
-    while(x[j] >= x.DV) { x[j] -= x.DV; x[++j]++; }
+    while (x[j] >= x.DV) { x[j] -= x.DV; x[++j]++; }
   }
   x.clamp()
   x.drShiftTo(this.m.t,x)
@@ -558,7 +558,7 @@ function bnpExp(e,z) {
   if (e > 0xffffffff || e < 1) return BigInteger.ONE
   var r = nbi(), r2 = nbi(), g = z.convert(this), i = nbits(e)-1
   g.copyTo(r)
-  while(--i >= 0) {
+  while (--i >= 0) {
     z.sqrTo(r,r2)
     if ((e&(1<<i)) > 0) z.mulTo(r2,g,r)
     else { var t = r; r = r2; r2 = t; }
@@ -651,7 +651,7 @@ var cs = this.chunkSize(b)
 var a = Math.pow(b,cs)
 var d = nbv(a), y = nbi(), z = nbi(), r = ''
 this.divRemTo(d,y,z)
-while(y.signum() > 0) {
+while (y.signum() > 0) {
  r = (a+z.intValue()).toString(b).substr(1) + r
  y.divRemTo(d,y,z)
 }
@@ -695,7 +695,7 @@ if ("number" == typeof b) {
    if (!this.testBit(a-1))	// force MSB set
      this.bitwiseTo(BigInteger.ONE.shiftLeft(a-1),op_or,this)
    if (this.isEven()) this.dAddOffset(1,0) // force odd
-   while(!this.isProbablePrime(b)) {
+   while (!this.isProbablePrime(b)) {
      this.dAddOffset(2,0)
      if (this.bitLength() > a) this.subTo(BigInteger.ONE.shiftLeft(a-1),this)
    }
@@ -719,7 +719,7 @@ var p = this.DB-(i*this.DB)%8, d, k = 0
 if (i-- > 0) {
  if (p < this.DB && (d = this[i]>>p) != (this.s&this.DM)>>p)
    r[k++] = d|(this.s<<(this.DB-p))
- while(i >= 0) {
+ while (i >= 0) {
    if (p < 8) {
      d = (this[i]&((1<<p)-1))<<(8-p)
      d |= this[--i]>>(p+=this.DB-8)
@@ -820,7 +820,7 @@ return -1
 // return number of 1 bits in x
 function cbit(x) {
 var r = 0
-while(x != 0) { x &= x-1; ++r; }
+while (x != 0) { x &= x-1; ++r; }
 return r
 }
 
@@ -857,14 +857,14 @@ function bnFlipBit(n) { return this.changeBit(n,op_xor); }
 // (protected) r = this + a
 function bnpAddTo(a,r) {
 var i = 0, c = 0, m = Math.min(a.t,this.t)
-while(i < m) {
+while (i < m) {
  c += this[i]+a[i]
  r[i++] = c&this.DM
  c >>= this.DB
 }
 if (a.t < this.t) {
  c += a.s
- while(i < this.t) {
+ while (i < this.t) {
    c += this[i]
    r[i++] = c&this.DM
    c >>= this.DB
@@ -873,7 +873,7 @@ if (a.t < this.t) {
 }
 else {
  c += this.s
- while(i < a.t) {
+ while (i < a.t) {
    c += a[i]
    r[i++] = c&this.DM
    c >>= this.DB
@@ -922,9 +922,9 @@ this.clamp()
 // (protected) this += n << w words, this >= 0
 function bnpDAddOffset(n,w) {
 if (n == 0) return
-while(this.t <= w) this[this.t++] = 0
+while (this.t <= w) this[this.t++] = 0
 this[w] += n
-while(this[w] >= this.DV) {
+while (this[w] >= this.DV) {
  this[w] -= this.DV
  if (++w >= this.t) this[this.t++] = 0
  ++this[w]
@@ -951,7 +951,7 @@ function bnpMultiplyLowerTo(a,n,r) {
 var i = Math.min(this.t+a.t,n)
 r.s = 0 // assumes a,this >= 0
 r.t = i
-while(i > 0) r[--i] = 0
+while (i > 0) r[--i] = 0
 var j
 for (j = r.t-this.t; i < j; ++i) r[i+this.t] = this.am(0,a[i],r,i,0,this.t)
 for (j = Math.min(a.t,n); i < j; ++i) this.am(0,a[i],r,i,0,n-i)
@@ -964,7 +964,7 @@ function bnpMultiplyUpperTo(a,n,r) {
 --n
 var i = r.t = this.t+a.t-n
 r.s = 0 // assumes a,this >= 0
-while(--i >= 0) r[i] = 0
+while (--i >= 0) r[i] = 0
 for (i = Math.max(n-this.t,0); i < a.t; ++i)
  r[this.t+i-n] = this.am(n-i,a[i],r,0,0,this.t+i-n)
 r.clamp()
@@ -995,9 +995,9 @@ x.drShiftTo(this.m.t-1,this.r2)
 if (x.t > this.m.t+1) { x.t = this.m.t+1; x.clamp(); }
 this.mu.multiplyUpperTo(this.r2,this.m.t+1,this.q3)
 this.m.multiplyLowerTo(this.q3,this.m.t+1,this.r2)
-while(x.compareTo(this.r2) < 0) x.dAddOffset(1,this.m.t+1)
+while (x.compareTo(this.r2) < 0) x.dAddOffset(1,this.m.t+1)
 x.subTo(this.r2,x)
-while(x.compareTo(this.m) >= 0) x.subTo(this.m,x)
+while (x.compareTo(this.m) >= 0) x.subTo(this.m,x)
 }
 
 // r = x^2 mod m; x != r
@@ -1034,7 +1034,7 @@ g[1] = z.convert(this)
 if (k > 1) {
  var g2 = nbi()
  z.sqrTo(g[1],g2)
- while(n <= km) {
+ while (n <= km) {
    g[n] = nbi()
    z.mulTo(g2,g[n-2],g[n])
    n += 2
@@ -1043,7 +1043,7 @@ if (k > 1) {
 
 var j = e.t-1, w, is1 = true, r2 = nbi(), t
 i = nbits(e[j])-1
-while(j >= 0) {
+while (j >= 0) {
  if (i >= k1) w = (e[j]>>(i-k1))&km
  else {
    w = (e[j]&((1<<(i+1))-1))<<(k1-i)
@@ -1051,19 +1051,19 @@ while(j >= 0) {
  }
 
  n = k
- while((w&1) == 0) { w >>= 1; --n; }
+ while ((w&1) == 0) { w >>= 1; --n; }
  if ((i -= n) < 0) { i += this.DB; --j; }
  if (is1) {	// ret == 1, don't bother squaring or multiplying it
    g[w].copyTo(r)
    is1 = false
  }
  else {
-   while(n > 1) { z.sqrTo(r,r2); z.sqrTo(r2,r); n -= 2; }
+   while (n > 1) { z.sqrTo(r,r2); z.sqrTo(r2,r); n -= 2; }
    if (n > 0) z.sqrTo(r,r2); else { t = r; r = r2; r2 = t; }
    z.mulTo(r2,g[w],r)
  }
 
- while(j >= 0 && (e[j]&(1<<i)) == 0) {
+ while (j >= 0 && (e[j]&(1<<i)) == 0) {
    z.sqrTo(r,r2); t = r; r = r2; r2 = t
    if (--i < 0) { i = this.DB-1; --j; }
  }
@@ -1083,7 +1083,7 @@ if (g > 0) {
  x.rShiftTo(g,x)
  y.rShiftTo(g,y)
 }
-while(x.signum() > 0) {
+while (x.signum() > 0) {
  if ((i = x.getLowestSetBit()) > 0) x.rShiftTo(i,x)
  if ((i = y.getLowestSetBit()) > 0) y.rShiftTo(i,y)
  if (x.compareTo(y) >= 0) {
@@ -1115,8 +1115,8 @@ var ac = m.isEven()
 if ((this.isEven() && ac) || m.signum() == 0) return BigInteger.ZERO
 var u = m.clone(), v = this.clone()
 var a = nbv(1), b = nbv(0), c = nbv(0), d = nbv(1)
-while(u.signum() != 0) {
- while(u.isEven()) {
+while (u.signum() != 0) {
+ while (u.isEven()) {
    u.rShiftTo(1,u)
    if (ac) {
      if (!a.isEven() || !b.isEven()) { a.addTo(this,a); b.subTo(m,b); }
@@ -1125,7 +1125,7 @@ while(u.signum() != 0) {
    else if (!b.isEven()) b.subTo(m,b)
    b.rShiftTo(1,b)
  }
- while(v.isEven()) {
+ while (v.isEven()) {
    v.rShiftTo(1,v)
    if (ac) {
      if (!c.isEven() || !d.isEven()) { c.addTo(this,c); d.subTo(m,d); }
@@ -1164,11 +1164,11 @@ if (x.t == 1 && x[0] <= lowprimes[lowprimes.length-1]) {
 }
 if (x.isEven()) return false
 i = 1
-while(i < lowprimes.length) {
+while (i < lowprimes.length) {
  var m = lowprimes[i], j = i+1
- while(j < lowprimes.length && m < lplim) m *= lowprimes[j++]
+ while (j < lowprimes.length && m < lplim) m *= lowprimes[j++]
  m = x.modInt(m)
- while(i < j) if (m%lowprimes[i++] == 0) return false
+ while (i < j) if (m%lowprimes[i++] == 0) return false
 }
 return x.millerRabin(t)
 }
@@ -1188,7 +1188,7 @@ for (var i = 0; i < t; ++i) {
   var y = a.modPow(r,this)
   if (y.compareTo(BigInteger.ONE) != 0 && y.compareTo(n1) != 0) {
     var j = 1
-    while(j++ < k && y.compareTo(n1) != 0) {
+    while (j++ < k && y.compareTo(n1) != 0) {
       y = y.modPowInt(2,this)
       if (y.compareTo(BigInteger.ONE) == 0) return false
    }

@@ -8,14 +8,14 @@ var WAIT_TIME = 20
 var services = {
   'user': {
     addOneService: {
-      doService: function(num, cb) {
+      doService: function (num, cb) {
         cb(null, num + 1)
       }
     }
   },
   'sys': {
     addTwoService: {
-      doService: function(num, cb) {
+      doService: function (num, cb) {
         cb(null, num + 2)
       }
     }
@@ -25,7 +25,7 @@ var services = {
 var tracer = new Tracer(console, false)
 
 describe('dispatcher', function () {
-  it('should be find the right service object', function(done) {
+  it('should be find the right service object', function (done) {
     var methodStr = 'doService'
     var serviceStr1 = 'addOneService'
     var serviceStr2 = 'addTwoService'
@@ -35,7 +35,7 @@ describe('dispatcher', function () {
     var callbackCount = 0
 
     var msg1 = {namespace: namespace1, service: serviceStr1, method: methodStr, args: [value]}
-    route(tracer, msg1, services, function(err, result) {
+    route(tracer, msg1, services, function (err, result) {
       should.not.exist(err)
       should.exist(result)
       result.should.equal(value + 1)
@@ -43,7 +43,7 @@ describe('dispatcher', function () {
     })
 
     var msg2 = {namespace: namespace2, service: serviceStr2, method: methodStr, args: [value]}
-    route(tracer, msg2, services, function(err, result) {
+    route(tracer, msg2, services, function (err, result) {
       should.not.exist(err)
       should.exist(result)
       result.should.equal(value + 2)
@@ -57,7 +57,7 @@ describe('dispatcher', function () {
     }, WAIT_TIME)
   })
 
-  it('should return an error if the service or method not exist', function(done) {
+  it('should return an error if the service or method not exist', function (done) {
     var serviceStr1 = 'addZeroService'
     var methodStr1 = 'doService'
     var serviceStr2 = 'addOneService'
@@ -67,14 +67,14 @@ describe('dispatcher', function () {
     var callbackCount = 0
 
     var msg1 = {namespace: namespace, service: serviceStr1, method: methodStr1, args: [value]}
-    route(tracer, msg1, services, function(err, result) {
+    route(tracer, msg1, services, function (err, result) {
       should.exist(err)
       should.not.exist(result)
       callbackCount++
     })
 
     var msg2 = {namespace: namespace, service: serviceStr2, method: methodStr2, args: [value]}
-    route(tracer, msg2, services, function(err, result) {
+    route(tracer, msg2, services, function (err, result) {
       should.exist(err)
       should.not.exist(result)
       callbackCount++

@@ -20,14 +20,14 @@ describe('countdown latch test', function () {
   var countDownLatch2
 
   describe('#count down', function () {
-    it('should invoke the callback after the done method was invoked the specified times', function(done) {
+    it('should invoke the callback after the done method was invoked the specified times', function (done) {
       var n = 3, doneCount = 0
       var cdl = CountDownLatch.createCountDownLatch(n, function () {
         doneCount.should.equal(n)
         done()
       })
 
-      for(var i=0; i<n; i++) {
+      for (var i=0; i<n; i++) {
         doneCount++
         cdl.done()
       }
@@ -53,7 +53,7 @@ describe('countdown latch test', function () {
       var n = 3
       var cdl = CountDownLatch.createCountDownLatch(n, function () {})
 
-      for(var i=0; i<n; i++) {
+      for (var i=0; i<n; i++) {
         cdl.done()
       }
 
@@ -64,11 +64,11 @@ describe('countdown latch test', function () {
 
     it('should invoke the callback if timeout', function () {
       var n = 3
-      var cdl = CountDownLatch.createCountDownLatch(n, {timeout: 3000}, function(isTimeout) {
+      var cdl = CountDownLatch.createCountDownLatch(n, {timeout: 3000}, function (isTimeout) {
         isTimeout.should.equal(true)
       })
 
-      for(var i=0; i<n-1; i++) {
+      for (var i=0; i<n-1; i++) {
         cdl.done()
       }
     })

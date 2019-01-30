@@ -12,14 +12,14 @@ util.inherits(Client, EventEmitter)
 
 var pro = Client.prototype
 
-pro.connect = function(host, port, cb) {
+pro.connect = function (host, port, cb) {
   this.socket = sioClient.connect(host + ':' + port, {'force new connection': true})
 
   this.socket.on('message', (pkg) => {
     var cb = this.requests[pkg.id]
     delete this.requests[pkg.id]
 
-    if(!cb) {
+    if (!cb) {
       return
     }
 
@@ -31,7 +31,7 @@ pro.connect = function(host, port, cb) {
   })
 }
 
-pro.send = function(msg, cb) {
+pro.send = function (msg, cb) {
   var id = this.curId++
   this.requests[id] = cb
   this.socket.emit('message', {id: id, msg: msg})
@@ -41,6 +41,6 @@ pro.close = function () {
   this.socket.disconnect()
 }
 
-module.exports.create = function(opts) {
+module.exports.create = function (opts) {
   return new Client()
 }

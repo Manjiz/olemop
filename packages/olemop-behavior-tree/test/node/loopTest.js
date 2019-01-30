@@ -2,7 +2,7 @@ var should = require('should')
 var bt = require('../../')
 var Loop = bt.Loop
 
-var SNode = function(bb) {
+var SNode = function (bb) {
   this.blackboard = bb
 }
 
@@ -13,7 +13,7 @@ SNode.prototype = {
   }
 }
 
-var FNode = function(bb) {
+var FNode = function (bb) {
   this.blackboard = bb
 }
 FNode.prototype = {
@@ -23,12 +23,12 @@ FNode.prototype = {
   }
 }
 
-var WNode = function(bb) {
+var WNode = function (bb) {
   this.blackboard = bb
 }
 WNode.prototype = {
   doAction: function () {
-    if(this.blackboard.wcount < 2) {
+    if (this.blackboard.wcount < 2) {
       this.blackboard.wcount++
       return bt.RES_WAIT
     } else {
@@ -48,7 +48,7 @@ describe('Loop Test', function () {
 
     var loopConditionCount = 0
 
-    var lc = function(bb) {
+    var lc = function (bb) {
       loopConditionCount++
       return bb.scount <= 2
     }
@@ -86,7 +86,7 @@ describe('Loop Test', function () {
 
     var loopConditionCount = 0
 
-    var lc = function(bb) {
+    var lc = function (bb) {
       // should never enter here
       loopConditionCount++
       return  true
@@ -118,7 +118,7 @@ describe('Loop Test', function () {
 
     var loopConditionCount = 0
 
-    var lc = function(bb) {
+    var lc = function (bb) {
       loopConditionCount++
       return  false
     }

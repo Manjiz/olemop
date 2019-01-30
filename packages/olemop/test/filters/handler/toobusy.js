@@ -6,27 +6,27 @@ var mockSession = {
   key : "123"
 }
 
-describe("#toobusyFilter",function() {
-  it("should do before filter ok",function(done) {
+describe("#toobusyFilter",function () {
+  it("should do before filter ok",function (done) {
     var service = new FilterService()
     var filter = toobusyFilter()
     service.before(filter)
 
-    service.beforeFilter(null,mockSession,function(err) {
+    service.beforeFilter(null,mockSession,function (err) {
       should.not.exist(err)
       should.exist(mockSession)
       done()
     })
   })
 
-  it("should do before filter error because of too busy",function(done) {
+  it("should do before filter error because of too busy",function (done) {
     var service = new FilterService()
     var filter = toobusyFilter()
     service.before(filter)
 
     var exit = false
     function load() {
-      service.beforeFilter(null,mockSession,function(err, resp) {
+      service.beforeFilter(null,mockSession,function (err, resp) {
         should.exist(mockSession)
         console.log('err: ' + err)
         if (err) {

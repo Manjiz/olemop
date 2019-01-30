@@ -2,13 +2,13 @@
 function joinTest(num) {
 
 	var arr = []
-	for(var i = 0; i < num; i++)
+	for (var i = 0; i < num; i++)
 		arr.push(i + '')
 
 	var start = Date.now()
 	var str = ''
 
-	for(var i = 0; i < num; i++) {
+	for (var i = 0; i < num; i++) {
 		str += arr[i]
 	}
 
@@ -17,7 +17,7 @@ function joinTest(num) {
 
 	start = Date.now()
 	var arr = []
-	for(var i = 0; i < num; i++) {
+	for (var i = 0; i < num; i++) {
 		arr.push(arr[i])
 	}
 	var str1 = arr.join()

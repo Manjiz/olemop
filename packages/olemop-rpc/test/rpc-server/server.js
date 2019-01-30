@@ -13,7 +13,7 @@ var port = 3333
 describe('server', function () {
 
   describe('#create', function () {
-    it('should create gateway by providing port and paths parameters', function(done) {
+    it('should create gateway by providing port and paths parameters', function (done) {
       var opts = {
         paths: paths,
         port: port
@@ -41,15 +41,15 @@ describe('server', function () {
       }, WAIT_TIME)
     })
 
-    it('should change the default acceptor by pass the acceptorFactory to the create function', function(done) {
+    it('should change the default acceptor by pass the acceptorFactory to the create function', function (done) {
       var oport = 3333
       var constructCount = 0, listenCount = 0, closeCount = 0
 
-      var MockAcceptor = function(opts, cb) {
+      var MockAcceptor = function (opts, cb) {
         constructCount++
       }
 
-      MockAcceptor.prototype.listen = function(port) {
+      MockAcceptor.prototype.listen = function (port) {
         oport.should.equal(port)
         listenCount++
       }
@@ -63,7 +63,7 @@ describe('server', function () {
       MockAcceptor.prototype.emit = function () {}
 
       var acceptorFactory = {
-        create: function(opts, cb) {
+        create: function (opts, cb) {
           return new MockAcceptor(null, cb)
         }
       }

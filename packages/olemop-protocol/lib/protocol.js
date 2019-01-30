@@ -78,7 +78,7 @@
       var offset = 0
       var charCode = 0
       var end = bytes.length
-      while(offset < end) {
+      while (offset < end) {
         if (bytes[offset] < 128) {
           charCode = bytes[offset]
           offset += 1
@@ -143,7 +143,7 @@
     var bytes = new ByteArray(buffer)
     var length = 0
     var rs = []
-    while(offset < bytes.length) {
+    while (offset < bytes.length) {
       var type = bytes[offset++]
       length = ((bytes[offset++]) << 16 | (bytes[offset++]) << 8 | bytes[offset++]) >>> 0
       var body = length ? new ByteArray(length) : null
@@ -245,7 +245,7 @@
         id += (m & 0x7f) << (7 * i)
         offset++
         i++
-      }while(m >= 128)
+      }while (m >= 128)
     }
 
     // parse route
@@ -301,7 +301,7 @@
     do {
       len += 1
       id >>= 7
-    } while(id > 0)
+    } while (id > 0)
     return len
   }
 
@@ -331,7 +331,7 @@
       buffer[offset++] = tmp
 
       id = next
-    } while(id !== 0)
+    } while (id !== 0)
 
     return offset
   }

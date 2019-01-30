@@ -6,10 +6,10 @@ taskManager.timeout = 100
 
 var WAIT_TIME = 200
 
-describe("#taskManager",function() {
-  it("should add task and execute it",function(done) {
+describe("#taskManager",function () {
+  it("should add task and execute it",function (done) {
     var key = 'key-1'
-    var fn = function(task) {
+    var fn = function (task) {
       taskCount++
       task.done()
     }
@@ -26,9 +26,9 @@ describe("#taskManager",function() {
     }, WAIT_TIME)
   })
 
-  it("should fire timeout callback if task timeout",function(done) {
+  it("should fire timeout callback if task timeout",function (done) {
     var key = 'key-1'
-    var fn = function(task) {
+    var fn = function (task) {
       taskCount++
     }
     var onTimeout = function () {
@@ -46,9 +46,9 @@ describe("#taskManager",function() {
     }, WAIT_TIME)
   })
 
-  it("should not fire timeout after close the task",function(done) {
+  it("should not fire timeout after close the task",function (done) {
     var key = 'key-1'
-    var fn = function(task) {
+    var fn = function (task) {
       taskCount++
     }
     var onTimeout = function () {
@@ -70,7 +70,7 @@ describe("#taskManager",function() {
     })
   })
 
-  it("should be ok to remove a queue not exist",function() {
+  it("should be ok to remove a queue not exist",function () {
     var key = 'key-n'
     taskManager.closeQueue(key, true)
   })

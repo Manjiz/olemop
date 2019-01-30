@@ -101,7 +101,7 @@
       }
       result.push(tmp)
       n = next
-    }while(n !== 0)
+    }while (n !== 0)
 
     return result
   }
@@ -194,7 +194,7 @@
     var array = []
     var end = offset + length
 
-    while(offset < end) {
+    while (offset < end) {
       var code = 0
 
       if (bytes[offset] < 128) {
@@ -496,7 +496,7 @@
   }
 
   function decodeMsg(msg, protos, length) {
-    while(offset<length) {
+    while (offset<length) {
       var head = getHead()
       var type = head.type
       var tag = head.tag
@@ -606,7 +606,7 @@
       b = buffer[pos]
       bytes.push(b)
       pos++
-    }while(b >= 128)
+    }while (b >= 128)
 
     if (!flag) {
       offset = pos

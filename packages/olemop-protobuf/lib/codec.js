@@ -21,7 +21,7 @@ Encoder.encodeUInt32 = function (num) {
 		}
 		result.push(tmp)
 		n = next
-	} while(n !== 0)
+	} while (n !== 0)
 
 	return result
 }

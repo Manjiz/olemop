@@ -28,7 +28,7 @@ var resp = sync.set(key,user1)
 
 console.log('resp %j' , sync.get(key))
 
-sync.execSync('bag.selectUser',10004,function(err,data) {
+sync.execSync('bag.selectUser',10004,function (err,data) {
 	console.log(err + '  select data ' + data)
 })
 
@@ -42,7 +42,7 @@ sync.exec('player.updateUser',10003,user1)
 user1.x = 999
 
 sync.flush('player.updateUser',10003,user1)
- 
-setInterval(function() {
+
+setInterval(function () {
  console.log(' count:' + sync.rewriter.count + ' isDone: ' + sync.isDone())
 },1000)

@@ -10,10 +10,10 @@ var port = 3333
 describe('acceptor', function () {
 
   describe('#listen', function () {
-    it('should be ok when listen a valid port and emit a closed event when it closed', function(done) {
+    it('should be ok when listen a valid port and emit a closed event when it closed', function (done) {
       var errorCount = 0
       var closeCount = 0
-      var acceptor = Acceptor.create(null, function(tracer, msg, cb) {})
+      var acceptor = Acceptor.create(null, function (tracer, msg, cb) {})
 
       should.exist(acceptor)
       acceptor.on('error', (err) => {
@@ -33,9 +33,9 @@ describe('acceptor', function () {
       }, WAIT_TIME)
     })
 
-    it('should emit an error when listen a port in use', function(done) {
+    it('should emit an error when listen a port in use', function (done) {
       var errorCount = 0
-      var acceptor = Acceptor.create(null, function(tracer, msg, cb) {})
+      var acceptor = Acceptor.create(null, function (tracer, msg, cb) {})
 
       should.exist(acceptor)
       acceptor.on('error', (err) => {
@@ -54,7 +54,7 @@ describe('acceptor', function () {
   })
 
   describe('#new message callback', function () {
-    it('should invoke the callback function with the same msg and return response to remote client by cb', function(done) {
+    it('should invoke the callback function with the same msg and return response to remote client by cb', function (done) {
       var callbackCount = 0
       var clientCallbackCount = 0
       var orgMsg = {
@@ -63,7 +63,7 @@ describe('acceptor', function () {
         args: [1, 'a', {param: 100}]
       }
 
-      var acceptor = Acceptor.create(null, function(tracer, msg, cb) {
+      var acceptor = Acceptor.create(null, function (tracer, msg, cb) {
         msg.should.eql(orgMsg)
         callbackCount++
         cb(msg)
@@ -74,7 +74,7 @@ describe('acceptor', function () {
 
       var client = Client.create()
       client.connect('127.0.0.1', port, function () {
-        client.send(orgMsg, function(backMsg) {
+        client.send(orgMsg, function (backMsg) {
           backMsg.should.eql(orgMsg)
           clientCallbackCount++
         })
@@ -89,7 +89,7 @@ describe('acceptor', function () {
       }, WAIT_TIME)
     })
 
-    it('should keep the relationship with request and response in batch rpc calls', function(done) {
+    it('should keep the relationship with request and response in batch rpc calls', function (done) {
       var callbackCount = 0
       var clientCallbackCount = 0
       var orgMsg1 = {
@@ -103,7 +103,7 @@ describe('acceptor', function () {
         args: [2, 'a', {param: 100}]
       }
 
-      var acceptor = Acceptor.create(null, function(tracer, msg, cb) {
+      var acceptor = Acceptor.create(null, function (tracer, msg, cb) {
         callbackCount++
         cb(msg)
       })
@@ -112,11 +112,11 @@ describe('acceptor', function () {
 
       var client = Client.create()
       client.connect('127.0.0.1', port, function () {
-        client.send(orgMsg1, function(backMsg) {
+        client.send(orgMsg1, function (backMsg) {
           backMsg.should.eql(orgMsg1)
           clientCallbackCount++
         })
-        client.send(orgMsg2, function(backMsg) {
+        client.send(orgMsg2, function (backMsg) {
           backMsg.should.eql(orgMsg2)
           clientCallbackCount++
         })

@@ -28,14 +28,14 @@ function nextTimeTest(count) {
  // console.log([1,2] instanceof Array)
  var r1, r2
  var start = Date.now()
- for(var i = 0; i < count; i++)
+ for (var i = 0; i < count; i++)
    r1 = cronTrigger.nextTime(value, timer)
  var end = Date.now()
 
  console.log("first run time : " + (end-start))
 
  var start = Date.now()
- for(var i = 0; i < count; i++)
+ for (var i = 0; i < count; i++)
    r2 = nextExcuteTimeTest(value, timer)
  var end = Date.now()
 
@@ -101,26 +101,26 @@ function nextExcuteTimeTest(time, cronTrigger) {
 }
 
 function getDomLimitTest(y1,y2,m1,m2) {
-  for(var year = y1; year <= y2; year++)
-    for(var month = m1; month <= m2; month++) {
+  for (var year = y1; year <= y2; year++)
+    for (var month = m1; month <= m2; month++) {
       console.log(year + "." + (month +1)+ " limit : " + cronTrigger.getDomLimit(year,month))
     }
 }
 
 function timeMatch(value, cronTime) {
 //  console.log("match value " + value + ' cronTime ' + cronTime)
-  if(typeof(cronTime) == 'number') {
-    if(cronTime == -1)
+  if (typeof(cronTime) == 'number') {
+    if (cronTime == -1)
       return true
-    if(value == cronTime)
+    if (value == cronTime)
       return true
     return false
-  }else if(typeof(cronTime) == 'object' && cronTime instanceof Array) {
-    if(value < cronTime[0] || value > cronTime[cronTime.length -1])
+  }else if (typeof(cronTime) == 'object' && cronTime instanceof Array) {
+    if (value < cronTime[0] || value > cronTime[cronTime.length -1])
       return false
 
-    for(var i = 0; i < cronTime.length; i++)
-      if(value == cronTime[i])
+    for (var i = 0; i < cronTime.length; i++)
+      if (value == cronTime[i])
         return true
 
     return false

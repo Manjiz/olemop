@@ -4,24 +4,24 @@ var FilterService = require('../../lib/common/service/filterService')
 var WAIT_TIME = 50
 
 var mockFilter1 = {
-  before: function(msg, session, cb) {
+  before: function (msg, session, cb) {
     session.beforeCount1++
     cb()
   },
 
-  after: function(err, msg, session, resp, cb) {
+  after: function (err, msg, session, resp, cb) {
     session.afterCount1++
     cb()
   }
 }
 
 var mockFilter2 = {
-  before: function(msg, session, cb) {
+  before: function (msg, session, cb) {
     session.beforeCount2++
     cb()
   },
 
-  after: function(err, msg, session, resp, cb) {
+  after: function (err, msg, session, resp, cb) {
     session.afterCount2++
     cb()
   }
@@ -32,7 +32,7 @@ var blackholdFilter = {
   after: function () {}
 }
 
-var MockSession = function() {
+var MockSession = function () {
   this.beforeCount1 = 0
   this.afterCount1 = 0
   this.beforeCount2 = 0
@@ -41,7 +41,7 @@ var MockSession = function() {
 
 describe('filter service test', function () {
   describe('#filter', function () {
-    it('should register before filter by calling before method and fire filter chain by calling beforeFilter', function(done) {
+    it('should register before filter by calling before method and fire filter chain by calling beforeFilter', function (done) {
       var session = new MockSession()
       var service = new FilterService()
       service.before(mockFilter1)
@@ -56,7 +56,7 @@ describe('filter service test', function () {
       })
     })
 
-    it('should register after filter by calling after method and fire filter chain by calling afterFilter', function(done) {
+    it('should register after filter by calling after method and fire filter chain by calling afterFilter', function (done) {
       var session = new MockSession()
       var service = new FilterService()
       service.after(mockFilter1)
@@ -71,16 +71,16 @@ describe('filter service test', function () {
       })
     })
 
-    it('should be ok if filter is a function', function(done) {
+    it('should be ok if filter is a function', function (done) {
       var session = {beforeCount: 0, afterCount: 0}
       var service = new FilterService()
       var beforeCount = 0, afterCount = 0
 
-      service.before(function(msg, session, cb) {
+      service.before(function (msg, session, cb) {
         session.beforeCount++
         cb()
       })
-      service.after(function(err, msg, session, resp, cb) {
+      service.after(function (err, msg, session, resp, cb) {
         session.afterCount++
         cb()
       })
@@ -101,7 +101,7 @@ describe('filter service test', function () {
       }, WAIT_TIME)
     })
 
-    it('should not invoke the callback if filter not invoke callback', function(done) {
+    it('should not invoke the callback if filter not invoke callback', function (done) {
       var session = new MockSession()
       var service = new FilterService()
       var beforeCount = 0, afterCount = 0
@@ -127,13 +127,13 @@ describe('filter service test', function () {
       }, WAIT_TIME)
     })
 
-    it('should pass the err and resp parameters to callback and ignore the filters behind if them specified in before filter', function(done) {
+    it('should pass the err and resp parameters to callback and ignore the filters behind if them specified in before filter', function (done) {
       var session = new MockSession()
       var service = new FilterService()
       var error = 'some error message'
       var response = {key: 'some value'}
       var respFilter = {
-        before: function(msg, session, cb) {
+        before: function (msg, session, cb) {
           cb(error, response)
         }
       }
@@ -141,7 +141,7 @@ describe('filter service test', function () {
       service.before(mockFilter1)
       service.before(respFilter)
       service.before(mockFilter2)
-      service.beforeFilter(null, session, function(err, resp) {
+      service.beforeFilter(null, session, function (err, resp) {
         should.exist(err)
         err.should.equal(error)
         should.exist(resp)

@@ -78,7 +78,7 @@ function excuteJob() {
   var job = peekNextJob()
   var nextJob
 
-  while(job && job.excuteTime() - Date.now() < accuracy) {
+  while (job && job.excuteTime() - Date.now() < accuracy) {
     job.run()
     queue.pop()
 
@@ -113,7 +113,7 @@ function peekNextJob() {
   do{
     job = map[queue.peek().id]
     if (!job) queue.pop()
-  }while(!job && queue.size() > 0)
+  }while (!job && queue.size() > 0)
 
   return job ? job : null
 }
@@ -125,7 +125,7 @@ function peekNextJob() {
 function getNextJob() {
   var job = null
 
-  while(!job && queue.size() > 0) {
+  while (!job && queue.size() > 0) {
     var id = queue.pop().id
     job = map[id]
   }

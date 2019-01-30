@@ -8,15 +8,15 @@ var util = require('../../lib/util')
 var should = require('should')
 var tc = require('../testMsg')
 
-describe('msgEncoderTest', function() {
+describe('msgEncoderTest', function () {
 
 	var protos = parser.parse(require('../example.json'))
 
 	protobuf.init({encoderProtos:protos, decoderProtos:protos})
 	protobufServer.init({encoderProtos:protos, decoderProtos:protos})
 
-	describe('protobufTest', function() {
-		for(var route in tc) {
+	describe('protobufTest', function () {
+		for (var route in tc) {
 			var msg = tc[route]
 			var buffer = protobuf.encode(route, msg)
 
@@ -30,7 +30,7 @@ describe('msgEncoderTest', function() {
 function toBuffer(arr) {
 	var buffer = new Buffer(arr.length)
 
-	for(var i = 0; i < arr.length; i++) {
+	for (var i = 0; i < arr.length; i++) {
 		buffer.writeUInt8(arr[i], i)
 	}
 

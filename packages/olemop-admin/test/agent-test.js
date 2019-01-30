@@ -10,7 +10,7 @@ var masterHost = '127.0.0.1'
 var masterPort = 3333
 
 describe('agent', function () {
-	it('should emit a error if master agent listen a port in use', function(done) {
+	it('should emit a error if master agent listen a port in use', function (done) {
 		var master = new Master()
 		var invalidPort = 80
 		var errorCount = 0
@@ -25,13 +25,13 @@ describe('agent', function () {
 		}, WAIT_TIME)
 	})
 
-	it('should fail if the monitor connect to the invalid address', function(done) {
+	it('should fail if the monitor connect to the invalid address', function (done) {
 		var monitor = new Monitor({})
 		var host = 'localhost'
 		var invalidPort = -80
 
 		var errorCount = 0
-		monitor.connect(invalidPort, host, function(err) {
+		monitor.connect(invalidPort, host, function (err) {
 			should.exist(err)
 			errorCount++
 		})
@@ -42,7 +42,7 @@ describe('agent', function () {
 		}, WAIT_TIME)
 	})
 
-	it('should forward the message from master to the right monitor and get the response by reuqest', function(done) {
+	it('should forward the message from master to the right monitor and get the response by reuqest', function (done) {
 		var monitorId1 = 'connector-server-1'
 		var monitorId2 = 'area-server-1'
 		var monitorType1 = 'connector'
@@ -61,7 +61,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole1 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req1Count++
 				moduleId.should.eql(moduleId1)
 				cb(null, msg)
@@ -69,7 +69,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole2 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req2Count++
 				moduleId.should.eql(moduleId2)
 				cb(null, msg)
@@ -78,34 +78,34 @@ describe('agent', function () {
 
 		var master = new Master(masterConsole)
 		var monitor1 = new Monitor({
-			consoleService: monitorConsole1, 
-			id: monitorId1, 
+			consoleService: monitorConsole1,
+			id: monitorId1,
 			type: monitorType1
 		})
 		var monitor2 = new Monitor({
-			consoleService: monitorConsole2, 
-			id: monitorId2, 
+			consoleService: monitorConsole2,
+			id: monitorId2,
 			type: monitorType2
 		})
 
 		master.listen(masterPort)
 		flow.exec(function () {
 			monitor1.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			monitor2.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
-			master.request(monitorId1, moduleId1, msg1, function(err, resp) {
+			master.request(monitorId1, moduleId1, msg1, function (err, resp) {
 				resp1Count++
 				should.not.exist(err)
 				should.exist(resp)
 				resp.should.eql(msg1)
 			})
 
-			master.request(monitorId2, moduleId2, msg2, function(err, resp) {
+			master.request(monitorId2, moduleId2, msg2, function (err, resp) {
 				resp2Count++
 				should.not.exist(err)
 				should.exist(resp)
@@ -127,7 +127,7 @@ describe('agent', function () {
 		}, WAIT_TIME)
 	})
 
-	it('should return error to master if monitor cb with a error by reuqest', function(done) {
+	it('should return error to master if monitor cb with a error by reuqest', function (done) {
 		var monitorId = 'connector-server-1'
 		var monitorType = 'connector'
 		var moduleId = 'testModuleId'
@@ -141,7 +141,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				reqCount++
 				moduleId.should.eql(moduleId)
 				cb(new Error(errMsg))
@@ -150,18 +150,18 @@ describe('agent', function () {
 
 		var master = new Master(masterConsole)
 		var monitor = new Monitor({
-			consoleService: monitorConsole, 
-			id: monitorId, 
+			consoleService: monitorConsole,
+			id: monitorId,
 			type: monitorType
 		})
 
 		master.listen(masterPort)
 		flow.exec(function () {
 			monitor.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
-			master.request(monitorId, moduleId, msg, function(err, resp) {
+			master.request(monitorId, moduleId, msg, function (err, resp) {
 				respCount++
 				should.exist(err)
 				err.message.should.eql(errMsg)
@@ -180,7 +180,7 @@ describe('agent', function () {
 		}, WAIT_TIME)
 	})
 
-	it('should forward the message from master to the right monitor by notifyById', function(done) {
+	it('should forward the message from master to the right monitor by notifyById', function (done) {
 		var monitorId1 = 'connector-server-1'
 		var monitorId2 = 'area-server-1'
 		var monitorType1 = 'connector'
@@ -197,7 +197,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole1 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req1Count++
 				moduleId.should.eql(moduleId1)
 				msg.should.eql(msg1)
@@ -205,7 +205,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole2 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req2Count++
 				moduleId.should.eql(moduleId2)
 				msg.should.eql(msg2)
@@ -214,25 +214,25 @@ describe('agent', function () {
 
 		var master = new Master(masterConsole)
 		var monitor1 = new Monitor({
-			consoleService: monitorConsole1, 
-			id: monitorId1, 
+			consoleService: monitorConsole1,
+			id: monitorId1,
 			type: monitorType1
 		})
 		var monitor2 = new Monitor({
-			consoleService: monitorConsole2, 
-			id: monitorId2, 
+			consoleService: monitorConsole2,
+			id: monitorId2,
 			type: monitorType2
 		})
 
 		master.listen(masterPort)
 		flow.exec(function () {
 			monitor1.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			monitor2.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			master.notifyById(monitorId1, moduleId1, msg1)
 			master.notifyById(monitorId2, moduleId2, msg2)
@@ -250,7 +250,7 @@ describe('agent', function () {
 		}, WAIT_TIME)
 	})
 
-	it('should forward the message to the right type monitors by notifyByType', function(done) {
+	it('should forward the message to the right type monitors by notifyByType', function (done) {
 		var monitorId1 = 'connector-server-1'
 		var monitorId2 = 'connector-server-2'
 		var monitorId3 = 'area-server-1'
@@ -271,7 +271,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole1 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req1Count++
 				reqType1Count++
 				moduleId.should.eql(moduleId1)
@@ -280,7 +280,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole2 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req2Count++
 				reqType1Count++
 				moduleId.should.eql(moduleId1)
@@ -289,7 +289,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole3 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req3Count++
 				reqType2Count++
 				moduleId.should.eql(moduleId2)
@@ -299,34 +299,34 @@ describe('agent', function () {
 
 		var master = new Master(masterConsole)
 		var monitor1 = new Monitor({
-			consoleService: monitorConsole1, 
-			id: monitorId1, 
+			consoleService: monitorConsole1,
+			id: monitorId1,
 			type: monitorType1
 		})
 		var monitor2 = new Monitor({
-			consoleService: monitorConsole2, 
-			id: monitorId2, 
+			consoleService: monitorConsole2,
+			id: monitorId2,
 			type: monitorType1
 		})
 		var monitor3 = new Monitor({
-			consoleService: monitorConsole3, 
-			id: monitorId3, 
+			consoleService: monitorConsole3,
+			id: monitorId3,
 			type: monitorType2
 		})
 
 		master.listen(masterPort)
 		flow.exec(function () {
 			monitor1.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			monitor2.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			monitor3.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			master.notifyByType(monitorType1, moduleId1, msg1)
 			master.notifyByType(monitorType2, moduleId2, msg2)
@@ -348,7 +348,7 @@ describe('agent', function () {
 		}, WAIT_TIME)
 	})
 
-	it('should forward the message to all monitors by notifyAll', function(done) {
+	it('should forward the message to all monitors by notifyAll', function (done) {
 		var monitorId1 = 'connector-server-1'
 		var monitorId2 = 'area-server-1'
 		var monitorType1 = 'connector'
@@ -363,7 +363,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole1 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req1Count++
 				orgModuleId.should.eql(moduleId)
 				msg.should.eql(orgMsg)
@@ -371,7 +371,7 @@ describe('agent', function () {
 		}
 
 		var monitorConsole2 = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				req2Count++
 				orgModuleId.should.eql(moduleId)
 				msg.should.eql(orgMsg)
@@ -380,25 +380,25 @@ describe('agent', function () {
 
 		var master = new Master(masterConsole)
 		var monitor1 = new Monitor({
-			consoleService: monitorConsole1, 
-			id: monitorId1, 
+			consoleService: monitorConsole1,
+			id: monitorId1,
 			type: monitorType1
 		})
 		var monitor2 = new Monitor({
-			consoleService: monitorConsole2, 
-			id: monitorId2, 
+			consoleService: monitorConsole2,
+			id: monitorId2,
 			type: monitorType2
 		})
 
 		master.listen(masterPort)
 		flow.exec(function () {
 			monitor1.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			monitor2.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			master.notifyAll(orgModuleId, orgMsg)
 		})
@@ -415,7 +415,7 @@ describe('agent', function () {
 		}, WAIT_TIME)
 	})
 
-	it('should push the message from monitor to master by notify', function(done) {
+	it('should push the message from monitor to master by notify', function (done) {
 		var monitorId = 'connector-server-1'
 		var monitorType = 'connector'
 		var orgModuleId = 'testModuleId'
@@ -424,7 +424,7 @@ describe('agent', function () {
 		var reqCount = 0
 
 		var masterConsole = {
-			execute: function(moduleId, method, msg, cb) {
+			execute: function (moduleId, method, msg, cb) {
 				reqCount++
 				orgModuleId.should.eql(moduleId)
 				msg.should.eql(orgMsg)
@@ -436,16 +436,16 @@ describe('agent', function () {
 
 		var master = new Master(masterConsole)
 		var monitor = new Monitor({
-			consoleService: monitorConsole, 
-			id: monitorId, 
+			consoleService: monitorConsole,
+			id: monitorId,
 			type: monitorType
 		})
 
 		master.listen(masterPort)
 		flow.exec(function () {
 			monitor.connect(masterPort, masterHost, this)
-		}, 
-		function(err) {
+		},
+		function (err) {
 			should.not.exist(err)
 			monitor.notify(orgModuleId, orgMsg)
 		})

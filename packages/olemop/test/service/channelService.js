@@ -72,7 +72,7 @@ describe('channel manager test', function () {
       ]
       var mockMsg = {key: 'some remote message'}
       var uidMap = {}
-      for(var i in mockUids) {
+      for (var i in mockUids) {
         uidMap[mockUids[i].uid] = mockUids[i]
       }
 
@@ -86,7 +86,7 @@ describe('channel manager test', function () {
         var uids = args[2]
         mockMsg.should.eql(msg)
 
-        for(var j=0, l=uids.length; j<l; j++) {
+        for (var j=0, l=uids.length; j<l; j++) {
           var uid = uids[j]
           var r2 = uidMap[uid]
           r2.sid.should.equal(sid)
@@ -127,7 +127,7 @@ describe('channel manager test', function () {
       ]
       var mockMsg = {key: 'some remote message'}
       var uidMap = {}
-      for(var i in mockUids) {
+      for (var i in mockUids) {
         uidMap[mockUids[i].uid] = mockUids[i]
       }
 
@@ -156,7 +156,7 @@ describe('channel manager test', function () {
       var mockUids = [{sid: sid1, uid: uid1}, {sid: sid2, uid: uid2}, {sid: sid2, uid: uid3}]
       var mockMsg = {key: 'some remote message'}
       var uidMap = {}
-      for(var i in mockUids) {
+      for (var i in mockUids) {
         uidMap[mockUids[i].uid] = mockUids[i]
       }
 
@@ -164,9 +164,9 @@ describe('channel manager test', function () {
 
       var mockRpcInvoke = function (sid, rmsg, cb) {
         invokeCount++
-        if(rmsg.args[2].indexOf(uid1) >= 0) {
+        if (rmsg.args[2].indexOf(uid1) >= 0) {
           cb(null, [uid1])
-        } else if(rmsg.args[2].indexOf(uid3) >= 0) {
+        } else if (rmsg.args[2].indexOf(uid3) >= 0) {
           cb(null, [uid3])
         } else {
           cb()
@@ -232,7 +232,7 @@ describe('channel manager test', function () {
                                opts, function () {
         invokeCount.should.equal(2)
         sids.length.should.equal(connectorIds.length)
-        for(var i=0, l=connectorIds.length; i<l; i++) {
+        for (var i=0, l=connectorIds.length; i<l; i++) {
           sids.should.include(connectorIds[i])
         }
         done()

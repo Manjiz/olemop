@@ -20,7 +20,7 @@ function nexExcuteTime(time, timer) {
   var nextTime = new Date(time)
 
   outmost:
-  while(true) {
+  while (true) {
     if (!timeMatch(date.getMonth(), timer.month)) {
       var nextMonth = nextTime(date.getMonth(), timer.month)
       if (nextMonth < date.getMonth()) {
@@ -52,7 +52,7 @@ function nexExcuteTime(time, timer) {
         }
 
          date.setDate(nextDom)
-      }while(!timeMatch(date.getDay(), timer.dow))
+      }while (!timeMatch(date.getDay(), timer.dow))
 
       date.setHours(0)
       date.setMinutes(0)

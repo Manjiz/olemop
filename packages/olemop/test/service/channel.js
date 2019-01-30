@@ -85,7 +85,7 @@ describe('channel test', function () {
       var channel = channelService.createChannel(channelName)
 
       var i, l, item
-      for(i=0, l=uinfos.length; i<l; i++) {
+      for (i=0, l=uinfos.length; i<l; i++) {
         item = uinfos[i]
         channel.add(item.uid, item.sid)
       }
@@ -93,7 +93,7 @@ describe('channel test', function () {
       var members = channel.getMembers()
       should.exist(members)
       members.length.should.equal(uinfos.length)
-      for(i=0, l=uinfos.length; i<l; i++) {
+      for (i=0, l=uinfos.length; i<l; i++) {
         item = uinfos[i]
         members.should.include(item.uid)
       }
@@ -101,19 +101,19 @@ describe('channel test', function () {
   })
 
   describe('#pushMessage', function () {
-    it('should push message to the right frontend server by sid', function(done) {
+    it('should push message to the right frontend server by sid', function (done) {
       var sid1 = 'sid1', sid2 = 'sid2'
       var uid1 = 'uid1', uid2 = 'uid2', uid3 = 'uid3'
       var mockUids = [{sid: sid1, uid: uid1}, {sid: sid2, uid: uid2}, {sid: sid2, uid: uid3}]
       var mockMsg = {key: 'some remote message'}
       var uidMap = {}
-      for(var i in mockUids) {
+      for (var i in mockUids) {
         uidMap[mockUids[i].uid] = mockUids[i]
       }
 
       var invokeCount = 0
 
-      var mockRpcInvoke = function(sid, rmsg, cb) {
+      var mockRpcInvoke = function (sid, rmsg, cb) {
         invokeCount++
         var args = rmsg.args
         var route = args[0]
@@ -121,7 +121,7 @@ describe('channel test', function () {
         var uids = args[2]
         mockMsg.should.eql(msg)
 
-        for(var j=0, l=uids.length; j<l; j++) {
+        for (var j=0, l=uids.length; j<l; j++) {
           var uid = uids[j]
           var r2 = uidMap[uid]
           r2.sid.should.equal(sid)
@@ -135,7 +135,7 @@ describe('channel test', function () {
       var channelService = new ChannelService(app)
 
       var channel = channelService.createChannel(channelName)
-      for(var i=0, l=mockUids.length; i<l; i++) {
+      for (var i=0, l=mockUids.length; i<l; i++) {
         channel.add(mockUids[i].uid, mockUids[i].sid)
       }
 
@@ -151,7 +151,7 @@ describe('channel test', function () {
 
       channel.destroy()
 
-      channel.pushMessage({}, function(err) {
+      channel.pushMessage({}, function (err) {
         should.exist(err)
         err.message.should.equal('channel is not running now')
       })

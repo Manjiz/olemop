@@ -482,7 +482,7 @@ function loadProtoBuf(ByteBuffer) {
                 var delim = Lang.DELIM.test(this.source.charAt(end))
                 if (!delim) {
                     end++
-                    while(end < this.source.length && !Lang.DELIM.test(this.source.charAt(end))) {
+                    while (end < this.source.length && !Lang.DELIM.test(this.source.charAt(end))) {
                         end++
                     }
                 } else {
@@ -800,7 +800,7 @@ function loadProtoBuf(ByteBuffer) {
                             break
                         }
                     }
-                } while(true)
+                } while (true)
             }
 
             /**

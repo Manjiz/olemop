@@ -2,13 +2,13 @@ var lib = process.env.POMELO_RPC_COV ? 'lib-cov' : 'lib'
 var should = require('should')
 var Proxy = require('../../' + lib + '/util/proxy')
 
-var A = function(value) {
+var A = function (value) {
   this.value = value
 }
-A.prototype.add = function(num) {
+A.prototype.add = function (num) {
   this.value += num
 }
-A.prototype.sub = function(num) {
+A.prototype.sub = function (num) {
   this.value -= num
 }
 A.prototype.addB = function () {
@@ -18,14 +18,14 @@ A.prototype.addInternal = function () {
   this.add(1)
 }
 
-var B = function(value) {
+var B = function (value) {
   this.value = value
 }
 B.prototype.addA = function () {
   this.a.value++
 }
 
-var callback = function(service, method, args, attach, invoke) {
+var callback = function (service, method, args, attach, invoke) {
 
 }
 
@@ -33,7 +33,7 @@ describe('proxy', function () {
   describe('#create', function () {
     it('should invoke the proxy function if it had been set', function () {
       var callbackCount = 0
-      var cb = function(service, method, args, attach, invoke) {
+      var cb = function (service, method, args, attach, invoke) {
         callbackCount++
       }
       var a = new A(1)
@@ -63,12 +63,12 @@ describe('proxy', function () {
       var originCallCount = 0
       var value = 1
 
-      var cb = function(namespace, method, args, attach, invoke) {
+      var cb = function (namespace, method, args, attach, invoke) {
         callbackCount++
         invoke(args)
       }
       var a = new A(value)
-      a.add = function(num) {
+      a.add = function (num) {
         originCallCount++
         this.value += num
       }
@@ -90,12 +90,12 @@ describe('proxy', function () {
       var originCallCount = 0
       var value = 1
 
-      var cb = function(namespace, method, args, attach, invoke) {
+      var cb = function (namespace, method, args, attach, invoke) {
         callbackCount++
       }
       var a = new A(value)
       // overwrite the origin function
-      a.add = function(num) {
+      a.add = function (num) {
         originCallCount++
         this.value += this.value
       }
@@ -130,7 +130,7 @@ describe('proxy', function () {
       var valueA = 1
       var valueB = 2
 
-      var cb = function(namespace, method, args, attach, invoke) {
+      var cb = function (namespace, method, args, attach, invoke) {
         callbackCount++
         invoke(args)
       }
@@ -159,7 +159,7 @@ describe('proxy', function () {
       var callbackCount = 0
       var value = 1
 
-      var cb = function(namespace, method, args, attach, invoke) {
+      var cb = function (namespace, method, args, attach, invoke) {
         callbackCount++
         invoke(args)
       }
@@ -189,7 +189,7 @@ describe('proxy', function () {
       var callbackCount = 0
       var expectAttach = {someValue: 1, someObject: {}, someStr: "hello"}
 
-      var cb = function(namespace, method, args, attach, invoke) {
+      var cb = function (namespace, method, args, attach, invoke) {
         callbackCount++
         should.exist(attach)
         attach.should.equal(expectAttach)

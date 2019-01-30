@@ -5,7 +5,7 @@ var should = require('should')
 var WAIT_TIME = 1000
 var mockBase = process.cwd() + '/test'
 
-describe('application test', function() {
+describe('application test', function () {
   afterEach(function () {
     app.state = 0
     app.settings = {}
@@ -52,23 +52,23 @@ describe('application test', function() {
   })
 
   describe("#compoent", function () {
-    it('should load the component and fire their lifecircle callback by app.start, app.afterStart, app.stop', function(done) {
+    it('should load the component and fire their lifecircle callback by app.start, app.afterStart, app.stop', function (done) {
       var startCount = 0, afterStartCount = 0, stopCount = 0
 
       var mockComponent = {
-        start: function(cb) {
+        start: function (cb) {
           console.log('start invoked')
           startCount++
           cb()
         },
 
-        afterStart: function(cb) {
+        afterStart: function (cb) {
           console.log('afterStart invoked')
           afterStartCount++
           cb()
         },
 
-        stop: function(force, cb) {
+        stop: function (force, cb) {
           console.log('stop invoked')
           stopCount++
           cb()
@@ -77,7 +77,7 @@ describe('application test', function() {
 
       app.init({base: mockBase})
       app.load(mockComponent)
-      app.start(function(err) {
+      app.start(function (err) {
         should.not.exist(err)
       })
 
@@ -137,14 +137,14 @@ describe('application test', function() {
       app.init({base: mockBase})
 
       var i, l
-      for(i=0, l=filters.length; i<l; i++) {
+      for (i=0, l=filters.length; i<l; i++) {
         app.before(filters[i])
       }
 
       var filters2 = app.get('__befores__')
       should.exist(filters2)
       filters2.length.should.equal(filters.length)
-      for(i=0, l=filters2.length; i<l; i++) {
+      for (i=0, l=filters2.length; i<l; i++) {
         filters2[i].should.equal(filters[i])
       }
     })
@@ -158,14 +158,14 @@ describe('application test', function() {
       app.init({base: mockBase})
 
       var i, l
-      for(i=0, l=filters.length; i<l; i++) {
+      for (i=0, l=filters.length; i<l; i++) {
         app.after(filters[i])
       }
 
       var filters2 = app.get('__afters__')
       should.exist(filters2)
       filters2.length.should.equal(filters.length)
-      for(i=0, l=filters2.length; i<l; i++) {
+      for (i=0, l=filters2.length; i<l; i++) {
         filters2[i].should.equal(filters[i])
       }
     })
@@ -179,21 +179,21 @@ describe('application test', function() {
       app.init({base: mockBase})
 
       var i, l
-      for(i=0, l=filters.length; i<l; i++) {
+      for (i=0, l=filters.length; i<l; i++) {
         app.filter(filters[i])
       }
 
       var filters2 = app.get('__befores__')
       should.exist(filters2)
       filters2.length.should.equal(filters.length)
-      for(i=0, l=filters2.length; i<l; i++) {
+      for (i=0, l=filters2.length; i<l; i++) {
         filters2[i].should.equal(filters[i])
       }
 
       var filters3 = app.get('__afters__')
       should.exist(filters3)
       filters3.length.should.equal(filters.length)
-      for(i=0, l=filters3.length; i<l; i++) {
+      for (i=0, l=filters3.length; i<l; i++) {
         filters2[i].should.equal(filters[i])
       }
     })
@@ -209,14 +209,14 @@ describe('application test', function() {
       app.init({base: mockBase})
 
       var i, l
-      for(i=0, l=filters.length; i<l; i++) {
+      for (i=0, l=filters.length; i<l; i++) {
         app.globalBefore(filters[i])
       }
 
       var filters2 = app.get('__globalBefores__')
       should.exist(filters2)
       filters2.length.should.equal(filters.length)
-      for(i=0, l=filters2.length; i<l; i++) {
+      for (i=0, l=filters2.length; i<l; i++) {
         filters2[i].should.equal(filters[i])
       }
     })
@@ -230,14 +230,14 @@ describe('application test', function() {
       app.init({base: mockBase})
 
       var i, l
-      for(i=0, l=filters.length; i<l; i++) {
+      for (i=0, l=filters.length; i<l; i++) {
         app.globalAfter(filters[i])
       }
 
       var filters2 = app.get('__globalAfters__')
       should.exist(filters2)
       filters2.length.should.equal(filters.length)
-      for(i=0, l=filters2.length; i<l; i++) {
+      for (i=0, l=filters2.length; i<l; i++) {
         filters2[i].should.equal(filters[i])
       }
     })
@@ -251,21 +251,21 @@ describe('application test', function() {
       app.init({base: mockBase})
 
       var i, l
-      for(i=0, l=filters.length; i<l; i++) {
+      for (i=0, l=filters.length; i<l; i++) {
         app.globalFilter(filters[i])
       }
 
       var filters2 = app.get('__globalBefores__')
       should.exist(filters2)
       filters2.length.should.equal(filters.length)
-      for(i=0, l=filters2.length; i<l; i++) {
+      for (i=0, l=filters2.length; i<l; i++) {
         filters2[i].should.equal(filters[i])
       }
 
       var filters3 = app.get('__globalAfters__')
       should.exist(filters3)
       filters3.length.should.equal(filters.length)
-      for(i=0, l=filters3.length; i<l; i++) {
+      for (i=0, l=filters3.length; i<l; i++) {
         filters2[i].should.equal(filters[i])
       }
     })
@@ -354,24 +354,24 @@ describe('application test', function() {
   describe('#transaction', function () {
     it('should execute all conditions and handlers', function () {
       var conditions = {
-        test1: function(cb) {
+        test1: function (cb) {
           console.log('condition1')
           cb()
         },
-        test2: function(cb) {
+        test2: function (cb) {
           console.log('condition2')
           cb()
         }
       }
       var flag = 1
       var handlers = {
-        do1: function(cb) {
+        do1: function (cb) {
           console.log('handler1')
           cb()
         },
-        do2: function(cb) {
+        do2: function (cb) {
           console.log('handler2')
-          if(flag < 3) {
+          if (flag < 3) {
             flag ++
             cb(new Error('error'))
           } else {
@@ -384,25 +384,25 @@ describe('application test', function() {
 
     it('shoud execute conditions with error and do not execute handlers', function () {
       var conditions = {
-        test1: function(cb) {
+        test1: function (cb) {
           console.log('condition1')
           cb()
         },
-        test2: function(cb) {
+        test2: function (cb) {
           console.log('condition2')
           cb(new Error('error'))
         },
-        test3: function(cb) {
+        test3: function (cb) {
           console.log('condition3')
           cb()
         }
       }
       var handlers = {
-        do1: function(cb) {
+        do1: function (cb) {
           console.log('handler1')
           cb()
         },
-        do2: function(cb) {
+        do2: function (cb) {
           console.log('handler2')
           cb()
         }
@@ -412,13 +412,13 @@ describe('application test', function() {
   })
 
   describe('#add and remove servers', function () {
-    it('should add servers and emit event and fetch the new server info by get methods', function(done) {
+    it('should add servers and emit event and fetch the new server info by get methods', function (done) {
       var newServers = [
         {id: 'connector-server-1', serverType: 'connecctor', host: '127.0.0.1', port: 1234, clientPort: 3000, frontend: true},
         {id: 'area-server-1', serverType: 'area', host: '127.0.0.1', port: 2234}
       ]
       app.init({base: mockBase})
-      app.event.on(pomelo.events.ADD_SERVERS, function(servers) {
+      app.event.on(pomelo.events.ADD_SERVERS, function (servers) {
         // check event args
         newServers.should.eql(servers)
 
@@ -426,34 +426,34 @@ describe('application test', function() {
         var curServers = app.getServers()
         should.exist(curServers)
         var item, i, l
-        for(i=0, l=newServers.length; i<l; i++) {
+        for (i=0, l=newServers.length; i<l; i++) {
           item = newServers[i]
           item.should.eql(curServers[item.id])
         }
 
         // check get server by id
-        for(i=0, l=newServers.length; i<l; i++) {
+        for (i=0, l=newServers.length; i<l; i++) {
           item = newServers[i]
           item.should.eql(app.getServerById(item.id))
         }
 
         // check server types
         var types = []
-        for(i=0, l=newServers.length; i<l; i++) {
+        for (i=0, l=newServers.length; i<l; i++) {
           item = newServers[i]
-          if(types.indexOf(item.serverType) < 0) {
+          if (types.indexOf(item.serverType) < 0) {
             types.push(item.serverType)
           }
         }
         var types2 = app.getServerTypes()
         types.length.should.equal(types2.length)
-        for(i=0, l=types.length; i<l; i++) {
+        for (i=0, l=types.length; i<l; i++) {
           types2.should.include(types[i])
         }
 
         // check server type list
         var slist
-        for(i=0, l=newServers.length; i<l; i++) {
+        for (i=0, l=newServers.length; i<l; i++) {
           item = newServers[i]
           slist = app.getServersByType(item.serverType)
           should.exist(slist)
@@ -466,7 +466,7 @@ describe('application test', function() {
       app.addServers(newServers)
     })
 
-    it('should remove server info and emit event', function(done) {
+    it('should remove server info and emit event', function (done) {
       var newServers = [
         {id: 'connector-server-1', serverType: 'connecctor', host: '127.0.0.1', port: 1234, clientPort: 3000, frontend: true},
         {id: 'area-server-1', serverType: 'area', host: '127.0.0.1', port: 2234},
@@ -481,26 +481,26 @@ describe('application test', function() {
       var delCount = 0
 
       app.init({base: mockBase})
-      app.event.on(pomelo.events.ADD_SERVERS, function(servers) {
+      app.event.on(pomelo.events.ADD_SERVERS, function (servers) {
         // check event args
         newServers.should.eql(servers)
         addCount++
       })
 
-      app.event.on(pomelo.events.REMOVE_SERVERS, function(ids) {
+      app.event.on(pomelo.events.REMOVE_SERVERS, function (ids) {
         delIds.should.eql(ids)
 
         // check servers
         var curServers = app.getServers()
         should.exist(curServers)
         var item, i, l
-        for(i=0, l=destServers.length; i<l; i++) {
+        for (i=0, l=destServers.length; i<l; i++) {
           item = destServers[i]
           item.should.eql(curServers[item.id])
         }
 
         // check get server by id
-        for(i=0, l=destServers.length; i<l; i++) {
+        for (i=0, l=destServers.length; i<l; i++) {
           item = destServers[i]
           item.should.eql(app.getServerById(item.id))
         }
@@ -508,21 +508,21 @@ describe('application test', function() {
         // check server types
         // NOTICE: server types would not clear when remove server from app
         var types = []
-        for(i=0, l=newServers.length; i<l; i++) {
+        for (i=0, l=newServers.length; i<l; i++) {
           item = newServers[i]
-          if(types.indexOf(item.serverType) < 0) {
+          if (types.indexOf(item.serverType) < 0) {
             types.push(item.serverType)
           }
         }
         var types2 = app.getServerTypes()
         types.length.should.equal(types2.length)
-        for(i=0, l=types.length; i<l; i++) {
+        for (i=0, l=types.length; i<l; i++) {
           types2.should.include(types[i])
         }
 
         // check server type list
         var slist
-        for(i=0, l=destServers.length; i<l; i++) {
+        for (i=0, l=destServers.length; i<l; i++) {
           item = destServers[i]
           slist = app.getServersByType(item.serverType)
           should.exist(slist)
@@ -538,13 +538,13 @@ describe('application test', function() {
   })
 
   describe('#beforeStopHook', function () {
-    it('should be called before application stopped.', function(done) {
+    it('should be called before application stopped.', function (done) {
       var count = 0
       app.init({base: mockBase})
       app.beforeStopHook(function () {
         count++
       })
-      app.start(function(err) {
+      app.start(function (err) {
         should.not.exist(err)
       })
 
@@ -561,7 +561,7 @@ describe('application test', function() {
     })
   })
   describe('#use', function () {
-    it('should exist plugin component and event', function(done) {
+    it('should exist plugin component and event', function (done) {
       var plugin = {
         components: mockBase + '/mock-plugin/components/',
         events: mockBase + '/mock-plugin/events/'
@@ -575,9 +575,9 @@ describe('application test', function() {
   })
 })
 
-var contains = function(slist, sinfo) {
-  for(var i=0, l=slist.length; i<l; i++) {
-    if(slist[i].id === sinfo.id) {
+var contains = function (slist, sinfo) {
+  for (var i=0, l=slist.length; i<l; i++) {
+    if (slist[i].id === sinfo.id) {
       return true
     }
   }

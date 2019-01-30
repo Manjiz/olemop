@@ -27,15 +27,15 @@ describe('router', function () {
   }
 
   describe("#route", function () {
-    it('should return the same result for the same user if the mapping info not changed', function(done) {
+    it('should return the same result for the same user if the mapping info not changed', function (done) {
       var firstRoute, secondRoute
 
-      route(session, msg, servers, function(err, sid) {
+      route(session, msg, servers, function (err, sid) {
         should.exist(sid)
         firstRoute = sid
       })
 
-      route(session, msg, servers, function(err, sid) {
+      route(session, msg, servers, function (err, sid) {
         should.exist(sid)
         secondRoute = sid
       })
@@ -46,7 +46,7 @@ describe('router', function () {
       }, WAIT_TIME)
     })
 
-    it('should return an error if try to route to an invalid server type', function(done) {
+    it('should return an error if try to route to an invalid server type', function (done) {
       var invalidMsg = {
         'serverType': 'invalid-type',
         'service': 'rpcRemote',
@@ -54,15 +54,15 @@ describe('router', function () {
         'args': []
       }
 
-      route(session, invalidMsg, servers, function(err, sid) {
+      route(session, invalidMsg, servers, function (err, sid) {
         should.exist(err)
         done()
       })
     })
 
-    it('should be ok when session or session.uid is null', function(done) {
+    it('should be ok when session or session.uid is null', function (done) {
       var okCount = 0
-      route(null, msg, servers, function(err, sid) {
+      route(null, msg, servers, function (err, sid) {
         should.exist(sid)
         okCount++
       })
@@ -71,7 +71,7 @@ describe('router', function () {
         'uid': null
       }
 
-      route(session, msg, servers, function(err, sid) {
+      route(session, msg, servers, function (err, sid) {
         should.exist(sid)
         okCount++
       })

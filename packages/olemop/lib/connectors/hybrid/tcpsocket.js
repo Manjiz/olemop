@@ -95,7 +95,7 @@ var ondata = function (socket, chunk) {
 
   var offset = 0, end = chunk.length
 
-  while(offset < end && socket.state !== ST_CLOSED) {
+  while (offset < end && socket.state !== ST_CLOSED) {
     if (socket.state === ST_HEAD) {
       offset = readHead(socket, chunk, offset)
     }
