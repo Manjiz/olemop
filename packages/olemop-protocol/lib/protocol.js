@@ -115,7 +115,7 @@
    *
    * @param  {number}    type   package type
    * @param  {ByteArray} body   body content in bytes
-   * @return {ByteArray}        new byte array that contains encode result
+   * @returns {ByteArray}        new byte array that contains encode result
    */
   Package.encode = function (type, body) {
     var length = body ? body.length : 0
@@ -136,7 +136,7 @@
    * See encode for package format.
    *
    * @param  {ByteArray} buffer byte array containing package content
-   * @return {Object}           {type: package type, buffer: body byte array}
+   * @returns {Object}           {type: package type, buffer: body byte array}
    */
   Package.decode = function (buffer) {
     var offset = 0
@@ -164,7 +164,7 @@
    * @param  {number} compressRoute whether compress route
    * @param  {Number|String} route  route code or route string
    * @param  {Buffer} msg           message body bytes
-   * @return {Buffer}               encode result
+   * @returns {Buffer}               encode result
    */
   Message.encode = function (id, type, compressRoute, route, msg, compressGzip) {
     // caculate message max length
@@ -221,7 +221,7 @@
    * Message protocol decode.
    *
    * @param  {Buffer|Uint8Array} buffer message bytes
-   * @return {Object}            message object
+   * @returns {Object}            message object
    */
   Message.decode = function (buffer) {
     var bytes =  new ByteArray(buffer)

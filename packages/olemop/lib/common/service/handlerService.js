@@ -72,7 +72,7 @@ Service.prototype.handle = async function (routeRecord, msg, session, cb) {
  *
  * @param  {Object} handlers    handler map
  * @param  {Object} routeRecord route record parsed from route string
- * @return {Object}             handler instance if any matchs or null for match fail
+ * @returns {Object}             handler instance if any matchs or null for match fail
  */
 Service.prototype.getHandler = function (routeRecord) {
   var serverType = routeRecord.serverType

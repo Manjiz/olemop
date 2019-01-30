@@ -14,7 +14,7 @@ var pomelo = require('../pomelo')
  * Run all servers
  *
  * @param {Object} app current application  context
- * @return {Void}
+ * @returns {Void}
  */
 starter.runServers = function (app) {
   var server, servers
@@ -46,7 +46,7 @@ starter.runServers = function (app) {
  *
  * @param {Object} app current application context
  * @param {Object} server
- * @return {Void}
+ * @returns {Void}
  */
 starter.run = function (app, server, cb) {
   env = app.get(Constants.RESERVED.ENV)
@@ -93,7 +93,7 @@ starter.run = function (app, server, cb) {
  * @param {string} sid server id
  * @param {string} pid process id
  * @param {string} host server host
- * @return {Void}
+ * @returns {Void}
  */
 starter.bindCpu = function (sid, pid, host) {
   if (os.platform() === Constants.PLATFORM.LINUX && cpus[sid] !== undefined) {

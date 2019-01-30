@@ -19,7 +19,7 @@ class Component {
    * Component lifecycle function
    *
    * @param  {Function} cb
-   * @return {Void}
+   * @returns {Void}
    */
   start (cb) {
     this.master.start(cb)
@@ -30,7 +30,7 @@ class Component {
    *
    * @param  {Boolean}   force whether stop the component immediately
    * @param  {Function}  cb
-   * @return {Void}
+   * @returns {Void}
    */
   stop (force, cb) {
     this.master.stop(cb)
@@ -41,7 +41,7 @@ class Component {
  * Component factory function
  *
  * @param  {Object} app  current application context
- * @return {Object}      component instances
+ * @returns {Object}      component instances
  */
 module.exports = (app, opts) => {
 	return new Component(app, opts)

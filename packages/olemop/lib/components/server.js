@@ -19,7 +19,7 @@ class Component {
    * Component lifecycle callback
    *
    * @param {Function} cb
-   * @return {Void}
+   * @returns {Void}
    */
   start (cb) {
     this.server.start()
@@ -30,7 +30,7 @@ class Component {
    * Component lifecycle callback
    *
    * @param {Function} cb
-   * @return {Void}
+   * @returns {Void}
    */
   afterStart (cb) {
     this.server.afterStart()
@@ -42,7 +42,7 @@ class Component {
    *
    * @param {Boolean}  force whether stop the component immediately
    * @param {Function}  cb
-   * @return {Void}
+   * @returns {Void}
    */
   stop (force, cb) {
     this.server.stop()
@@ -68,7 +68,7 @@ class Component {
  * Component factory function
  *
  * @param {Object} app  current application context
- * @return {Object}     component instance
+ * @returns {Object}     component instance
  */
 module.exports = (app, opts) => {
 	return new Component(app, opts)

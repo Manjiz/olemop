@@ -29,7 +29,7 @@ Encoder.encodeUInt32 = function (num) {
 /**
  * [encode a sInt32, return a byte array]
  * @param  {[sInt32]} num  The sInt32 need to encode
- * @return {[array]} A byte array represent the integer
+ * @returns {[array]} A byte array represent the integer
  */
 Encoder.encodeSInt32 = function (num) {
 	var n = parseInt(num)

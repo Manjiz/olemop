@@ -11,7 +11,7 @@ const pathUtil = require('../util/pathUtil')
  * Get remote paths from application
  *
  * @param {Object} app current application context
- * @return {Array} paths
+ * @returns {Array} paths
  */
 const getRemotePaths = (app) => {
   const paths = []
@@ -36,7 +36,7 @@ const getRemotePaths = (app) => {
  *
  * @param {Object} app current application context
  * @param {Object} opts contructor parameters for rpc Server
- * @return {Object} remote server instance
+ * @returns {Object} remote server instance
  */
 const genRemote = (app, opts) => {
   opts.paths = getRemotePaths(app)
@@ -59,7 +59,7 @@ class Component {
    * Remote component lifecycle function
    *
    * @param {Function} cb
-   * @return {Void}
+   * @returns {Void}
    */
   start (cb) {
     this.opts.port = this.app.getCurServer().port
@@ -73,7 +73,7 @@ class Component {
    *
    * @param {Boolean}  force whether stop the component immediately
    * @param {Function}  cb
-   * @return {Void}
+   * @returns {Void}
    */
   stop (force, cb) {
     this.remote.stop(force)
@@ -87,7 +87,7 @@ class Component {
  * @param {Object} app  current application context
  * @param {Object} opts construct parameters
  *                       opts.acceptorFactory {Object}: acceptorFactory.create(opts, cb)
- * @return {Object}     remote component instances
+ * @returns {Object}     remote component instances
  */
 module.exports = (app, opts) => {
   opts = opts || {}

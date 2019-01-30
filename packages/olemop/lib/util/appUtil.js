@@ -220,7 +220,7 @@ exports.configLogger = configLogger
  *
  * @param args command line arguments
  *
- * @return Object argsMap map of arguments
+ * @returns Object argsMap map of arguments
  */
 var parseArgs = function (args) {
   var argsMap = {}

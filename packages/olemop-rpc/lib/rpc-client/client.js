@@ -244,7 +244,7 @@ Client.prototype.start = function (cb) {
  * Stop the rpc client.
  *
  * @param  {Boolean} force
- * @return {Void}
+ * @returns {Void}
  */
 Client.prototype.stop = function (force) {
   if (this.state !== STATE_STARTED) {
@@ -406,7 +406,7 @@ module.exports = {
    *                       opts.context: mail box init parameter,
    *                       opts.router: (optional) rpc message route function, route(routeParam, msg, cb),
    *                       opts.mailBoxFactory: (optional) mail box factory instance.
-   * @return {Object}      client instance.
+   * @returns {Object}      client instance.
    */
   create (opts) {
     return new Client(opts)

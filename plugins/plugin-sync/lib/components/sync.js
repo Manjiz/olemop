@@ -18,7 +18,7 @@ const STATE_STOPED  = 2
  * Init sync
  *
  * @param {Object} opts contructor parameters for DataSync
- * @return {Object} DataSync Object
+ * @returns {Object} DataSync Object
  */
 const createSync = (opts = {}) => {
   opts.mappingPath = opts.path
@@ -69,7 +69,7 @@ class Component {
  *
  * @param {Object} app  current application context
  * @param {Object} opts construct parameters
- * @return {Object}     component instances
+ * @returns {Object}     component instances
  */
 module.exports = function (app, opts) {
   // this should be singleton

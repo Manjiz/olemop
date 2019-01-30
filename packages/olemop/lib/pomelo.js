@@ -54,7 +54,7 @@ var self = this
 /**
  * Create an olemop application.
  *
- * @return {Application}
+ * @returns {Application}
  * @memberOf Olemop
  * @api public
  */

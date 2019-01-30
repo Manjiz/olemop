@@ -58,7 +58,7 @@ ChannelService.prototype.createChannel = function (name) {
  *
  * @param {string} name channel's name
  * @param {Boolean} create if true, create channel
- * @return {Channel}
+ * @returns {Channel}
  * @memberOf ChannelService
  */
 ChannelService.prototype.getChannel = function (name, create) {
@@ -223,7 +223,7 @@ Channel.prototype.add = function (uid, sid) {
  *
  * @param {number} uid user id
  * @param {string} sid frontend server id which user has connected to.
- * @return [Boolean] true if success or false if fail
+ * @returns [Boolean] true if success or false if fail
  */
 Channel.prototype.leave = function (uid, sid) {
   if (!uid || !sid) {
@@ -246,7 +246,7 @@ Channel.prototype.leave = function (uid, sid) {
  * Get channel UserAmount in a channel.
 
  *
- * @return {number } channel member amount
+ * @returns {number } channel member amount
  */
 Channel.prototype.getUserAmount = function () {
   return this.userAmount
@@ -257,7 +257,7 @@ Channel.prototype.getUserAmount = function () {
  *
  * <b>Notice:</b> Heavy operation.
  *
- * @return {Array} channel member uid list
+ * @returns {Array} channel member uid list
  */
 Channel.prototype.getMembers = function () {
   var res = [], groups = this.groups
@@ -275,7 +275,7 @@ Channel.prototype.getMembers = function () {
  * Get Member info.
  *
  * @param {string} uid user id
- * @return {Object} member info
+ * @returns {Object} member info
  */
 Channel.prototype.getMember = function (uid) {
   return this.records[uid]

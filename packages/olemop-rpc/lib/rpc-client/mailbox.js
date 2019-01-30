@@ -11,7 +11,7 @@ const Mailbox = require('./mailboxes/mqtt-mailbox')
  *
  * @param {Object} serverInfo single server instance info, {id, host, port, ...}
  * @param {Object} opts construct parameters
- * @return {Object} mailbox instancef
+ * @returns {Object} mailbox instancef
  */
 const create = function (serverInfo, opts) {
 	// let mailbox = opts.mailbox || 'mqtt'

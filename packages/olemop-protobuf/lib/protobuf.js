@@ -8,7 +8,7 @@ var Protobuf = module.exports
  * [encode the given message, return a Buffer represent the message encoded by protobuf]
  * @param  {[type]} key The key to identify the message type.
  * @param  {[type]} msg The message body, a js object.
- * @return {[type]} The binary encode result in a Buffer.
+ * @returns {[type]} The binary encode result in a Buffer.
  */
 Protobuf.encode = function (key, msg) {
 	return encoder.encode(key, msg)

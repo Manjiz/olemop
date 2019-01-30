@@ -42,7 +42,7 @@ Utils.getObjectClass = (obj) => {
  * Utils check float
  *
  * @param  {Float}   float
- * @return {Boolean}
+ * @returns {Boolean}
  */
 Utils.checkFloat = (v) => {
 	return v === Number(v) && v % 1 !== 0
@@ -53,7 +53,7 @@ Utils.checkFloat = (v) => {
  * Utils check type
  *
  * @param {string}   type
- * @return {Function} high order function
+ * @returns {Function} high order function
  */
 Utils.isType = (type) => {
 	return (obj) => {
@@ -72,7 +72,7 @@ Utils.checkBoolean = Utils.isType('Boolean')
  * Utils check bean
  *
  * @param  {Object}   obj object
- * @return {Boolean}
+ * @returns {Boolean}
  */
 Utils.checkBean = (obj) => {
   return obj && obj['$id']
@@ -86,7 +86,7 @@ Utils.checkNull = (obj) => !Utils.isNotNull(obj)
  * Utils check is not null
  *
  * @param  {Object}   value
- * @return {Boolean}
+ * @returns {Boolean}
  */
 Utils.isNotNull = (value) => value !== null && typeof value !== 'undefined'
 

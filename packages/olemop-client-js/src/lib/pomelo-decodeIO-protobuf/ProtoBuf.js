@@ -204,7 +204,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Constructs a XMLHttpRequest object.
-             * @return {XMLHttpRequest}
+             * @returns {XMLHttpRequest}
              * @throws {Error} If XMLHttpRequest is not supported
              * @expose
              */
@@ -232,7 +232,7 @@ function loadProtoBuf(ByteBuffer) {
              * @param {string} path Resource path
              * @param {function (?string)=} callback Callback receiving the resource's contents. If omitted the resource will
              *   be fetched synchronously. If the request failed, contents will be null.
-             * @return {?string|undefined} Resource contents if callback is omitted (null if the request failed), else undefined.
+             * @returns {?string|undefined} Resource contents if callback is omitted (null if the request failed), else undefined.
              * @expose
              */
             Util.fetch = function (path, callback) {
@@ -412,7 +412,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Reads a string beginning at the current index.
-             * @return {string} The string
+             * @returns {string} The string
              * @throws {Error} If it's not a valid string
              * @private
              */
@@ -431,7 +431,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Gets the next token and advances by one.
-             * @return {?string} Token or `null` on EOF
+             * @returns {?string} Token or `null` on EOF
              * @throws {Error} If it's not a valid proto file
              * @expose
              */
@@ -504,7 +504,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Peeks for the next token.
-             * @return {?string} Token or `null` on EOF
+             * @returns {?string} Token or `null` on EOF
              * @throws {Error} If it's not a valid proto file
              * @expose
              */
@@ -519,7 +519,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Returns a string representation of this object.
-             * @return {string} String representation as of "Tokenizer(index/length)"
+             * @returns {string} String representation as of "Tokenizer(index/length)"
              * @expose
              */
             Tokenizer.prototype.toString = function () {
@@ -556,7 +556,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Runs the parser.
-             * @return {{package: string|null, messages: Array.<object>, enums: Array.<object>, imports: Array.<string>, options: object<string,*>}}
+             * @returns {{package: string|null, messages: Array.<object>, enums: Array.<object>, imports: Array.<string>, options: object<string,*>}}
              * @throws {Error} If the source cannot be parsed
              * @expose
              */
@@ -619,7 +619,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Parses a number value.
              * @param {string} val Number value to parse
-             * @return {number} Number
+             * @returns {number} Number
              * @throws {Error} If the number value is invalid
              * @private
              */
@@ -676,7 +676,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Parses the package definition.
              * @param {string} token Initial token
-             * @return {string} Package name
+             * @returns {string} Package name
              * @throws {Error} If the package definition cannot be parsed
              * @private
              */
@@ -696,7 +696,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Parses an import definition.
              * @param {string} token Initial token
-             * @return {string} Import file name
+             * @returns {string} Import file name
              * @throws {Error} If the import definition cannot be parsed
              * @private
              */
@@ -934,7 +934,7 @@ function loadProtoBuf(ByteBuffer) {
              * Parses a message definition.
              * @param {Object} parent Parent definition
              * @param {string} token First token
-             * @return {Object}
+             * @returns {Object}
              * @throws {Error} If the message cannot be parsed
              * @private
              */
@@ -1321,7 +1321,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Returns a string representation of this Reflect object (its fully qualified name).
              * @param {boolean=} includeClass Set to true to include the class name. Defaults to false.
-             * @return String representation
+             * @returns String representation
              * @expose
              */
             T.prototype.toString = function (includeClass) {
@@ -1397,7 +1397,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Returns an array of the namespace's children.
              * @param {ProtoBuf.Reflect.T=} type Filter type (returns instances of this type only). Defaults to null (all children).
-             * @return {Array.<ProtoBuf.Reflect.T>}
+             * @returns {Array.<ProtoBuf.Reflect.T>}
              * @expose
              */
             Namespace.prototype.getChildren = function (type) {
@@ -1455,7 +1455,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Gets a child by its name.
              * @param {string|number} nameOrId Child name or id
-             * @return {?ProtoBuf.Reflect.T} The child or null if not found
+             * @returns {?ProtoBuf.Reflect.T} The child or null if not found
              * @expose
              */
             Namespace.prototype.getChild = function (nameOrId) {
@@ -1472,7 +1472,7 @@ function loadProtoBuf(ByteBuffer) {
              * Resolves a reflect object inside of this namespace.
              * @param {string} qn Qualified name to resolve
              * @param {boolean=} excludeFields Excludes fields, defaults to `false`
-             * @return {ProtoBuf.Reflect.Namespace|null} The resolved type or null if not found
+             * @returns {ProtoBuf.Reflect.Namespace|null} The resolved type or null if not found
              * @expose
              */
             Namespace.prototype.resolve = function (qn, excludeFields) {
@@ -1508,7 +1508,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Builds the namespace and returns the runtime counterpart.
-             * @return {Object.<string,Function|Object>} Runtime namespace
+             * @returns {Object.<string,Function|Object>} Runtime namespace
              * @expose
              */
             Namespace.prototype.build = function () {
@@ -1534,7 +1534,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Builds the namespace's '$options' property.
-             * @return {Object.<string,*>}
+             * @returns {Object.<string,*>}
              */
             Namespace.prototype.buildOpt = function () {
                 var opt = {}
@@ -1555,7 +1555,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Gets the value assigned to the option with the specified name.
              * @param {string=} name Returns the option value if specified, otherwise all options are returned.
-             * @return {*|Object.<string,*>}null} Option value or NULL if there is no such option
+             * @returns {*|Object.<string,*>}null} Option value or NULL if there is no such option
              */
             Namespace.prototype.getOption = function (name) {
                 if (typeof name == 'undefined') {
@@ -1604,7 +1604,7 @@ function loadProtoBuf(ByteBuffer) {
              * Builds the message and returns the runtime counterpart, which is a fully functional class.
              * @see ProtoBuf.Builder.Message
              * @param {boolean=} rebuild Whether to rebuild or not, defaults to false
-             * @return {ProtoBuf.Reflect.Message} Message class
+             * @returns {ProtoBuf.Reflect.Message} Message class
              * @throws {Error} If the message cannot be built
              * @expose
              */
@@ -1721,7 +1721,7 @@ function loadProtoBuf(ByteBuffer) {
                      * @name ProtoBuf.Builder.Message#get
                      * @function
                      * @param {string} key Key
-                     * @return {*} Value
+                     * @returns {*} Value
                      * @throws {Error} If there is no such field
                      * @expose
                      */
@@ -1793,7 +1793,7 @@ function loadProtoBuf(ByteBuffer) {
                              * @name ProtoBuf.Builder.Message#get[SomeField]
                              * @function
                              * @abstract
-                             * @return {*} The value
+                             * @returns {*} The value
                              */
                             if (!T.hasChild("get"+Name)) {
                                 Message.prototype["get"+Name] = function () {
@@ -1807,7 +1807,7 @@ function loadProtoBuf(ByteBuffer) {
                              * another field.
                              * @name ProtoBuf.Builder.Message#get_[some_field]
                              * @function
-                             * @return {*} The value
+                             * @returns {*} The value
                              * @abstract
                              */
                             if (!T.hasChild("get_"+name)) {
@@ -1827,7 +1827,7 @@ function loadProtoBuf(ByteBuffer) {
                      * @name ProtoBuf.Builder.Message#encode
                      * @function
                      * @param {(!ByteBuffer|boolean)=} buffer ByteBuffer to encode to. Will create a new one if omitted.
-                     * @return {!ByteBuffer} Encoded message as a ByteBuffer
+                     * @returns {!ByteBuffer} Encoded message as a ByteBuffer
                      * @throws {Error} If the message cannot be encoded or if required fields are missing. The later still
                      *  returns the encoded ByteBuffer in the `encoded` property on the error.
                      * @expose
@@ -1850,7 +1850,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Directly encodes the message to an ArrayBuffer.
                      * @name ProtoBuf.Builder.Message#encodeAB
                      * @function
-                     * @return {ArrayBuffer} Encoded message as ArrayBuffer
+                     * @returns {ArrayBuffer} Encoded message as ArrayBuffer
                      * @throws {Error} If the message cannot be encoded or if required fields are missing. The later still
                      *  returns the encoded ArrayBuffer in the `encoded` property on the error.
                      * @expose
@@ -1869,7 +1869,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Returns the message as an ArrayBuffer. This is an alias for {@link ProtoBuf.Builder.Message#encodeAB}.
                      * @name ProtoBuf.Builder.Message#toArrayBuffer
                      * @function
-                     * @return {ArrayBuffer} Encoded message as ArrayBuffer
+                     * @returns {ArrayBuffer} Encoded message as ArrayBuffer
                      * @throws {Error} If the message cannot be encoded or if required fields are missing. The later still
                      *  returns the encoded ArrayBuffer in the `encoded` property on the error.
                      * @expose
@@ -1880,7 +1880,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Directly encodes the message to a node Buffer.
                      * @name ProtoBuf.Builder.Message#encodeNB
                      * @function
-                     * @return {!Buffer}
+                     * @returns {!Buffer}
                      * @throws {Error} If the message cannot be encoded, not running under node.js or if required fields are
                      *  missing. The later still returns the encoded node Buffer in the `encoded` property on the error.
                      * @expose
@@ -1898,7 +1898,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Returns the message as a node Buffer. This is an alias for {@link ProtoBuf.Builder.Message#encodeNB}.
                      * @name ProtoBuf.Builder.Message#encodeNB
                      * @function
-                     * @return {!Buffer}
+                     * @returns {!Buffer}
                      * @throws {Error} If the message cannot be encoded or if required fields are missing. The later still
                      *  returns the encoded node Buffer in the `encoded` property on the error.
                      * @expose
@@ -1909,7 +1909,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Directly encodes the message to a base64 encoded string.
                      * @name ProtoBuf.Builder.Message#encode64
                      * @function
-                     * @return {string} Base64 encoded string
+                     * @returns {string} Base64 encoded string
                      * @throws {Error} If the underlying buffer cannot be encoded or if required fields are missing. The later
                      *  still returns the encoded base64 string in the `encoded` property on the error.
                      * @expose
@@ -1927,7 +1927,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Returns the message as a base64 encoded string. This is an alias for {@link ProtoBuf.Builder.Message#encode64}.
                      * @name ProtoBuf.Builder.Message#toBase64
                      * @function
-                     * @return {string} Base64 encoded string
+                     * @returns {string} Base64 encoded string
                      * @throws {Error} If the message cannot be encoded or if required fields are missing. The later still
                      *  returns the encoded base64 string in the `encoded` property on the error.
                      * @expose
@@ -1938,7 +1938,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Directly encodes the message to a hex encoded string.
                      * @name ProtoBuf.Builder.Message#encodeHex
                      * @function
-                     * @return {string} Hex encoded string
+                     * @returns {string} Hex encoded string
                      * @throws {Error} If the underlying buffer cannot be encoded or if required fields are missing. The later
                      *  still returns the encoded hex string in the `encoded` property on the error.
                      * @expose
@@ -1956,7 +1956,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Returns the message as a hex encoded string. This is an alias for {@link ProtoBuf.Builder.Message#encodeHex}.
                      * @name ProtoBuf.Builder.Message#toHex
                      * @function
-                     * @return {string} Hex encoded string
+                     * @returns {string} Hex encoded string
                      * @throws {Error} If the message cannot be encoded or if required fields are missing. The later still
                      *  returns the encoded hex string in the `encoded` property on the error.
                      * @expose
@@ -1969,7 +1969,7 @@ function loadProtoBuf(ByteBuffer) {
                      * @function
                      * @param {!ByteBuffer|!ArrayBuffer|!Buffer|string} buffer Buffer to decode from
                      * @param {string=} enc Encoding if buffer is a string: hex, utf8 (not recommended), defaults to base64
-                     * @return {!ProtoBuf.Builder.Message} Decoded message
+                     * @returns {!ProtoBuf.Builder.Message} Decoded message
                      * @throws {Error} If the message cannot be decoded or if required fields are missing. The later still
                      *  returns the decoded message with missing fields in the `decoded` property on the error.
                      * @expose
@@ -1999,7 +1999,7 @@ function loadProtoBuf(ByteBuffer) {
                      * @name ProtoBuf.Builder.Message.decode64
                      * @function
                      * @param {string} str String to decode from
-                     * @return {!ProtoBuf.Builder.Message} Decoded message
+                     * @returns {!ProtoBuf.Builder.Message} Decoded message
                      * @throws {Error} If the message cannot be decoded or if required fields are missing. The later still
                      *  returns the decoded message with missing fields in the `decoded` property on the error.
                      * @expose
@@ -2013,7 +2013,7 @@ function loadProtoBuf(ByteBuffer) {
                      * @name ProtoBuf.Builder.Message.decodeHex
                      * @function
                      * @param {string} str String to decode from
-                     * @return {!ProtoBuf.Builder.Message} Decoded message
+                     * @returns {!ProtoBuf.Builder.Message} Decoded message
                      * @throws {Error} If the message cannot be decoded or if required fields are missing. The later still
                      *  returns the decoded message with missing fields in the `decoded` property on the error.
                      * @expose
@@ -2028,7 +2028,7 @@ function loadProtoBuf(ByteBuffer) {
                      * Returns a string representation of this Message.
                      * @name ProtoBuf.Builder.Message#toString
                      * @function
-                     * @return {string} String representation as of ".Fully.Qualified.MessageName"
+                     * @returns {string} String representation as of ".Fully.Qualified.MessageName"
                      * @expose
                      */
                     Message.prototype.toString = function () {
@@ -2080,7 +2080,7 @@ function loadProtoBuf(ByteBuffer) {
              * Encodes a runtime message's contents to the specified buffer.
              * @param {ProtoBuf.Builder.Message} message Runtime message to encode
              * @param {ByteBuffer} buffer ByteBuffer to write to
-             * @return {ByteBuffer} The ByteBuffer for chaining
+             * @returns {ByteBuffer} The ByteBuffer for chaining
              * @throws {string} If requried fields are missing or the message cannot be encoded for another reason
              * @expose
              */
@@ -2108,7 +2108,7 @@ function loadProtoBuf(ByteBuffer) {
              * Decodes an encoded message and returns the decoded message.
              * @param {ByteBuffer} buffer ByteBuffer to decode from
              * @param {number=} length Message length. Defaults to decode all the available data.
-             * @return {ProtoBuf.Builder.Message} Decoded message
+             * @returns {ProtoBuf.Builder.Message} Decoded message
              * @throws {Error} If the message cannot be decoded
              * @expose
              */
@@ -2250,7 +2250,7 @@ function loadProtoBuf(ByteBuffer) {
              * Checks if the given value can be set for this field.
              * @param {*} value Value to check
              * @param {boolean=} skipRepeated Whether to skip the repeated value check or not. Defaults to false.
-             * @return {*} Verified, maybe adjusted, value
+             * @returns {*} Verified, maybe adjusted, value
              * @throws {Error} If the value cannot be set for this field
              * @expose
              */
@@ -2358,7 +2358,7 @@ function loadProtoBuf(ByteBuffer) {
              * Encodes the specified field value to the specified buffer.
              * @param {*} value Field value
              * @param {ByteBuffer} buffer ByteBuffer to encode to
-             * @return {ByteBuffer} The ByteBuffer for chaining
+             * @returns {ByteBuffer} The ByteBuffer for chaining
              * @throws {Error} If the field cannot be encoded
              * @expose
              */
@@ -2417,7 +2417,7 @@ function loadProtoBuf(ByteBuffer) {
              * Encodes a value to the specified buffer. Does not encode the key.
              * @param {*} value Field value
              * @param {ByteBuffer} buffer ByteBuffer to encode to
-             * @return {ByteBuffer} The ByteBuffer for chaining
+             * @returns {ByteBuffer} The ByteBuffer for chaining
              * @throws {Error} If the value cannot be encoded
              * @expose
              */
@@ -2506,7 +2506,7 @@ function loadProtoBuf(ByteBuffer) {
              * @param {number} wireType Leading wire type
              * @param {ByteBuffer} buffer ByteBuffer to decode from
              * @param {boolean=} skipRepeated Whether to skip the repeated check or not. Defaults to false.
-             * @return {*} Decoded value
+             * @returns {*} Decoded value
              * @throws {Error} If the field cannot be decoded
              * @expose
              */
@@ -2658,7 +2658,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Builds this enum and returns the runtime counterpart.
-             * @return {Object<string,*>}
+             * @returns {Object<string,*>}
              * @expose
              */
             Enum.prototype.build = function () {
@@ -2739,7 +2739,7 @@ function loadProtoBuf(ByteBuffer) {
              * Builds the service and returns the runtime counterpart, which is a fully functional class.
              * @see ProtoBuf.Builder.Service
              * @param {boolean=} rebuild Whether to rebuild or not
-             * @return {Function} Service class
+             * @returns {Function} Service class
              * @throws {Error} If the message cannot be built
              * @expose
              */
@@ -2896,7 +2896,7 @@ function loadProtoBuf(ByteBuffer) {
              * Builds the method's '$options' property.
              * @name ProtoBuf.Reflect.Service.Method#buildOpt
              * @function
-             * @return {Object.<string,*>}
+             * @returns {Object.<string,*>}
              */
             Method.prototype.buildOpt = Namespace.prototype.buildOpt
 
@@ -3033,7 +3033,7 @@ function loadProtoBuf(ByteBuffer) {
              * Defines a package on top of the current pointer position and places the pointer on it.
              * @param {string} pkg
              * @param {Object.<string,*>=} options
-             * @return {ProtoBuf.Builder} this
+             * @returns {ProtoBuf.Builder} this
              * @throws {Error} If the package name is invalid
              * @expose
              */
@@ -3061,7 +3061,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Tests if a definition is a valid message definition.
              * @param {Object.<string,*>} def Definition
-             * @return {boolean} true if valid, else false
+             * @returns {boolean} true if valid, else false
              * @expose
              */
             Builder.isValidMessage = function (def) {
@@ -3124,7 +3124,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Tests if a definition is a valid message field definition.
              * @param {Object} def Definition
-             * @return {boolean} true if valid, else false
+             * @returns {boolean} true if valid, else false
              * @expose
              */
             Builder.isValidMessageField = function (def) {
@@ -3154,7 +3154,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Tests if a definition is a valid enum definition.
              * @param {Object} def Definition
-             * @return {boolean} true if valid, else false
+             * @returns {boolean} true if valid, else false
              * @expose
              */
             Builder.isValidEnum = function (def) {
@@ -3186,7 +3186,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Creates ths specified protocol types at the current pointer position.
              * @param {Array.<Object.<string,*>>} defs Messages, enums or services to create
-             * @return {ProtoBuf.Builder} this
+             * @returns {ProtoBuf.Builder} this
              * @throws {Error} If a message definition is invalid
              * @expose
              */
@@ -3346,7 +3346,7 @@ function loadProtoBuf(ByteBuffer) {
              * Imports another definition into this builder.
              * @param {Object.<string,*>} json Parsed import
              * @param {(string|{root: string, file: string})=} filename Imported file name
-             * @return {ProtoBuf.Builder} this
+             * @returns {ProtoBuf.Builder} this
              * @throws {Error} If the definition or file cannot be imported
              * @expose
              */
@@ -3465,7 +3465,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Tests if a definition is a valid service definition.
              * @param {Object} def Definition
-             * @return {boolean} true if valid, else false
+             * @returns {boolean} true if valid, else false
              * @expose
              */
             Builder.isValidService = function (def) {
@@ -3574,7 +3574,7 @@ function loadProtoBuf(ByteBuffer) {
              * Builds the protocol. This will first try to resolve all definitions and, if this has been successful,
              * return the built package.
              * @param {string=} path Specifies what to return. If omitted, the entire namespace will be returned.
-             * @return {ProtoBuf.Builder.Message|Object.<string,*>}
+             * @returns {ProtoBuf.Builder.Message|Object.<string,*>}
              * @throws {Error} If a type could not be resolved
              * @expose
              */
@@ -3611,7 +3611,7 @@ function loadProtoBuf(ByteBuffer) {
             /**
              * Similar to {@link ProtoBuf.Builder#build}, but looks up the internal reflection descriptor.
              * @param {string=} path Specifies what to return. If omitted, the entire namespace wiil be returned.
-             * @return {ProtoBuf.Reflect.T} Reflection descriptor or `null` if not found
+             * @returns {ProtoBuf.Reflect.T} Reflection descriptor or `null` if not found
              */
             Builder.prototype.lookup = function (path) {
                 return path ? this.ns.resolve(path) : this.ns
@@ -3619,7 +3619,7 @@ function loadProtoBuf(ByteBuffer) {
 
             /**
              * Returns a string representation of this object.
-             * @return {string} String representation as of "Builder"
+             * @returns {string} String representation as of "Builder"
              * @expose
              */
             Builder.prototype.toString = function () {
@@ -3641,7 +3641,7 @@ function loadProtoBuf(ByteBuffer) {
          * @param {string} proto .proto file contents
          * @param {(ProtoBuf.Builder|string|{root: string, file: string})=} builder Builder to append to. Will create a new one if omitted.
          * @param {(string|{root: string, file: string})=} filename The corresponding file name if known. Must be specified for imports.
-         * @return {ProtoBuf.Builder} Builder to create new messages
+         * @returns {ProtoBuf.Builder} Builder to create new messages
          * @throws {Error} If the definition cannot be parsed or built
          * @expose
          */
@@ -3659,7 +3659,7 @@ function loadProtoBuf(ByteBuffer) {
          * @param {string} proto .proto file contents
          * @param {(ProtoBuf.Builder|string)=} builder Builder to append to. Will create a new one if omitted.
          * @param {(string|{root: string, file: string})=} filename The corresponding file name if known. Must be specified for imports.
-         * @return {ProtoBuf.Builder} Builder to create new messages
+         * @returns {ProtoBuf.Builder} Builder to create new messages
          * @throws {Error} If the definition cannot be parsed or built
          * @expose
          *
@@ -3675,7 +3675,7 @@ function loadProtoBuf(ByteBuffer) {
          *   If the request has failed, builder will be NULL. If omitted, the file will be read synchronously and this
          *   function will return the Builder or NULL if the request has failed.
          * @param {ProtoBuf.Builder=} builder Builder to append to. Will create a new one if omitted.
-         * @return {?ProtoBuf.Builder|undefined} The Builder if synchronous (no callback specified, will be NULL if the
+         * @returns {?ProtoBuf.Builder|undefined} The Builder if synchronous (no callback specified, will be NULL if the
          *   request has failed), else undefined
          * @expose
          */
@@ -3705,7 +3705,7 @@ function loadProtoBuf(ByteBuffer) {
          *   If the request has failed, builder will be NULL. If omitted, the file will be read synchronously and this
          *   function will return the Builder or NULL if the request has failed.
          * @param {ProtoBuf.Builder=} builder Builder to append to. Will create a new one if omitted.
-         * @return {?ProtoBuf.Builder|undefined} The Builder if synchronous (no callback specified, will be NULL if the
+         * @returns {?ProtoBuf.Builder|undefined} The Builder if synchronous (no callback specified, will be NULL if the
          *   request has failed), else undefined
          * @expose
          *
@@ -3719,7 +3719,7 @@ function loadProtoBuf(ByteBuffer) {
          * @param {string=} pkg Package name as fully qualified name, e.g. "My.Game". If no package is specified, the
          * builder will only contain a global namespace.
          * @param {Object.<string,*>=} options Top level options
-         * @return {ProtoBuf.Builder} New Builder
+         * @returns {ProtoBuf.Builder} New Builder
          * @expose
          */
         ProtoBuf.newBuilder = function (pkg, options) {
@@ -3735,7 +3735,7 @@ function loadProtoBuf(ByteBuffer) {
          * @param {!*|string} json JSON definition
          * @param {(ProtoBuf.Builder|string|{root: string, file: string})=} builder Builder to append to. Will create a new one if omitted.
          * @param {(string|{root: string, file: string})=} filename The corresponding file name if known. Must be specified for imports.
-         * @return {ProtoBuf.Builder} Builder to create new messages
+         * @returns {ProtoBuf.Builder} Builder to create new messages
          * @throws {Error} If the definition cannot be parsed or built
          * @expose
          */
@@ -3760,7 +3760,7 @@ function loadProtoBuf(ByteBuffer) {
          *   If the request has failed, builder will be NULL. If omitted, the file will be read synchronously and this
          *   function will return the Builder or NULL if the request has failed.
          * @param {ProtoBuf.Builder=} builder Builder to append to. Will create a new one if omitted.
-         * @return {?ProtoBuf.Builder|undefined} The Builder if synchronous (no callback specified, will be NULL if the
+         * @returns {?ProtoBuf.Builder|undefined} The Builder if synchronous (no callback specified, will be NULL if the
          *   request has failed), else undefined
          * @expose
          */

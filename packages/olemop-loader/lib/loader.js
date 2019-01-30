@@ -65,7 +65,7 @@ const requireUncached = (m) => require(m)
  *                           any sub-directory.
  * @param  {Object} context  the context parameter that would be pass to the
  *                           module factory function.
- * @return {Object}          module that has loaded.
+ * @returns {Object}          module that has loaded.
  */
 module.exports.load = function (mpath, context) {
 	if (!mpath) {

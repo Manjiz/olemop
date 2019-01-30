@@ -158,7 +158,7 @@ util.inherits(MailStation, EventEmitter)
  * Init and start station. Connect all mailbox to remote servers.
  *
  * @param  {Function} cb(err) callback function
- * @return {Void}
+ * @returns {Void}
  */
 MailStation.prototype.start = function (cb) {
   if (this.state > STATE_INITED) {
@@ -176,7 +176,7 @@ MailStation.prototype.start = function (cb) {
  * Stop station and all its mailboxes
  *
  * @param  {Boolean} force whether stop station forcely
- * @return {Void}
+ * @returns {Void}
  */
 MailStation.prototype.stop = function (force) {
   if (this.state !== STATE_STARTED) {
@@ -303,7 +303,7 @@ MailStation.prototype.replaceServers = function (serverInfos) {
  * @param  {Object}   msg      rpc invoke message
  * @param  {Object}   opts     rpc invoke option args
  * @param  {Function} cb       callback function
- * @return {Void}
+ * @returns {Void}
  */
 MailStation.prototype.dispatch = function (tracer, serverId, msg, opts, cb) {
   tracer && tracer.info('client', __filename, 'dispatch', 'dispatch rpc message to the mailbox')
@@ -375,7 +375,7 @@ MailStation.prototype.dispatch = function (tracer, serverId, msg, opts, cb) {
  * Add a before filter
  *
  * @param  {[type]} filter [description]
- * @return {[type]}        [description]
+ * @returns {[type]}        [description]
  */
 MailStation.prototype.before = function (filter) {
   if (Array.isArray(filter)) {
@@ -389,7 +389,7 @@ MailStation.prototype.before = function (filter) {
  * Add after filter
  *
  * @param  {[type]} filter [description]
- * @return {[type]}        [description]
+ * @returns {[type]}        [description]
  */
 MailStation.prototype.after = function (filter) {
   if (Array.isArray(filter)) {
@@ -403,7 +403,7 @@ MailStation.prototype.after = function (filter) {
  * Add before and after filter
  *
  * @param  {[type]} filter [description]
- * @return {[type]}        [description]
+ * @returns {[type]}        [description]
  */
 MailStation.prototype.filter = function (filter) {
   this.befores.push(filter)
@@ -448,7 +448,7 @@ MailStation.prototype.connect = function (tracer, serverId, cb) {
  * @param  {Object} opts construct paramters
  *           opts.servers {Object} global server info map. {serverType: [{id, host, port, ...}, ...]}
  *           opts.mailboxFactory {Function} mailbox factory function
- * @return {Object}      mail station instance
+ * @returns {Object}      mail station instance
  */
 const create = function (opts) {
   return new MailStation(opts || {})

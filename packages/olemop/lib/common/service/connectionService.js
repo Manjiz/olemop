@@ -82,7 +82,7 @@ pro.decreaseConnectionCount = function (uid) {
 /**
  * Get statistics info
  *
- * @return {Object} statistics info
+ * @returns {Object} statistics info
  */
 pro.getStatisticsInfo = function () {
   var list = []

@@ -58,7 +58,7 @@ class SessionService {
    * @param {string} frontendId frontend server in which the internal session is created
    * @param {Object} socket the underlying socket would be held by the internal session
    *
-   * @return {Session}
+   * @returns {Session}
    *
    * @memberOf SessionService
    * @api private
@@ -176,7 +176,7 @@ class SessionService {
    * Get session by id.
    *
    * @param {number} id The session id
-   * @return {Session}
+   * @returns {Session}
    *
    * @memberOf SessionService
    * @api private
@@ -189,7 +189,7 @@ class SessionService {
    * Get sessions by userId.
    *
    * @param {number} uid User id associated with the session
-   * @return {Array} list of session binded with the uid
+   * @returns {Array} list of session binded with the uid
    *
    * @memberOf SessionService
    * @api private
@@ -333,7 +333,7 @@ class SessionService {
    * Get client remote address by session id.
    *
    * @param {number}   sid session id
-   * @return {Object} remote address of client
+   * @returns {Object} remote address of client
    *
    * @memberOf SessionService
    */
@@ -502,7 +502,7 @@ class Session extends EventEmitter {
    * Get value from the session.
    *
    * @param {string} key session key
-   * @return {Object} value associated with session key
+   * @returns {Object} value associated with session key
    * @api public
    */
   get (key) {

@@ -68,7 +68,7 @@ pro.excuteTime = function () {
  * @param trigger The trigger to use
  * @param jobFunc The function the job to run
  * @param jobDate The date the job use
- * @return The new instance of the give job or null if fail
+ * @returns The new instance of the give job or null if fail
  */
 function createJob(trigger, jobFunc, jobData) {
   return new Job(trigger, jobFunc, jobData)

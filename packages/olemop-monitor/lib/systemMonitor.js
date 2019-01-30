@@ -63,7 +63,7 @@ function format(data) {
 /**
  * get basic information of operating-system
  *
- * @return {Object} result
+ * @returns {Object} result
  */
 function getBasicInfo() {
 	const result = {}

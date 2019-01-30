@@ -66,7 +66,7 @@ class Parallel extends Composite {
 
   /**
    * check current state with policy
-   * @return {number} ai.RES_SUCCESS for success and ai.RES_FAIL for fail
+   * @returns {number} ai.RES_SUCCESS for success and ai.RES_FAIL for fail
    */
   checkPolicy () {
     if (this.policy === Parallel.POLICY_FAIL_ON_ONE) {

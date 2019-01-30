@@ -272,7 +272,7 @@ BackendSession.prototype.set = function (key, value) {
  * Get the value from backend session by key.
  *
  * @param {string} key key
- * @return {Object}     value
+ * @returns {Object}     value
  */
 BackendSession.prototype.get = function (key) {
   return this.settings[key]

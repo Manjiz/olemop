@@ -16,7 +16,7 @@ pro.init = function (comparator) {
 
 /**
  * Return the size of the pirority queue
- * @return PirorityQueue size
+ * @returns PirorityQueue size
  */
 pro.size = function () {
   return this._tailPos
@@ -49,7 +49,7 @@ pro.offer = function (element) {
 
 /**
  * Get and remove the first element in the queue
- * @return The first element
+ * @returns The first element
  */
 pro.pop = function () {
   var queue = this._queue
@@ -93,7 +93,7 @@ pro.pop = function () {
 
 /**
  * Get but not remove the first element in the queue
- * @return The first element
+ * @returns The first element
  */
 pro.peek = function () {
   if (this._tailPos == 0)

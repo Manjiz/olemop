@@ -16,7 +16,7 @@ const Constants = require('../util/constants')
  *
  * @param {Object} app current application context
  * @param {Object} opts contructor parameters for rpc client
- * @return {Object} rpc client
+ * @returns {Object} rpc client
  */
 const genRpcClient = (app, opts) => {
   opts.context = app
@@ -50,7 +50,7 @@ const genProxies = (client, app, sinfos) => {
  *
  * @param  {Object}  client rpc client instance
  * @param  {Object}  sinfo  server info
- * @return {Boolean}        true or false
+ * @returns {Boolean}        true or false
  */
 const hasProxy = (client, sinfo) => {
   const proxy = client.proxies
@@ -63,7 +63,7 @@ const hasProxy = (client, sinfo) => {
  *
  * @param {Object} app current application context
  * @param {Object} sinfo server info, format: {id, serverType, host, port}
- * @return {Array}     remote path record array
+ * @returns {Array}     remote path record array
  */
 const getProxyRecords = (app, sinfo) => {
   const records = []
@@ -135,7 +135,7 @@ class Component {
    * Proxy component lifecycle function
    *
    * @param {Function} cb
-   * @return {Void}
+   * @returns {Void}
    */
   start (cb) {
     if (this.opts.enableRpcLog) {
@@ -161,7 +161,7 @@ class Component {
    * Component lifecycle callback
    *
    * @param {Function} cb
-   * @return {Void}
+   * @returns {Void}
    */
   afterStart (cb) {
     this.app.__defineGetter__('rpc', () => {
@@ -229,7 +229,7 @@ class Component {
  * @param {Object} opts construct parameters
  *                      opts.router: (optional) rpc message route function, route(routeParam, msg, cb),
  *                      opts.mailBoxFactory: (optional) mail box factory instance.
- * @return {Object}     component instance
+ * @returns {Object}     component instance
  */
 module.exports = (app, opts) => {
   opts = opts || {}

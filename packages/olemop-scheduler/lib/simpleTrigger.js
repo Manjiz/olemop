@@ -27,7 +27,7 @@ SimpleTrigger.prototype.excuteTime = function () {
 
 /**
  * Get the next excuteTime of the trigger, and set the trigger's excuteTime
- * @return Next excute time
+ * @returns Next excute time
  */
 SimpleTrigger.prototype.nextExcuteTime = function () {
   const period = this.period

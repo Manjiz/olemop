@@ -31,7 +31,7 @@ const createNamespace = (namespace, proxies) => {
  *                       opts.paths {Array} remote service code paths, [{namespace, path}, ...]
  *                       opts.context {Object} context for remote service
  *                       opts.acceptorFactory {Object} (optionals)acceptorFactory.create(opts, cb)
- * @return {Object}      rpc server instance
+ * @returns {Object}      rpc server instance
  */
 const create = (opts) => {
   if (!opts || !opts.port || opts.port < 0 || !opts.paths) {

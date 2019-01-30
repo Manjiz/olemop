@@ -43,7 +43,7 @@ pro.excuteTime = function () {
 /**
  * Caculate the next valid cronTime after the given time
  * @param The given time point
- * @return The nearest valid time after the given time point
+ * @returns The nearest valid time after the given time point
  */
 pro.nextExcuteTime = function (time) {
   // add 1s to the time so it must be the next time
@@ -160,7 +160,7 @@ pro.nextExcuteTime = function (time) {
  * return the next match time of the given value
  * @param value The time value
  * @param cronTime The cronTime need to match
- * @return The match value or null if unmatch(it offten means an error occur).
+ * @returns The match value or null if unmatch(it offten means an error occur).
  */
 function nextCronTime(value, cronTime) {
   value += 1
@@ -187,7 +187,7 @@ function nextCronTime(value, cronTime) {
  * Match the given value to the cronTime
  * @param value The given value
  * @param cronTime The cronTime
- * @return The match result
+ * @returns The match result
  */
 function timeMatch(value, cronTime) {
   if (typeof(cronTime) == 'number') {
@@ -213,7 +213,7 @@ function timeMatch(value, cronTime) {
 /**
  * Decude the cronTrigger string to arrays
  * @param cronTimeStr The cronTimeStr need to decode, like "0 12 * * * 3"
- * @return The array to represent the cronTimer
+ * @returns The array to represent the cronTimer
  */
 pro.decodeTrigger = function (cronTimeStr) {
   cronTimeStr = cronTimeStr.trim()
@@ -243,7 +243,7 @@ pro.decodeTrigger = function (cronTimeStr) {
 /**
  * Decode the cron Time string
  * @param timeStr The cron time string, like: 1,2 or 1-3
- * @return A sorted array, like [1,2,3]
+ * @returns A sorted array, like [1,2,3]
  */
 pro.decodeTimeStr = function (timeStr, type) {
   var result = {}
@@ -333,7 +333,7 @@ function decodePeriodTime(map, timeStr, type) {
  * @param nums The numbers array need to check
  * @param min Minimus value
  * @param max Maximam value
- * @return If all the numbers are in the data range
+ * @returns If all the numbers are in the data range
  */
 function checkNum(nums, min, max) {
   if (nums == null)
@@ -354,7 +354,7 @@ function checkNum(nums, min, max) {
  * Get the date limit of given month
  * @param The given year
  * @month The given month
- * @return The date count of given month
+ * @returns The date count of given month
  */
 function getDomLimit(year, month) {
   var date = new Date(year, month + 1, 0)
@@ -365,7 +365,7 @@ function getDomLimit(year, month) {
 /**
  * Create cronTrigger
  * @param trigger The Cron Trigger string
- * @return The Cron trigger
+ * @returns The Cron trigger
  */
 function createTrigger(trigger, job) {
   return new CronTrigger(trigger, job)

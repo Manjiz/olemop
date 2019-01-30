@@ -28,7 +28,7 @@ class Component {
  * Component factory function
  *
  * @param  {Object} app  current application context
- * @return {Object}      component instances
+ * @returns {Object}      component instances
  */
 module.exports = (app, opts) => {
   return new Component(app, opts)

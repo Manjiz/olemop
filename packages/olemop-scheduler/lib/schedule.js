@@ -64,7 +64,7 @@ function cancelJob(id) {
  * Clear last timeout and schedule the next job, it will automaticly run the job that
  * need to run now
  * @param job The job need to schedule
- * @return void
+ * @returns void
  */
 function setTimer(job) {
   clearTimeout(timer)
@@ -103,7 +103,7 @@ function excuteJob() {
 
 /**
  * Return, but not remove the next valid job
- * @return Next valid job
+ * @returns Next valid job
  */
 function peekNextJob() {
   if (queue.size() <= 0)
@@ -121,7 +121,7 @@ function peekNextJob() {
 
 /**
  * Return and remove the next valid job
- * @return Next valid job
+ * @returns Next valid job
  */
 function getNextJob() {
   var job = null

@@ -412,7 +412,7 @@ function _zeroPaddingOfSignature(hex, bitLength) {
  * @function
  * @param {string} s message string to be signed.
  * @param {string} hashAlg hash algorithm name for signing.<br/>
- * @return returns hexadecimal string of signature value.
+ * @returns returns hexadecimal string of signature value.
  */
 function _rsasign_signString(s, hashAlg) {
   // alert("this.n.bitLength() = " + this.n.bitLength())
@@ -487,7 +487,7 @@ function _rsasign_verifyHexSignatureForMessage(hSig, sMsg) {
  * @param {string} sMsg message string to be verified.
  * @param {string} hSig hexadecimal string of siganture.<br/>
  *                 non-hexadecimal charactors including new lines will be ignored.
- * @return returns 1 if valid, otherwise 0
+ * @returns returns 1 if valid, otherwise 0
  */
 function _rsasign_verifyString(sMsg, hSig) {
   hSig = hSig.replace(_RE_HEXDECONLY, '')
@@ -1250,7 +1250,7 @@ KJUR.crypto.Signature = function (params) {
      * @name sign
      * @memberOf KJUR.crypto.Signature
      * @function
-     * @return the signature bytes as a hexadecimal string
+     * @returns the signature bytes as a hexadecimal string
      * @description
      * @example
      * var hSigValue = sig.sign()
@@ -1265,7 +1265,7 @@ KJUR.crypto.Signature = function (params) {
      * @memberOf KJUR.crypto.Signature
      * @function
      * @param {string} str string to final update
-     * @return the signature bytes of a hexadecimal string
+     * @returns the signature bytes of a hexadecimal string
      * @description
      * @example
      * var hSigValue = sig.signString('aaa')
@@ -1280,7 +1280,7 @@ KJUR.crypto.Signature = function (params) {
      * @memberOf KJUR.crypto.Signature
      * @function
      * @param {string} hex hexadecimal string to final update
-     * @return the signature bytes of a hexadecimal string
+     * @returns the signature bytes of a hexadecimal string
      * @description
      * @example
      * var hSigValue = sig.signHex('1fdc33')
@@ -1295,7 +1295,7 @@ KJUR.crypto.Signature = function (params) {
      * @memberOf KJUR.crypto.Signature
      * @function
      * @param {string} str string to final update
-     * @return {Boolean} true if the signature was verified, otherwise false
+     * @returns {Boolean} true if the signature was verified, otherwise false
      * @description
      * @example
      * var isValid = sig.verify('1fbcefdca4823a7(snip)')
@@ -1360,7 +1360,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
              *
              * @param {Object} overrides Properties to copy into the new object.
              *
-             * @return {Object} The new object.
+             * @returns {Object} The new object.
              *
              * @static
              *
@@ -1403,7 +1403,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
              * Extends this object and runs the init method.
              * Arguments to create() will be passed to init().
              *
-             * @return {Object} The new object.
+             * @returns {Object} The new object.
              *
              * @static
              *
@@ -1460,7 +1460,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
             /**
              * Creates a copy of this object.
              *
-             * @return {Object} The clone.
+             * @returns {Object} The clone.
              *
              * @example
              *
@@ -1506,7 +1506,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {Encoder} encoder (Optional) The encoding strategy to use. Default: CryptoJS.enc.Hex
          *
-         * @return {string} The stringified word array.
+         * @returns {string} The stringified word array.
          *
          * @example
          *
@@ -1523,7 +1523,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {WordArray} wordArray The word array to append.
          *
-         * @return {WordArray} This word array.
+         * @returns {WordArray} This word array.
          *
          * @example
          *
@@ -1581,7 +1581,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         /**
          * Creates a copy of this word array.
          *
-         * @return {WordArray} The clone.
+         * @returns {WordArray} The clone.
          *
          * @example
          *
@@ -1599,7 +1599,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {number} nBytes The number of random bytes to generate.
          *
-         * @return {WordArray} The random word array.
+         * @returns {WordArray} The random word array.
          *
          * @static
          *
@@ -1631,7 +1631,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {WordArray} wordArray The word array.
          *
-         * @return {string} The hex string.
+         * @returns {string} The hex string.
          *
          * @static
          *
@@ -1660,7 +1660,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {string} hexStr The hex string.
          *
-         * @return {WordArray} The word array.
+         * @returns {WordArray} The word array.
          *
          * @static
          *
@@ -1691,7 +1691,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {WordArray} wordArray The word array.
          *
-         * @return {string} The Latin1 string.
+         * @returns {string} The Latin1 string.
          *
          * @static
          *
@@ -1719,7 +1719,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {string} latin1Str The Latin1 string.
          *
-         * @return {WordArray} The word array.
+         * @returns {WordArray} The word array.
          *
          * @static
          *
@@ -1750,7 +1750,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {WordArray} wordArray The word array.
          *
-         * @return {string} The UTF-8 string.
+         * @returns {string} The UTF-8 string.
          *
          * @static
          *
@@ -1771,7 +1771,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {string} utf8Str The UTF-8 string.
          *
-         * @return {WordArray} The word array.
+         * @returns {WordArray} The word array.
          *
          * @static
          *
@@ -1833,7 +1833,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {boolean} doFlush Whether all blocks and partial blocks should be processed.
          *
-         * @return {WordArray} The processed data.
+         * @returns {WordArray} The processed data.
          *
          * @example
          *
@@ -1884,7 +1884,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         /**
          * Creates a copy of this object.
          *
-         * @return {Object} The clone.
+         * @returns {Object} The clone.
          *
          * @example
          *
@@ -1948,7 +1948,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {WordArray|string} messageUpdate The message to append.
          *
-         * @return {Hasher} This hasher.
+         * @returns {Hasher} This hasher.
          *
          * @example
          *
@@ -1972,7 +1972,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {WordArray|string} messageUpdate (Optional) A final message update.
          *
-         * @return {WordArray} The hash.
+         * @returns {WordArray} The hash.
          *
          * @example
          *
@@ -1999,7 +1999,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {Hasher} hasher The hasher to create a helper for.
          *
-         * @return {Function} The shortcut function.
+         * @returns {Function} The shortcut function.
          *
          * @static
          *
@@ -2018,7 +2018,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *
          * @param {Hasher} hasher The hasher to use in this HMAC helper.
          *
-         * @return {Function} The shortcut function.
+         * @returns {Function} The shortcut function.
          *
          * @static
          *
@@ -2199,7 +2199,7 @@ code.google.com/p/crypto-js/wiki/License
      *
      * @param {WordArray|string} message The message to hash.
      *
-     * @return {WordArray} The hash.
+     * @returns {WordArray} The hash.
      *
      * @static
      *
@@ -2216,7 +2216,7 @@ code.google.com/p/crypto-js/wiki/License
      * @param {WordArray|string} message The message to hash.
      * @param {WordArray|string} key The secret key.
      *
-     * @return {WordArray} The HMAC.
+     * @returns {WordArray} The HMAC.
      *
      * @static
      *

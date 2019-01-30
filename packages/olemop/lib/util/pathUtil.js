@@ -43,7 +43,7 @@ exp.getCronPath = function (appBase, serverType) {
  * which hold the codes for all the server types.
  *
  * @param {string} appBase application base path
- * @return {Array}         all the subdiretory name under servers/
+ * @returns {Array}         all the subdiretory name under servers/
  */
 exp.listUserRemoteDir = function (appBase) {
   var base = path.join(appBase, '/app/servers/')
@@ -63,7 +63,7 @@ exp.listUserRemoteDir = function (appBase) {
  * @param {string} namespace  remote path namespace, such as: 'sys', 'user'
  * @param {string} serverType
  * @param {string} path       remote service source path
- * @return {Object}            remote path record
+ * @returns {Object}            remote path record
  */
 exp.remotePathRecord = function (namespace, serverType, path) {
   return {namespace: namespace, serverType: serverType, path: path}

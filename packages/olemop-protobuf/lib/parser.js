@@ -3,7 +3,7 @@ var Parser = module.exports
 /**
  * [parse the original protos, give the paresed result can be used by protobuf encode/decode.]
  * @param  {[Object]} protos Original protos, in a js map.
- * @return {[Object]} The presed result, a js object represent all the meta data of the given protos.
+ * @returns {[Object]} The presed result, a js object represent all the meta data of the given protos.
  */
 Parser.parse = function (protos) {
 	var maps = {}
@@ -17,7 +17,7 @@ Parser.parse = function (protos) {
 /**
  * [parse a single protos, return a object represent the result. The method can be invocked recursively.]
  * @param  {[Object]} obj The origin proto need to parse.
- * @return {[Object]} The parsed result, a js object.
+ * @returns {[Object]} The parsed result, a js object.
  */
 function parseObject(obj) {
 	var proto = {}

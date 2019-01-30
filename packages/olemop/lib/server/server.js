@@ -25,7 +25,7 @@ var ST_STOPED = 2
  * Server factory function.
  *
  * @param {Object} app  current application context
- * @return {Object} erver instance
+ * @returns {Object} erver instance
  */
 module.exports.create = function (app, opts) {
   return new Server(app, opts)
@@ -311,7 +311,7 @@ var response = function (isGlobal, server, err, msg, session, resp, opts, cb) {
  * Parse route string.
  *
  * @param {string} route route string, such as: serverName.handlerName.methodName
- * @return {Object}       parse result object or null for illeagle route string
+ * @returns {Object}       parse result object or null for illeagle route string
  */
 var parseRoute = function (route) {
   if (!route) {

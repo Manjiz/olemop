@@ -221,7 +221,7 @@ Application.rpcFilter = function (filter) {
  * @param {string} name    (optional) name of the component
  * @param  {Object} component component instance or factory function of the component
  * @param  {[type]} opts    (optional) construct parameters for the factory function
- * @return {Object}     app instance for chain invoke
+ * @returns {Object}     app instance for chain invoke
  * @memberOf Application
  */
 Application.load = function (name, component, opts) {
@@ -263,7 +263,7 @@ Application.load = function (name, component, opts) {
  * @param {string} key environment key
  * @param {string} val environment value
  * @param {Boolean} reload whether reload after change default false
- * @return {Server|Mixed} for chaining, or the setting value
+ * @returns {Server|Mixed} for chaining, or the setting value
  * @memberOf Application
  */
 Application.loadConfigBaseApp = function (key, val, reload) {
@@ -302,7 +302,7 @@ Application.loadConfigBaseApp = function (key, val, reload) {
  *
  * @param {string} key environment key
  * @param {string} val environment value
- * @return {Server|Mixed} for chaining, or the setting value
+ * @returns {Server|Mixed} for chaining, or the setting value
  * @memberOf Application
  */
 Application.loadConfig = function (key, val) {
@@ -329,7 +329,7 @@ Application.loadConfig = function (key, val) {
  *
  * @param {string} serverType server type string
  * @param  {Function} routeFunc  route function. routeFunc(session, msg, app, cb)
- * @return {Object}     current application instance for chain invoking
+ * @returns {Object}     current application instance for chain invoking
  * @memberOf Application
  */
 Application.route = function (serverType, routeFunc) {
@@ -346,7 +346,7 @@ Application.route = function (serverType, routeFunc) {
  * Set before stop function. It would perform before servers stop.
  *
  * @param  {Function} fun before close function
- * @return {Void}
+ * @returns {Void}
  * @memberOf Application
  */
 Application.beforeStopHook = function (fun) {
@@ -396,7 +396,7 @@ Application.beforeStopHook = function (fun) {
  * Lifecycle callback for after start.
  *
  * @param  {Function} cb callback function
- * @return {Void}
+ * @returns {Void}
  */
 Application.afterStart = function (cb) {
   if (this.state !== STATE_START) {
@@ -486,7 +486,7 @@ Application.stop = function (force) {
  * @param {string} setting the setting of application
  * @param {string} val the setting's value
  * @param {Boolean} attach whether attach the settings to application
- * @return {Server|Mixed} for chaining, or the setting value
+ * @returns {Server|Mixed} for chaining, or the setting value
  * @memberOf Application
  */
 Application.set = function (setting, val, attach) {
@@ -515,7 +515,7 @@ Application.get = function (setting) {
  * Check if `setting` is enabled.
  *
  * @param {string} setting application setting
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberOf Application
  */
 Application.enabled = function (setting) {
@@ -526,7 +526,7 @@ Application.enabled = function (setting) {
  * Check if `setting` is disabled.
  *
  * @param {string} setting application setting
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberOf Application
  */
 Application.disabled = function (setting) {
@@ -537,7 +537,7 @@ Application.disabled = function (setting) {
  * Enable `setting`.
  *
  * @param {string} setting application setting
- * @return {app} for chaining
+ * @returns {app} for chaining
  * @memberOf Application
  */
 Application.enable = function (setting) {
@@ -548,7 +548,7 @@ Application.enable = function (setting) {
  * Disable `setting`.
  *
  * @param {string} setting application setting
- * @return {app} for chaining
+ * @returns {app} for chaining
  * @memberOf Application
  */
 Application.disable = function (setting) {
@@ -578,7 +578,7 @@ Application.disable = function (setting) {
  * @param {string} env application environment
  * @param {Function} fn callback function
  * @param {string} type server type
- * @return {Application} for chaining
+ * @returns {Application} for chaining
  * @memberOf Application
  */
 Application.configure = function (env, type, fn) {
@@ -699,7 +699,7 @@ Application.transaction = function (name, conditions, handlers, retry) {
 /**
  * Get master server info.
  *
- * @return {Object} master server info, {id, host, port}
+ * @returns {Object} master server info, {id, host, port}
  * @memberOf Application
  */
 Application.getMaster = function () {
@@ -709,7 +709,7 @@ Application.getMaster = function () {
 /**
  * Get current server info.
  *
- * @return {Object} current server info, {id, serverType, host, port}
+ * @returns {Object} current server info, {id, serverType, host, port}
  * @memberOf Application
  */
 Application.getCurServer = function () {
@@ -719,7 +719,7 @@ Application.getCurServer = function () {
 /**
  * Get current server id.
  *
- * @return {String|Number} current server id from servers.json
+ * @returns {String|Number} current server id from servers.json
  * @memberOf Application
  */
 Application.getServerId = function () {
@@ -729,7 +729,7 @@ Application.getServerId = function () {
 /**
  * Get current server type.
  *
- * @return {String|Number} current server type from servers.json
+ * @returns {String|Number} current server type from servers.json
  * @memberOf Application
  */
 Application.getServerType = function () {
@@ -739,7 +739,7 @@ Application.getServerType = function () {
 /**
  * Get all the current server infos.
  *
- * @return {Object} server info map, key: server id, value: server info
+ * @returns {Object} server info map, key: server id, value: server info
  * @memberOf Application
  */
 Application.getServers = function () {
@@ -749,7 +749,7 @@ Application.getServers = function () {
 /**
  * Get all server infos from servers.json.
  *
- * @return {Object} server info map, key: server id, value: server info
+ * @returns {Object} server info map, key: server id, value: server info
  * @memberOf Application
  */
 Application.getServersFromConfig = function () {
@@ -759,7 +759,7 @@ Application.getServersFromConfig = function () {
 /**
  * Get all the server type.
  *
- * @return {Array} server type list
+ * @returns {Array} server type list
  * @memberOf Application
  */
 Application.getServerTypes = function () {
@@ -770,7 +770,7 @@ Application.getServerTypes = function () {
  * Get server info by server id from current server cluster.
  *
  * @param {string} serverId server id
- * @return {Object} server info or undefined
+ * @returns {Object} server info or undefined
  * @memberOf Application
  */
 Application.getServerById = function (serverId) {
@@ -781,7 +781,7 @@ Application.getServerById = function (serverId) {
  * Get server info by server id from servers.json.
  *
  * @param {string} serverId server id
- * @return {Object} server info or undefined
+ * @returns {Object} server info or undefined
  * @memberOf Application
  */
 
@@ -793,7 +793,7 @@ Application.getServerFromConfig = function (serverId) {
  * Get server infos by server type.
  *
  * @param {string} serverType server type
- * @return {Array}      server info list
+ * @returns {Array}      server info list
  * @memberOf Application
  */
 Application.getServersByType = function (serverType) {
@@ -805,7 +805,7 @@ Application.getServersByType = function (serverType) {
  *
  * @param  {server}  server server info. it would check current server
  *            if server not specified
- * @return {Boolean}
+ * @returns {Boolean}
  *
  * @memberOf Application
  */
@@ -819,7 +819,7 @@ Application.isFrontend = function (server) {
  *
  * @param  {server}  server server info. it would check current server
  *            if server not specified
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberOf Application
  */
 Application.isBackend = function (server) {
@@ -830,7 +830,7 @@ Application.isBackend = function (server) {
 /**
  * Check whether current server is a master server
  *
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberOf Application
  */
 Application.isMaster = function () {

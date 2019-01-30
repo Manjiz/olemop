@@ -43,7 +43,7 @@ var Long = function (low, high, unsigned) {
      * Returns a Long representing the given (32-bit) integer value.
      * @param {number} value The 32-bit integer in question.
      * @param {boolean=} unsigned Whether unsigned or not. Defaults to false (signed).
-     * @return {!Long} The corresponding Long value.
+     * @returns {!Long} The corresponding Long value.
      * @expose
      */
     Long.fromInt = function (value, unsigned) {
@@ -78,7 +78,7 @@ var Long = function (low, high, unsigned) {
      * number.  Otherwise, zero is returned.
      * @param {number} value The number in question.
      * @param {boolean=} unsigned Whether unsigned or not. Defaults to false (signed).
-     * @return {!Long} The corresponding Long value.
+     * @returns {!Long} The corresponding Long value.
      * @expose
      */
     Long.fromNumber = function (value, unsigned) {
@@ -106,7 +106,7 @@ var Long = function (low, high, unsigned) {
      * @param {number} lowBits The low 32 bits.
      * @param {number} highBits The high 32 bits.
      * @param {boolean=} unsigned Whether unsigned or not. Defaults to false (signed).
-     * @return {!Long} The corresponding Long value.
+     * @returns {!Long} The corresponding Long value.
      * @expose
      */
     Long.fromBits = function (lowBits, highBits, unsigned) {
@@ -120,7 +120,7 @@ var Long = function (low, high, unsigned) {
      * @param {number} part1 The middle 28 bits
      * @param {number} part2 The high 28 (8) bits
      * @param {boolean=} unsigned Whether unsigned or not. Defaults to false (signed).
-     * @return {!Long}
+     * @returns {!Long}
      * @expose
      */
     Long.from28Bits = function (part0, part1, part2, unsigned) {
@@ -135,7 +135,7 @@ var Long = function (low, high, unsigned) {
      * @param {string} str The textual representation of the Long.
      * @param {(boolean|number)=} unsigned Whether unsigned or not. Defaults to false (signed).
      * @param {number=} radix The radix in which the text is written.
-     * @return {!Long} The corresponding Long value.
+     * @returns {!Long} The corresponding Long value.
      * @expose
      */
     Long.fromString = function (str, unsigned, radix) {
@@ -283,7 +283,7 @@ var Long = function (low, high, unsigned) {
     Long.MIN_VALUE = Long.MIN_SIGNED_VALUE
 
     /**
-     * @return {number} The value, assuming it is a 32-bit integer.
+     * @returns {number} The value, assuming it is a 32-bit integer.
      * @expose
      */
     Long.prototype.toInt = function () {
@@ -291,7 +291,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {number} The closest floating-point representation to this value.
+     * @returns {number} The closest floating-point representation to this value.
      * @expose
      */
     Long.prototype.toNumber = function () {
@@ -303,7 +303,7 @@ var Long = function (low, high, unsigned) {
 
     /**
      * @param {number=} radix The radix in which the text should be written.
-     * @return {string} The textual representation of this value.
+     * @returns {string} The textual representation of this value.
      * @override
      * @expose
      */
@@ -352,7 +352,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {number} The high 32 bits as a signed value.
+     * @returns {number} The high 32 bits as a signed value.
      * @expose
      */
     Long.prototype.getHighBits = function () {
@@ -360,7 +360,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {number} The high 32 bits as an unsigned value.
+     * @returns {number} The high 32 bits as an unsigned value.
      * @expose
      */
     Long.prototype.getHighBitsUnsigned = function () {
@@ -368,7 +368,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {number} The low 32 bits as a signed value.
+     * @returns {number} The low 32 bits as a signed value.
      * @expose
      */
     Long.prototype.getLowBits = function () {
@@ -376,7 +376,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {number} The low 32 bits as an unsigned value.
+     * @returns {number} The low 32 bits as an unsigned value.
      * @expose
      */
     Long.prototype.getLowBitsUnsigned = function () {
@@ -384,7 +384,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {number} Returns the number of bits needed to represent the absolute
+     * @returns {number} Returns the number of bits needed to represent the absolute
      *     value of this Long.
      * @expose
      */
@@ -408,7 +408,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {boolean} Whether this value is zero.
+     * @returns {boolean} Whether this value is zero.
      * @expose
      */
     Long.prototype.isZero = function () {
@@ -416,7 +416,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {boolean} Whether this value is negative.
+     * @returns {boolean} Whether this value is negative.
      * @expose
      */
     Long.prototype.isNegative = function () {
@@ -424,7 +424,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {boolean} Whether this value is odd.
+     * @returns {boolean} Whether this value is odd.
      * @expose
      */
     Long.prototype.isOdd = function () {
@@ -432,7 +432,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {boolean} Whether this value is even.
+     * @returns {boolean} Whether this value is even.
      */
     Long.prototype.isEven = function () {
         return (this.low & 1) == 0
@@ -440,7 +440,7 @@ var Long = function (low, high, unsigned) {
 
     /**
      * @param {Long} other Long to compare against.
-     * @return {boolean} Whether this Long equals the other.
+     * @returns {boolean} Whether this Long equals the other.
      * @expose
      */
     Long.prototype.equals = function (other) {
@@ -450,7 +450,7 @@ var Long = function (low, high, unsigned) {
 
     /**
      * @param {Long} other Long to compare against.
-     * @return {boolean} Whether this Long does not equal the other.
+     * @returns {boolean} Whether this Long does not equal the other.
      * @expose
      */
     Long.prototype.notEquals = function (other) {
@@ -459,7 +459,7 @@ var Long = function (low, high, unsigned) {
 
     /**
      * @param {Long} other Long to compare against.
-     * @return {boolean} Whether this Long is less than the other.
+     * @returns {boolean} Whether this Long is less than the other.
      * @expose
      */
     Long.prototype.lessThan = function (other) {
@@ -468,7 +468,7 @@ var Long = function (low, high, unsigned) {
 
     /**
      * @param {Long} other Long to compare against.
-     * @return {boolean} Whether this Long is less than or equal to the other.
+     * @returns {boolean} Whether this Long is less than or equal to the other.
      * @expose
      */
     Long.prototype.lessThanOrEqual = function (other) {
@@ -477,7 +477,7 @@ var Long = function (low, high, unsigned) {
 
     /**
      * @param {Long} other Long to compare against.
-     * @return {boolean} Whether this Long is greater than the other.
+     * @returns {boolean} Whether this Long is greater than the other.
      * @expose
      */
     Long.prototype.greaterThan = function (other) {
@@ -486,7 +486,7 @@ var Long = function (low, high, unsigned) {
 
     /**
      * @param {Long} other Long to compare against.
-     * @return {boolean} Whether this Long is greater than or equal to the other.
+     * @returns {boolean} Whether this Long is greater than or equal to the other.
      * @expose
      */
     Long.prototype.greaterThanOrEqual = function (other) {
@@ -496,7 +496,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Compares this Long with the given one.
      * @param {Long} other Long to compare against.
-     * @return {number} 0 if they are the same, 1 if the this is greater, and -1
+     * @returns {number} 0 if they are the same, 1 if the this is greater, and -1
      *     if the given one is greater.
      * @expose
      */
@@ -518,7 +518,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {!Long} The negation of this value.
+     * @returns {!Long} The negation of this value.
      * @expose
      */
     Long.prototype.negate = function () {
@@ -531,7 +531,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns the sum of this and the given Long.
      * @param {Long} other Long to add to this one.
-     * @return {!Long} The sum of this and the given Long.
+     * @returns {!Long} The sum of this and the given Long.
      * @expose
      */
     Long.prototype.add = function (other) {
@@ -565,7 +565,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns the difference of this and the given Long.
      * @param {Long} other Long to subtract from this.
-     * @return {!Long} The difference of this and the given Long.
+     * @returns {!Long} The difference of this and the given Long.
      * @expose
      */
     Long.prototype.subtract = function (other) {
@@ -575,7 +575,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns the product of this and the given long.
      * @param {Long} other Long to multiply with this.
-     * @return {!Long} The product of this and the other.
+     * @returns {!Long} The product of this and the other.
      * @expose
      */
     Long.prototype.multiply = function (other) {
@@ -646,7 +646,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns this Long divided by the given one.
      * @param {Long} other Long by which to divide.
-     * @return {!Long} This Long divided by the given one.
+     * @returns {!Long} This Long divided by the given one.
      * @expose
      */
     Long.prototype.div = function (other) {
@@ -728,7 +728,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns this Long modulo the given one.
      * @param {Long} other Long by which to mod.
-     * @return {!Long} This Long modulo the given one.
+     * @returns {!Long} This Long modulo the given one.
      * @expose
      */
     Long.prototype.modulo = function (other) {
@@ -736,7 +736,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {!Long} The bitwise-NOT of this value.
+     * @returns {!Long} The bitwise-NOT of this value.
      * @expose
      */
     Long.prototype.not = function () {
@@ -746,7 +746,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns the bitwise-AND of this Long and the given one.
      * @param {Long} other The Long with which to AND.
-     * @return {!Long} The bitwise-AND of this and the other.
+     * @returns {!Long} The bitwise-AND of this and the other.
      * @expose
      */
     Long.prototype.and = function (other) {
@@ -756,7 +756,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns the bitwise-OR of this Long and the given one.
      * @param {Long} other The Long with which to OR.
-     * @return {!Long} The bitwise-OR of this and the other.
+     * @returns {!Long} The bitwise-OR of this and the other.
      * @expose
      */
     Long.prototype.or = function (other) {
@@ -766,7 +766,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns the bitwise-XOR of this Long and the given one.
      * @param {Long} other The Long with which to XOR.
-     * @return {!Long} The bitwise-XOR of this and the other.
+     * @returns {!Long} The bitwise-XOR of this and the other.
      * @expose
      */
     Long.prototype.xor = function (other) {
@@ -776,7 +776,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns this Long with bits shifted to the left by the given amount.
      * @param {number} numBits The number of bits by which to shift.
-     * @return {!Long} This shifted to the left by the given amount.
+     * @returns {!Long} This shifted to the left by the given amount.
      * @expose
      */
     Long.prototype.shiftLeft = function (numBits) {
@@ -797,7 +797,7 @@ var Long = function (low, high, unsigned) {
     /**
      * Returns this Long with bits shifted to the right by the given amount.
      * @param {number} numBits The number of bits by which to shift.
-     * @return {!Long} This shifted to the right by the given amount.
+     * @returns {!Long} This shifted to the right by the given amount.
      * @expose
      */
     Long.prototype.shiftRight = function (numBits) {
@@ -819,7 +819,7 @@ var Long = function (low, high, unsigned) {
      * Returns this Long with bits shifted to the right by the given amount, with
      * the new top bits matching the current sign bit.
      * @param {number} numBits The number of bits by which to shift.
-     * @return {!Long} This shifted to the right by the given amount, with
+     * @returns {!Long} This shifted to the right by the given amount, with
      *     zeros placed into the new leading bits.
      * @expose
      */
@@ -841,7 +841,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {!Long} Signed long
+     * @returns {!Long} Signed long
      * @expose
      */
     Long.prototype.toSigned = function () {
@@ -851,7 +851,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {!Long} Unsigned long
+     * @returns {!Long} Unsigned long
      * @expose
      */
     Long.prototype.toUnsigned = function () {
@@ -861,7 +861,7 @@ var Long = function (low, high, unsigned) {
     }
 
     /**
-     * @return {Long} Cloned instance with the same low/high bits and unsigned flag.
+     * @returns {Long} Cloned instance with the same low/high bits and unsigned flag.
      * @expose
      */
     Long.prototype.clone = function () {

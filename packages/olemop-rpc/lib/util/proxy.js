@@ -43,7 +43,7 @@ const genObjectProxy = (serviceName, origin, attach, proxyCB) => {
  *           opts.proxyCB {Function} proxy invoke callback
  *           opts.service {string} deletgated service name
  *           opts.attach {Object} attach parameter pass to proxyCB
- * @return {Object}      proxy instance
+ * @returns {Object}      proxy instance
  */
 exports.create = function (opts) {
   if (!opts || !opts.origin) {
