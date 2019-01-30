@@ -50,7 +50,7 @@ describe('dispatcher', function () {
       callbackCount++
     })
 
-    //wait for all finished
+    // wait for all finished
     setTimeout(function () {
       callbackCount.should.equal(2)
       done()
@@ -80,7 +80,7 @@ describe('dispatcher', function () {
       callbackCount++
     })
 
-    //wait for all finished
+    // wait for all finished
     setTimeout(function () {
       callbackCount.should.equal(2)
       done()

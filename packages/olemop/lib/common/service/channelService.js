@@ -232,7 +232,7 @@ Channel.prototype.leave = function (uid, sid) {
     delete this.records[uid]
     this.userAmount = this.userAmount-1
   }
-  if (this.userAmount<0) this.userAmount=0//robust
+  if (this.userAmount<0) this.userAmount=0// robust
   removeFromStore(this.__channelService__, genKey(this.__channelService__, this.name), genValue(sid, uid))
   if (this.groups[sid] && this.groups[sid].length === 0) {
     delete this.groups[sid]

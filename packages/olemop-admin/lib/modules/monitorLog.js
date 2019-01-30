@@ -67,7 +67,7 @@ Module.prototype.clientHandler = function (agent, msg, cb) {
 	})
 }
 
-//get the latest logs
+// get the latest logs
 var fetchLogs = function (root, msg, callback) {
 	var number = msg.number
 	var logfile = msg.logfile

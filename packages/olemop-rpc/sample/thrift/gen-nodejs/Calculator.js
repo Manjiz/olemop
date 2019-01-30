@@ -14,7 +14,7 @@ var SharedService = require('./SharedService')
 var SharedServiceClient = SharedService.Client
 var SharedServiceProcessor = SharedService.Processor
 var ttypes = require('./tutorial_types')
-//HELPER FUNCTIONS AND STRUCTURES
+// HELPER FUNCTIONS AND STRUCTURES
 
 Calculator_ping_args = function (args) {
 }

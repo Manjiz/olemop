@@ -26,15 +26,15 @@ class Sequence extends Composite {
       if (res === bt.RES_SUCCESS) {
         continue
       } else if (res === bt.RES_WAIT) {
-        //return to parent directly if wait
+        // return to parent directly if wait
         return res
       } else {
-        //reset state and return fail
+        // reset state and return fail
         this.reset()
         return res
       }
     }
-    //we will return success if all children success
+    // we will return success if all children success
     this.reset()
     return bt.RES_SUCCESS
   }

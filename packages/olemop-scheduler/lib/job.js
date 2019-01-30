@@ -15,7 +15,7 @@ var warnLimit = 500
 var logger = require('log4js').getLogger(__filename)
 
 
-//For test
+// For test
 var lateCount = 0
 
 var Job = function (trigger, jobFunc, jobData){
@@ -48,7 +48,7 @@ pro.run = function (){
       logger.warn('run Job count ' + jobCount + ' late :' + late + ' lateCount ' + (++lateCount))
     this.func(this.data)
   } catch (e){
-    logger.error("Job run error for exception ! " + e.stack)
+    logger.error(`Job run error for exception ! ${e.stack}`)
   }
 }
 

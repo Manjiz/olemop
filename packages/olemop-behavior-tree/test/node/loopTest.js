@@ -41,8 +41,8 @@ WNode.prototype = {
 describe('Loop Test', function () {
   it('should invoke the child in loop', function () {
     var bb = {
-      scount: 0, 
-      fcount: 0, 
+      scount: 0,
+      fcount: 0,
       wcount: 0
     }
 
@@ -79,15 +79,15 @@ describe('Loop Test', function () {
 
   it('should return fail and break loop if child return fail', function () {
     var bb = {
-      scount: 0, 
-      fcount: 0, 
+      scount: 0,
+      fcount: 0,
       wcount: 0
     }
-    
+
     var loopConditionCount = 0
 
     var lc = function(bb) {
-      //should never enter here
+      // should never enter here
       loopConditionCount++
       return  true
     }
@@ -111,8 +111,8 @@ describe('Loop Test', function () {
 
   it('should return wait when the child return wait', function () {
     var bb = {
-      scount: 0, 
-      fcount: 0, 
+      scount: 0,
+      fcount: 0,
       wcount: 0
     }
 

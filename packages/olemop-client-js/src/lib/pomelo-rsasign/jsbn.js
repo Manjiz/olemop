@@ -98,16 +98,16 @@ function am3(i,x,w,j,c,n) {
 }
 
 // We need to select the fastest one that works in this environment.
-//if (j_lm && (navigator.appName == "Microsoft Internet Explorer")) {
+// if (j_lm && (navigator.appName == "Microsoft Internet Explorer")) {
 //	BigInteger.prototype.am = am2
 //	dbits = 30
-//} else if (j_lm && (navigator.appName != "Netscape")) {
+// } else if (j_lm && (navigator.appName != "Netscape")) {
 //	BigInteger.prototype.am = am1
 //	dbits = 26
-//} else { // Mozilla/Netscape seems to prefer am3
+// } else { // Mozilla/Netscape seems to prefer am3
 //	BigInteger.prototype.am = am3
 //	dbits = 28
-//}
+// }
 
 // For node.js, we pick am3 with max dbits to 28.
 BigInteger.prototype.am = am3
@@ -612,10 +612,10 @@ BigInteger.ONE = nbv(1)
 // Version 1.1: new BigInteger("0", 10) returns "proper" zero
 // Version 1.2: square() API, isProbablePrime fix
 
-//(public)
+// (public)
 function bnClone() { var r = nbi(); this.copyTo(r); return r; }
 
-//(public) return value as integer
+// (public) return value as integer
 function bnIntValue() {
 if (this.s < 0) {
  if (this.t == 1) return this[0]-this.DV
@@ -627,23 +627,23 @@ else if (this.t == 0) return 0
 return ((this[1]&((1<<(32-this.DB))-1))<<this.DB)|this[0]
 }
 
-//(public) return value as byte
+// (public) return value as byte
 function bnByteValue() { return (this.t==0)?this.s:(this[0]<<24)>>24; }
 
-//(public) return value as short (assumes DB>=16)
+// (public) return value as short (assumes DB>=16)
 function bnShortValue() { return (this.t==0)?this.s:(this[0]<<16)>>16; }
 
-//(protected) return x s.t. r^x < DV
+// (protected) return x s.t. r^x < DV
 function bnpChunkSize(r) { return Math.floor(Math.LN2*this.DB/Math.log(r)); }
 
-//(public) 0 if this == 0, 1 if this > 0
+// (public) 0 if this == 0, 1 if this > 0
 function bnSigNum() {
 if (this.s < 0) return -1
 else if (this.t <= 0 || (this.t == 1 && this[0] <= 0)) return 0
 else return 1
 }
 
-//(protected) convert to radix string
+// (protected) convert to radix string
 function bnpToRadix(b) {
 if (b == null) b = 10
 if (this.signum() == 0 || b < 2 || b > 36) return "0"
@@ -658,7 +658,7 @@ while(y.signum() > 0) {
 return z.intValue().toString(b) + r
 }
 
-//(protected) convert from radix string
+// (protected) convert from radix string
 function bnpFromRadix(s,b) {
 this.fromInt(0)
 if (b == null) b = 10
@@ -685,7 +685,7 @@ if (j > 0) {
 if (mi) BigInteger.ZERO.subTo(this,this)
 }
 
-//(protected) alternate constructor
+// (protected) alternate constructor
 function bnpFromNumber(a,b,c) {
 if ("number" == typeof b) {
  // new BigInteger(int,int,RNG)
@@ -711,7 +711,7 @@ else {
 }
 }
 
-//(public) convert to bigendian byte array
+// (public) convert to bigendian byte array
 function bnToByteArray() {
 var i = this.t, r = new Array()
 r[0] = this.s
@@ -740,7 +740,7 @@ function bnEquals(a) { return(this.compareTo(a)==0); }
 function bnMin(a) { return(this.compareTo(a)<0)?this:a; }
 function bnMax(a) { return(this.compareTo(a)>0)?this:a; }
 
-//(protected) r = this op a (bitwise)
+// (protected) r = this op a (bitwise)
 function bnpBitwiseTo(a,op,r) {
 var i, f, m = Math.min(a.t,this.t)
 for (i = 0; i < m; ++i) r[i] = op(this[i],a[i])
@@ -758,23 +758,23 @@ r.s = op(this.s,a.s)
 r.clamp()
 }
 
-//(public) this & a
+// (public) this & a
 function op_and(x,y) { return x&y; }
 function bnAnd(a) { var r = nbi(); this.bitwiseTo(a,op_and,r); return r; }
 
-//(public) this | a
+// (public) this | a
 function op_or(x,y) { return x|y; }
 function bnOr(a) { var r = nbi(); this.bitwiseTo(a,op_or,r); return r; }
 
-//(public) this ^ a
+// (public) this ^ a
 function op_xor(x,y) { return x^y; }
 function bnXor(a) { var r = nbi(); this.bitwiseTo(a,op_xor,r); return r; }
 
-//(public) this & ~a
+// (public) this & ~a
 function op_andnot(x,y) { return x&~y; }
 function bnAndNot(a) { var r = nbi(); this.bitwiseTo(a,op_andnot,r); return r; }
 
-//(public) ~this
+// (public) ~this
 function bnNot() {
 var r = nbi()
 for (var i = 0; i < this.t; ++i) r[i] = this.DM&~this[i]
@@ -783,21 +783,21 @@ r.s = ~this.s
 return r
 }
 
-//(public) this << n
+// (public) this << n
 function bnShiftLeft(n) {
 var r = nbi()
 if (n < 0) this.rShiftTo(-n,r); else this.lShiftTo(n,r)
 return r
 }
 
-//(public) this >> n
+// (public) this >> n
 function bnShiftRight(n) {
 var r = nbi()
 if (n < 0) this.lShiftTo(-n,r); else this.rShiftTo(n,r)
 return r
 }
 
-//return index of lowest 1-bit in x, x < 2^31
+// return index of lowest 1-bit in x, x < 2^31
 function lbit(x) {
 if (x == 0) return -1
 var r = 0
@@ -809,7 +809,7 @@ if ((x&1) == 0) ++r
 return r
 }
 
-//(public) returns index of lowest 1-bit (or -1 if none)
+// (public) returns index of lowest 1-bit (or -1 if none)
 function bnGetLowestSetBit() {
 for (var i = 0; i < this.t; ++i)
  if (this[i] != 0) return i*this.DB+lbit(this[i])
@@ -817,44 +817,44 @@ if (this.s < 0) return this.t*this.DB
 return -1
 }
 
-//return number of 1 bits in x
+// return number of 1 bits in x
 function cbit(x) {
 var r = 0
 while(x != 0) { x &= x-1; ++r; }
 return r
 }
 
-//(public) return number of set bits
+// (public) return number of set bits
 function bnBitCount() {
 var r = 0, x = this.s&this.DM
 for (var i = 0; i < this.t; ++i) r += cbit(this[i]^x)
 return r
 }
 
-//(public) true iff nth bit is set
+// (public) true iff nth bit is set
 function bnTestBit(n) {
 var j = Math.floor(n/this.DB)
 if (j >= this.t) return(this.s!=0)
 return((this[j]&(1<<(n%this.DB)))!=0)
 }
 
-//(protected) this op (1<<n)
+// (protected) this op (1<<n)
 function bnpChangeBit(n,op) {
 var r = BigInteger.ONE.shiftLeft(n)
 this.bitwiseTo(r,op,r)
 return r
 }
 
-//(public) this | (1<<n)
+// (public) this | (1<<n)
 function bnSetBit(n) { return this.changeBit(n,op_or); }
 
-//(public) this & ~(1<<n)
+// (public) this & ~(1<<n)
 function bnClearBit(n) { return this.changeBit(n,op_andnot); }
 
-//(public) this ^ (1<<n)
+// (public) this ^ (1<<n)
 function bnFlipBit(n) { return this.changeBit(n,op_xor); }
 
-//(protected) r = this + a
+// (protected) r = this + a
 function bnpAddTo(a,r) {
 var i = 0, c = 0, m = Math.min(a.t,this.t)
 while(i < m) {
@@ -887,39 +887,39 @@ r.t = i
 r.clamp()
 }
 
-//(public) this + a
+// (public) this + a
 function bnAdd(a) { var r = nbi(); this.addTo(a,r); return r; }
 
-//(public) this - a
+// (public) this - a
 function bnSubtract(a) { var r = nbi(); this.subTo(a,r); return r; }
 
-//(public) this * a
+// (public) this * a
 function bnMultiply(a) { var r = nbi(); this.multiplyTo(a,r); return r; }
 
 // (public) this^2
 function bnSquare() { var r = nbi(); this.squareTo(r); return r; }
 
-//(public) this / a
+// (public) this / a
 function bnDivide(a) { var r = nbi(); this.divRemTo(a,r,null); return r; }
 
-//(public) this % a
+// (public) this % a
 function bnRemainder(a) { var r = nbi(); this.divRemTo(a,null,r); return r; }
 
-//(public) [this/a,this%a]
+// (public) [this/a,this%a]
 function bnDivideAndRemainder(a) {
 var q = nbi(), r = nbi()
 this.divRemTo(a,q,r)
 return new Array(q,r)
 }
 
-//(protected) this *= n, this >= 0, 1 < n < DV
+// (protected) this *= n, this >= 0, 1 < n < DV
 function bnpDMultiply(n) {
 this[this.t] = this.am(0,n-1,this,0,0,this.t)
 ++this.t
 this.clamp()
 }
 
-//(protected) this += n << w words, this >= 0
+// (protected) this += n << w words, this >= 0
 function bnpDAddOffset(n,w) {
 if (n == 0) return
 while(this.t <= w) this[this.t++] = 0
@@ -931,7 +931,7 @@ while(this[w] >= this.DV) {
 }
 }
 
-//A "null" reducer
+// A "null" reducer
 function NullExp() {}
 function nNop(x) { return x; }
 function nMulTo(x,y,r) { x.multiplyTo(y,r); }
@@ -942,11 +942,11 @@ NullExp.prototype.revert = nNop
 NullExp.prototype.mulTo = nMulTo
 NullExp.prototype.sqrTo = nSqrTo
 
-//(public) this^e
+// (public) this^e
 function bnPow(e) { return this.exp(e,new NullExp()); }
 
-//(protected) r = lower n words of "this * a", a.t <= n
-//"this" should be the larger one if appropriate.
+// (protected) r = lower n words of "this * a", a.t <= n
+// "this" should be the larger one if appropriate.
 function bnpMultiplyLowerTo(a,n,r) {
 var i = Math.min(this.t+a.t,n)
 r.s = 0 // assumes a,this >= 0
@@ -958,8 +958,8 @@ for (j = Math.min(a.t,n); i < j; ++i) this.am(0,a[i],r,i,0,n-i)
 r.clamp()
 }
 
-//(protected) r = "this * a" without lower n words, n > 0
-//"this" should be the larger one if appropriate.
+// (protected) r = "this * a" without lower n words, n > 0
+// "this" should be the larger one if appropriate.
 function bnpMultiplyUpperTo(a,n,r) {
 --n
 var i = r.t = this.t+a.t-n
@@ -971,7 +971,7 @@ r.clamp()
 r.drShiftTo(1,r)
 }
 
-//Barrett modular reduction
+// Barrett modular reduction
 function Barrett(m) {
 // setup Barrett
 this.r2 = nbi()
@@ -989,7 +989,7 @@ else { var r = nbi(); x.copyTo(r); this.reduce(r); return r; }
 
 function barrettRevert(x) { return x; }
 
-//x = x mod m (HAC 14.42)
+// x = x mod m (HAC 14.42)
 function barrettReduce(x) {
 x.drShiftTo(this.m.t-1,this.r2)
 if (x.t > this.m.t+1) { x.t = this.m.t+1; x.clamp(); }
@@ -1000,10 +1000,10 @@ x.subTo(this.r2,x)
 while(x.compareTo(this.m) >= 0) x.subTo(this.m,x)
 }
 
-//r = x^2 mod m; x != r
+// r = x^2 mod m; x != r
 function barrettSqrTo(x,r) { x.squareTo(r); this.reduce(r); }
 
-//r = x*y mod m; x,y != r
+// r = x*y mod m; x,y != r
 function barrettMulTo(x,y,r) { x.multiplyTo(y,r); this.reduce(r); }
 
 Barrett.prototype.convert = barrettConvert
@@ -1012,7 +1012,7 @@ Barrett.prototype.reduce = barrettReduce
 Barrett.prototype.mulTo = barrettMulTo
 Barrett.prototype.sqrTo = barrettSqrTo
 
-//(public) this^e % m (HAC 14.85)
+// (public) this^e % m (HAC 14.85)
 function bnModPow(e,m) {
 var i = e.bitLength(), k, r = nbv(1), z
 if (i <= 0) return r
@@ -1071,7 +1071,7 @@ while(j >= 0) {
 return z.revert(r)
 }
 
-//(public) gcd(this,a) (HAC 14.54)
+// (public) gcd(this,a) (HAC 14.54)
 function bnGCD(a) {
 var x = (this.s<0)?this.negate():this.clone()
 var y = (a.s<0)?a.negate():a.clone()
@@ -1099,7 +1099,7 @@ if (g > 0) y.lShiftTo(g,y)
 return y
 }
 
-//(protected) this % n, n < 2^26
+// (protected) this % n, n < 2^26
 function bnpModInt(n) {
 if (n <= 0) return 0
 var d = this.DV%n, r = (this.s<0)?n-1:0
@@ -1109,7 +1109,7 @@ if (this.t > 0)
 return r
 }
 
-//(public) 1/this % m (HAC 14.61)
+// (public) 1/this % m (HAC 14.61)
 function bnModInverse(m) {
 var ac = m.isEven()
 if ((this.isEven() && ac) || m.signum() == 0) return BigInteger.ZERO
@@ -1154,7 +1154,7 @@ if (d.signum() < 0) return d.add(m); else return d
 var lowprimes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997]
 var lplim = (1<<26)/lowprimes[lowprimes.length-1]
 
-//(public) test primality with certainty >= 1-.5^t
+// (public) test primality with certainty >= 1-.5^t
 function bnIsProbablePrime(t) {
 var i, x = this.abs()
 if (x.t == 1 && x[0] <= lowprimes[lowprimes.length-1]) {
@@ -1173,7 +1173,7 @@ while(i < lowprimes.length) {
 return x.millerRabin(t)
 }
 
-//(protected) true if probably prime (HAC 4.24, Miller-Rabin)
+// (protected) true if probably prime (HAC 4.24, Miller-Rabin)
 function bnpMillerRabin(t) {
 var n1 = this.subtract(BigInteger.ONE)
 var k = n1.getLowestSetBit()
@@ -1183,7 +1183,7 @@ t = (t+1)>>1
 if (t > lowprimes.length) t = lowprimes.length
 var a = nbi()
 for (var i = 0; i < t; ++i) {
-  //Pick bases at random, instead of starting at 2
+  // Pick bases at random, instead of starting at 2
   a.fromInt(lowprimes[Math.floor(Math.random()*lowprimes.length)])
   var y = a.modPow(r,this)
   if (y.compareTo(BigInteger.ONE) != 0 && y.compareTo(n1) != 0) {
@@ -1198,7 +1198,7 @@ for (var i = 0; i < t; ++i) {
 return true
 }
 
-//protected
+// protected
 BigInteger.prototype.chunkSize = bnpChunkSize
 BigInteger.prototype.toRadix = bnpToRadix
 BigInteger.prototype.fromRadix = bnpFromRadix
@@ -1213,7 +1213,7 @@ BigInteger.prototype.multiplyUpperTo = bnpMultiplyUpperTo
 BigInteger.prototype.modInt = bnpModInt
 BigInteger.prototype.millerRabin = bnpMillerRabin
 
-//public
+// public
 BigInteger.prototype.clone = bnClone
 BigInteger.prototype.intValue = bnIntValue
 BigInteger.prototype.byteValue = bnByteValue
@@ -1252,13 +1252,13 @@ BigInteger.int2char = int2char
 // JSBN-specific extension
 BigInteger.prototype.square = bnSquare
 
-//BigInteger interfaces not implemented in jsbn:
+// BigInteger interfaces not implemented in jsbn:
 
-//BigInteger(int signum, byte[] magnitude)
-//double doubleValue()
-//float floatValue()
-//int hashCode()
-//long longValue()
-//static BigInteger valueOf(long val)
+// BigInteger(int signum, byte[] magnitude)
+// double doubleValue()
+// float floatValue()
+// int hashCode()
+// long longValue()
+// static BigInteger valueOf(long val)
 
 module.exports = BigInteger

@@ -83,7 +83,7 @@ MonitorAgent.prototype.connect = function (port, host, cb) {
     if (msg.command) {
       // a command from master
       self.consoleService.command(msg.command, msg.moduleId, msg.body, function (err, res) {
-        //notify should not have a callback
+        // notify should not have a callback
       })
     } else {
       var respId = msg.respId
@@ -107,7 +107,7 @@ MonitorAgent.prototype.connect = function (port, host, cb) {
             self.doSend('monitor', resp)
           }
         } else {
-          //notify should not have a callback
+          // notify should not have a callback
           logger.error('notify should not have a callback.')
         }
       })
@@ -116,7 +116,7 @@ MonitorAgent.prototype.connect = function (port, host, cb) {
 
   this.socket.on('connect', function () {
     if (self.state > ST_INITED) {
-      //ignore reconnect
+      // ignore reconnect
       return
     }
     self.state = ST_CONNECTED

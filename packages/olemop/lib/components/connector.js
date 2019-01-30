@@ -79,7 +79,7 @@ const bindEvents = (self, socket) => {
     }
   }
 
-  //create session for connection
+  // create session for connection
   const session = getSession(self, socket)
   let closed = false
 

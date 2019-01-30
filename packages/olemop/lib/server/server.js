@@ -329,7 +329,7 @@ var parseRoute = function (route) {
 
 var doForward = function (app, msg, session, routeRecord, cb) {
   var finished = false
-  //should route to other servers
+  // should route to other servers
   try {
     app.sysrpc[routeRecord.serverType].msgRemote.forwardMessage(
     // app.sysrpc[routeRecord.serverType].msgRemote.forwardMessage2(
@@ -374,7 +374,7 @@ var doHandle = function (server, msg, session, routeRecord, cb) {
 
     self.handlerService.handle(routeRecord, msg, session, function (err, resp, opts) {
       if (err) {
-        //error from handler
+        // error from handler
         handleError(false, self, err, msg, session, resp, opts, function (err, resp, opts) {
           response(false, self, err, msg, session, resp, opts, cb)
         })
@@ -383,7 +383,7 @@ var doHandle = function (server, msg, session, routeRecord, cb) {
 
       response(false, self, err, msg, session, resp, opts, cb)
     })
-  }  //end of handle
+  }  // end of handle
 
   beforeFilter(false, server, msg, session, handle)
 }

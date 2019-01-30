@@ -45,7 +45,7 @@ Watchdog.prototype.reconnectServer = function (server) {
   if (!this.servers[server.id]) {
     this.servers[server.id] = server
   }
-  //replace server in reconnect server
+  // replace server in reconnect server
   this.notifyById(server.id, {action: 'replaceServer', servers: self.servers})
   // notify other server to add server
   this.notify({action: 'addServer', server: server})

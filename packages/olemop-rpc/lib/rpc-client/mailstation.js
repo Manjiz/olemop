@@ -30,7 +30,7 @@ const doFilter = (tracer, err, serverId, msg, opts, filters, index, operate, cb)
   if (typeof filter === 'function') {
     filter(serverId, msg, opts, (target, message, options) => {
       index++
-      //compatible for pomelo filter next(err) method
+      // compatible for pomelo filter next(err) method
       if (utils.getObjectClass(target) === 'Error') {
         doFilter(tracer, target, serverId, msg, opts, filters, index, operate, cb)
       } else {

@@ -26,14 +26,14 @@ class Select extends Composite {
         this.reset()
         return res
       } else if (res === bt.RES_WAIT) {
-        //return to parent directly if wait
+        // return to parent directly if wait
         return res
       } else {
-        //try next if fail
+        // try next if fail
         continue
       }
     }
-    //we will return success if all children success
+    // we will return success if all children success
     this.reset()
     return bt.RES_FAIL
   }

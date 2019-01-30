@@ -56,7 +56,7 @@ pro.nextExcuteTime = function (time) {
 
   outmost: while (true) {
     if (date.getFullYear() > 2999) {
-      logger.error("Can't compute the next time, exceed the limit")
+      logger.error('Can\'t compute the next time, exceed the limit')
       return null
     }
     if (!timeMatch(date.getMonth(), cronTrigger[MONTH])) {
@@ -90,7 +90,7 @@ pro.nextExcuteTime = function (time) {
         if (nextDom == null)
           return null
 
-        //If the date is in the next month, add month
+        // If the date is in the next month, add month
         if (nextDom <= date.getDate() || nextDom > domLimit) {
           date.setDate(1)
           date.setMonth(date.getMonth() + 1)
@@ -298,7 +298,7 @@ function decodeRangeTime(map, timeStr) {
   times[0] = Number(times[0])
   times[1] = Number(times[1])
   if (times[0] > times[1]) {
-    console.log("Error time range")
+    console.log('Error time range')
     return null
   }
 

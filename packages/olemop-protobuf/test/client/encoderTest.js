@@ -10,7 +10,7 @@ describe('client encoder test', function(){
 			var result = encoder.decodeFloat(bytes, 0)
 
 			var diff = Math.abs(float-result)
-			//console.log('float : %j, result : %j, diff : %j', float, result, diff)
+			// console.log('float : %j, result : %j, diff : %j', float, result, diff)
 			diff.should.below(0.0000001)
 
 		}
@@ -36,19 +36,19 @@ describe('client encoder test', function(){
 			for(var j = 0; j < strLength; j++){
 				arr.push(Math.floor(Math.random()*65536))
 			}
-			//arr = [ 58452, 127, 38641, 25796, 20652, 19237 ]
+			// arr = [ 58452, 127, 38641, 25796, 20652, 19237 ]
 
 			var str = String.fromCharCode.apply(null, arr)
 
-			//console.log('old arr : %j', arr)
+			// console.log('old arr : %j', arr)
 
 			var length = encoder.byteLength(str)
 			var buffer = new ArrayBuffer(length)
 			var bytes = new Uint8Array(buffer)
 
 			var offset = encoder.encodeStr(bytes, 0, str)
-			//console.log('encode over, offset : %j, length : %j, str length : %j', offset, length, str.length)
-			//console.log(bytes)
+			// console.log('encode over, offset : %j, length : %j, str length : %j', offset, length, str.length)
+			// console.log(bytes)
 			length.should.equal.offset
 
 			var result = encoder.decodeStr(bytes, 0, length)
@@ -65,7 +65,7 @@ describe('client encoder test', function(){
 			}
 
 			if(!flag)return
-			//console.log('str : %j, bytes : %j, result : %j', str, bytes, result)
+			// console.log('str : %j, bytes : %j, result : %j', str, bytes, result)
 		}
 	})
 
@@ -79,7 +79,7 @@ describe('client encoder test', function(){
 			str += String.fromCharCode.apply(null, array.slice(j, j+10000))
 			j += 10000
 		}
-		//var str = String.fromCharCode.apply(null, array)
+		// var str = String.fromCharCode.apply(null, array)
 		var end = Date.now()
 
 		console.log('cost time with fromCharCode method : %j, length : %j', end-start, str.length)

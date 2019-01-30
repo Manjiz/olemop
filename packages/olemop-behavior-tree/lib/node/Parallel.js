@@ -44,7 +44,7 @@ class Parallel extends Composite {
     }
 
     if (rest.length) {
-      //return wait if any in wait
+      // return wait if any in wait
       this.waits = rest
       return bt.RES_WAIT
     }

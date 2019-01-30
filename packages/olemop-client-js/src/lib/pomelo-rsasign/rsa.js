@@ -164,17 +164,17 @@ function pkcs1unpad2(d, n) {
   while (++i < b.length) {
 		var c = b[i] & 255
 		ret.push(c)
-    //This will need to be tested more, but Node doesn't like all of this!
-    //if (c < 128) { // utf-8 decode
-		//ret += String.fromCharCode(c)
-		//} else if ((c > 191) && (c < 224)) {
-		//	ret += String.fromCharCode(((c & 31) << 6) | (b[i + 1] & 63))
-		//	++i
-		//} else {
-		//	ret += String.fromCharCode(((c & 15) << 12)
+    // This will need to be tested more, but Node doesn't like all of this!
+    // if (c < 128) { // utf-8 decode
+		// ret += String.fromCharCode(c)
+		// } else if ((c > 191) && (c < 224)) {
+		// 	 ret += String.fromCharCode(((c & 31) << 6) | (b[i + 1] & 63))
+		//   ++i
+		// } else {
+		//   ret += String.fromCharCode(((c & 15) << 12)
 		//			| ((b[i + 1] & 63) << 6) | (b[i + 2] & 63))
 		//	i += 2
-		//}
+		// }
 	}
 	return new Buffer(ret)
 }
@@ -362,8 +362,8 @@ _RSASIGN_HASHHEXFUNC['sha512'] =    function (s){return KJUR.crypto.Util.sha512(
 _RSASIGN_HASHHEXFUNC['md5'] =       function (s){return KJUR.crypto.Util.md5(s);}
 _RSASIGN_HASHHEXFUNC['ripemd160'] = function (s){return KJUR.crypto.Util.ripemd160(s);}
 
-//_RSASIGN_HASHHEXFUNC['sha1'] =   function (s){return sha1.hex(s);}   // http://user1.matsumoto.ne.jp/~goma/js/hash.html
-//_RSASIGN_HASHHEXFUNC['sha256'] = function (s){return sha256.hex;}    // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+// _RSASIGN_HASHHEXFUNC['sha1'] =   function (s){return sha1.hex(s);}   // http://user1.matsumoto.ne.jp/~goma/js/hash.html
+// _RSASIGN_HASHHEXFUNC['sha256'] = function (s){return sha256.hex;}    // http://user1.matsumoto.ne.jp/~goma/js/hash.html
 
 var _RE_HEXDECONLY = new RegExp('')
 _RE_HEXDECONLY.compile("[^0-9a-f]", "gi")
@@ -407,7 +407,7 @@ function _zeroPaddingOfSignature(hex, bitLength) {
  * @return returns hexadecimal string of signature value.
  */
 function _rsasign_signString(s, hashAlg) {
-  //alert("this.n.bitLength() = " + this.n.bitLength())
+  // alert("this.n.bitLength() = " + this.n.bitLength())
   var hPM = _rsasign_getHexPaddedDigestInfoForString(s, this.n.bitLength(), hashAlg)
   var biPaddedMessage = parseBigInt(hPM, 16)
   var biSign = this.doPrivate(biPaddedMessage)
@@ -1151,7 +1151,7 @@ KJUR.crypto.Signature = function (params) {
 		    return false
 		}
 		var hHashFromDI = s.substr(hDIHEAD.length)
-		//alert(hHashFromDI + "\n" + this.sHashHex)
+		// alert(hHashFromDI + "\n" + this.sHashHex)
 		return (hHashFromDI == this.sHashHex)
 	    }
 	}

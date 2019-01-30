@@ -109,7 +109,7 @@ MasterSocket.prototype.onMonitor = function (msg) {
 				self.agent.doSend(socket, 'monitor', resp)
 			}
 		} else {
-			//notify should not have a callback
+			// notify should not have a callback
 			logger.warn('notify should not have a callback.')
 		}
 	})
@@ -146,7 +146,7 @@ MasterSocket.prototype.onClient = function (msg) {
 					self.agent.doSend(socket, 'client', resp)
 				}
 			} else {
-				//notify should not have a callback
+				// notify should not have a callback
 				logger.warn('notify should not have a callback.')
 			}
 		})
@@ -160,7 +160,7 @@ MasterSocket.prototype.onClient = function (msg) {
 					self.agent.doSend(socket, 'client', resp)
 				}
 			} else {
-				//notify should not have a callback
+				// notify should not have a callback
 				logger.warn('notify should not have a callback.')
 			}
 		})

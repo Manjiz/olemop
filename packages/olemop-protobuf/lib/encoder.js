@@ -14,19 +14,19 @@ Encoder.encode = function (route, msg){
 		return null
 	}
 
-	//Get protos from protos map use the route as key
+	// Get protos from protos map use the route as key
 	var protos = this.protos[route]
 
-	//Check msg
+	// Check msg
 	if (!checkMsg(msg, protos)){
 		console.warn('check msg failed! msg : %j, proto : %j', msg, protos)
 		return null
 	}
 
-	//Set the length of the buffer 2 times bigger to prevent overflow
+	// Set the length of the buffer 2 times bigger to prevent overflow
 	var length = Buffer.byteLength(JSON.stringify(msg))*2
 
-	//Init buffer and offset
+	// Init buffer and offset
 	var buffer = new Buffer(length)
 	var offset = 0
 
@@ -52,7 +52,7 @@ function checkMsg(msg, protos){
 	for (var name in protos){
 		var proto = protos[name]
 
-		//All required element must exist
+		// All required element must exist
 		switch(proto.option){
 			case 'required' :
 				if (typeof(msg[name]) === 'undefined'){
@@ -69,7 +69,7 @@ function checkMsg(msg, protos){
 				}
 			break
 			case 'repeated' :
-				//Check nest message in repeated elements
+				// Check nest message in repeated elements
 				var message = protos.__messages[proto.type] || Encoder.protos['message ' + proto.type]
 				if (msg[name] && message){
 					for (var i = 0; i < msg[name].length; i++){
@@ -130,23 +130,23 @@ function encodeProp(value, type, offset, buffer, protos){
 		case 'string':
 			length = Buffer.byteLength(value)
 
-			//Encode length
+			// Encode length
 			offset = writeBytes(buffer, offset, codec.encodeUInt32(length))
-			//write string
+			// write string
 			buffer.write(value, offset, length)
 			offset += length
 		break
 		default :
 			var message = protos.__messages[type] || Encoder.protos['message ' + type]
 			if (message){
-				//Use a tmp buffer to build an internal msg
+				// Use a tmp buffer to build an internal msg
 				var tmpBuffer = new Buffer(Buffer.byteLength(JSON.stringify(value))*2)
 				length = 0
 
 				length = encodeMsg(tmpBuffer, length, message, value)
-				//Encode length
+				// Encode length
 				offset = writeBytes(buffer, offset, codec.encodeUInt32(length))
-				//contact the object
+				// contact the object
 				tmpBuffer.copy(buffer, offset, 0, length)
 
 				offset += length

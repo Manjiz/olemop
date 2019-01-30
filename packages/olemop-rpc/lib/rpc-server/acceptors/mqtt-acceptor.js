@@ -94,7 +94,7 @@ const Acceptor = function (opts, cb) {
 util.inherits(Acceptor, EventEmitter)
 
 Acceptor.prototype.listen = function (port) {
-  //check status
+  // check status
   if (this.inited) {
     this.cb(new Error('already inited.'))
     return

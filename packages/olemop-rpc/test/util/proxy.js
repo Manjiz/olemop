@@ -73,7 +73,7 @@ describe('proxy', function () {
         this.value += num
       }
 
-      //overwrite the origin function
+      // overwrite the origin function
       var proxy = Proxy.create({
         origin: a,
         proxyCB: cb
@@ -94,7 +94,7 @@ describe('proxy', function () {
         callbackCount++
       }
       var a = new A(value)
-      //overwrite the origin function
+      // overwrite the origin function
       a.add = function(num) {
         originCallCount++
         this.value += this.value

@@ -9,10 +9,10 @@ const SKIP_OLD_JOB = false
 const SimpleTrigger = function (trigger, job) {
   this.nextTime = trigger.start ? trigger.start : Date.now()
 
-  //The rec
+  // The rec
   this.period = trigger.period ? trigger.period : -1
 
-  //The running count of the job, -1 means no limit
+  // The running count of the job, -1 means no limit
   this.count = trigger.count ? trigger.count : -1
 
   this.job = job

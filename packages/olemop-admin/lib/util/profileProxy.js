@@ -129,8 +129,8 @@ pro.asyncGet = function (id, params, snapshot, clientId, agent) {
 pro.clearProfiles = function (id, params) {
 	this.profiles.HEAP = {}
 	this.profiles.CPU = {}
-	//profiler.deleteAllSnapshots()
-	//profiler.deleteAllProfiles()
+	// profiler.deleteAllSnapshots()
+	// profiler.deleteAllProfiles()
 }
 
 pro.sendResult = function (id, res, clientId, agent){

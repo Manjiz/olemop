@@ -31,7 +31,7 @@ describe('client', function () {
 
   before(function (done) {
     gateways = []
-    //start remote servers
+    // start remote servers
     var item, opts, gateway
     for(var i=0, l=serverList.length; i<l; i++) {
       item = serverList[i]
@@ -49,7 +49,7 @@ describe('client', function () {
   })
 
   after(function (done) {
-    //stop remote servers
+    // stop remote servers
     for(var i=0; i<gateways.length; i++) {
       gateways[i].stop()
     }

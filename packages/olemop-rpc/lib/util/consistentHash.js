@@ -72,7 +72,7 @@ ConsistentHash.prototype.getNodePosition = function (result) {
     return 0
   }
 
-  //binary search
+  // binary search
   while (lower <= upper) {
     idx = Math.floor((lower + upper) / 2)
     comp = compare(this.keys[idx], result)

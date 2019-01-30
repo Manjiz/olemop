@@ -60,7 +60,7 @@ Service.prototype.beforeFilter = function (msg, session, cb) {
       logger.error('meet invalid before filter, handler or handler.before should be function.')
       next(new Error('invalid before filter.'))
     }
-  } //end of next
+  } // end of next
 
   next()
 }
@@ -79,7 +79,7 @@ Service.prototype.beforeFilter = function (msg, session, cb) {
 Service.prototype.afterFilter = function (err, msg, session, resp, cb) {
   var index = 0, self = this
   function next(err) {
-    //if done
+    // if done
     if (index >= self.afters.length) {
       cb(err)
       return
@@ -94,7 +94,7 @@ Service.prototype.afterFilter = function (err, msg, session, resp, cb) {
       logger.error('meet invalid after filter, handler or handler.after should be function.')
       next(new Error('invalid after filter.'))
     }
-  } //end of next
+  } // end of next
 
   next(err)
 }

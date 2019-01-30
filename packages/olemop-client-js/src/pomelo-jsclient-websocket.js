@@ -38,7 +38,7 @@ var socket = null
 var reqId = 0
 var callbacks = {}
 var handlers = {}
-//Map from request id to route
+// Map from request id to route
 var routeMap = {}
 // route string to code
 var dict = {}

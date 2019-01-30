@@ -15,7 +15,7 @@ var MqttServer = function (opts, cb) {
 Util.inherits(MqttServer, EventEmitter)
 
 MqttServer.prototype.listen = function (port) {
-	//check status
+	// check status
 	if (this.inited) {
 		this.cb(new Error('already inited.'))
 		return

@@ -33,7 +33,7 @@ describe('ws mailbox test', function () {
   var gateway
 
   before(function(done) {
-    //start remote server
+    // start remote server
     var opts = {
       acceptorFactory: Server.WSAcceptor,
       paths: paths,
@@ -48,7 +48,7 @@ describe('ws mailbox test', function () {
   })
 
   after(function(done) {
-    //stop remote server
+    // stop remote server
     gateway.stop()
     done()
   })
@@ -68,7 +68,7 @@ describe('ws mailbox test', function () {
       var server = {
         id: "area-server-1",
         host: "127.0.0.1",
-        port: -1000  //invalid port
+        port: -1000  // invalid port
       }
 
       var mailbox = Mailbox.create(server)
@@ -210,7 +210,7 @@ describe('ws mailbox test', function () {
     })
 
     it('should distinguish different services and keep the right request/response relationship if the client uses message cache mode but server not', function(done) {
-      //start a new remote server without message cache mode
+      // start a new remote server without message cache mode
       var opts = {
         paths: paths,
         port: 3051

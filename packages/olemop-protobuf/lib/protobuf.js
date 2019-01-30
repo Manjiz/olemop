@@ -58,10 +58,10 @@ Protobuf.setDecoderProtos = function (protos){
 }
 
 Protobuf.init = function (opts){
-	//On the serverside, use serverProtos to encode messages send to client
+	// On the serverside, use serverProtos to encode messages send to client
 	encoder.init(opts.encoderProtos)
 
-	//On the serverside, user clientProtos to decode messages receive from clients
+	// On the serverside, user clientProtos to decode messages receive from clients
 	decoder.init(opts.decoderProtos)
 
 }

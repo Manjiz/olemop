@@ -23,7 +23,7 @@ var Module = function (opts) {
 }
 
 Module.prototype.monitorHandler = function (agent, msg, cb) {
-	//collect data
+	// collect data
 	monitor.sysmonitor.getSysInfo(function (err, data) {
 		agent.notify(module.exports.moduleId, {serverId: agent.id, body: data})
 	})

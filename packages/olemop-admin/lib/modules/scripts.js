@@ -50,7 +50,7 @@ Module.prototype.monitorHandler = function (agent, msg, cb) {
         cb(null, e.toString())
     }
 
-    //cb(null, vm.runInContext(msg.script, context))
+    // cb(null, vm.runInContext(msg.script, context))
 }
 
 Module.prototype.clientHandler = function (agent, msg, cb) {

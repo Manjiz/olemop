@@ -14,7 +14,7 @@ var timer = {
 var limit = [[0,59],[0,59],[0,24],[1,31],[1,12],[0,6]]
 
 function nexExcuteTime(time, timer){
-  //add 1s to the time so it must be the next time
+  // add 1s to the time so it must be the next time
   time += 1000
   var date = new Date(time)
   var nextTime = new Date(time)
@@ -38,13 +38,13 @@ function nexExcuteTime(time, timer){
       do{
         var nextDom = nextTime(date.getDate(), timer.dom)
 
-        //If the date is in the next month, add month
+        // If the date is in the next month, add month
         if (nextDom <= date.getDate()){
           date.setMonth(date.getMonth() + 1)
           continue outmost
         }
 
-        //If the date exceed the limit, add month
+        // If the date exceed the limit, add month
          var domLimit = getDomLimit()
         if (nexDom > domLimit){
            date.setMonth(date.getMonth() + 1)

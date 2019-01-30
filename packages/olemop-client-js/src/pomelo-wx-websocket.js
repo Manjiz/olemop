@@ -37,7 +37,7 @@ var socket = null
 var reqId = 0
 var callbacks = {}
 var handlers = {}
-//Map from request id to route
+// Map from request id to route
 var routeMap = {}
 var dict = {}    // route string to code
 var abbrs = {}   // code to route string
@@ -106,7 +106,7 @@ pomelo.init = function (params, cb) {
 }
 
 var defaultDecode = pomelo.decode = function (data) {
-  //probuff decode
+  // probuff decode
   var msg = Message.decode(data)
 
   if (msg.id > 0){
@@ -124,7 +124,7 @@ var defaultDecode = pomelo.decode = function (data) {
 var defaultEncode = pomelo.encode = function (reqId, route, msg) {
   var type = reqId ? Message.TYPE_REQUEST : Message.TYPE_NOTIFY
 
-  //compress message by protobuf
+  // compress message by protobuf
   if (protobuf && clientProtos[route]) {
     msg = protobuf.encode(route, msg)
   } else if (decodeIO_encoder && decodeIO_encoder.lookup(route)) {
@@ -149,7 +149,7 @@ var connect = function (params, url, cb) {
   var params = params || {}
   var maxReconnectAttempts = params.maxReconnectAttempts || DEFAULT_MAX_RECONNECT_ATTEMPTS
   reconnectUrl = url
-  //Add protobuf version
+  // Add protobuf version
   // if (window.localStorage && window.localStorage.getItem('protos') && protoVersion === 0) {
   wx.getStorage({
     key: 'protos',
@@ -171,7 +171,7 @@ var connect = function (params, url, cb) {
       }
     },
     complete: function () {
-      //Set protoversion
+      // Set protoversion
       handshakeBuffer.sys.protoVersion = protoVersion
 
       var onopen = function (event) {
@@ -391,7 +391,7 @@ var processMessage = function (pomelo, msg) {
     return
   }
 
-  //if have a id then find the callback function with the request
+  // if have a id then find the callback function with the request
   var cb = callbacks[msg.id]
 
   delete callbacks[msg.id]
@@ -412,7 +412,7 @@ var processMessageBatch = function (pomelo, msgs) {
 var deCompose = function (msg) {
   var route = msg.route
 
-  //Decompose route from dict
+  // Decompose route from dict
   if (msg.compressRoute) {
     if (!abbrs[route]){
       return {}
@@ -447,7 +447,7 @@ var handshakeInit = function (data) {
   }
 }
 
-//Initilize data used in pomelo client
+// Initilize data used in pomelo client
 var initData = function (data) {
   if (!data || !data.sys) {
     return
@@ -455,7 +455,7 @@ var initData = function (data) {
   dict = data.sys.dict
   var protos = data.sys.protos
 
-  //Init compress dict
+  // Init compress dict
   if (dict) {
     dict = dict
     abbrs = {}
@@ -465,13 +465,13 @@ var initData = function (data) {
     }
   }
 
-  //Init protobuf protos
+  // Init protobuf protos
   if (protos) {
     protoVersion = protos.version || 0
     serverProtos = protos.server || {}
     clientProtos = protos.client || {}
 
-    //Save protobuf protos to localStorage
+    // Save protobuf protos to localStorage
     // window.localStorage.setItem('protos', JSON.stringify(protos))
     wx.setStorage({ key: 'protos', data: JSON.stringify(protos) })
 

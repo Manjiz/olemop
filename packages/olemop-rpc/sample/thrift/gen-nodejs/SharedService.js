@@ -9,7 +9,7 @@ var Q = thrift.Q
 
 
 var ttypes = require('./shared_types')
-//HELPER FUNCTIONS AND STRUCTURES
+// HELPER FUNCTIONS AND STRUCTURES
 
 SharedService_getStruct_args = function (args) {
   this.key = null

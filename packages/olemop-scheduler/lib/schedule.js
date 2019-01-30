@@ -13,8 +13,8 @@ var queue = PriorityQueue.createPriorityQueue(comparator)
 var jobId = 0
 var timer
 
-//The accuracy of the scheduler, it will affect the performance when the schedule tasks are
-//crowded together
+// The accuracy of the scheduler, it will affect the performance when the schedule tasks are
+// crowded together
 var accuracy = 10
 
 /**
@@ -92,11 +92,11 @@ function excuteJob(){
     job = peekNextJob()
   }
 
-  //If all the job have been canceled
+  // If all the job have been canceled
   if (!job)
     return
 
-  //Run next schedule
+  // Run next schedule
   setTimer(job)
 }
 

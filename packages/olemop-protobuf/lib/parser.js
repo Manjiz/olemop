@@ -38,7 +38,7 @@ function parseObject(obj){
 			case 'required':
 			case 'optional':
 			case 'repeated':{
-				//params length should be 3 and tag can't be duplicated
+				// params length should be 3 and tag can't be duplicated
 				if (params.length !== 3 || !!tags[tag]){
 					continue
 				}

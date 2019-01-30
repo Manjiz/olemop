@@ -93,7 +93,7 @@ function b64tohex(s) {
 
 // convert a base64 string to a byte/number array
 function b64toBA(s) {
-  //piggyback on b64tohex for now, optimize later
+  // piggyback on b64tohex for now, optimize later
   var h = b64tohex(s)
   var i
   var a = new Array()

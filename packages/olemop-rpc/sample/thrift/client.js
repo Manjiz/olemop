@@ -94,7 +94,7 @@ run()
 //   client.getStruct(1, function (err, message) {
 //     console.log('Check log: ' + message.value)
 
-//     //close the connection once we're done
+//     // close the connection once we're done
 //     connection.end()
 //   })
 // })

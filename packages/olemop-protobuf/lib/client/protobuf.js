@@ -13,10 +13,10 @@
   var Protobuf = exports
 
   Protobuf.init = function (opts){
-    //On the serverside, use serverProtos to encode messages send to client
+    // On the serverside, use serverProtos to encode messages send to client
     Protobuf.encoder.init(opts.encoderProtos)
 
-    //On the serverside, user clientProtos to decode messages receive from clients
+    // On the serverside, user clientProtos to decode messages receive from clients
     Protobuf.decoder.init(opts.decoderProtos)
   }
 
@@ -281,18 +281,18 @@
   }
 
   MsgEncoder.encode = function (route, msg){
-    //Get protos from protos map use the route as key
+    // Get protos from protos map use the route as key
     var protos = this.protos[route]
 
-    //Check msg
+    // Check msg
     if (!checkMsg(msg, protos)){
       return null
     }
 
-    //Set the length of the buffer 2 times bigger to prevent overflow
+    // Set the length of the buffer 2 times bigger to prevent overflow
     var length = codec.byteLength(JSON.stringify(msg))
 
-    //Init buffer and offset
+    // Init buffer and offset
     var buffer = new ArrayBuffer(length)
     var uInt8Array = new Uint8Array(buffer)
     var offset = 0
@@ -318,7 +318,7 @@
     for (var name in protos){
       var proto = protos[name]
 
-      //All required element must exist
+      // All required element must exist
       switch(proto.option){
         case 'required' :
           if (typeof(msg[name]) === 'undefined'){
@@ -335,7 +335,7 @@
           }
         break
         case 'repeated' :
-          //Check nest message in repeated elements
+          // Check nest message in repeated elements
           var message = protos.__messages[proto.type] || MsgEncoder.protos['message ' + proto.type]
           if (msg[name] && message){
             for (var i = 0; i < msg[name].length; i++){
@@ -394,23 +394,23 @@
       case 'string':
         var length = codec.byteLength(value)
 
-        //Encode length
+        // Encode length
         offset = writeBytes(buffer, offset, codec.encodeUInt32(length))
-        //write string
+        // write string
         codec.encodeStr(buffer, offset, value)
         offset += length
       break
       default :
         var message = protos.__messages[type] || MsgEncoder.protos['message ' + type]
         if (message){
-          //Use a tmp buffer to build an internal msg
+          // Use a tmp buffer to build an internal msg
           var tmpBuffer = new ArrayBuffer(codec.byteLength(JSON.stringify(value))*2)
           var length = 0
 
           length = encodeMsg(tmpBuffer, length, message, value)
-          //Encode length
+          // Encode length
           offset = writeBytes(buffer, offset, codec.encodeUInt32(length))
-          //contact the object
+          // contact the object
           for (var i = 0; i < length; i++){
             buffer[offset] = tmpBuffer[i]
             offset++

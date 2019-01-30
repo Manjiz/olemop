@@ -18,7 +18,7 @@ const flush = (mailbox) => {
   if (mailbox.closed || !mailbox.queue.length) return
 
   doSend(mailbox.socket, mailbox.queue)
-  //mailbox.socket.send(JSON.stringify({body: mailbox.queue}))
+  // mailbox.socket.send(JSON.stringify({body: mailbox.queue}))
   mailbox.queue = []
 }
 
@@ -134,7 +134,7 @@ MailBox.prototype.connect = function (tracer, cb) {
   }
 
   this.socket = wsClient.connect(`ws://${this.host}:${this.port}`)
-  //this.socket = wsClient.connect(`${this.host}:${this.port}, {'force new connection': true, 'reconnect': false})
+  // this.socket = wsClient.connect(`${this.host}:${this.port}, {'force new connection': true, 'reconnect': false})
 
   this.socket.on('message', (data, flags) => {
     try {
