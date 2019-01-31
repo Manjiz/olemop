@@ -34,7 +34,7 @@
     window.protobuf = Protobuf
   }
 
-})(typeof(window) == "undefined" ? module.exports : (this.protobuf = {}), this)
+})(typeof(window) == "undefined" ? module.exports : (this.protobuf = {}), this);
 
 /**
  * constants
@@ -52,7 +52,7 @@
     float : 5
   }
 
-})('undefined' !== typeof protobuf ? protobuf : module.exports, this)
+})('undefined' !== typeof protobuf ? protobuf : module.exports, this);
 
 /**
  * util module
@@ -71,7 +71,7 @@
              type === 'double' )
   }
 
-})('undefined' !== typeof protobuf ? protobuf : module.exports, this)
+})('undefined' !== typeof protobuf ? protobuf : module.exports, this);
 
 /**
  * codec module
@@ -262,7 +262,7 @@
       return 3
     }
   }
-})('undefined' !== typeof protobuf ? protobuf : module.exports, this)
+})('undefined' !== typeof protobuf ? protobuf : module.exports, this);
 
 /**
  * encoder module
@@ -457,7 +457,7 @@
 
     return codec.encodeUInt32((tag<<3)|value)
   }
-})('undefined' !== typeof protobuf ? protobuf : module.exports, this)
+})('undefined' !== typeof protobuf ? protobuf : module.exports, this);
 
 /**
  * decoder module
