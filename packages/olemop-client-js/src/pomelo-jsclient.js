@@ -3,6 +3,8 @@ const Protocol = require('@olemop/protocol')
 const protobuf = require('@olemop/protobuf/lib/client/protobuf')
 // const rsa = require('./pomelo-rsasign/rsa')
 // const decodeIO_protobuf = require('./lib/pomelo-decodeIO-protobuf/ProtoBuf')
+const envUtil = require(`./envUtil/${__PLATFORM__}`)
+
 let rsa
 let decodeIO_protobuf
 
@@ -32,8 +34,8 @@ if (typeof Object.create !== 'function') {
 
 var root = window
 // object extend from object
-var pomelo = Object.create(EventEmitter.prototype)
-root.pomelo = pomelo
+var olemop = Object.create(EventEmitter.prototype)
+root.olemop = olemop
 var socket = null
 var reqId = 0
 var callbacks = {}
@@ -62,6 +64,7 @@ var encode = null
 
 var useCrypto
 
+var preventReconnect = false
 var reconnect = false
 var reconncetTimer = null
 var reconnectUrl = null
@@ -81,7 +84,7 @@ var handshakeBuffer = {
 
 var initCallback = null
 
-pomelo.init = function (params, cb) {
+olemop.init = function (params, cb) {
   initCallback = cb
   var host = params.host
   var port = params.port
@@ -89,11 +92,7 @@ pomelo.init = function (params, cb) {
   encode = params.encode || defaultEncode
   decode = params.decode || defaultDecode
 
-  var url = 'wss://' + host
-  if (port) {
-    // url +=  ':' + port
-    url += '/' + port
-  }
+  var url = envUtil.formatURI(host, port)
 
   handshakeBuffer.user = params.user
   if (params.encrypt) {
@@ -109,7 +108,7 @@ pomelo.init = function (params, cb) {
   connect(params, url, cb)
 }
 
-var defaultDecode = pomelo.decode = function (data) {
+var defaultDecode = olemop.decode = function (data) {
   // probuff decode
   var msg = Message.decode(data)
 
@@ -125,7 +124,7 @@ var defaultDecode = pomelo.decode = function (data) {
   return msg
 }
 
-var defaultEncode = pomelo.encode = function (reqId, route, msg) {
+var defaultEncode = olemop.encode = function (reqId, route, msg) {
   var type = reqId ? Message.TYPE_REQUEST : Message.TYPE_NOTIFY
 
   // compress message by protobuf
@@ -154,86 +153,73 @@ var connect = function (params, url, cb) {
   var maxReconnectAttempts = params.maxReconnectAttempts || DEFAULT_MAX_RECONNECT_ATTEMPTS
   reconnectUrl = url
   // Add protobuf version
-  // if (window.localStorage && window.localStorage.getItem('protos') && protoVersion === 0) {
-  wx.getStorage({
-    key: 'protos',
-    success: function (ret) {
-      if (ret && ret.data && protoVersion === 0) {
-        var protos = JSON.parse(ret)
+  if (protoVersion === 0) {
+    let protos = envUtil.getStorageProtos()
+    if (protos) {
+      protos = JSON.parse(protos)
 
-        protoVersion = protos.version || 0
-        serverProtos = protos.server || {}
-        clientProtos = protos.client || {}
+      protoVersion = protos.version || 0
+      serverProtos = protos.server || {}
+      clientProtos = protos.client || {}
 
-        if (protobuf) {
-          protobuf.init({encoderProtos: clientProtos, decoderProtos: serverProtos})
-        }
-        if (decodeIO_protobuf) {
-          decodeIO_encoder = decodeIO_protobuf.loadJson(clientProtos)
-          decodeIO_decoder = decodeIO_protobuf.loadJson(serverProtos)
-        }
+      if (protobuf) {
+        protobuf.init({encoderProtos: clientProtos, decoderProtos: serverProtos})
       }
-    },
-    complete: function () {
-      // Set protoversion
-      handshakeBuffer.sys.protoVersion = protoVersion
-
-      var onopen = function (event) {
-        if (reconnect) {
-          pomelo.emit('reconnect')
-        }
-        reset()
-        var obj = Package.encode(Package.TYPE_HANDSHAKE, Protocol.strencode(JSON.stringify(handshakeBuffer)))
-        send(obj)
+      if (decodeIO_protobuf) {
+        decodeIO_encoder = decodeIO_protobuf.loadJson(clientProtos)
+        decodeIO_decoder = decodeIO_protobuf.loadJson(serverProtos)
       }
-      var onmessage = function (event) {
-        processPackage(Package.decode(event.data), cb)
-        // new package arrived, update the heartbeat timeout
-        if (heartbeatTimeout) {
-          nextHeartbeatTimeout = Date.now() + heartbeatTimeout
-        }
-      }
-      var onerror = function (event) {
-        pomelo.emit('io-error', event)
-        console.error('socket error: ', event)
-      }
-      var onclose = function (event) {
-        pomelo.emit('close',event)
-        pomelo.emit('disconnect', event)
-        // console.error('socket close: ', event)
-        if (params.reconnect && reconnectAttempts < maxReconnectAttempts) {
-          reconnect = true
-          reconnectAttempts++
-          reconncetTimer = setTimeout(function () {
-            connect(params, reconnectUrl, cb)
-          }, reconnectionDelay)
-          reconnectionDelay *= 2
-        }
-      }
-
-      // Browser WebSocket
-      // socket = new WebSocket(url)
-      // socket.binaryType = 'arraybuffer'
-      // socket.onopen = onopen
-      // socket.onmessage = onmessage
-      // socket.onerror = onerror
-      // socket.onclose = onclose
-
-      // wxclosesocket
-      socket = wx.connectSocket({ url })
-      wx.onSocketOpen(onopen)
-      wx.onSocketMessage(onmessage)
-      wx.onSocketError(onerror)
-      wx.onSocketClose(onclose)
     }
-  })
+  }
+
+  // Set protoversion
+  handshakeBuffer.sys.protoVersion = protoVersion
+
+  var onopen = function (event) {
+    if (reconnect) {
+      olemop.emit('reconnect')
+    }
+    reset()
+    var obj = Package.encode(Package.TYPE_HANDSHAKE, Protocol.strencode(JSON.stringify(handshakeBuffer)))
+    send(obj)
+  }
+  var onmessage = function (event) {
+    processPackage(Package.decode(event.data), cb)
+    // new package arrived, update the heartbeat timeout
+    if (heartbeatTimeout) {
+      nextHeartbeatTimeout = Date.now() + heartbeatTimeout
+    }
+  }
+  var onerror = function (event) {
+    olemop.emit('io-error', event)
+    console.error('socket error: ', event)
+  }
+  var onclose = function (event) {
+    olemop.emit('close',event)
+    olemop.emit('disconnect', event)
+    if (event.code !== 1000) {
+      console.error('socket close: ', event)
+    }
+    if (!preventReconnect && params.reconnect && reconnectAttempts < maxReconnectAttempts) {
+      reconnect = true
+      reconnectAttempts++
+      reconncetTimer = setTimeout(function () {
+        connect(params, reconnectUrl, cb)
+      }, reconnectionDelay)
+      reconnectionDelay *= 2
+    }
+  }
+
+  socket = envUtil.initSocket(url, onopen, onmessage, onerror, onclose)
 }
 
-pomelo.disconnect = function () {
+olemop.preventReconnect = () => {
+  preventReconnect = true
+}
+
+olemop.disconnect = function () {
   if (socket) {
-    // if (socket.disconnect) socket.disconnect()
-    // if (socket.close) socket.close()
-    wx.closeSocket()
+    envUtil.closeConnection()
     console.log('disconnect')
     socket = null
   }
@@ -249,13 +235,14 @@ pomelo.disconnect = function () {
 }
 
 var reset = function () {
+  preventReconnect = false
   reconnect = false
   reconnectionDelay = 1000 * 5
   reconnectAttempts = 0
   clearTimeout(reconncetTimer)
 }
 
-pomelo.request = function (route, msg, cb) {
+olemop.request = function (route, msg, cb) {
   if (arguments.length === 2 && typeof msg === 'function') {
     cb = msg
     msg = {}
@@ -274,7 +261,7 @@ pomelo.request = function (route, msg, cb) {
   routeMap[reqId] = route
 }
 
-pomelo.notify = function (route, msg) {
+olemop.notify = function (route, msg) {
   msg = msg || {}
   sendMessage(0, route, msg)
 }
@@ -295,9 +282,7 @@ var sendMessage = function (reqId, route, msg) {
 }
 
 var send = function (packet) {
-  if (socket)
-    // socket.send(packet.buffer)
-    wx.sendSocketMessage({ data: packet.buffer })
+  envUtil.send(socket, packet.buffer)
 }
 
 var handler = {}
@@ -333,20 +318,20 @@ var heartbeatTimeoutCb = function () {
     heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, gap)
   } else {
     console.error('server heartbeat timeout')
-    pomelo.emit('heartbeat timeout')
-    pomelo.disconnect()
+    olemop.emit('heartbeat timeout')
+    olemop.disconnect()
   }
 }
 
 var handshake = function (data) {
   data = JSON.parse(Protocol.strdecode(data))
   if (data.code === RES_OLD_CLIENT) {
-    pomelo.emit('error', 'client version not fullfill')
+    olemop.emit('error', 'client version not fullfill')
     return
   }
 
   if (data.code !== RES_OK) {
-    pomelo.emit('error', 'handshake fail')
+    olemop.emit('error', 'handshake fail')
     return
   }
 
@@ -364,12 +349,12 @@ var onData = function (data) {
   if (decode) {
     msg = decode(msg)
   }
-  processMessage(pomelo, msg)
+  processMessage(olemop, msg)
 }
 
 var onKick = function (data) {
   data = JSON.parse(Protocol.strdecode(data))
-  pomelo.emit('onKick', data)
+  olemop.emit('onKick', data)
 }
 
 handlers[Package.TYPE_HANDSHAKE] = handshake
@@ -379,7 +364,7 @@ handlers[Package.TYPE_KICK] = onKick
 
 var processPackage = function (msgs) {
   if (Array.isArray(msgs)) {
-    for (var i=0; i<msgs.length; i++) {
+    for (var i = 0; i < msgs.length; i++) {
       var msg = msgs[i]
       handlers[msg.type](msg.body)
     }
@@ -388,10 +373,10 @@ var processPackage = function (msgs) {
   }
 }
 
-var processMessage = function (pomelo, msg) {
+var processMessage = function (olemop, msg) {
   if (!msg.id) {
     // server push message
-    pomelo.emit(msg.route, msg.body)
+    olemop.emit(msg.route, msg.body)
     return
   }
 
@@ -407,9 +392,9 @@ var processMessage = function (pomelo, msg) {
   return
 }
 
-var processMessageBatch = function (pomelo, msgs) {
-  for (var i=0, l=msgs.length; i<l; i++) {
-    processMessage(pomelo, msgs[i])
+var processMessageBatch = function (olemop, msgs) {
+  for (var i = 0; i < msgs.length; i++) {
+    processMessage(olemop, msgs[i])
   }
 }
 
@@ -453,7 +438,7 @@ var handshakeInit = function (data) {
   }
 }
 
-// Initilize data used in pomelo client
+// Initilize data used in olemop client
 var initData = function (data) {
   if (!data || !data.sys) {
     return
@@ -478,8 +463,7 @@ var initData = function (data) {
     clientProtos = protos.client || {}
 
     // Save protobuf protos to localStorage
-    // window.localStorage.setItem('protos', JSON.stringify(protos))
-    wx.setStorage({ key: 'protos', data: JSON.stringify(protos) })
+    envUtil.setStorageProtos(JSON.stringify(protos))
 
     if (protobuf) {
       protobuf.init({encoderProtos: protos.client, decoderProtos: protos.server})
@@ -491,4 +475,4 @@ var initData = function (data) {
   }
 }
 
-  module.exports = pomelo
+module.exports = olemop
