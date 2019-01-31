@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config build/webpack.browser.conf.js",
-    "build:wx": "webpack --config build/webpack.wechat.conf.js"
+    "build:browser": "webpack --config build/webpack.browser.conf.js",
+    "build:wechat": "webpack --config build/webpack.wechat.conf.js"
   },
   "author": "",
   "license": "ISC",

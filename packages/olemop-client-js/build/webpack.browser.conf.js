@@ -1,19 +1,14 @@
-const path = require('path')
 const webpack = require('webpack')
+const merge = require('webpack-merge')
+const baseConf = require('./webpack.base.conf')
 
-module.exports = {
-  mode: 'production',
-  entry: './src/pomelo-jsclient.js',
+module.exports = merge(baseConf, {
   output: {
-    path: path.resolve(__dirname, '..', 'dist'),
     filename: 'olemopclient.browser.js'
-  },
-  optimization: {
-		minimize: false
   },
   plugins: [
     new webpack.DefinePlugin({
       __PLATFORM__: '"browser"'
     })
   ]
-}
+})
