@@ -1,11 +1,11 @@
 {
   "name": "@olemop/core",
-  "version": "0.0.49",
+  "version": "0.0.50",
   "dependencies": {
     "@olemop/admin": "^0.0.49",
     "@olemop/loader": "^0.0.49",
     "@olemop/logger": "^0.0.48",
-    "@olemop/protobuf": "^0.0.49",
+    "@olemop/protobuf": "^0.0.50",
     "@olemop/protocol": "^0.0.49",
     "@olemop/rpc": "^0.0.49",
     "@olemop/scheduler": "^0.0.49",
