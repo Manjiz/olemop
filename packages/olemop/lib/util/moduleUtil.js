@@ -65,7 +65,7 @@ pro.registerDefaultModules = function (isMaster, app, closeWatcher) {
     }
   }
   app.registerAdmin(admin.modules.watchServer,{app:app})
-  app.registerAdmin(require('../modules/console'), {app: app, starter: starter})
+  app.registerAdmin(require('../modules/console'), { app, starter })
   if (app.enabled('systemMonitor')) {
     if (os.platform() !== Constants.PLATFORM.WIN) {
       app.registerAdmin(admin.modules.systemInfo)
