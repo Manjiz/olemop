@@ -1,9 +1,5 @@
 exports.formatURI = (host, port) => {
-  let uri = `wss://${host}`
-  if (port) {
-    uri += `/${port}`
-  }
-  return uri
+  return `wss://${host}${port ? `/${port}` : ''}`
 }
 /**
  * 注意 getStorage 和 getStorageSync 的返回是不一样的

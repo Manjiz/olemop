@@ -7,8 +7,6 @@
     "build:browser": "webpack --config build/webpack.browser.conf.js",
     "build:wechat": "webpack --config build/webpack.wechat.conf.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@olemop/protobuf": "^0.0.50",
     "@olemop/protocol": "^0.0.49",

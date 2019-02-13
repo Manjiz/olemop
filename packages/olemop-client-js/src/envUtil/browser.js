@@ -1,9 +1,5 @@
 exports.formatURI = (host, port) => {
-  let uri = `ws://${host}`
-  if (port) {
-    uri += `:${port}`
-  }
-  return uri
+  return `ws://${host}${port ? `:${port}` : ''}`
 }
 
 exports.getStorageProtos = () => {
