@@ -24,7 +24,6 @@
     "olemop": "./bin/olemop"
   },
   "devDependencies": {
-    "blanket": "~1.1.6",
     "grunt": "~0.4.2",
     "grunt-contrib-clean": "0.5.x",
     "grunt-contrib-jshint": "~0.8.0",
