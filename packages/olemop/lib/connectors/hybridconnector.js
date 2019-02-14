@@ -44,7 +44,7 @@ module.exports = Connector
  * Start connector to listen the specified port
  */
 Connector.prototype.start = function (cb) {
-  var app = require('../pomelo').app
+  var app = require('../olemop').app
   var self = this
 
   var gensocket = function (socket) {

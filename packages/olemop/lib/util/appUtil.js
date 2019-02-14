@@ -43,31 +43,31 @@ exports.startByType = function (app, cb) {
  * Load default components for application.
  */
 exports.loadDefaultComponents = function (app) {
-  var pomelo = require('../pomelo')
+  var olemop = require('../olemop')
   // load system default components
   if (app.serverType === Constants.RESERVED.MASTER) {
-    app.load(pomelo.master, app.get('masterConfig'))
+    app.load(olemop.master, app.get('masterConfig'))
   } else {
-    app.load(pomelo.proxy, app.get('proxyConfig'))
+    app.load(olemop.proxy, app.get('proxyConfig'))
     if (app.getCurServer().port) {
-      app.load(pomelo.remote, app.get('remoteConfig'))
+      app.load(olemop.remote, app.get('remoteConfig'))
     }
     if (app.isFrontend()) {
-      app.load(pomelo.connection, app.get('connectionConfig'))
-      app.load(pomelo.connector, app.get('connectorConfig'))
-      app.load(pomelo.session, app.get('sessionConfig'))
+      app.load(olemop.connection, app.get('connectionConfig'))
+      app.load(olemop.connector, app.get('connectorConfig'))
+      app.load(olemop.session, app.get('sessionConfig'))
       // compatible for schedulerConfig
       if (app.get('schedulerConfig')) {
-        app.load(pomelo.pushScheduler, app.get('schedulerConfig'))
+        app.load(olemop.pushScheduler, app.get('schedulerConfig'))
       } else {
-        app.load(pomelo.pushScheduler, app.get('pushSchedulerConfig'))
+        app.load(olemop.pushScheduler, app.get('pushSchedulerConfig'))
       }
     }
-    app.load(pomelo.backendSession, app.get('backendSessionConfig'))
-    app.load(pomelo.channel, app.get('channelConfig'))
-    app.load(pomelo.server, app.get('serverConfig'))
+    app.load(olemop.backendSession, app.get('backendSessionConfig'))
+    app.load(olemop.channel, app.get('channelConfig'))
+    app.load(olemop.server, app.get('serverConfig'))
   }
-  app.load(pomelo.monitor, app.get('monitorConfig'))
+  app.load(olemop.monitor, app.get('monitorConfig'))
 }
 
 /**
@@ -196,7 +196,7 @@ const setupEnv = (app, args) => {
  * Configure custom logger.
  */
 const configLogger = function (app, logger) {
-  if (process.env.POMELO_LOGGER !== 'off') {
+  if (process.env.OLEMOP_LOGGER !== 'off') {
     var env = app.get(Constants.RESERVED.ENV)
     var originPath = path.join(app.getBase(), Constants.FILEPATH.LOG)
     var presentPath = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG))

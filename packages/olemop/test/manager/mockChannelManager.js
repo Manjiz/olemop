@@ -1,4 +1,4 @@
-var DEFAULT_PREFIX = 'POMELO:CHANNEL'
+var DEFAULT_PREFIX = 'OLEMOP:CHANNEL'
 var utils = require('../../lib/util/utils')
 
 var MockManager = function (app, opts) {

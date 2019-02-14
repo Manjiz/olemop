@@ -1,5 +1,5 @@
 /*!
- * Pomelo -- consoleModule runScript
+ * Olemop -- consoleModule runScript
  * Copyright(c) 2012 fantasyni <fantasyni@163.com>
  * MIT Licensed
  */

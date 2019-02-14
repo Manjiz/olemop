@@ -3,7 +3,7 @@ var util = require('util')
 var exec = require('child_process').exec
 var logger = require('@olemop/logger').getLogger('olemop', __filename)
 var Constants = require('./constants')
-var pomelo = require('../pomelo')
+var olemop = require('../olemop')
 
 var utils = module.exports
 
@@ -213,7 +213,7 @@ utils.checkPort = function (server, cb) {
   var host = server.host
   var generateCommand = function (self, host, port) {
     var cmd
-    var ssh_params = pomelo.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS)
+    var ssh_params = olemop.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS)
     if (ssh_params && Array.isArray(ssh_params)) {
       ssh_params = ssh_params.join(' ')
     }
@@ -252,7 +252,7 @@ utils.checkPort = function (server, cb) {
 }
 
 utils.isLocal = function (host) {
-  var app = require('../pomelo').app
+  var app = require('../olemop').app
   if (!app) {
     return host === '127.0.0.1' || host === 'localhost' || host === '0.0.0.0' || inLocal(host)
   } else {

@@ -9,7 +9,7 @@ test:
 		$(MOCHA_OPTS)
 
 test-cov: lib-cov
-	@POMELO_PROTOCOL_COV=1 $(MAKE) test REPORTER=html-cov > coverage.html
+	@OLEMOP_PROTOCOL_COV=1 $(MAKE) test REPORTER=html-cov > coverage.html
 
 lib-cov:
 	@jscoverage lib lib-cov

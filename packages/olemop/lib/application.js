@@ -1,5 +1,5 @@
 /*!
- * Pomelo -- proto
+ * Olemop -- proto
  * Copyright(c) 2012 xiechengchao <xiecc@163.com>
  * MIT Licensed
  */
@@ -86,7 +86,7 @@ Application.init = function (opts) {
  * Get application base path
  *
  *  // cwd: /home/game/
- *  pomelo start
+ *  olemop start
  *  // app.getBase() -> /home/game
  *
  * @returns {string} application base path
@@ -350,7 +350,7 @@ Application.route = function (serverType, routeFunc) {
  * @memberOf Application
  */
 Application.beforeStopHook = function (fun) {
-  logger.warn('this method was deprecated in pomelo 0.8')
+  logger.warn('this method was deprecated in olemop 0.8')
   if (fun && typeof fun === 'function') {
     this.set(Constants.KEYWORDS.BEFORE_STOP_HOOK, fun)
   }
@@ -432,7 +432,7 @@ Application.afterStart = function (cb) {
  */
 Application.stop = function (force) {
   if (this.state > STATE_STARTED) {
-    logger.warn('[pomelo application] application is not running now.')
+    logger.warn('[olemop application] application is not running now.')
     return
   }
   this.state = STATE_STOPED

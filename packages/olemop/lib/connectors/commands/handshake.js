@@ -1,4 +1,4 @@
-var pomelo = require('../../pomelo')
+var olemop = require('../../olemop')
 var Package = require('@olemop/protocol').Package
 
 var CODE_OK = 200
@@ -49,40 +49,40 @@ Command.prototype.handle = function (socket, msg) {
   }
 
   if (this.useDict) {
-    var dictVersion = pomelo.app.components.__dictionary__.getVersion()
+    var dictVersion = olemop.app.components.__dictionary__.getVersion()
     if (!msg.sys.dictVersion || msg.sys.dictVersion !== dictVersion) {
 
       // may be deprecated in future
-      opts.dict = pomelo.app.components.__dictionary__.getDict()
+      opts.dict = olemop.app.components.__dictionary__.getDict()
 
-      opts.routeToCode = pomelo.app.components.__dictionary__.getDict()
-      opts.codeToRoute = pomelo.app.components.__dictionary__.getAbbrs()
+      opts.routeToCode = olemop.app.components.__dictionary__.getDict()
+      opts.codeToRoute = olemop.app.components.__dictionary__.getAbbrs()
       opts.dictVersion = dictVersion
     }
     opts.useDict = true
   }
 
   if (this.useProtobuf) {
-    var protoVersion = pomelo.app.components.__protobuf__.getVersion()
+    var protoVersion = olemop.app.components.__protobuf__.getVersion()
     if (!msg.sys.protoVersion || msg.sys.protoVersion !== protoVersion) {
-      opts.protos = pomelo.app.components.__protobuf__.getProtos()
+      opts.protos = olemop.app.components.__protobuf__.getProtos()
     }
     opts.useProto = true
   }
 
-  if (pomelo.app.components.__decodeIO__protobuf__) {
+  if (olemop.app.components.__decodeIO__protobuf__) {
     if (this.useProtobuf) {
       throw new Error('protobuf can not be both used in the same project.')
     }
-    var version = pomelo.app.components.__decodeIO__protobuf__.getVersion()
+    var version = olemop.app.components.__decodeIO__protobuf__.getVersion()
     if (!msg.sys.protoVersion || msg.sys.protoVersion < version) {
-      opts.protos = pomelo.app.components.__decodeIO__protobuf__.getProtos()
+      opts.protos = olemop.app.components.__decodeIO__protobuf__.getProtos()
     }
     opts.useProto = true
   }
 
   if (this.useCrypto) {
-    pomelo.app.components.__connector__.setPubKey(socket.id, msg.sys.rsa)
+    olemop.app.components.__connector__.setPubKey(socket.id, msg.sys.rsa)
   }
 
   if (typeof this.userHandshake === 'function') {

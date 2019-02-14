@@ -19,7 +19,7 @@ exports.setStorageProtos = (data) => {
 }
 
 exports.initSocket = (uri, onopen, onmessage, onerror, onclose) => {
-  const socketTask = wx.connectSocket({ url })
+  const socketTask = wx.connectSocket({ url: uri })
   // wx.onSocketOpen(onopen)
   // wx.onSocketMessage(onmessage)
   // wx.onSocketError(onerror)

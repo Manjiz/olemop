@@ -35,7 +35,7 @@ const RESTART_SERVER_INFO = 'Successfully restart server.'
 const INIT_PROJ_NOTICE = '\nThe default admin user is: \n\n'+ '  username'.green + ': admin\n  ' + 'password'.green+ ': admin\n\nYou can configure admin users by editing adminUser.json later.\n '
 const SCRIPT_NOT_FOUND = 'Fail to find an appropriate script to run,\nplease check the current work directory or the directory specified by option `--directory`.\n'.red
 const MASTER_HA_NOT_FOUND = 'Fail to find an appropriate masterha config file, \nplease check the current work directory or the arguments passed to.\n'.red
-const COMMAND_ERROR = 'Illegal command format. Use `pomelo --help` to get more info.\n'.red
+const COMMAND_ERROR = 'Illegal command format. Use `olemop --help` to get more info.\n'.red
 const DAEMON_INFO = 'The application is running in the background now.\n'
 
 const o755 = parseInt('0755', 8)
@@ -82,7 +82,7 @@ program.command('add')
   })
 
 program.command('stop')
-  .description('stop the servers, for multiple servers, use `pomelo stop server-id-1 server-id-2`')
+  .description('stop the servers, for multiple servers, use `olemop stop server-id-1 server-id-2`')
   .option('-u, --username <username>', 'administration user name', DEFAULT_USERNAME)
   .option('-p, --password <password>', 'administration password', DEFAULT_PWD)
   .option('-h, --host <master-host>', 'master server host', DEFAULT_MASTER_HOST)
@@ -107,7 +107,7 @@ program.command('kill')
   })
 
 program.command('restart')
-  .description('restart the servers, for multiple servers, use `pomelo restart server-id-1 server-id-2`')
+  .description('restart the servers, for multiple servers, use `olemop restart server-id-1 server-id-2`')
   .option('-u, --username <username>', 'administration user name', DEFAULT_USERNAME)
   .option('-p, --password <password>', 'administration password', DEFAULT_PWD)
   .option('-h, --host <master-host>', 'master server host', DEFAULT_MASTER_HOST)
@@ -182,8 +182,8 @@ function createApplicationAt(ph, type) {
           'game-server/app.js.udp',
           'web-server/app.js.https',
           'web-server/public/index.html.sio',
-          'web-server/public/js/lib/pomeloclient.js',
-          'web-server/public/js/lib/pomeloclient.js.wss',
+          'web-server/public/js/lib/olemopclient.js',
+          'web-server/public/js/lib/olemopclient.js.wss',
           'web-server/public/js/lib/build/build.js.wss',
           'web-server/public/js/lib/socket.io.js'
         ]
@@ -202,7 +202,7 @@ function createApplicationAt(ph, type) {
           'web-server/app.js.https',
           'web-server/public/index.html',
           'web-server/public/js/lib/component.json',
-          'web-server/public/js/lib/pomeloclient.js.wss'
+          'web-server/public/js/lib/olemopclient.js.wss'
         ]
         for (let file of unlinkFiles) {
           fs.unlinkSync(path.resolve(ph, file))
@@ -224,8 +224,8 @@ function createApplicationAt(ph, type) {
           'game-server/app.js.mqtt',
           'web-server/app.js',
           'web-server/public/index.html.sio',
-          'web-server/public/js/lib/pomeloclient.js',
-          'web-server/public/js/lib/pomeloclient.js.wss',
+          'web-server/public/js/lib/olemopclient.js',
+          'web-server/public/js/lib/olemopclient.js.wss',
           'web-server/public/js/lib/build/build.js',
           'web-server/public/js/lib/socket.io.js'
         ]
@@ -247,7 +247,7 @@ function createApplicationAt(ph, type) {
           'game-server/app.js.mqtt',
           'web-server/app.js',
           'web-server/public/index.html',
-          'web-server/public/js/lib/pomeloclient.js'
+          'web-server/public/js/lib/olemopclient.js'
         ]
         for (let file of unlinkFiles) {
           fs.unlinkSync(path.resolve(ph, file))
@@ -256,7 +256,7 @@ function createApplicationAt(ph, type) {
         fs.renameSync(path.resolve(ph, 'game-server/app.js.sio.wss'), path.resolve(ph, 'game-server/app.js'))
         fs.renameSync(path.resolve(ph, 'web-server/app.js.https'), path.resolve(ph, 'web-server/app.js'))
         fs.renameSync(path.resolve(ph, 'web-server/public/index.html.sio'), path.resolve(ph, 'web-server/public/index.html'))
-        fs.renameSync(path.resolve(ph, 'web-server/public/js/lib/pomeloclient.js.wss'), path.resolve(ph, 'web-server/public/js/lib/pomeloclient.js'))
+        fs.renameSync(path.resolve(ph, 'web-server/public/js/lib/olemopclient.js.wss'), path.resolve(ph, 'web-server/public/js/lib/olemopclient.js'))
 
         fse.removeSync(path.resolve(ph, 'web-server/public/js/lib/build'))
         fse.removeSync(path.resolve(ph, 'web-server/public/js/lib/local'))
@@ -273,7 +273,7 @@ function createApplicationAt(ph, type) {
           'web-server/app.js.https',
           'web-server/public/index.html',
           'web-server/public/js/lib/component.json',
-          'web-server/public/js/lib/pomeloclient.js.wss'
+          'web-server/public/js/lib/olemopclient.js.wss'
         ]
         for (let file of unlinkFiles) {
           fs.unlinkSync(path.resolve(ph, file))
@@ -294,7 +294,7 @@ function createApplicationAt(ph, type) {
           'web-server/app.js.https',
           'web-server/public/index.html',
           'web-server/public/js/lib/component.json',
-          'web-server/public/js/lib/pomeloclient.js.wss'
+          'web-server/public/js/lib/olemopclient.js.wss'
         ]
         for (let file of unlinkFiles) {
           fs.unlinkSync(path.resolve(ph, file))
@@ -364,12 +364,12 @@ function start(opts) {
 }
 
 /**
- * List pomelo processes.
+ * List olemop processes.
  *
  * @param {Object} opts options for `list` operation
  */
 function list(opts) {
-  const id = `pomelo_list_${Date.now()}`
+  const id = `olemop_list_${Date.now()}`
   connectToMaster(id, opts, (client) => {
     client.request(co.moduleId, { signal: 'list' }, (err, data) => {
       if (err) {
@@ -406,7 +406,7 @@ function list(opts) {
  * @param {Object} opts options for `add` operation
  */
 function add(opts) {
-  const id = `pomelo_add_${Date.now()}`
+  const id = `olemop_add_${Date.now()}`
   connectToMaster(id, opts, (client) => {
     client.request(co.moduleId, { signal: 'add', args: opts.args }, (err) => {
       if (err) {
@@ -437,7 +437,7 @@ function terminal(signal, opts) {
     process.exit(1)
     return
   }
-  const id = `pomelo_terminal_${Date.now()}`
+  const id = `olemop_terminal_${Date.now()}`
   connectToMaster(id, opts, (client) => {
     client.request(co.moduleId, {
       signal, ids: opts.serverIds
@@ -458,7 +458,7 @@ function terminal(signal, opts) {
 }
 
 function restart(opts) {
-  const id = `pomelo_restart_${Date.now()}`
+  const id = `olemop_restart_${Date.now()}`
   const serverIds = []
   let type = null
   opts.id && serverIds.push(opts.id)

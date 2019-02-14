@@ -1,4 +1,4 @@
-var lib = process.env.POMELO_RPC_COV ? 'lib-cov' : 'lib'
+var lib = process.env.OLEMOP_RPC_COV ? 'lib-cov' : 'lib'
 var Acceptor = require('../../' + lib + '/rpc-server/acceptor')
 var should = require('should')
 var Client = require('./client/mock-client')

@@ -1,8 +1,8 @@
 const EventEmitter = require('wolfy87-eventemitter')
 const Protocol = require('@olemop/protocol')
 const protobuf = require('@olemop/protobuf/lib/client/protobuf')
-// const rsa = require('./pomelo-rsasign/rsa')
-// const decodeIO_protobuf = require('./lib/pomelo-decodeIO-protobuf/ProtoBuf')
+// const rsa = require('./olemop-rsasign/rsa')
+// const decodeIO_protobuf = require('./lib/olemop-decodeIO-protobuf/ProtoBuf')
 const envUtil = require(`./envUtil/${__PLATFORM__}`)
 
 // @todo const

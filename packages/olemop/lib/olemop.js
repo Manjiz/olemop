@@ -78,9 +78,7 @@ Object.defineProperty(Olemop, 'app', {
  * Auto-load bundled components with getters.
  */
 fs.readdirSync(__dirname + '/components').forEach(function (filename) {
-  if (!/\.js$/.test(filename)) {
-    return
-  }
+  if (!/\.js$/.test(filename)) return
   var name = path.basename(filename, '.js')
   var _load = load.bind(null, './components/', name)
 
@@ -89,9 +87,7 @@ fs.readdirSync(__dirname + '/components').forEach(function (filename) {
 })
 
 fs.readdirSync(__dirname + '/filters/handler').forEach(function (filename) {
-  if (!/\.js$/.test(filename)) {
-    return
-  }
+  if (!/\.js$/.test(filename)) return
   var name = path.basename(filename, '.js')
   var _load = load.bind(null, './filters/handler/', name)
 
@@ -100,9 +96,7 @@ fs.readdirSync(__dirname + '/filters/handler').forEach(function (filename) {
 })
 
 fs.readdirSync(__dirname + '/filters/rpc').forEach(function (filename) {
-  if (!/\.js$/.test(filename)) {
-    return
-  }
+  if (!/\.js$/.test(filename)) return
   var name = path.basename(filename, '.js')
   var _load = load.bind(null, './filters/rpc/', name)
 

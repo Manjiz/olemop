@@ -50,9 +50,9 @@ class Component {
    * @param {Object} opts construct parameters
    */
   constructor(app, opts) {
+    this.name = '__remote__'
     this.app = app
     this.opts = opts
-    this.name = '__remote__'
   }
 
   /**

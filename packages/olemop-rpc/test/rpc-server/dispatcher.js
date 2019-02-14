@@ -1,4 +1,4 @@
-var lib = process.env.POMELO_RPC_COV ? 'lib-cov' : 'lib'
+var lib = process.env.OLEMOP_RPC_COV ? 'lib-cov' : 'lib'
 var route = require('../../' + lib + '/rpc-server/dispatcher').route
 var should = require('should')
 var Tracer = require('../../lib/util/tracer')

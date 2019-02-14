@@ -2,7 +2,7 @@ const rsa = require('node-bignumber')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const taskManager = require('../common/manager/taskManager')
 const DefaultConnector = require('../connectors/sioconnector')
-const pomelo = require('../pomelo')
+const olemop = require('../olemop')
 const events = require('../util/events')
 const utils = require('../util/utils')
 
@@ -316,11 +316,11 @@ class Component {
     this.blacklist = []
 
     if (opts.useDict) {
-      app.load(pomelo.dictionary, app.get('dictionaryConfig'))
+      app.load(olemop.dictionary, app.get('dictionaryConfig'))
     }
 
     if (opts.useProtobuf) {
-      app.load(pomelo.protobuf, app.get('protobufConfig'))
+      app.load(olemop.protobuf, app.get('protobufConfig'))
     }
 
     // component dependencies

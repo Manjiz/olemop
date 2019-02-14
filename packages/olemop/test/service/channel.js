@@ -1,5 +1,5 @@
 var should = require('should')
-var pomelo = require('../../')
+var olemop = require('../../')
 var ChannelService = require('../../lib/common/service/channelService')
 
 var mockBase = process.cwd() + '/test'
@@ -130,7 +130,7 @@ describe('channel test', function () {
         cb()
       }
 
-      var app = pomelo.createApp({base: mockBase})
+      var app = olemop.createApp({base: mockBase})
       app.rpcInvoke = mockRpcInvoke
       var channelService = new ChannelService(app)
 

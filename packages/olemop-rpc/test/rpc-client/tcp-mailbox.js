@@ -1,4 +1,4 @@
-var lib = process.env.POMELO_RPC_COV ? 'lib-cov' : 'lib'
+var lib = process.env.OLEMOP_RPC_COV ? 'lib-cov' : 'lib'
 var should = require('should')
 var Mailbox = require('../../' + lib + '/rpc-client/mailboxes/tcp-mailbox')
 var Server = require('../../').server

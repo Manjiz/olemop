@@ -1,5 +1,5 @@
 /*!
- * Pomelo -- consoleModule systemInfo
+ * Olemop -- consoleModule systemInfo
  * Copyright(c) 2012 fantasyni <fantasyni@163.com>
  * MIT Licensed
  */

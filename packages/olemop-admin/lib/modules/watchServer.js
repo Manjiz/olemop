@@ -1,5 +1,5 @@
 /*!
- * Pomelo -- consoleModule watchServer
+ * Olemop -- consoleModule watchServer
  * Copyright(c) 2013 fantasyni <fantasyni@163.com>
  * MIT Licensed
  */
@@ -431,7 +431,7 @@ function dumpCPU(handle, agent, comd, context, param, cb) {
 		var times = param['times']
 		var filepath = param['filepath']
 		var force = param['force']
-		cb(null, 'cpu dump is unused in 1.0 of pomelo')
+		cb(null, 'cpu dump is unused in 1.0 of olemop')
 		/**
 		if (!/\.cpuprofile$/.test(filepath)) {
 			filepath = filepath + '.cpuprofile'

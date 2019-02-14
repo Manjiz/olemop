@@ -121,6 +121,7 @@ const defaultRoute = (session, msg, app, cb) => {
  */
 class Component {
   constructor(app, opts) {
+    this.name = '__proxy__'
     this.app = app
     this.opts = opts
     this.client = genRpcClient(this.app, opts)
@@ -128,8 +129,6 @@ class Component {
     this.app.event.on(events.REMOVE_SERVERS, this.removeServers.bind(this))
     this.app.event.on(events.REPLACE_SERVERS, this.replaceServers.bind(this))
   }
-
-  static get name() { return '__proxy__' }
 
   /**
    * Proxy component lifecycle function
@@ -139,7 +138,7 @@ class Component {
    */
   start (cb) {
     if (this.opts.enableRpcLog) {
-      logger.warn('enableRpcLog is deprecated in 0.8.0, please use app.rpcFilter(pomelo.rpcFilters.rpcLog())')
+      logger.warn('enableRpcLog is deprecated in 0.8.0, please use app.rpcFilter(olemop.rpcFilters.rpcLog())')
     }
     const rpcBefores = this.app.get(Constants.KEYWORDS.RPC_BEFORE_FILTER)
     const rpcAfters = this.app.get(Constants.KEYWORDS.RPC_AFTER_FILTER)

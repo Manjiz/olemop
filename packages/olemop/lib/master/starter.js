@@ -7,7 +7,7 @@ const Constants = require('../util/constants')
 
 const cpus = {}
 // @todo
-const olemop = require('../pomelo')
+const olemop = require('../olemop')
 
 let env = Constants.RESERVED.ENV_DEV
 
