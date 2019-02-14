@@ -1,6 +1,6 @@
 {
   "name": "@olemop/admin",
-  "version": "0.0.49",
+  "version": "0.0.51",
   "private": false,
   "dependencies": {
     "@olemop/logger": "^0.0.48",

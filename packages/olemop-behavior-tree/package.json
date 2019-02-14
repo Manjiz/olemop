@@ -1,6 +1,6 @@
 {
 		"name": "@olemop/behavior-tree",
-		"version": "0.0.49",
+		"version": "0.0.51",
 		"devDependencies": {
 				"mocha": ">=0.0.1",
 				"should": ">=0.0.1"
