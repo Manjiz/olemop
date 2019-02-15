@@ -13,29 +13,27 @@ const utils = require('../../util/utils')
  * @param {Object} handlers functions which are called during transaction
  * @param {number} retry retry times to execute handlers if conditions are successfully executed
  * @example
-
-  const conditions = {
-    test1: function (cb) {
-      console.log('condition1')
-      cb()
-    },
-    test2: function (cb) {
-      console.log('condition2')
-      cb()
-    }
-  }
-  const handlers = {
-    do1: function (cb) {
-      console.log('handler1')
-      cb()
-    },
-    do2: function (cb) {
-      console.log('handler2')
-      cb()
-    }
-  }
-  app.transaction('test', conditions, handlers, 3)
-
+ * const conditions = {
+ *   test1(cb) {
+ *     console.log('condition1')
+ *     cb()
+ *   },
+ *   test2(cb) {
+ *     console.log('condition2')
+ *     cb()
+ *   }
+ * }
+ * const handlers = {
+ *   do1(cb) {
+ *     console.log('handler1')
+ *     cb()
+ *   },
+ *   do2(cb) {
+ *     console.log('handler2')
+ *     cb()
+ *   }
+ * }
+ * app.transaction('test', conditions, handlers, 3)
  */
 const transaction = (name, conditions, handlers, retry) => {
 	if (!retry) {

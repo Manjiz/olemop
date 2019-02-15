@@ -4,7 +4,6 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-mocha-test')
   grunt.loadNpmTasks('grunt-contrib-clean')
-  grunt.loadNpmTasks('grunt-contrib-jshint')
 
   var src = ['test/manager/taskManager.js', 'test/filters/*.js',
   'test/remote/*.js', 'test/service/*.js', 'test/modules/*.js', 'test/util/*.js', 'test/*.js']
@@ -33,12 +32,9 @@ module.exports = function (grunt) {
       "coverage.html" : {
         src: ['coverage.html']
       }
-    },
-    jshint: {
-      all: ['lib/*']
     }
   })
 
   // Default task.
-  grunt.registerTask('default', ['clean', 'mochaTest', 'jshint'])
+  grunt.registerTask('default', ['clean', 'mochaTest'])
 }
