@@ -72,9 +72,9 @@ describe('channel manager test', function () {
       ]
       var mockMsg = {key: 'some remote message'}
       var uidMap = {}
-      for (var i in mockUids) {
-        uidMap[mockUids[i].uid] = mockUids[i]
-      }
+      mockUids.forEach((item) => {
+        uidMap[item.uid] = item
+      })
 
       var invokeCount = 0
 
@@ -127,9 +127,9 @@ describe('channel manager test', function () {
       ]
       var mockMsg = {key: 'some remote message'}
       var uidMap = {}
-      for (var i in mockUids) {
-        uidMap[mockUids[i].uid] = mockUids[i]
-      }
+      mockUids.forEach((item) => {
+        uidMap[item.uid] = item
+      })
 
       var invokeCount = 0
 
@@ -156,9 +156,9 @@ describe('channel manager test', function () {
       var mockUids = [{sid: sid1, uid: uid1}, {sid: sid2, uid: uid2}, {sid: sid2, uid: uid3}]
       var mockMsg = {key: 'some remote message'}
       var uidMap = {}
-      for (var i in mockUids) {
-        uidMap[mockUids[i].uid] = mockUids[i]
-      }
+      mockUids.forEach((item) => {
+        uidMap[item.uid] = item
+      })
 
       var invokeCount = 0
 

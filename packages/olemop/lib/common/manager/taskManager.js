@@ -1,4 +1,4 @@
-const sequeue = require('seq-queue')
+const sequeue = require('./sequeue')
 
 const timeout = 3000
 const queues = {}

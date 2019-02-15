@@ -1,8 +1,10 @@
 const async = require('async')
-const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const transactionLogger = require('@olemop/logger').getLogger('transaction-log', __filename)
-const transactionErrorLogger = require('@olemop/logger').getLogger('transaction-error-log', __filename)
+const olemopLogger = require('@olemop/logger')
 const utils = require('../../util/utils')
+
+const logger = olemopLogger.getLogger('olemop', __filename)
+const transactionLogger = olemopLogger.getLogger('transaction-log', __filename)
+const transactionErrorLogger = olemopLogger.getLogger('transaction-error-log', __filename)
 
 /**
  * Application transaction. Transcation includes conditions and handlers, if conditions are satisfied, handlers would be executed.
@@ -35,10 +37,7 @@ const utils = require('../../util/utils')
  * }
  * app.transaction('test', conditions, handlers, 3)
  */
-const transaction = (name, conditions, handlers, retry) => {
-	if (!retry) {
-    retry = 1
-  }
+const transaction = (name, conditions, handlers, retry = 1) => {
   if (typeof name !== 'string') {
     logger.error(`transaction name is error format, name: ${name}.`)
     return
