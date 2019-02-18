@@ -1,6 +1,6 @@
 {
   "name": "@olemop/core",
-  "version": "0.0.52",
+  "version": "0.0.53",
   "dependencies": {
     "@olemop/admin": "^0.0.52",
     "@olemop/loader": "^0.0.49",
