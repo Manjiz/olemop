@@ -48,11 +48,11 @@ Connector.prototype.start = function (cb) {
 
   const gensocket = (socket) => {
     const hybridsocket = new HybridSocket(curId++, socket)
-    hybridsocket.on('handshake', self.handshake.handle.bind(self.handshake, hybridsocket))
-    hybridsocket.on('heartbeat', self.heartbeat.handle.bind(self.heartbeat, hybridsocket))
-    hybridsocket.on('disconnect', self.heartbeat.clear.bind(self.heartbeat, hybridsocket.id))
+    hybridsocket.on('handshake', this.handshake.handle.bind(this.handshake, hybridsocket))
+    hybridsocket.on('heartbeat', this.heartbeat.handle.bind(this.heartbeat, hybridsocket))
+    hybridsocket.on('disconnect', this.heartbeat.clear.bind(this.heartbeat, hybridsocket.id))
     hybridsocket.on('closing', Kick.handle.bind(null, hybridsocket))
-    self.emit('connection', hybridsocket)
+    this.emit('connection', hybridsocket)
   }
 
   this.connector = app.components.__connector__.connector
@@ -64,7 +64,7 @@ Connector.prototype.start = function (cb) {
   } else {
     this.listeningServer = tls.createServer(this.ssl)
   }
-  this.switcher = new Switcher(this.listeningServer, self.opts)
+  this.switcher = new Switcher(this.listeningServer, this.opts)
 
   this.switcher.on('connection', (socket) => {
     gensocket(socket)
