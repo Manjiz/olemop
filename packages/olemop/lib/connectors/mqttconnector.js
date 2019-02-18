@@ -27,7 +27,7 @@ const composePush = (route, msgBody) => {
  * Connector that manager low level connection and protocol bewteen server and client.
  * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
  */
-const Connector = function (port, host, opts) {
+const Connector = function (port, host, opts = {}) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts)
   }
@@ -35,7 +35,7 @@ const Connector = function (port, host, opts) {
   EventEmitter.call(this)
   this.port = port
   this.host = host
-  this.opts = opts || {}
+  this.opts = opts
 
   this.adaptor = new Adaptor(this.opts)
 }

@@ -1,47 +1,47 @@
-var http = require('http')
-var EventEmitter = require('events')
-var util = require('util')
-var WebSocket = require('ws')
+const http = require('http')
+const EventEmitter = require('events')
+const WebSocket = require('ws')
 
-var ST_STARTED = 1
-var ST_CLOSED = 2
+const ST_STARTED = 1
+const ST_CLOSED = 2
 
 /**
  * websocket protocol processor
  */
-var Processor = function () {
-  EventEmitter.call(this)
-  this.httpServer = http.createServer()
+class WSProcessor extends EventEmitter {
+  constructor() {
+    super()
+    this.httpServer = http.createServer()
 
-  this.wsServer = new WebSocket.Server({ server: this.httpServer })
+    this.wsServer = new WebSocket.Server({ server: this.httpServer })
 
-  this.wsServer.on('connection', (socket) => {
-    // emit socket to outside
-    this.emit('connection', socket)
-  })
+    this.wsServer.on('connection', (socket) => {
+      // emit socket to outside
+      this.emit('connection', socket)
+    })
 
-  this.state = ST_STARTED
-}
-util.inherits(Processor, EventEmitter)
+    this.state = ST_STARTED
+  }
 
-module.exports = Processor
+  add(socket, data) {
+    if (this.state !== ST_STARTED) return
+    this.httpServer.emit('connection', socket)
+    if (typeof socket.ondata === 'function') {
+      // compatible with stream2
+      socket.ondata(data, 0, data.length)
+    } else {
+      // compatible with old stream
+      socket.emit('data', data)
+    }
+  }
 
-Processor.prototype.add = function (socket, data) {
-  if (this.state !== ST_STARTED) return
-  this.httpServer.emit('connection', socket)
-  if (typeof socket.ondata === 'function') {
-    // compatible with stream2
-    socket.ondata(data, 0, data.length)
-  } else {
-    // compatible with old stream
-    socket.emit('data', data)
+  close() {
+    if (this.state !== ST_STARTED) return
+    this.state = ST_CLOSED
+    this.wsServer.close()
+    this.wsServer = null
+    this.httpServer = null
   }
 }
 
-Processor.prototype.close = function () {
-  if (this.state !== ST_STARTED) return
-  this.state = ST_CLOSED
-  this.wsServer.close()
-  this.wsServer = null
-  this.httpServer = null
-}
+module.exports = WSProcessor

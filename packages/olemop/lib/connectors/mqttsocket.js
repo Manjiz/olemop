@@ -1,13 +1,13 @@
-var util = require('util')
-var EventEmitter = require('events')
+const util = require('util')
+const EventEmitter = require('events')
 
-var ST_INITED = 1
-var ST_CLOSED = 2
+const ST_INITED = 1
+const ST_CLOSED = 2
 
 /**
  * Socket class that wraps socket and websocket to provide unified interface for up level.
  */
-var Socket = function (id, socket, adaptor) {
+const Socket = function (id, socket, adaptor) {
   EventEmitter.call(this)
   this.id = id
   this.socket = socket
@@ -17,13 +17,11 @@ var Socket = function (id, socket, adaptor) {
   }
   this.adaptor = adaptor
 
-  var self = this
-
   socket.on('close', this.emit.bind(this, 'disconnect'))
   socket.on('error', this.emit.bind(this, 'disconnect'))
   socket.on('disconnect', this.emit.bind(this, 'disconnect'))
 
-  socket.on('pingreq', function (packet) {
+  socket.on('pingreq', (packet) => {
     socket.pingresp()
   })
 
@@ -33,7 +31,7 @@ var Socket = function (id, socket, adaptor) {
 
   this.state = ST_INITED
 
-  // TODO: any other events?
+  // @todo: any other events?
 }
 
 util.inherits(Socket, EventEmitter)
@@ -41,9 +39,7 @@ util.inherits(Socket, EventEmitter)
 module.exports = Socket
 
 Socket.prototype.send = function (msg) {
-  if (this.state !== ST_INITED) {
-    return
-  }
+  if (this.state !== ST_INITED) return
   if (msg instanceof Buffer) {
     // if encoded, send directly
     this.socket.stream.write(msg)
@@ -53,16 +49,13 @@ Socket.prototype.send = function (msg) {
 }
 
 Socket.prototype.sendBatch = function (msgs) {
-  for (var i = 0, l = msgs.length; i<l; i++) {
-    this.send(msgs[i])
-  }
+  msgs.forEach((item) => {
+    this.send(item)
+  })
 }
 
 Socket.prototype.disconnect = function () {
-  if (this.state === ST_CLOSED) {
-    return
-  }
-
+  if (this.state === ST_CLOSED) return
   this.state = ST_CLOSED
   this.socket.stream.destroy()
 }

@@ -1,16 +1,17 @@
-var util = require('util')
-var handler = require('./common/handler')
-var protocol = require('@olemop/protocol')
-var Package = protocol.Package
-var EventEmitter = require('events')
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
+const util = require('util')
+const EventEmitter = require('events')
+const protocol = require('@olemop/protocol')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const handler = require('./common/handler')
 
-var ST_INITED = 0
-var ST_WAIT_ACK = 1
-var ST_WORKING = 2
-var ST_CLOSED = 3
+const Package = protocol.Package
 
-var Socket = function (id, socket, peer) {
+const ST_INITED = 0
+const ST_WAIT_ACK = 1
+const ST_WORKING = 2
+const ST_CLOSED = 3
+
+const Socket = function (id, socket, peer) {
 	EventEmitter.call(this)
 
   this.id = id
@@ -23,11 +24,10 @@ var Socket = function (id, socket, peer) {
     port: this.port
   }
 
-  var self = this
-  this.on('package', function (pkg) {
+  this.on('package', (pkg) => {
     if (pkg) {
       pkg = Package.decode(pkg)
-      handler(self, pkg)
+      handler(this, pkg)
     }
   })
 
@@ -44,9 +44,7 @@ module.exports = Socket
  * @param  {Buffer} msg byte data
  */
 Socket.prototype.send = function (msg) {
-  if (this.state !== ST_WORKING) {
-    return
-  }
+  if (this.state !== ST_WORKING) return
   if (msg instanceof String) {
     msg = new Buffer(msg)
   } else if (!(msg instanceof Buffer)) {
@@ -56,45 +54,36 @@ Socket.prototype.send = function (msg) {
 }
 
 Socket.prototype.sendRaw = function (msg) {
-	this.socket.send(msg, 0, msg.length, this.port, this.host, function (err, bytes) {
+	this.socket.send(msg, 0, msg.length, this.port, this.host, (err, bytes) => {
     if (err)	{
       logger.error('send msg to remote with err: %j', err.stack)
-      return
     }
   })
 }
 
 Socket.prototype.sendForce = function (msg) {
-  if (this.state === ST_CLOSED) {
-    return
-  }
+  if (this.state === ST_CLOSED) return
   this.sendRaw(msg)
 }
 
 Socket.prototype.handshakeResponse = function (resp) {
-  if (this.state !== ST_INITED) {
-    return
-  }
+  if (this.state !== ST_INITED) return
   this.sendRaw(resp)
   this.state = ST_WAIT_ACK
 }
 
 Socket.prototype.sendBatch = function (msgs) {
-  if (this.state !== ST_WORKING) {
-    return
-  }
-  var rs = []
-  for (var i=0; i<msgs.length; i++) {
-    var src = Package.encode(Package.TYPE_DATA, msgs[i])
-    rs.push(src)
-  }
+  if (this.state !== ST_WORKING) return
+  const rs = msgs.reduce((prev, msg) => {
+    const src = Package.encode(Package.TYPE_DATA, msg)
+    prev.push(src)
+    return prev
+  }, [])
   this.sendRaw(Buffer.concat(rs))
 }
 
 Socket.prototype.disconnect = function () {
-  if (this.state === ST_CLOSED) {
-    return
-  }
+  if (this.state === ST_CLOSED) return
   this.state = ST_CLOSED
   this.emit('disconnect', 'the connection is disconnected.')
 }

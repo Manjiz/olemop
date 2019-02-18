@@ -1,29 +1,29 @@
-var net = require('net')
-var tls = require('tls')
-var util = require('util')
-var EventEmitter = require('events')
+const net = require('net')
+const tls = require('tls')
+const util = require('util')
+const EventEmitter = require('events')
 
-var HybridSocket = require('./hybridsocket')
-var Switcher = require('./hybrid/switcher')
-var Handshake = require('./commands/handshake')
-var Heartbeat = require('./commands/heartbeat')
-var Kick = require('./commands/kick')
-var coder = require('./common/coder')
+const HybridSocket = require('./hybridsocket')
+const Switcher = require('./hybrid/switcher')
+const Handshake = require('./commands/handshake')
+const Heartbeat = require('./commands/heartbeat')
+const Kick = require('./commands/kick')
+const coder = require('./common/coder')
 
-var curId = 1
+let curId = 1
 
 /**
  * Connector that manager low level connection and protocol bewteen server and client.
  * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
  */
-var Connector = function (port, host, opts) {
+const Connector = function (port, host, opts = {}) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts)
   }
 
   EventEmitter.call(this)
 
-  this.opts = opts || {}
+  this.opts = opts
   this.port = port
   this.host = host
   this.useDict = opts.useDict
@@ -44,11 +44,10 @@ module.exports = Connector
  * Start connector to listen the specified port
  */
 Connector.prototype.start = function (cb) {
-  var app = require('../olemop').app
-  var self = this
+  const app = require('../olemop').app
 
-  var gensocket = function (socket) {
-    var hybridsocket = new HybridSocket(curId++, socket)
+  const gensocket = (socket) => {
+    const hybridsocket = new HybridSocket(curId++, socket)
     hybridsocket.on('handshake', self.handshake.handle.bind(self.handshake, hybridsocket))
     hybridsocket.on('heartbeat', self.heartbeat.handle.bind(self.heartbeat, hybridsocket))
     hybridsocket.on('disconnect', self.heartbeat.clear.bind(self.heartbeat, hybridsocket.id))
@@ -67,7 +66,7 @@ Connector.prototype.start = function (cb) {
   }
   this.switcher = new Switcher(this.listeningServer, self.opts)
 
-  this.switcher.on('connection', function (socket) {
+  this.switcher.on('connection', (socket) => {
     gensocket(socket)
   })
 

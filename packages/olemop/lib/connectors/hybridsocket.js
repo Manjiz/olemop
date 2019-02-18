@@ -1,19 +1,20 @@
-var util = require('util')
-var EventEmitter = require('events')
-var handler = require('./common/handler')
-var protocol = require('@olemop/protocol')
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
-var Package = protocol.Package
+const util = require('util')
+const EventEmitter = require('events')
+const protocol = require('@olemop/protocol')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const handler = require('./common/handler')
 
-var ST_INITED = 0
-var ST_WAIT_ACK = 1
-var ST_WORKING = 2
-var ST_CLOSED = 3
+const Package = protocol.Package
+
+const ST_INITED = 0
+const ST_WAIT_ACK = 1
+const ST_WORKING = 2
+const ST_CLOSED = 3
 
 /**
  * Socket class that wraps socket and websocket to provide unified interface for up level.
  */
-var Socket = function (id, socket) {
+const Socket = function (id, socket) {
   EventEmitter.call(this)
   this.id = id
   this.socket = socket
@@ -30,21 +31,19 @@ var Socket = function (id, socket) {
     }
   }
 
-  var self = this
-
   socket.once('close', this.emit.bind(this, 'disconnect'))
   socket.on('error', this.emit.bind(this, 'error'))
 
-  socket.on('message', function (msg) {
+  socket.on('message', (msg) => {
     if (msg) {
       msg = Package.decode(msg)
-      handler(self, msg)
+      handler(this, msg)
     }
   })
 
   this.state = ST_INITED
 
-  // TODO: any other events?
+  // @todo: any other events?
 }
 
 util.inherits(Socket, EventEmitter)
@@ -57,15 +56,11 @@ module.exports = Socket
  * @api private
  */
 Socket.prototype.sendRaw = function (msg) {
-  if (this.state !== ST_WORKING) {
-    return
-  }
-  var self = this
+  if (this.state !== ST_WORKING) return
 
-  this.socket.send(msg, {binary: true}, function (err) {
+  this.socket.send(msg, { binary: true }, (err) => {
     if (err) {
       logger.error('websocket send binary data failed: %j', err.stack)
-      return
     }
   })
 }
@@ -90,11 +85,11 @@ Socket.prototype.send = function (msg) {
  * @param  {Buffer} msgs byte data
  */
 Socket.prototype.sendBatch = function (msgs) {
-  var rs = []
-  for (var i=0; i<msgs.length; i++) {
-    var src = Package.encode(Package.TYPE_DATA, msgs[i])
-    rs.push(src)
-  }
+  const rs = msgs.reduce((prev, item) => {
+    const src = Package.encode(Package.TYPE_DATA, item)
+    prev.push(src)
+    return prev
+  }, [])
   this.sendRaw(Buffer.concat(rs))
 }
 
@@ -104,10 +99,8 @@ Socket.prototype.sendBatch = function (msgs) {
  * @api private
  */
 Socket.prototype.sendForce = function (msg) {
-  if (this.state === ST_CLOSED) {
-    return
-  }
-  this.socket.send(msg, {binary: true})
+  if (this.state === ST_CLOSED) return
+  this.socket.send(msg, { binary: true })
 }
 
 /**
@@ -116,11 +109,8 @@ Socket.prototype.sendForce = function (msg) {
  * @api private
  */
 Socket.prototype.handshakeResponse = function (resp) {
-  if (this.state !== ST_INITED) {
-    return
-  }
-
-  this.socket.send(resp, {binary: true})
+  if (this.state !== ST_INITED) return
+  this.socket.send(resp, { binary: true })
   this.state = ST_WAIT_ACK
 }
 
@@ -130,9 +120,7 @@ Socket.prototype.handshakeResponse = function (resp) {
  * @api private
  */
 Socket.prototype.disconnect = function () {
-  if (this.state === ST_CLOSED) {
-    return
-  }
+  if (this.state === ST_CLOSED) return
 
   this.state = ST_CLOSED
   this.socket.emit('close')

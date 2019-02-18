@@ -1,18 +1,17 @@
-var protocol = require('@olemop/protocol')
-var Package = protocol.Package
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
+const protocol = require('@olemop/protocol')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
 
-var handlers = {}
+const Package = protocol.Package
 
-var ST_INITED = 0
-var ST_WAIT_ACK = 1
-var ST_WORKING = 2
-var ST_CLOSED = 3
+const handlers = {}
 
-var handleHandshake = function (socket, pkg) {
-  if (socket.state !== ST_INITED) {
-    return
-  }
+const ST_INITED = 0
+const ST_WAIT_ACK = 1
+const ST_WORKING = 2
+const ST_CLOSED = 3
+
+const handleHandshake = (socket, pkg) => {
+  if (socket.state !== ST_INITED) return
   try {
     socket.emit('handshake', JSON.parse(protocol.strdecode(pkg.body)))
   } catch (ex) {
@@ -20,25 +19,19 @@ var handleHandshake = function (socket, pkg) {
   }
 }
 
-var handleHandshakeAck = function (socket, pkg) {
-  if (socket.state !== ST_WAIT_ACK) {
-    return
-  }
+const handleHandshakeAck = (socket, pkg) => {
+  if (socket.state !== ST_WAIT_ACK) return
   socket.state = ST_WORKING
   socket.emit('heartbeat')
 }
 
-var handleHeartbeat = function (socket, pkg) {
-  if (socket.state !== ST_WORKING) {
-    return
-  }
+const handleHeartbeat = (socket, pkg) => {
+  if (socket.state !== ST_WORKING) return
   socket.emit('heartbeat')
 }
 
-var handleData = function (socket, pkg) {
-  if (socket.state !== ST_WORKING) {
-    return
-  }
+const handleData = (socket, pkg) => {
+  if (socket.state !== ST_WORKING) return
   socket.emit('message', pkg)
 }
 
@@ -47,8 +40,8 @@ handlers[Package.TYPE_HANDSHAKE_ACK] = handleHandshakeAck
 handlers[Package.TYPE_HEARTBEAT] = handleHeartbeat
 handlers[Package.TYPE_DATA] = handleData
 
-var handle = function (socket, pkg) {
-  var handler = handlers[pkg.type]
+const handle = (socket, pkg) => {
+  const handler = handlers[pkg.type]
   if (handler) {
     handler(socket, pkg)
   } else {

@@ -1,120 +1,113 @@
-var olemop = require('../../olemop')
-var Package = require('@olemop/protocol').Package
+const Package = require('@olemop/protocol').Package
+const olemop = require('../../olemop')
 
-var CODE_OK = 200
-var CODE_USE_ERROR = 500
-var CODE_OLD_CLIENT = 501
+const CODE_OK = 200
+const CODE_USE_ERROR = 500
+const CODE_OLD_CLIENT = 501
 
 /**
  * Process the handshake request.
  *
  * @param {Object} opts option parameters
- *                      opts.handshake(msg, cb(err, resp)) handshake callback. msg is the handshake message from client.
- *                      opts.hearbeat heartbeat interval (level?)
- *                      opts.version required client level
+ * @param {Function(msg, cb(err, resp))} opts.handshake handshake callback. msg is the handshake message from client
+ * @param {number} opts.hearbeat heartbeat interval (level?)
+ * @param {string} opts.version required client level
  */
-var Command = function (opts) {
-  opts = opts || {}
-  this.userHandshake = opts.handshake
+class Handshake {
+  constructor(opts = {}) {
+    this.userHandshake = opts.handshake
 
-  if (opts.heartbeat) {
-    this.heartbeatSec = opts.heartbeat
-    this.heartbeat = opts.heartbeat * 1000
+    if (opts.heartbeat) {
+      this.heartbeatSec = opts.heartbeat
+      this.heartbeat = opts.heartbeat * 1000
+    }
+
+    this.checkClient = opts.checkClient
+
+    this.useDict = opts.useDict
+    this.useProtobuf = opts.useProtobuf
+    this.useCrypto = opts.useCrypto
   }
 
-  this.checkClient = opts.checkClient
-
-  this.useDict = opts.useDict
-  this.useProtobuf = opts.useProtobuf
-  this.useCrypto = opts.useCrypto
-}
-
-module.exports = Command
-
-Command.prototype.handle = function (socket, msg) {
-  if (!msg.sys) {
-    processError(socket, CODE_USE_ERROR)
-    return
+  static setupHeartbeat(self) {
+    return self.heartbeatSec
   }
 
-  if (typeof this.checkClient === 'function') {
-    if (!msg || !msg.sys || !this.checkClient(msg.sys.type, msg.sys.version)) {
-      processError(socket, CODE_OLD_CLIENT)
+  static response(socket, sys, resp) {
+    const res = { code: CODE_OK, sys }
+    resp && (res.user = resp)
+    socket.handshakeResponse(Package.encode(Package.TYPE_HANDSHAKE, new Buffer(JSON.stringify(res))))
+  }
+
+  static processError(socket, code) {
+    const res = { code }
+    socket.sendForce(Package.encode(Package.TYPE_HANDSHAKE, new Buffer(JSON.stringify(res))))
+    process.nextTick(() => {
+      socket.disconnect()
+    })
+  }
+
+  handle(socket, msg) {
+    if (!msg.sys) {
+      Handshake.processError(socket, CODE_USE_ERROR)
       return
     }
-  }
 
-  var opts = {
-    heartbeat : setupHeartbeat(this)
-  }
-
-  if (this.useDict) {
-    var dictVersion = olemop.app.components.__dictionary__.getVersion()
-    if (!msg.sys.dictVersion || msg.sys.dictVersion !== dictVersion) {
-
-      // may be deprecated in future
-      opts.dict = olemop.app.components.__dictionary__.getDict()
-
-      opts.routeToCode = olemop.app.components.__dictionary__.getDict()
-      opts.codeToRoute = olemop.app.components.__dictionary__.getAbbrs()
-      opts.dictVersion = dictVersion
-    }
-    opts.useDict = true
-  }
-
-  if (this.useProtobuf) {
-    var protoVersion = olemop.app.components.__protobuf__.getVersion()
-    if (!msg.sys.protoVersion || msg.sys.protoVersion !== protoVersion) {
-      opts.protos = olemop.app.components.__protobuf__.getProtos()
-    }
-    opts.useProto = true
-  }
-
-  if (this.useCrypto) {
-    olemop.app.components.__connector__.setPubKey(socket.id, msg.sys.rsa)
-  }
-
-  if (typeof this.userHandshake === 'function') {
-    this.userHandshake(msg, function (err, resp) {
-      if (err) {
-        process.nextTick(function () {
-          processError(socket, CODE_USE_ERROR)
-        })
+    if (typeof this.checkClient === 'function') {
+      if (!msg || !msg.sys || !this.checkClient(msg.sys.type, msg.sys.version)) {
+        Handshake.processError(socket, CODE_OLD_CLIENT)
         return
       }
-      process.nextTick(function () {
-        response(socket, opts, resp)
-      })
-    }, socket)
-    return
-  }
+    }
 
-  process.nextTick(function () {
-    response(socket, opts)
-  })
+    const opts = {
+      heartbeat: Handshake.setupHeartbeat(this)
+    }
+
+    if (this.useDict) {
+      const dictVersion = olemop.app.components.__dictionary__.getVersion()
+      if (!msg.sys.dictVersion || msg.sys.dictVersion !== dictVersion) {
+        // may be deprecated in future
+        opts.dict = olemop.app.components.__dictionary__.getDict()
+
+        opts.routeToCode = olemop.app.components.__dictionary__.getDict()
+        opts.codeToRoute = olemop.app.components.__dictionary__.getAbbrs()
+        opts.dictVersion = dictVersion
+      }
+      opts.useDict = true
+    }
+
+    if (this.useProtobuf) {
+      const protoVersion = olemop.app.components.__protobuf__.getVersion()
+      if (!msg.sys.protoVersion || msg.sys.protoVersion !== protoVersion) {
+        opts.protos = olemop.app.components.__protobuf__.getProtos()
+      }
+      opts.useProto = true
+    }
+
+    if (this.useCrypto) {
+      olemop.app.components.__connector__.setPubKey(socket.id, msg.sys.rsa)
+    }
+
+    if (typeof this.userHandshake === 'function') {
+      this.userHandshake(msg, (err, resp) => {
+        if (err) {
+          process.nextTick(() => {
+            Handshake.processError(socket, CODE_USE_ERROR)
+          })
+          return
+        }
+        process.nextTick(() => {
+          Handshake.response(socket, opts, resp)
+        })
+      }, socket)
+      return
+    }
+
+    process.nextTick(() => {
+      Handshake.response(socket, opts)
+    })
+  }
 }
 
-var setupHeartbeat = function (self) {
-  return self.heartbeatSec
-}
-
-var response = function (socket, sys, resp) {
-  var res = {
-    code: CODE_OK,
-    sys: sys
-  }
-  if (resp) {
-    res.user = resp
-  }
-  socket.handshakeResponse(Package.encode(Package.TYPE_HANDSHAKE, new Buffer(JSON.stringify(res))))
-}
-
-var processError = function (socket, code) {
-  var res = {
-    code: code
-  }
-  socket.sendForce(Package.encode(Package.TYPE_HANDSHAKE, new Buffer(JSON.stringify(res))))
-  process.nextTick(function () {
-    socket.disconnect()
-  })
-}
+module.exports = Handshake

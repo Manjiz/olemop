@@ -1,25 +1,20 @@
-var Message = require('@olemop/protocol').Message
-var Constants = require('../../util/constants')
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
+const Message = require('@olemop/protocol').Message
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
 
-var encode = function (reqId, route, msg) {
-  if (reqId) {
-    return composeResponse(this, reqId, route, msg)
-  } else {
-    return composePush(this, route, msg)
-  }
+const encode = function (reqId, route, msg) {
+  return reqId ? composeResponse(this, reqId, route, msg) : composePush(this, route, msg)
 }
 
-var decode = function (msg) {
+const decode = function (msg) {
   msg = Message.decode(msg.body)
-  var route = msg.route
+  let route = msg.route
 
   // decode use dictionary
   if (msg.compressRoute) {
     if (this.connector.useDict) {
-      var abbrs = this.dictionary.getAbbrs()
+      const abbrs = this.dictionary.getAbbrs()
       if (!abbrs[route]) {
-        logger.error('dictionary error! no abbrs for route : %s', route)
+        logger.error(`dictionary error! no abbrs for route: ${route}`)
         return null
       }
       route = msg.route = abbrs[route]
@@ -43,7 +38,7 @@ var decode = function (msg) {
   return msg
 }
 
-var composeResponse = function (server, msgId, route, msgBody) {
+const composeResponse = function (server, msgId, route, msgBody) {
   if (!msgId || !route || !msgBody) {
     return null
   }
@@ -51,15 +46,15 @@ var composeResponse = function (server, msgId, route, msgBody) {
   return Message.encode(msgId, Message.TYPE_RESPONSE, 0, null, msgBody)
 }
 
-var composePush = function (server, route, msgBody) {
+const composePush = function (server, route, msgBody) {
   if (!route || !msgBody) {
     return null
   }
   msgBody = encodeBody(server, route, msgBody)
   // encode use dictionary
-  var compressRoute = 0
+  let compressRoute = 0
   if (server.dictionary) {
-    var dict = server.dictionary.getDict()
+    const dict = server.dictionary.getDict()
     if (server.connector.useDict && dict[route]) {
       route = dict[route]
       compressRoute = 1
@@ -68,7 +63,7 @@ var composePush = function (server, route, msgBody) {
   return Message.encode(0, Message.TYPE_PUSH, compressRoute, route, msgBody)
 }
 
-var encodeBody = function (server, route, msgBody) {
+const encodeBody = function (server, route, msgBody) {
     // encode use protobuf
   if (server.protobuf && server.protobuf.getProtos().server[route]) {
     msgBody = server.protobuf.encode(route, msgBody)
@@ -79,6 +74,6 @@ var encodeBody = function (server, route, msgBody) {
 }
 
 module.exports = {
-  encode: encode,
-  decode: decode
+  encode,
+  decode
 }

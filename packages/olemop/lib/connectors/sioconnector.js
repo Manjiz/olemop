@@ -1,19 +1,20 @@
-var util = require('util')
-var EventEmitter = require('events')
-var httpServer = require('http').createServer()
-var SioSocket = require('./siosocket')
+const util = require('util')
+const EventEmitter = require('events')
+const httpServer = require('http').createServer()
+const socketIO = require('socket.io')
+const SioSocket = require('./siosocket')
 
-var PKG_ID_BYTES = 4
-var PKG_ROUTE_LENGTH_BYTES = 1
-var PKG_HEAD_BYTES = PKG_ID_BYTES + PKG_ROUTE_LENGTH_BYTES
+const PKG_ID_BYTES = 4
+const PKG_ROUTE_LENGTH_BYTES = 1
+const PKG_HEAD_BYTES = PKG_ID_BYTES + PKG_ROUTE_LENGTH_BYTES
 
-var curId = 1
+let curId = 1
 
 /**
  * Connector that manager low level connection and protocol bewteen server and client.
  * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
  */
-var Connector = function (port, host, opts) {
+const Connector = function (port, host, opts) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts)
   }
@@ -36,9 +37,7 @@ module.exports = Connector
  * Start connector to listen the specified port
  */
 Connector.prototype.start = function (cb) {
-  var self = this
-
-  var sio = require('socket.io')(httpServer, Object.assign({
+  const sio = socketIO(httpServer, Object.assign({
     path: '/socket.io',
     pingTimeout: this.heartbeatTimeout,
     pingInterval: this.heartbeatInterval,
@@ -47,15 +46,15 @@ Connector.prototype.start = function (cb) {
     ]
   }, this.opts))
 
-  var port = this.port
-  httpServer.listen(port, function () {
-    console.log('sio Server listening at port %d', port)
+  const port = this.port
+  httpServer.listen(port, () => {
+    console.log(`sio Server listening at port ${port}`)
   })
 
-  sio.on('connection', function (socket) {
-    var siosocket = new SioSocket(curId++, socket)
-    self.emit('connection', siosocket)
-    siosocket.on('closing', function (reason) {
+  sio.on('connection', (socket) => {
+    const siosocket = new SioSocket(curId++, socket)
+    this.emit('connection', siosocket)
+    siosocket.on('closing', (reason) => {
       siosocket.send({route: 'onKick', reason: reason})
     })
   })
@@ -72,11 +71,7 @@ Connector.prototype.stop = function (force, cb) {
 }
 
 Connector.encode = Connector.prototype.encode = function (reqId, route, msg) {
-  if (reqId) {
-    return composeResponse(reqId, route, msg)
-  } else {
-    return composePush(route, msg)
-  }
+  return reqId ? composeResponse(reqId, route, msg) : composePush(route, msg)
 }
 
 /**
@@ -92,37 +87,37 @@ Connector.encode = Connector.prototype.encode = function (reqId, route, msg) {
  * @returns {Object}      message object
  */
 Connector.decode = Connector.prototype.decode = function (msg) {
-  var index = 0
+  let index = 0
 
-  var id = parseIntField(msg, index, PKG_ID_BYTES)
+  const id = parseIntField(msg, index, PKG_ID_BYTES)
   index += PKG_ID_BYTES
 
-  var routeLen = parseIntField(msg, index, PKG_ROUTE_LENGTH_BYTES)
+  const routeLen = parseIntField(msg, index, PKG_ROUTE_LENGTH_BYTES)
 
-  var route = msg.substr(PKG_HEAD_BYTES, routeLen)
-  var body = msg.substr(PKG_HEAD_BYTES + routeLen)
+  const route = msg.substr(PKG_HEAD_BYTES, routeLen)
+  const body = msg.substr(PKG_HEAD_BYTES + routeLen)
 
   return {
-    id: id,
-    route: route,
+    id,
+    route,
     body: JSON.parse(body)
   }
 }
 
-var composeResponse = function (msgId, route, msgBody) {
+const composeResponse = (msgId, route, msgBody) => {
   return {
     id: msgId,
     body: msgBody
   }
 }
 
-var composePush = function (route, msgBody) {
-  return JSON.stringify({route: route, body: msgBody})
+const composePush = (route, msgBody) => {
+  return JSON.stringify({ route, body: msgBody })
 }
 
-var parseIntField = function (str, offset, len) {
-  var res = 0
-  for (var i=0; i<len; i++) {
+const parseIntField = (str, offset, len) => {
+  let res = 0
+  for (let i = 0; i < len; i++) {
     if (i > 0) {
       res <<= 8
     }

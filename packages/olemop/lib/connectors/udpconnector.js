@@ -1,34 +1,35 @@
-var net = require('net')
-var util = require('util')
-var dgram = require("dgram")
-var utils = require('../util/utils')
-var Constants = require('../util/constants')
-var UdpSocket = require('./udpsocket')
-var Kick = require('./commands/kick')
-var Handshake = require('./commands/handshake')
-var Heartbeat = require('./commands/heartbeat')
-var protocol = require('@olemop/protocol')
-var Package = protocol.Package
-var Message = protocol.Message
-var coder = require('./common/coder')
-var EventEmitter = require('events')
+const net = require('net')
+const util = require('util')
+const dgram = require('dgram')
+const EventEmitter = require('events')
+const protocol = require('@olemop/protocol')
+const utils = require('../util/utils')
+const Constants = require('../util/constants')
+const UdpSocket = require('./udpsocket')
+const Kick = require('./commands/kick')
+const coder = require('./common/coder')
+const Handshake = require('./commands/handshake')
+const Heartbeat = require('./commands/heartbeat')
 
-var curId = 1
+const Package = protocol.Package
+const Message = protocol.Message
 
-var Connector = function (port, host, opts) {
+let curId = 1
+
+const Connector = function (port, host, opts = {}) {
   if (!(this instanceof Connector)) {
     return new Connector(port, host, opts)
   }
 
   EventEmitter.call(this)
-  this.opts = opts || {}
+  this.opts = opts
   this.type = opts.udpType || 'udp4'
   this.handshake = new Handshake(opts)
   if (!opts.heartbeat) {
     opts.heartbeat = Constants.TIME.DEFAULT_UDP_HEARTBEAT_TIME
     opts.timeout = Constants.TIME.DEFAULT_UDP_HEARTBEAT_TIMEOUT
   }
-  this.heartbeat = new Heartbeat(utils.extends(opts, {disconnectOnTimeout: true}))
+  this.heartbeat = new Heartbeat(utils.extends(opts, { disconnectOnTimeout: true }))
   this.clients = {}
   this.host = host
   this.port = port
@@ -39,41 +40,33 @@ util.inherits(Connector, EventEmitter)
 module.exports = Connector
 
 Connector.prototype.start = function (cb) {
-  var self = this
   this.tcpServer = net.createServer()
-  this.socket = dgram.createSocket(this.type, function (msg, peer) {
-    var key = genKey(peer)
-    if (!self.clients[key]) {
-      var udpsocket = new UdpSocket(curId++, self.socket, peer)
-      self.clients[key] = udpsocket
+  this.socket = dgram.createSocket(this.type, (msg, peer) => {
+    const key = genKey(peer)
+    if (!this.clients[key]) {
+      const udpsocket = new UdpSocket(curId++, this.socket, peer)
+      this.clients[key] = udpsocket
 
-      udpsocket.on('handshake',
-      self.handshake.handle.bind(self.handshake, udpsocket))
-
-      udpsocket.on('heartbeat',
-      self.heartbeat.handle.bind(self.heartbeat, udpsocket))
-
-      udpsocket.on('disconnect',
-      self.heartbeat.clear.bind(self.heartbeat, udpsocket.id))
-
-      udpsocket.on('disconnect', function () {
-        delete self.clients[genKey(udpsocket.peer)]
+      udpsocket.on('handshake', this.handshake.handle.bind(this.handshake, udpsocket))
+      udpsocket.on('heartbeat', this.heartbeat.handle.bind(this.heartbeat, udpsocket))
+      udpsocket.on('disconnect', this.heartbeat.clear.bind(this.heartbeat, udpsocket.id))
+      udpsocket.on('disconnect', () => {
+        delete this.clients[genKey(udpsocket.peer)]
       })
-
       udpsocket.on('closing', Kick.handle.bind(null, udpsocket))
 
-      self.emit('connection', udpsocket)
+      this.emit('connection', udpsocket)
     }
   })
 
-  this.socket.on('message', function (data, peer) {
-    var socket = self.clients[genKey(peer)]
+  this.socket.on('message', (data, peer) => {
+    const socket = this.clients[genKey(peer)]
     if (socket) {
       socket.emit('package', data)
     }
   })
 
-  this.socket.on('error', function (err) {
+  this.socket.on('error', (err) => {
     logger.error('udp socket encounters with error: %j', err.stack)
     return
   })
@@ -92,6 +85,4 @@ Connector.prototype.stop = function (force, cb) {
   process.nextTick(cb)
 }
 
-var genKey = function (peer) {
-  return peer.address + ":" + peer.port
-}
+const genKey = (peer) => `${peer.address}:${peer.port}`

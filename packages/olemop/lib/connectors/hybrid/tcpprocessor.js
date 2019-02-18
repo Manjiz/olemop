@@ -1,40 +1,38 @@
-var EventEmitter = require('events')
-var util = require('util')
-var utils = require('../../util/utils')
-var TcpSocket = require('./tcpsocket')
+const EventEmitter = require('events')
+const utils = require('../../util/utils')
+const TcpSocket = require('./tcpsocket')
 
-var ST_STARTED = 1
-var ST_CLOSED = 2
+const ST_STARTED = 1
+const ST_CLOSED = 2
 
 // private protocol, no need exports
-var HEAD_SIZE = 4
+const HEAD_SIZE = 4
 
 /**
  * websocket protocol processor
  */
-var Processor = function (closeMethod) {
-  EventEmitter.call(this)
-  this.closeMethod = closeMethod
-  this.state = ST_STARTED
-}
-util.inherits(Processor, EventEmitter)
-
-module.exports = Processor
-
-Processor.prototype.add = function (socket, data) {
-  if (this.state !== ST_STARTED) {
-    return
+class TCPProcessor extends EventEmitter {
+  constructor(closeMethod) {
+    super()
+    this.closeMethod = closeMethod
+    this.state = ST_STARTED
   }
-  var tcpsocket = new TcpSocket(socket, {headSize: HEAD_SIZE,
-                                         headHandler: utils.headHandler,
-                                         closeMethod: this.closeMethod})
-  this.emit('connection', tcpsocket)
-  socket.emit('data', data)
+
+  add(socket, data) {
+    if (this.state !== ST_STARTED) return
+    const tcpsocket = new TcpSocket(socket, {
+      headSize: HEAD_SIZE,
+      headHandler: utils.headHandler,
+      closeMethod: this.closeMethod
+    })
+    this.emit('connection', tcpsocket)
+    socket.emit('data', data)
+  }
+
+  close() {
+    if (this.state !== ST_STARTED) return
+    this.state = ST_CLOSED
+  }
 }
 
-Processor.prototype.close = function () {
-  if (this.state !== ST_STARTED) {
-    return
-  }
-  this.state = ST_CLOSED
-}
+module.exports = TCPProcessor

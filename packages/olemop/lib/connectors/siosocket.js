@@ -1,13 +1,13 @@
-var util = require('util')
-var EventEmitter = require('events')
+const util = require('util')
+const EventEmitter = require('events')
 
-var ST_INITED = 0
-var ST_CLOSED = 1
+const ST_INITED = 0
+const ST_CLOSED = 1
 
 /**
  * Socket class that wraps socket.io socket to provide unified interface for up level.
  */
-var Socket = function (id, socket) {
+const Socket = function (id, socket) {
   EventEmitter.call(this)
   this.id = id
   this.socket = socket
@@ -16,19 +16,17 @@ var Socket = function (id, socket) {
     port: socket.handshake.address.port
   }
 
-  var self = this
-
   socket.on('disconnect', this.emit.bind(this, 'disconnect'))
 
   socket.on('error', this.emit.bind(this, 'error'))
 
-  socket.on('message', function (msg) {
-    self.emit('message', msg)
+  socket.on('message', (msg) => {
+    this.emit('message', msg)
   })
 
   this.state = ST_INITED
 
-  // TODO: any other events?
+  // @todo: any other events?
 }
 
 util.inherits(Socket, EventEmitter)
@@ -36,9 +34,7 @@ util.inherits(Socket, EventEmitter)
 module.exports = Socket
 
 Socket.prototype.send = function (msg) {
-  if (this.state !== ST_INITED) {
-    return
-  }
+  if (this.state !== ST_INITED) return
   if (typeof msg !== 'string') {
     msg = JSON.stringify(msg)
   }
@@ -46,10 +42,7 @@ Socket.prototype.send = function (msg) {
 }
 
 Socket.prototype.disconnect = function () {
-  if (this.state === ST_CLOSED) {
-    return
-  }
-
+  if (this.state === ST_CLOSED) return
   this.state = ST_CLOSED
   this.socket.disconnect()
 }
@@ -61,19 +54,9 @@ Socket.prototype.sendBatch = function (msgs) {
 /**
  * Encode batch msg to client
  */
-var encodeBatch = function (msgs) {
-  var res = '[', msg
-  for (var i=0, l=msgs.length; i<l; i++) {
-    if (i > 0) {
-      res += ','
-    }
-    msg = msgs[i]
-    if (typeof msg === 'string') {
-      res += msg
-    } else {
-      res += JSON.stringify(msg)
-    }
-  }
-  res += ']'
-  return res
+const encodeBatch = (msgs) => {
+  const joinStr = msgs.map((msg) => {
+    return typeof msg === 'string' ? msg : JSON.stringify(msg)
+  }).join(',')
+  return `[${joinStr}]`
 }
