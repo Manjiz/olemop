@@ -6,10 +6,9 @@ const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const Constants = require('../util/constants')
 
 class Component {
-  constructor(app, opts) {
+  constructor(app, opts = {}) {
     this.name = '__protobuf__'
     this.app = app
-    opts = opts || {}
     this.watchers = {}
     this.serverProtos = {}
     this.clientProtos = {}

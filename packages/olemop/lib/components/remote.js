@@ -89,9 +89,7 @@ class Component {
  *                       opts.acceptorFactory {Object}: acceptorFactory.create(opts, cb)
  * @returns {Object}     remote component instances
  */
-module.exports = (app, opts) => {
-  opts = opts || {}
-
+module.exports = (app, opts = {}) => {
   // cacheMsg is deprecated, just for compatibility here.
   opts.bufferMsg = opts.bufferMsg || opts.cacheMsg || false
   opts.interval = opts.interval || 30

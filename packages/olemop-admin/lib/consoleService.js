@@ -454,8 +454,7 @@ var aclControl = function (agent, action, method, moduleId, msg) {
  * @param {Object} opts construct parameter
  *                      opts.port {String | Number} listen port for master console
  */
-module.exports.createMasterConsole = function (opts) {
-	opts = opts || {}
+module.exports.createMasterConsole = function (opts = {}) {
 	opts.master = true
 	return new ConsoleService(opts)
 }

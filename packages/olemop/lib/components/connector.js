@@ -219,7 +219,7 @@ const handleMessage = (self, session, msg) => {
     logger.error(`invalid route string. route : ${msg.route}`)
     return
   }
-  self.server.globalHandle(msg, session.toFrontendSession(), (err, resp, opts) => {
+  self.server.globalHandle(msg, session.toFrontendSession(), (err, resp, opts = {}) => {
     if (resp && !msg.id) {
       logger.warn(`try to response to a notify: ${msg.route}`)
       return
@@ -229,7 +229,7 @@ const handleMessage = (self, session, msg) => {
     if (err && !resp.code) {
       resp.code = 500
     }
-    opts = { type: 'response', userOptions: opts || {} }
+    opts = { type: 'response', userOptions: opts }
     // for compatiablity
     opts.isResponse = true
 
@@ -301,9 +301,8 @@ const verifyMessage = (self, session, msg) => {
  *                      opts.connector {Object} provides low level network and protocol details implementation between server and clients.
  */
 class Component {
-  constructor(app, opts) {
+  constructor(app, opts = {}) {
     this.name = '__connector__'
-    opts = opts || {}
     this.app = app
     this.connector = getConnector(app, opts)
     this.encode = opts.encode

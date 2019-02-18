@@ -6,8 +6,8 @@ const hash = (algorithm, str) => crypto.createHash(algorithm).update(str).digest
 
 const compare = (v1, v2) => v1 > v2 ? 1 : v1 < v2 ? -1 : 0
 
-const ConsistentHash = function (nodes, opts) {
-  this.opts = opts || {}
+const ConsistentHash = function (nodes, opts = {}) {
+  this.opts = opts
   this.replicas = this.opts.replicas || 100
   this.algorithm = this.opts.algorithm || 'md5'
   this.station = this.opts.station

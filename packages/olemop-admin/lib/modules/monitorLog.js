@@ -24,8 +24,7 @@ module.exports.moduleId = 'monitorLog'
  * @param {Object} opts
  * @api public
  */
-var Module = function (opts) {
-	opts = opts || {}
+var Module = function (opts = {}) {
 	this.root = opts.path
 	this.interval = opts.interval || DEFAULT_INTERVAL
 }

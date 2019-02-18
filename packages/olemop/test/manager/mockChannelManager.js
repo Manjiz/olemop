@@ -1,9 +1,9 @@
 var DEFAULT_PREFIX = 'OLEMOP:CHANNEL'
 var utils = require('../../lib/util/utils')
 
-var MockManager = function (app, opts) {
+var MockManager = function (app, opts = {}) {
   this.app = app
-  this.opts = opts || {}
+  this.opts = opts
   this.prefix = opts.prefix || DEFAULT_PREFIX
 }
 

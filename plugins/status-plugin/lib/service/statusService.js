@@ -12,9 +12,9 @@ const getStatusManager = (app, opts) => {
 }
 
 class StatusService {
-  constructor (app, opts) {
+  constructor (app, opts = {}) {
     this.app = app
-    this.opts = opts || {}
+    this.opts = opts
     this.cleanOnStartUp = opts.cleanOnStartUp
     this.manager = getStatusManager(app, opts)
     this.state = ST_INITED

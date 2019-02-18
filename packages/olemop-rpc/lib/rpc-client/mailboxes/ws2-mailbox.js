@@ -263,6 +263,6 @@ MailBox.prototype.send = function (tracer, msg, opts, cb) {
  *                      opts.bufferMsg {Boolean} msg should be buffered or send immediately.
  *                      opts.interval {Boolean} msg queue flush interval if bufferMsg is true. default is 50 ms
  */
-module.exports.create = function (server, opts) {
-  return new MailBox(server, opts || {})
+module.exports.create = function (server, opts = {}) {
+  return new MailBox(server, opts)
 }

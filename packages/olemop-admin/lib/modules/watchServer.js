@@ -16,8 +16,7 @@ module.exports = function (opts) {
 
 module.exports.moduleId = 'watchServer'
 
-var Module = function (opts) {
-	opts = opts || {}
+var Module = function (opts = {}) {
 	this.app = opts.app
 }
 

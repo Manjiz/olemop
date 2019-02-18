@@ -16,8 +16,7 @@ module.exports = function (opts) {
 
 module.exports.moduleId = '__console__'
 
-var Module = function (opts) {
-  opts = opts || {}
+var Module = function (opts = {}) {
   this.app = opts.app
   this.starter = opts.starter
 }

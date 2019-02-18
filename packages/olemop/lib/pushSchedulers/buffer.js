@@ -1,12 +1,11 @@
 var utils = require('../util/utils')
 var DEFAULT_FLUSH_INTERVAL = 20
 
-var Service = function (app, opts) {
+var Service = function (app, opts = {}) {
   if (!(this instanceof Service)) {
     return new Service(app, opts)
   }
 
-  opts = opts || {}
   this.app = app
   this.flushInterval = opts.flushInterval || DEFAULT_FLUSH_INTERVAL
   // sid -> msg queue
@@ -33,8 +32,7 @@ Service.prototype.stop = function (force, cb) {
   })
 }
 
-Service.prototype.schedule = function (reqId, route, msg, recvs, opts, cb) {
-  opts = opts || {}
+Service.prototype.schedule = function (reqId, route, msg, recvs, opts = {}, cb) {
   if (opts.type === 'broadcast') {
     doBroadcast(this, msg, opts.userOptions)
   } else {

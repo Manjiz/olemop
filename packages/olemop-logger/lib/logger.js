@@ -121,10 +121,9 @@ const configureLevels = (levels) => {
  * @param {string|Object} config configure filename or configure object
  * @param {Object} opts options
  */
-const configure = (config, opts) => {
+const configure = (config, opts = {}) => {
 	const filename = config
 	config = config || process.env.LOG4JS_CONFIG
-	opts = opts || {}
 
 	if (typeof config === 'string') {
 		config = JSON.parse(fs.readFileSync(config, 'utf8'))

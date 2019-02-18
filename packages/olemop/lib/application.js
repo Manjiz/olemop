@@ -39,8 +39,7 @@ var STATE_STOPED  = 4
  *
  *   - setup default configuration
  */
-Application.init = function (opts) {
-  opts = opts || {}
+Application.init = function (opts = {}) {
   // loaded component list
   this.loaded = []
   // name -> component map
@@ -642,14 +641,13 @@ Application.registerAdmin = function (moduleId, module, opts) {
  * @param  {[type]} opts    (optional) construct parameters for the factory function
  * @memberOf Application
  */
-Application.use = function (plugin, opts) {
+Application.use = function (plugin, opts = {}) {
   if (!plugin.components) {
     logger.error('invalid components, no components exist')
     return
   }
 
   var self = this
-  opts = opts || {}
   var dir = path.dirname(plugin.components)
 
   if (!fs.existsSync(plugin.components)) {

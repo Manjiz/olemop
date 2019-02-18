@@ -61,9 +61,9 @@ const clearCbTimeout = (mailbox, id) => {
   delete mailbox.timeout[id]
 }
 
-const MailBox = function (server, opts) {
+const MailBox = function (server, opts = {}) {
   EventEmitter.call(this)
-  this.opts = opts || {}
+  this.opts = opts
   this.id = server.id
   this.host = server.host
   this.port = server.port
@@ -197,6 +197,6 @@ MailBox.prototype.send = function (tracer, msg, opts, cb) {
  *                      opts.bufferMsg {Boolean} msg should be buffered or send immediately.
  *                      opts.interval {Boolean} msg queue flush interval if bufferMsg is true. default is 50 ms
  */
-module.exports.create = function (server, opts) {
-  return new MailBox(server, opts || {})
+module.exports.create = function (server, opts = {}) {
+  return new MailBox(server, opts)
 }

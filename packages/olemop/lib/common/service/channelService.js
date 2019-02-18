@@ -17,8 +17,7 @@ var ST_DESTROYED = 1
  * @class
  * @constructor
  */
-var ChannelService = function (app, opts) {
-  opts = opts || {}
+var ChannelService = function (app, opts = {}) {
   this.app = app
   this.channels = {}
   this.prefix = opts.prefix
@@ -133,7 +132,7 @@ ChannelService.prototype.pushMessageByUids = function (route, msg, uids, opts, c
  * @param  {Function} cb         callback
  * @memberOf ChannelService
  */
-ChannelService.prototype.broadcast = (stype, route, msg, opts, cb) => {
+ChannelService.prototype.broadcast = (stype, route, msg, opts = {}, cb) => {
   const app = this.app
   const namespace = 'sys'
   const service = 'channelRemote'
@@ -146,7 +145,7 @@ ChannelService.prototype.broadcast = (stype, route, msg, opts, cb) => {
     return
   }
 
-  opts = { type: 'broadcast', userOptions: opts || {} }
+  opts = { type: 'broadcast', userOptions: opts }
   // for compatiblity
   opts.isBroadcast = true
   if (opts.userOptions) {
@@ -370,7 +369,7 @@ var deleteFrom = function (uid, sid, group) {
  *
  * @api private
  */
-const sendMessageByGroup = (channelService, route, msg, groups, opts, cb) => {
+const sendMessageByGroup = (channelService, route, msg, groups, opts = {}, cb) => {
   const app = channelService.app
   const namespace = 'sys'
   const service = 'channelRemote'
@@ -384,7 +383,7 @@ const sendMessageByGroup = (channelService, route, msg, groups, opts, cb) => {
     return
   }
 
-  opts = { type: 'push', userOptions: opts || {} }
+  opts = { type: 'push', userOptions: opts }
   // for compatiblity
   opts.isPush = true
 

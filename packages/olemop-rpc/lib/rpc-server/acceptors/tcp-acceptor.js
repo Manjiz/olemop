@@ -70,9 +70,8 @@ const flush = (acceptor) => {
   }
 }
 
-const Acceptor = function (opts, cb) {
+const Acceptor = function (opts = {}, cb) {
   EventEmitter.call(this)
-  opts = opts || {}
   this.bufferMsg = opts.bufferMsg
   // flush interval in ms
   this.interval = opts.interval
@@ -156,8 +155,8 @@ Acceptor.prototype.close = function () {
  * @param opts init params
  * @param cb(tracer, msg, cb) callback function that would be invoked when new message arrives
  */
-module.exports.create = function (opts, cb) {
-  return new Acceptor(opts || {}, cb)
+module.exports.create = function (opts = {}, cb) {
+  return new Acceptor(opts, cb)
 }
 
 process.on('SIGINT', () => {

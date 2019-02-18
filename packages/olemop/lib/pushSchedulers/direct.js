@@ -1,18 +1,16 @@
 var utils = require('../util/utils')
 
-var Service = function (app, opts) {
+var Service = function (app, opts = {}) {
   if (!(this instanceof Service)) {
     return new Service(app, opts)
   }
 
-  opts = opts || {}
   this.app = app
 }
 
 module.exports = Service
 
-Service.prototype.schedule = function (reqId, route, msg, recvs, opts, cb) {
-  opts = opts || {}
+Service.prototype.schedule = function (reqId, route, msg, recvs, opts = {}, cb) {
   if (opts.type === 'broadcast') {
     doBroadcast(this, msg, opts.userOptions)
   } else {

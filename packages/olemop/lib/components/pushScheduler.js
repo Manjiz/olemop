@@ -25,10 +25,9 @@ const getScheduler = (pushSchedulerComp, app, opts) => {
 }
 
 class PushScheduler {
-  constructor(app, opts) {
+  constructor(app, opts = {}) {
     this.name = '__pushScheduler__'
     this.app = app
-    opts = opts || {}
     this.scheduler = getScheduler(this, app, opts)
   }
 

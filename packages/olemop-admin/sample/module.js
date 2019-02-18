@@ -11,8 +11,7 @@ module.exports = function (opts) {
 
 module.exports.moduleId = 'test_module'
 
-var Module = function (opts) {
-	opts = opts || {}
+var Module = function (opts = {}) {
 	this.type = opts.type || 'pull'
 	this.interval = opts.interval || DEFAULT_INTERVAL
 	this.delay = opts.delay || DEFAULT_DELAY

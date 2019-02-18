@@ -450,8 +450,8 @@ MailStation.prototype.connect = function (tracer, serverId, cb) {
  *           opts.mailboxFactory {Function} mailbox factory function
  * @returns {Object}      mail station instance
  */
-const create = function (opts) {
-  return new MailStation(opts || {})
+const create = function (opts = {}) {
+  return new MailStation(opts)
 }
 
 module.exports = {

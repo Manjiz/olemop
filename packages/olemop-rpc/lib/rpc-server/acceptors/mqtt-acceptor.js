@@ -186,6 +186,6 @@ Acceptor.prototype.onSocketClose = function (socket) {
  * @param opts init params
  * @param cb(tracer, msg, cb) callback function that would be invoked when new message arrives
  */
-module.exports.create = function (opts, cb) {
-  return new Acceptor(opts || {}, cb)
+module.exports.create = function (opts = {}, cb) {
+  return new Acceptor(opts, cb)
 }

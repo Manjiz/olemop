@@ -25,9 +25,9 @@ const watchServices = (gateway, dispatcher) => {
   })
 }
 
-const Gateway = function (opts) {
+const Gateway = function (opts = {}) {
   EventEmitter.call(this)
-  this.opts = opts || {}
+  this.opts = opts
   this.port = opts.port || 3050
   this.started = false
   this.stoped = false

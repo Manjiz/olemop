@@ -230,8 +230,7 @@ class Component {
  *                      opts.mailBoxFactory: (optional) mail box factory instance.
  * @returns {Object}     component instance
  */
-module.exports = (app, opts) => {
-  opts = opts || {}
+module.exports = (app, opts = {}) => {
   // proxy default config
   // cacheMsg is deprecated, just for compatibility here.
   opts.bufferMsg = opts.bufferMsg || opts.cacheMsg || false

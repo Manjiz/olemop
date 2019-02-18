@@ -201,8 +201,7 @@ const generateProxy = (client, record, context) => {
 /**
  * RPC Client Class
  */
-const Client = function (opts) {
-  opts = opts || {}
+const Client = function (opts = {}) {
   this._context = opts.context
   this._routeContext = opts.routeContext
   this.router = opts.router || router.df

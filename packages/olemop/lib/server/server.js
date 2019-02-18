@@ -31,8 +31,8 @@ module.exports.create = function (app, opts) {
   return new Server(app, opts)
 }
 
-var Server = function (app, opts) {
-  this.opts = opts || {}
+var Server = function (app, opts = {}) {
+  this.opts = opts
   this.app = app
   this.globalFilterService = null
   this.filterService = null

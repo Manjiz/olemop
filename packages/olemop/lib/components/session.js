@@ -8,9 +8,8 @@ const SessionService = require('../common/service/sessionService')
  * @param {Object} opts attach parameters
  */
 class Component {
-  constructor (app, opts) {
+  constructor (app, opts = {}) {
     this.name = '__session__'
-    opts = opts || {}
     this.app = app
     this.service = new SessionService(opts)
 

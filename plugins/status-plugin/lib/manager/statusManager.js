@@ -22,9 +22,9 @@ const genCleanKey = (self) => {
 }
 
 class StatusManager {
-  constructor (app, opts) {
+  constructor (app, opts = {}) {
     this.app = app
-    this.opts = opts || {}
+    this.opts = opts
     this.statusKeyPrefix = opts.statusKeyPrefix || DEFAULT_PREFIX
     this.host = opts.host
     this.port = opts.port

@@ -42,8 +42,7 @@ const dclone = (src) => {
  * @constructor
  */
 class SessionService {
-  constructor (opts) {
-    opts = opts || {}
+  constructor (opts = {}) {
     this.singleSession = opts.singleSession
     // sid -> session
     this.sessions = {}
