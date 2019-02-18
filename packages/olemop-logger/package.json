@@ -1,6 +1,6 @@
 {
   "name": "@olemop/logger",
-  "version": "0.0.48",
+  "version": "0.0.52",
   "main": "lib/logger",
   "scripts": {
     "test": "jest"

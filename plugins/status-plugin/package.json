@@ -1,8 +1,8 @@
 {
   "name": "@olemop/status-plugin",
-  "version": "0.0.48",
+  "version": "0.0.52",
   "dependencies": {
-    "@olemop/logger": "^0.0.48",
+    "@olemop/logger": "^0.0.52",
     "redis": "^2.8.0"
   },
   "publishConfig": {
