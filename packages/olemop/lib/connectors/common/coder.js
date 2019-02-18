@@ -32,8 +32,6 @@ var decode = function (msg) {
   // decode use protobuf
   if (this.protobuf && this.protobuf.getProtos().client[route]) {
     msg.body = this.protobuf.decode(route, msg.body)
-  } else if (this.decodeIO_protobuf && this.decodeIO_protobuf.check(Constants.RESERVED.CLIENT, route)) {
-    msg.body = this.decodeIO_protobuf.decode(route, msg.body)
   } else {
     try {
       msg.body = JSON.parse(msg.body.toString('utf8'))
@@ -74,8 +72,6 @@ var encodeBody = function (server, route, msgBody) {
     // encode use protobuf
   if (server.protobuf && server.protobuf.getProtos().server[route]) {
     msgBody = server.protobuf.encode(route, msgBody)
-  } else if (server.decodeIO_protobuf && server.decodeIO_protobuf.check(Constants.RESERVED.SERVER, route)) {
-     msgBody = server.decodeIO_protobuf.encode(route, msgBody)
   } else {
     msgBody = new Buffer(JSON.stringify(msgBody), 'utf8')
   }

@@ -2,19 +2,14 @@ const EventEmitter = require('wolfy87-eventemitter')
 const Protocol = require('@olemop/protocol')
 const protobuf = require('@olemop/protobuf/lib/client/protobuf')
 // const rsa = require('./olemop-rsasign/rsa')
-// const decodeIO_protobuf = require('./lib/olemop-decodeIO-protobuf/ProtoBuf')
 const envUtil = require(`./envUtil/${__PLATFORM__}`)
 
 // @todo const
 let rsa
-// @todo const
-let decodeIO_protobuf
 
 const JS_WS_CLIENT_TYPE = 'js-websocket'
 const JS_WS_CLIENT_VERSION = '0.0.1'
 
-let decodeIO_encoder = null
-let decodeIO_decoder = null
 const Package = Protocol.Package
 const Message = Protocol.Message
 
@@ -134,9 +129,6 @@ const defaultEncode = olemop.encode = (reqId, route, msg) => {
   // compress message by protobuf
   if (protobuf && clientProtos[route]) {
     msg = protobuf.encode(route, msg)
-  } else if (decodeIO_encoder && decodeIO_encoder.lookup(route)) {
-    const Builder = decodeIO_encoder.build(route)
-    msg = new Builder(msg).encodeNB()
   } else {
     msg = Protocol.strencode(JSON.stringify(msg))
   }
@@ -168,10 +160,6 @@ const connect = (params, url, cb) => {
 
       if (protobuf) {
         protobuf.init({ encoderProtos: clientProtos, decoderProtos: serverProtos })
-      }
-      if (decodeIO_protobuf) {
-        decodeIO_encoder = decodeIO_protobuf.loadJson(clientProtos)
-        decodeIO_decoder = decodeIO_protobuf.loadJson(serverProtos)
       }
     }
   }
@@ -402,8 +390,6 @@ const deCompose = (msg) => {
   }
   if (protobuf && serverProtos[route]) {
     return protobuf.decodeStr(route, msg.body)
-  } else if (decodeIO_decoder && decodeIO_decoder.lookup(route)) {
-    return decodeIO_decoder.build(route).decode(msg.body)
   } else {
     return JSON.parse(Protocol.strdecode(msg.body))
   }
@@ -452,10 +438,6 @@ const initData = (data) => {
 
     if (protobuf) {
       protobuf.init({encoderProtos: protos.client, decoderProtos: protos.server})
-    }
-    if (decodeIO_protobuf) {
-      decodeIO_encoder = decodeIO_protobuf.loadJson(clientProtos)
-      decodeIO_decoder = decodeIO_protobuf.loadJson(serverProtos)
     }
   }
 }

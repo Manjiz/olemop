@@ -70,17 +70,6 @@ Command.prototype.handle = function (socket, msg) {
     opts.useProto = true
   }
 
-  if (olemop.app.components.__decodeIO__protobuf__) {
-    if (this.useProtobuf) {
-      throw new Error('protobuf can not be both used in the same project.')
-    }
-    var version = olemop.app.components.__decodeIO__protobuf__.getVersion()
-    if (!msg.sys.protoVersion || msg.sys.protoVersion < version) {
-      opts.protos = olemop.app.components.__decodeIO__protobuf__.getProtos()
-    }
-    opts.useProto = true
-  }
-
   if (this.useCrypto) {
     olemop.app.components.__connector__.setPubKey(socket.id, msg.sys.rsa)
   }
