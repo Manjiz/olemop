@@ -2,43 +2,40 @@
  * Filter for rpc log.
  * Record used time for remote process call.
  */
-var rpcLogger = require('@olemop/logger').getLogger('rpc-log', __filename)
-var utils = require('../../util/utils')
 
-module.exports = function () {
-  return new Filter()
-}
+const rpcLogger = require('@olemop/logger').getLogger('rpc-log', __filename)
+const utils = require('../../util/utils')
 
-var Filter = function () {
-}
-
-Filter.prototype.name = 'rpcLog'
-
-/**
- * Before filter for rpc
- */
-
-Filter.prototype.before = function (serverId, msg, opts, next) {
-  opts = opts||{}
-  opts.__start_time__ = Date.now()
-  next()
-}
-
-/**
- * After filter for rpc
- */
-Filter.prototype.after = function (serverId, msg, opts, next) {
-  if (opts && opts.__start_time__) {
-    var start = opts.__start_time__
-    var end = Date.now()
-    var timeUsed = end - start
-    var log = {
-      route: msg.service,
-      args: msg.args,
-      time: utils.format(new Date(start)),
-      timeUsed: timeUsed
-    }
-    rpcLogger.info(JSON.stringify(log))
+class RPCLogFilter {
+  constructor () {
+    this.name = 'rpcLog'
   }
-  next()
+
+  /**
+   * Before filter for rpc
+   */
+  before (serverId, msg, opts = {}, next) {
+    opts.__start_time__ = Date.now()
+    next()
+  }
+
+  /**
+   * After filter for rpc
+   */
+  after (serverId, msg, opts, next) {
+    if (opts && opts.__start_time__) {
+      const start = opts.__start_time__
+      rpcLogger.info(JSON.stringify({
+        route: msg.service,
+        args: msg.args,
+        time: utils.format(new Date(start)),
+        timeUsed: Date.now() - start
+      }))
+    }
+    next()
+  }
+}
+
+module.exports = () => {
+  return new RPCLogFilter()
 }

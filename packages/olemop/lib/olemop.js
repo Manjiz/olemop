@@ -105,10 +105,10 @@ fs.readdirSync(__dirname + '/filters/handler').forEach(function (filename) {
   })
 })
 
-fs.readdirSync(__dirname + '/filters/rpc').forEach(function (filename) {
+fs.readdirSync(__dirname + '/filters/rpc').forEach((filename) => {
   if (!/\.js$/.test(filename)) return
-  var name = path.basename(filename, '.js')
-  var _load = load.bind(null, './filters/rpc/', name)
+  const name = path.basename(filename, '.js')
+  const _load = load.bind(null, './filters/rpc/', name)
 
   Object.defineProperty(Olemop.rpcFilters, name, {
     get: _load

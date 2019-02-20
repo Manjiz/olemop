@@ -2,32 +2,30 @@
  * Filter for statistics.
  * Record used time for each request.
  */
-var conLogger = require('@olemop/logger').getLogger('con-log', __filename)
-var utils = require('../../util/utils')
 
-module.exports = function () {
-  return new Filter()
-}
+const conLogger = require('@olemop/logger').getLogger('con-log', __filename)
+const utils = require('../../util/utils')
 
-var Filter = function () {
-}
-
-Filter.prototype.before = function (msg, session, next) {
-  session.__startTime__ = Date.now()
-  next()
-}
-
-Filter.prototype.after = function (err, msg, session, resp, next) {
-  var start = session.__startTime__
-  if (typeof start === 'number') {
-    var timeUsed = Date.now() - start
-    var log = {
-      route : msg.__route__,
-      args : msg,
-      time : utils.format(new Date(start)),
-      timeUsed : timeUsed
-    }
-    conLogger.info(JSON.stringify(log))
+class TimeFilter {
+  before (msg, session, next) {
+    session.__startTime__ = Date.now()
+    next()
   }
-  next(err)
+
+  after (err, msg, session, resp, next) {
+    const start = session.__startTime__
+    if (typeof start === 'number') {
+      conLogger.info(JSON.stringify({
+        route: msg.__route__,
+        args: msg,
+        time: utils.format(new Date(start)),
+        timeUsed: Date.now() - start
+      }))
+    }
+    next(err)
+  }
+}
+
+module.exports = () => {
+  return new TimeFilter()
 }

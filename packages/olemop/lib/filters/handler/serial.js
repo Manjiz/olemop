@@ -1,38 +1,41 @@
 /**
  * Filter to keep request sequence.
  */
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
-var taskManager = require('../../common/manager/taskManager')
 
-module.exports = function (timeout) {
-  return new Filter(timeout)
-}
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const taskManager = require('../../common/manager/taskManager')
 
-var Filter = function (timeout) {
-  this.timeout = timeout
-}
-
-/**
- * request serialization after filter
- */
-Filter.prototype.before = function (msg, session, next) {
-  taskManager.addTask(session.id, function (task) {
-    session.__serialTask__ = task
-    next()
-  }, function () {
-    logger.error('[serial filter] msg timeout, msg:' + JSON.stringify(msg))
-  }, this.timeout)
-}
-
-/**
- * request serialization after filter
- */
-Filter.prototype.after = function (err, msg, session, resp, next) {
-  var task = session.__serialTask__
-  if (task) {
-    if (!task.done() && !err) {
-      err = new Error('task time out. msg:' + JSON.stringify(msg))
-    }
+class SerialFilter {
+  constructor (timeout) {
+    this.timeout = timeout
   }
-  next(err)
+
+  /**
+   * request serialization after filter
+   */
+  before (msg, session, next) {
+    taskManager.addTask(session.id, (task) => {
+      session.__serialTask__ = task
+      next()
+    }, () => {
+      logger.error(`[serial filter] msg timeout, msg: ${JSON.stringify(msg)}`)
+    }, this.timeout)
+  }
+
+  /**
+   * request serialization after filter
+   */
+  after (err, msg, session, resp, next) {
+    const task = session.__serialTask__
+    if (task) {
+      if (!task.done() && !err) {
+        err = new Error(`task time out. msg: ${JSON.stringify(msg)}`)
+      }
+    }
+    next(err)
+  }
+}
+
+module.exports = (timeout) => {
+  return new SerialFilter(timeout)
 }
