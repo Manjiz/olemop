@@ -163,11 +163,15 @@ class Component {
    * @returns {Void}
    */
   afterStart (cb) {
-    this.app.__defineGetter__('rpc', () => {
-      return this.client.proxies.user
+    Object.defineProperty(this.app, 'rpc', {
+      get: () => {
+        return this.client.proxies.user
+      }
     })
-    this.app.__defineGetter__('sysrpc', () => {
-      return this.client.proxies.sys
+    Object.defineProperty(this.app, 'sysrpc', {
+      get: () => {
+        return this.client.proxies.sys
+      }
     })
     this.app.set('rpcInvoke', this.client.rpcInvoke.bind(this.client), true)
     this.client.start(cb)

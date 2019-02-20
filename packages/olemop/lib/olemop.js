@@ -39,15 +39,17 @@ const Olemop = {
   rpcFilters: {}
 }
 
-Olemop.connectors = {}
-Olemop.connectors.__defineGetter__('sioconnector', load.bind(null, './connectors/sioconnector'))
-Olemop.connectors.__defineGetter__('hybridconnector', load.bind(null, './connectors/hybridconnector'))
-Olemop.connectors.__defineGetter__('udpconnector', load.bind(null, './connectors/udpconnector'))
-Olemop.connectors.__defineGetter__('mqttconnector', load.bind(null, './connectors/mqttconnector'))
+Olemop.connectors = {
+  get sioconnector() { return load('./connectors/sioconnector') },
+  get hybridconnector() { return load('./connectors/hybridconnector') },
+  get udpconnector() { return load('./connectors/udpconnector') },
+  get mqttconnector() { return load('./connectors/mqttconnector') }
+}
 
-Olemop.pushSchedulers = {}
-Olemop.pushSchedulers.__defineGetter__('direct', load.bind(null, './pushSchedulers/direct'))
-Olemop.pushSchedulers.__defineGetter__('buffer', load.bind(null, './pushSchedulers/buffer'))
+Olemop.pushSchedulers = {
+  get direct() { return load('./pushSchedulers/direct') },
+  get buffer() { return load('./pushSchedulers/buffer') }
+}
 
 var self = this
 
@@ -69,7 +71,7 @@ Olemop.createApp = function (opts) {
  * Get application
  */
 Object.defineProperty(Olemop, 'app', {
-  get: function () {
+  get () {
     return self.app
   }
 })
@@ -82,8 +84,12 @@ fs.readdirSync(__dirname + '/components').forEach(function (filename) {
   var name = path.basename(filename, '.js')
   var _load = load.bind(null, './components/', name)
 
-  Olemop.components.__defineGetter__(name, _load)
-  Olemop.__defineGetter__(name, _load)
+  Object.defineProperty(Olemop.components, name, {
+    get: _load
+  })
+  Object.defineProperty(Olemop, name, {
+    get: _load
+  })
 })
 
 fs.readdirSync(__dirname + '/filters/handler').forEach(function (filename) {
@@ -91,8 +97,12 @@ fs.readdirSync(__dirname + '/filters/handler').forEach(function (filename) {
   var name = path.basename(filename, '.js')
   var _load = load.bind(null, './filters/handler/', name)
 
-  Olemop.filters.__defineGetter__(name, _load)
-  Olemop.__defineGetter__(name, _load)
+  Object.defineProperty(Olemop.filters, name, {
+    get: _load
+  })
+  Object.defineProperty(Olemop, name, {
+    get: _load
+  })
 })
 
 fs.readdirSync(__dirname + '/filters/rpc').forEach(function (filename) {
@@ -100,7 +110,9 @@ fs.readdirSync(__dirname + '/filters/rpc').forEach(function (filename) {
   var name = path.basename(filename, '.js')
   var _load = load.bind(null, './filters/rpc/', name)
 
-  Olemop.rpcFilters.__defineGetter__(name, _load)
+  Object.defineProperty(Olemop.rpcFilters, name, {
+    get: _load
+  })
 })
 
 function load(path, name) {
