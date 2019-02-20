@@ -603,34 +603,32 @@ Application.configure = function (env, type, fn) {
 /**
  * Register admin modules. Admin modules is the extends point of the monitor system.
  *
- * @param {string} module (optional) module id or provoided by module.moduleId
- * @param {Object} module module object or factory function for module
+ * @param {string} moduleId (optional) module id or provoided by module.moduleId
+ * @param {Object} _module module object or factory function for module
  * @param {Object} opts construct parameter for module
  * @memberOf Application
  */
-Application.registerAdmin = function (moduleId, module, opts) {
-  var modules = this.get(Constants.KEYWORDS.MODULE)
+Application.registerAdmin = function (moduleId, _module, opts) {
+  let modules = this.get(Constants.KEYWORDS.MODULE)
   if (!modules) {
     modules = {}
     this.set(Constants.KEYWORDS.MODULE, modules)
   }
 
   if (typeof moduleId !== 'string') {
-    opts = module
-    module = moduleId
-    if (module) {
-      moduleId = module.moduleId
+    opts = _module
+    _module = moduleId
+    if (_module) {
+      moduleId = _module.moduleId
     }
   }
 
-  if (!moduleId) {
-    return
-  }
+  if (!moduleId) return
 
   modules[moduleId] = {
-    moduleId: moduleId,
-    module: module,
-    opts: opts
+    moduleId,
+    module: _module,
+    opts
   }
 }
 

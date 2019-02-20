@@ -45,7 +45,7 @@ class Server {
 
     this.masterConsole.on('error', (err) => {
       if (err) {
-        logger.error('masterConsole encounters with error: ' + err.stack)
+        logger.error(`masterConsole encounters with error: ${err.stack}`)
         return
       }
     })
@@ -55,8 +55,8 @@ class Server {
     })
 
     // monitor servers disconnect event
-    this.masterConsole.on('disconnect', (id, type, info, reason) => {
-      crashLogger.info(`[${type}],[${id}],[${Date.now()}],[${reason || 'disconnect'}]`)
+    this.masterConsole.on('disconnect', (id, type, info, reason = 'disconnect') => {
+      crashLogger.info(`[${type}],[${id}],[${Date.now()}],[${reason}]`)
       let count = 0
       let time = 0
       let pingTimer = null

@@ -14,9 +14,7 @@ pro.loadModules = function (self, consoleService) {
   // load app register modules
   var _modules = self.app.get(Constants.KEYWORDS.MODULE)
 
-  if (!_modules) {
-    return
-  }
+  if (!_modules) return
 
   var modules = []
   for (var m in _modules) {
@@ -59,12 +57,12 @@ pro.startModules = function (modules, cb) {
 pro.registerDefaultModules = function (isMaster, app, closeWatcher) {
   if (!closeWatcher) {
     if (isMaster) {
-      app.registerAdmin(require('../modules/masterwatcher'), {app: app})
+      app.registerAdmin(require('../modules/masterwatcher'), { app })
     } else {
-      app.registerAdmin(require('../modules/monitorwatcher'), {app: app})
+      app.registerAdmin(require('../modules/monitorwatcher'), { app })
     }
   }
-  app.registerAdmin(admin.modules.watchServer,{app:app})
+  app.registerAdmin(admin.modules.watchServer, { app })
   app.registerAdmin(require('../modules/console'), { app, starter })
   if (app.enabled('systemMonitor')) {
     if (os.platform() !== Constants.PLATFORM.WIN) {

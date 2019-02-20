@@ -8,7 +8,7 @@ const cliff = require('cliff')
 const program = require('commander')
 const fse = require('fs-extra')
 const { adminClient } = require('@olemop/admin')
-const co = require('../lib/modules/console')
+const consoleModule = require('../lib/modules/console')
 const utils = require('../lib/util/utils')
 const starter = require('../lib/master/starter')
 const constants = require('../lib/util/constants')
@@ -371,7 +371,7 @@ function start(opts) {
 function list(opts) {
   const id = `olemop_list_${Date.now()}`
   connectToMaster(id, opts, (client) => {
-    client.request(co.moduleId, { signal: 'list' }, (err, data) => {
+    client.request(consoleModule.moduleId, { signal: 'list' }, (err, data) => {
       if (err) {
         console.error(err)
       }
@@ -408,7 +408,7 @@ function list(opts) {
 function add(opts) {
   const id = `olemop_add_${Date.now()}`
   connectToMaster(id, opts, (client) => {
-    client.request(co.moduleId, { signal: 'add', args: opts.args }, (err) => {
+    client.request(consoleModule.moduleId, { signal: 'add', args: opts.args }, (err) => {
       if (err) {
         console.error(err)
       } else {
@@ -439,7 +439,7 @@ function terminal(signal, opts) {
   }
   const id = `olemop_terminal_${Date.now()}`
   connectToMaster(id, opts, (client) => {
-    client.request(co.moduleId, {
+    client.request(consoleModule.moduleId, {
       signal, ids: opts.serverIds
     }, (err, msg) => {
       if (err) {
@@ -464,7 +464,7 @@ function restart(opts) {
   opts.id && serverIds.push(opts.id)
   opts.type && (type = opts.type)
   connectToMaster(id, opts, (client) => {
-    client.request(co.moduleId, { signal: 'restart', ids: serverIds, type }, (err, fails) => {
+    client.request(consoleModule.moduleId, { signal: 'restart', ids: serverIds, type }, (err, fails) => {
       if (err) {
         console.error(err)
       } else if (fails.length) {

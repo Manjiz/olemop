@@ -1,8 +1,7 @@
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
-var utils = require('../util/utils')
-var events = require('../util/events')
-var Constants = require('../util/constants')
-var util = require('util')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const utils = require('../util/utils')
+const events = require('../util/events')
+const Constants = require('../util/constants')
 
 module.exports = function (opts, consoleService) {
   return new Module(opts, consoleService)
@@ -10,7 +9,7 @@ module.exports = function (opts, consoleService) {
 
 module.exports.moduleId = Constants.KEYWORDS.MONITOR_WATCHER
 
-var Module = function (opts, consoleService) {
+const Module = function (opts, consoleService) {
   this.app = opts.app
   this.service = consoleService
   this.id = this.app.getServerId()
@@ -23,10 +22,8 @@ Module.prototype.start = function (cb) {
 }
 
 Module.prototype.monitorHandler = function (agent, msg, cb) {
-  if (!msg || !msg.action) {
-    return
-  }
-  var func = monitorMethods[msg.action]
+  if (!msg || !msg.action) return
+  const func = monitorMethods[msg.action]
   if (!func) {
     logger.info('monitorwatcher unknown action: %j', msg.action)
     return
@@ -36,15 +33,15 @@ Module.prototype.monitorHandler = function (agent, msg, cb) {
 
 // ----------------- monitor start method -------------------------
 
-var subscribeRequest = function (self, agent, id, cb) {
-  var msg = {action: 'subscribe', id: id}
-  agent.request(Constants.KEYWORDS.MASTER_WATCHER, msg, function (err, servers) {
+const subscribeRequest = (self, agent, id, cb) => {
+  const msg = { action: 'subscribe', id }
+  agent.request(Constants.KEYWORDS.MASTER_WATCHER, msg, (err, servers) => {
     if (err) {
       logger.error('subscribeRequest request to master with error: %j', err.stack)
       utils.invokeCallback(cb, err)
     }
-    var res = []
-    for (var id in servers) {
+    const res = []
+    for (let id in servers) {
       res.push(servers[id])
     }
     addServers(self, res)
@@ -54,7 +51,7 @@ var subscribeRequest = function (self, agent, id, cb) {
 
 // ----------------- monitor request methods -------------------------
 
-var addServer = function (self, agent, msg, cb) {
+const addServer = (self, agent, msg, cb) => {
   logger.debug('[%s] receive addServer signal: %j', self.app.serverId, msg)
   if (!msg || !msg.server) {
     logger.warn('monitorwatcher addServer receive empty message: %j', msg)
@@ -65,7 +62,7 @@ var addServer = function (self, agent, msg, cb) {
   utils.invokeCallback(cb, Constants.SIGNAL.OK)
 }
 
-var removeServer = function (self, agent, msg, cb) {
+const removeServer = (self, agent, msg, cb) => {
   logger.debug('%s receive removeServer signal: %j', self.app.serverId, msg)
   if (!msg || !msg.id) {
     logger.warn('monitorwatcher removeServer receive empty message: %j', msg)
@@ -76,7 +73,7 @@ var removeServer = function (self, agent, msg, cb) {
   utils.invokeCallback(cb, Constants.SIGNAL.OK)
 }
 
-var replaceServer = function (self, agent, msg, cb) {
+const replaceServer = (self, agent, msg, cb) => {
   logger.debug('%s receive replaceServer signal: %j', self.app.serverId, msg)
   if (!msg || !msg.servers) {
     logger.warn('monitorwatcher replaceServer receive empty message: %j', msg)
@@ -87,10 +84,10 @@ var replaceServer = function (self, agent, msg, cb) {
   utils.invokeCallback(cb, Constants.SIGNAL.OK)
 }
 
-var startOver = function (self, agent, msg, cb) {
-  var fun = self.app.lifecycleCbs[Constants.LIFECYCLE.AFTER_STARTALL]
-  if (fun) {
-    fun.call(null, self.app)
+const startOver = (self, agent, msg, cb) => {
+  const func = self.app.lifecycleCbs[Constants.LIFECYCLE.AFTER_STARTALL]
+  if (func) {
+    func.call(null, self.app)
   }
   self.app.event.emit(events.START_ALL)
   utils.invokeCallback(cb, Constants.SIGNAL.OK)
@@ -98,34 +95,30 @@ var startOver = function (self, agent, msg, cb) {
 
 // ----------------- common methods -------------------------
 
-var addServers = function (self, servers) {
-  if (!servers || !servers.length) {
-    return
-  }
+const addServers = (self, servers) => {
+  if (!servers || !servers.length) return
   self.app.addServers(servers)
 }
 
-var removeServers = function (self, ids) {
-  if (!ids || !ids.length) {
-    return
-  }
+const removeServers = (self, ids) => {
+  if (!ids || !ids.length) return
   self.app.removeServers(ids)
 }
 
-var replaceServers = function (self, servers) {
+const replaceServers = (self, servers) => {
   self.app.replaceServers(servers)
 }
 
 // ----------------- bind methods -------------------------
 
-var finishStart = function (self, id) {
-  var msg = {action: 'record', id: id}
+const finishStart = (self, id) => {
+  const msg = { action: 'record', id }
   self.service.agent.notify(Constants.KEYWORDS.MASTER_WATCHER, msg)
 }
 
-var monitorMethods = {
-  'addServer': addServer,
-  'removeServer': removeServer,
-  'replaceServer': replaceServer,
-  'startOver': startOver
+const monitorMethods = {
+  addServer,
+  removeServer,
+  replaceServer,
+  startOver
 }
