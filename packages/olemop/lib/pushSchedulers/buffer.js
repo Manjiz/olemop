@@ -1,7 +1,8 @@
-var utils = require('../util/utils')
-var DEFAULT_FLUSH_INTERVAL = 20
+const utils = require('../util/utils')
 
-var Service = function (app, opts = {}) {
+const DEFAULT_FLUSH_INTERVAL = 20
+
+const Service = function (app, opts = {}) {
   if (!(this instanceof Service)) {
     return new Service(app, opts)
   }
@@ -17,7 +18,7 @@ module.exports = Service
 
 Service.prototype.start = function (cb) {
   this.tid = setInterval(flush.bind(null, this), this.flushInterval)
-  process.nextTick(function () {
+  process.nextTick(() => {
     utils.invokeCallback(cb)
   })
 }
@@ -27,7 +28,7 @@ Service.prototype.stop = function (force, cb) {
     clearInterval(this.tid)
     this.tid = null
   }
-  process.nextTick(function () {
+  process.nextTick(() => {
     utils.invokeCallback(cb)
   })
 }
@@ -39,75 +40,58 @@ Service.prototype.schedule = function (reqId, route, msg, recvs, opts = {}, cb) 
     doBatchPush(this, msg, recvs)
   }
 
-  process.nextTick(function () {
+  process.nextTick(() => {
     utils.invokeCallback(cb)
   })
 }
 
-var doBroadcast = function (self, msg, opts) {
-  var channelService = self.app.get('channelService')
-  var sessionService = self.app.get('sessionService')
+const doBroadcast = (self, msg, opts) => {
+  const channelService = self.app.get('channelService')
+  const sessionService = self.app.get('sessionService')
 
   if (opts.binded) {
-    sessionService.forEachBindedSession(function (session) {
-      if (channelService.broadcastFilter &&
-         !channelService.broadcastFilter(session, msg, opts.filterParam)) {
-        return
-      }
-
+    sessionService.forEachBindedSession((session) => {
+      if (channelService.broadcastFilter && !channelService.broadcastFilter(session, msg, opts.filterParam)) return
       enqueue(self, session, msg)
     })
   } else {
-    sessionService.forEachSession(function (session) {
-      if (channelService.broadcastFilter &&
-          !channelService.broadcastFilter(session, msg, opts.filterParam)) {
-        return
-      }
-
+    sessionService.forEachSession((session) => {
+      if (channelService.broadcastFilter && !channelService.broadcastFilter(session, msg, opts.filterParam)) return
       enqueue(self, session, msg)
     })
   }
 }
 
-var doBatchPush = function (self, msg, recvs) {
-  var sessionService = self.app.get('sessionService')
-  var session
-  for (var i=0, l=recvs.length; i<l; i++) {
-    session = sessionService.get(recvs[i])
+const doBatchPush = (self, msg, recvs) => {
+  const sessionService = self.app.get('sessionService')
+  recvs.forEach((item) => {
+    const session = sessionService.get(item)
     if (session) {
       enqueue(self, session, msg)
     }
-  }
+  })
 }
 
-var enqueue = function (self, session, msg) {
-  var queue = self.sessions[session.id]
+const enqueue = (self, session, msg) => {
+  let queue = self.sessions[session.id]
   if (!queue) {
     queue = self.sessions[session.id] = []
     session.once('closed', onClose.bind(null, self))
   }
-
   queue.push(msg)
 }
 
-var onClose = function (self, session) {
+const onClose = (self, session) => {
   delete self.sessions[session.id]
 }
 
-var flush = function (self) {
-  var sessionService = self.app.get('sessionService')
-  var queue, session
-  for (var sid in self.sessions) {
-    session = sessionService.get(sid)
-    if (!session) {
-      continue
-    }
-
-    queue = self.sessions[sid]
-    if (!queue || queue.length === 0) {
-      continue
-    }
-
+const flush = (self) => {
+  const sessionService = self.app.get('sessionService')
+  for (let sid in self.sessions) {
+    const session = sessionService.get(sid)
+    if (!session) continue
+    const queue = self.sessions[sid]
+    if (!queue || queue.length === 0) continue
     session.sendBatch(queue)
     self.sessions[sid] = []
   }

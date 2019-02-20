@@ -2,24 +2,25 @@
  * Implementation of server component.
  * Init and start server instance.
  */
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
-var fs = require('fs')
-var path = require('path')
-var pathUtil = require('../util/pathUtil')
-var Loader = require('@olemop/loader')
-var utils = require('../util/utils')
-var schedule = require('@olemop/scheduler')
-var events = require('../util/events')
-var Constants = require('../util/constants')
-var FilterService = require('../common/service/filterService')
-var HandlerService = require('../common/service/handlerService')
+
+const fs = require('fs')
+const path = require('path')
+const Loader = require('@olemop/loader')
+const schedule = require('@olemop/scheduler')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const pathUtil = require('../util/pathUtil')
+const utils = require('../util/utils')
+const events = require('../util/events')
+const Constants = require('../util/constants')
+const FilterService = require('../common/service/filterService')
+const HandlerService = require('../common/service/handlerService')
 
 // server inited
-var ST_INITED = 0
+const ST_INITED = 0
 // server started
-var ST_STARTED = 1
+const ST_STARTED = 1
 // server stoped
-var ST_STOPED = 2
+const ST_STOPED = 2
 
 /**
  * Server factory function.
@@ -27,141 +28,145 @@ var ST_STOPED = 2
  * @param {Object} app  current application context
  * @returns {Object} erver instance
  */
-module.exports.create = function (app, opts) {
+module.exports.create = (app, opts) => {
   return new Server(app, opts)
 }
 
-var Server = function (app, opts = {}) {
-  this.opts = opts
-  this.app = app
-  this.globalFilterService = null
-  this.filterService = null
-  this.handlerService = null
-  this.crons = []
-  this.jobs = {}
-  this.state = ST_INITED
+class Server {
+  constructor (app, opts = {}) {
+    this.opts = opts
+    this.app = app
+    this.globalFilterService = null
+    this.filterService = null
+    this.handlerService = null
+    this.crons = []
+    this.jobs = {}
+    this.state = ST_INITED
 
-  app.event.on(events.ADD_CRONS, this.addCrons.bind(this))
-  app.event.on(events.REMOVE_CRONS, this.removeCrons.bind(this))
-}
-
-var pro = Server.prototype
-
-/**
- * Server lifecycle callback
- */
-pro.start = function () {
-  if (this.state > ST_INITED) {
-    return
+    app.event.on(events.ADD_CRONS, this.addCrons.bind(this))
+    app.event.on(events.REMOVE_CRONS, this.removeCrons.bind(this))
   }
 
-  this.globalFilterService = initFilter(true, this.app)
-  this.filterService = initFilter(false, this.app)
-  this.handlerService = initHandler(this.app, this.opts)
-  this.cronHandlers = loadCronHandlers(this.app)
-  loadCrons(this, this.app)
-  this.state = ST_STARTED
-}
+  /**
+   * Server lifecycle callback
+   */
+  start () {
+    if (this.state > ST_INITED) return
 
-pro.afterStart = function () {
-  scheduleCrons(this, this.crons)
-}
-
-/**
- * Stop server
- */
-pro.stop = function () {
-  this.state = ST_STOPED
-}
-
-/**
- * Global handler.
- *
- * @param  {Object} msg request message
- * @param  {Object} session session object
- * @param  {Callback} callback function
- */
-pro.globalHandle = function (msg, session, cb) {
-  if (this.state !== ST_STARTED) {
-    utils.invokeCallback(cb, new Error('server not started'))
-    return
+    this.globalFilterService = initFilter(true, this.app)
+    this.filterService = initFilter(false, this.app)
+    this.handlerService = initHandler(this.app, this.opts)
+    this.cronHandlers = loadCronHandlers(this.app)
+    loadCrons(this, this.app)
+    this.state = ST_STARTED
   }
 
-  var routeRecord = parseRoute(msg.route)
-  if (!routeRecord) {
-    utils.invokeCallback(cb, new Error('meet unknown route message %j', msg.route))
-    return
+  afterStart () {
+    scheduleCrons(this, this.crons)
   }
 
-  var self = this
-  var dispatch = function (err, resp, opts) {
-    if (err) {
-      handleError(true, self, err, msg, session, resp, opts, function (err, resp, opts) {
-        response(true, self, err, msg, session, resp, opts, cb)
-      })
+  /**
+   * Stop server
+   */
+  stop () {
+    this.state = ST_STOPED
+  }
+
+  /**
+   * Global handler.
+   *
+   * @param  {Object} msg request message
+   * @param  {Object} session session object
+   * @param  {Callback} callback function
+   */
+  globalHandle (msg, session, cb) {
+    if (this.state !== ST_STARTED) {
+      utils.invokeCallback(cb, new Error('server not started'))
       return
     }
 
-    if (self.app.getServerType() !== routeRecord.serverType) {
-      doForward(self.app, msg, session, routeRecord, function (err, resp, opts) {
-        response(true, self, err, msg, session, resp, opts, cb)
-      })
-    } else {
-      doHandle(self, msg, session, routeRecord, function (err, resp, opts) {
-        response(true, self, err, msg, session, resp, opts, cb)
-      })
+    const routeRecord = parseRoute(msg.route)
+    if (!routeRecord) {
+      utils.invokeCallback(cb, new Error('meet unknown route message %j', msg.route))
+      return
     }
-  }
-  beforeFilter(true, self, msg, session, dispatch)
-}
 
-/**
- * Handle request
- */
-pro.handle = function (msg, session, cb) {
-   if (this.state !== ST_STARTED) {
-    cb(new Error('server not started'))
-    return
-  }
+    const dispatch = (err, resp, opts) => {
+      if (err) {
+        handleError(true, this, err, msg, session, resp, opts, (err, resp, opts) => {
+          response(true, this, err, msg, session, resp, opts, cb)
+        })
+        return
+      }
 
-  var routeRecord = parseRoute(msg.route)
-  doHandle(this, msg, session, routeRecord, cb)
-}
-
-/**
- * Add crons at runtime.
- *
- * @param {Array} crons would be added in application
- */
-pro.addCrons = function (crons) {
-  this.cronHandlers = loadCronHandlers(this.app)
-  for (var i=0, l=crons.length; i<l; i++) {
-    var cron = crons[i]
-    checkAndAdd(cron, this.crons, this)
-  }
-  scheduleCrons(this, crons)
-}
-
-/**
- * Remove crons at runtime.
- *
- * @param {Array} crons would be removed in application
- */
-pro.removeCrons = function (crons) {
-  for (var i=0, l=crons.length; i<l; i++) {
-    var cron = crons[i]
-    var id = parseInt(cron.id)
-    if (this.jobs[id]) {
-      schedule.cancelJob(this.jobs[id])
-    } else {
-      logger.warn('cron is not in application: %j', cron)
+      if (this.app.getServerType() !== routeRecord.serverType) {
+        doForward(this.app, msg, session, routeRecord, (err, resp, opts) => {
+          response(true, this, err, msg, session, resp, opts, cb)
+        })
+      } else {
+        doHandle(this, msg, session, routeRecord, (err, resp, opts) => {
+          response(true, this, err, msg, session, resp, opts, cb)
+        })
+      }
     }
+    beforeFilter(true, this, msg, session, dispatch)
+  }
+
+  /**
+   * Handle request
+   */
+  handle (msg, session, cb) {
+    if (this.state !== ST_STARTED) {
+      cb(new Error('server not started'))
+      return
+    }
+
+    const routeRecord = parseRoute(msg.route)
+    doHandle(this, msg, session, routeRecord, cb)
+  }
+
+  /**
+   * Add crons at runtime.
+   *
+   * @param {Array} crons would be added in application
+   */
+  addCrons (crons) {
+    this.cronHandlers = loadCronHandlers(this.app)
+    crons.forEach((cron) => {
+      checkAndAdd(cron, this.crons, this)
+    })
+    scheduleCrons(this, crons)
+  }
+
+  /**
+   * Remove crons at runtime.
+   *
+   * @param {Array} crons would be removed in application
+   */
+  removeCrons (crons) {
+    crons.forEach((cron) => {
+      const id = parseInt(cron.id)
+      if (this.jobs[id]) {
+        schedule.cancelJob(this.jobs[id])
+      } else {
+        logger.warn('cron is not in application: %j', cron)
+      }
+    })
+    crons.forEach((cron) => {
+      const id = parseInt(cron.id)
+      if (this.jobs[id]) {
+        schedule.cancelJob(this.jobs[id])
+      } else {
+        logger.warn('cron is not in application: %j', cron)
+      }
+    })
   }
 }
 
-var initFilter = function (isGlobal, app) {
-  var service = new FilterService()
-  var befores, afters
+const initFilter = (isGlobal, app) => {
+  const service = new FilterService()
+  let befores
+  let afters
 
   if (isGlobal) {
     befores = app.get(Constants.KEYWORDS.GLOBAL_BEFORE_FILTER)
@@ -171,31 +176,30 @@ var initFilter = function (isGlobal, app) {
     afters = app.get(Constants.KEYWORDS.AFTER_FILTER)
   }
 
-  var i, l
   if (befores) {
-    for (i=0, l=befores.length; i<l; i++) {
-      service.before(befores[i])
-    }
+    befores.forEach((item) => {
+      service.before(item)
+    })
   }
 
   if (afters) {
-    for (i=0, l=afters.length; i<l; i++) {
-      service.after(afters[i])
-    }
+    afters.forEach((item) => {
+      service.after(item)
+    })
   }
 
   return service
 }
 
-var initHandler = function (app, opts) {
+const initHandler = (app, opts) => {
   return new HandlerService(app, opts)
 }
 
 /**
  * Load cron handlers from current application
  */
-var loadCronHandlers = function (app) {
-  var p = pathUtil.getCronPath(app.getBase(), app.getServerType())
+const loadCronHandlers = (app) => {
+  const p = pathUtil.getCronPath(app.getBase(), app.getServerType())
   if (p) {
     return Loader.load(p, app)
   }
@@ -204,29 +208,25 @@ var loadCronHandlers = function (app) {
 /**
  * Load crons from configure file
  */
-var loadCrons = function (server, app) {
-  var env = app.get(Constants.RESERVED.ENV)
-  var p = path.join(app.getBase(), Constants.FILEPATH.CRON)
+const loadCrons = (server, app) => {
+  const env = app.get(Constants.RESERVED.ENV)
+  let p = path.join(app.getBase(), Constants.FILEPATH.CRON)
   if (!fs.existsSync(p)) {
     p = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.CRON))
-    if (!fs.existsSync(p)) {
-      return
-    }
+    if (!fs.existsSync(p)) return
   }
   app.loadConfigBaseApp(Constants.RESERVED.CRONS, Constants.FILEPATH.CRON)
-  var crons = app.get(Constants.RESERVED.CRONS)
-  for (var serverType in crons) {
+  const crons = app.get(Constants.RESERVED.CRONS)
+  for (let serverType in crons) {
     if (app.serverType === serverType) {
-      var list = crons[serverType]
-      for (var i = 0; i<list.length; i++) {
-        if (!list[i].serverId) {
-          checkAndAdd(list[i], server.crons, server)
-        } else {
-          if (app.serverId === list[i].serverId) {
-            checkAndAdd(list[i], server.crons, server)
-          }
+      const list = crons[serverType]
+      list.forEach((item) => {
+        if (!item.serverId) {
+          checkAndAdd(item, server.crons, server)
+        } else if (app.serverId === item.serverId) {
+          checkAndAdd(item, server.crons, server)
         }
-      }
+      })
     }
   }
 }
@@ -234,13 +234,8 @@ var loadCrons = function (server, app) {
 /**
  * Fire before filter chain if any
  */
-var beforeFilter = function (isGlobal, server, msg, session, cb) {
-  var fm
-  if (isGlobal) {
-    fm = server.globalFilterService
-  } else {
-    fm = server.filterService
-  }
+const beforeFilter = (isGlobal, server, msg, session, cb) => {
+  const fm = isGlobal ? server.globalFilterService : server.filterService
   if (fm) {
     fm.beforeFilter(msg, session, cb)
   } else {
@@ -251,44 +246,33 @@ var beforeFilter = function (isGlobal, server, msg, session, cb) {
 /**
  * Fire after filter chain if have
  */
-var afterFilter = function (isGlobal, server, err, msg, session, resp, opts, cb) {
-  var fm
+const afterFilter = (isGlobal, server, err, msg, session, resp, opts, cb) => {
+  const fm = isGlobal ? server.globalFilterService : server.filterService
+  if (!fm) return
   if (isGlobal) {
-    fm = server.globalFilterService
+    fm.afterFilter(err, msg, session, resp, () => {
+      // do nothing
+    })
   } else {
-    fm = server.filterService
-  }
-  if (fm) {
-    if (isGlobal) {
-      fm.afterFilter(err, msg, session, resp, function () {
-        // do nothing
-      })
-    } else {
-      fm.afterFilter(err, msg, session, resp, function (err) {
-        cb(err, resp, opts)
-      })
-    }
+    fm.afterFilter(err, msg, session, resp, (err) => {
+      cb(err, resp, opts)
+    })
   }
 }
 
 /**
  * pass err to the global error handler if specified
  */
-var handleError = function (isGlobal, server, err, msg, session, resp, opts, cb) {
-  var handler
-  if (isGlobal) {
-    handler = server.app.get(Constants.RESERVED.GLOBAL_ERROR_HANDLER)
-  } else {
-    handler = server.app.get(Constants.RESERVED.ERROR_HANDLER)
-  }
+const handleError = (isGlobal, server, err, msg, session, resp, opts, cb) => {
+  const handler = isGlobal ? server.app.get(Constants.RESERVED.GLOBAL_ERROR_HANDLER) : server.app.get(Constants.RESERVED.ERROR_HANDLER)
   if (!handler) {
-    logger.debug('no default error handler to resolve unknown exception. ' + err.stack)
+    logger.debug(`no default error handler to resolve unknown exception. ${err.stack}`)
     utils.invokeCallback(cb, err, resp, opts)
   } else {
     if (handler.length === 5) {
       handler(err, msg, resp, session, cb)
     } else {
-       handler(err, msg, resp, session, opts, cb)
+      handler(err, msg, resp, session, opts, cb)
     }
   }
 }
@@ -296,8 +280,7 @@ var handleError = function (isGlobal, server, err, msg, session, resp, opts, cb)
 /**
  * Send response to client and fire after filter chain if any.
  */
-
-var response = function (isGlobal, server, err, msg, session, resp, opts, cb) {
+const response = (isGlobal, server, err, msg, session, resp, opts, cb) => {
   if (isGlobal) {
     cb(err, resp, opts)
     // after filter should not interfere response
@@ -313,29 +296,29 @@ var response = function (isGlobal, server, err, msg, session, resp, opts, cb) {
  * @param {string} route route string, such as: serverName.handlerName.methodName
  * @returns {Object}       parse result object or null for illeagle route string
  */
-var parseRoute = function (route) {
+const parseRoute = (route) => {
   if (!route) {
     return null
   }
-  var ts = route.split('.')
+  const ts = route.split('.')
   if (ts.length !== 3) {
     return null
   }
 
   return {
-    route: route,
+    route,
     serverType: ts[0],
     handler: ts[1],
     method: ts[2]
   }
 }
 
-var doForward = function (app, msg, session, routeRecord, cb) {
-  var finished = false
+const doForward = (app, msg, session, routeRecord, cb) => {
+  let finished = false
   // should route to other servers
   try {
     app.sysrpc[routeRecord.serverType].msgRemote.forwardMessage(
-    // app.sysrpc[routeRecord.serverType].msgRemote.forwardMessage2(
+      // app.sysrpc[routeRecord.serverType].msgRemote.forwardMessage2(
       session,
       msg,
       // msg.oldRoute || msg.route,
@@ -343,7 +326,7 @@ var doForward = function (app, msg, session, routeRecord, cb) {
       // msg.aesPassword,
       // msg.compressGzip,
       session.export(),
-      function (err, resp, opts) {
+      (err, resp, opts) => {
         if (err) {
           logger.error(`fail to process remote message: ${err.stack}`)
         }
@@ -359,26 +342,26 @@ var doForward = function (app, msg, session, routeRecord, cb) {
   }
 }
 
-var doHandle = function (server, msg, session, routeRecord, cb) {
-  var originMsg = msg
+const doHandle = (server, msg, session, routeRecord, cb) => {
+  const originMsg = msg
   msg = msg.body || {}
   msg.__route__ = originMsg.route
 
-  var self = server
+  const self = server
 
-  var handle = function (err, resp, opts) {
+  beforeFilter(false, server, msg, session, (err, resp, opts) => {
     if (err) {
       // error from before filter
-      handleError(false, self, err, msg, session, resp, opts, function (err, resp, opts) {
+      handleError(false, self, err, msg, session, resp, opts, (err, resp, opts) => {
         response(false, self, err, msg, session, resp, opts, cb)
       })
       return
     }
 
-    self.handlerService.handle(routeRecord, msg, session, function (err, resp, opts) {
+    self.handlerService.handle(routeRecord, msg, session, (err, resp, opts) => {
       if (err) {
         // error from handler
-        handleError(false, self, err, msg, session, resp, opts, function (err, resp, opts) {
+        handleError(false, self, err, msg, session, resp, opts, (err, resp, opts) => {
           response(false, self, err, msg, session, resp, opts, cb)
         })
         return
@@ -386,21 +369,19 @@ var doHandle = function (server, msg, session, routeRecord, cb) {
 
       response(false, self, err, msg, session, resp, opts, cb)
     })
-  }
-
-  beforeFilter(false, server, msg, session, handle)
+  })
 }
 
 /**
  * Schedule crons
  */
-var scheduleCrons = function (server, crons) {
-  var handlers = server.cronHandlers
-  for (var i = 0; i<crons.length; i++) {
-    var cronInfo = crons[i]
-    var time = cronInfo.time
-    var action = cronInfo.action
-    var jobId = cronInfo.id
+const scheduleCrons = (server, crons) => {
+  const handlers = server.cronHandlers
+  for (let i = 0; i < crons.length; i++) {
+    const cronInfo = crons[i]
+    const time = cronInfo.time
+    const action = cronInfo.action
+    const jobId = cronInfo.id
 
     if (!time || !action || !jobId) {
       logger.error('cron miss necessary parameters: %j', cronInfo)
@@ -412,9 +393,8 @@ var scheduleCrons = function (server, crons) {
       continue
     }
 
-    var cron = action.split('.')[0]
-    var job = action.split('.')[1]
-    var handler = handlers[cron]
+    const [cron, job] = action.split('.')
+    const handler = handlers[cron]
 
     if (!handler) {
       logger.error('could not find cron: %j', cronInfo)
@@ -426,7 +406,7 @@ var scheduleCrons = function (server, crons) {
       continue
     }
 
-    var id = schedule.scheduleJob(time, handler[job].bind(handler))
+    const id = schedule.scheduleJob(time, handler[job].bind(handler))
     server.jobs[jobId] = id
   }
 }
@@ -434,7 +414,7 @@ var scheduleCrons = function (server, crons) {
 /**
  * If cron is not in crons then put it in the array.
  */
-var checkAndAdd = function (cron, crons, server) {
+const checkAndAdd = (cron, crons, server) => {
   if (!containCron(cron.id, crons)) {
     server.crons.push(cron)
   } else {
@@ -445,8 +425,8 @@ var checkAndAdd = function (cron, crons, server) {
 /**
  * Check if cron is in crons.
  */
-var containCron = function (id, crons) {
-  for (var i=0, l=crons.length; i<l; i++) {
+const containCron = (id, crons) => {
+  for (let i = 0; i < crons.length; i++) {
     if (id === crons[i].id) {
       return true
     }

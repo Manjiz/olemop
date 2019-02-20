@@ -3,14 +3,14 @@
  * Load and start monitor client.
  */
 
-const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const admin = require('@olemop/admin')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const utils = require('../util/utils')
 const moduleUtil = require('../util/moduleUtil')
 const Constants = require('../util/constants')
 
 class Monitor {
-  constructor(app, opts = {}) {
+  constructor (app, opts = {}) {
     this.app = app
     this.serverInfo = app.getCurServer()
     this.masterInfo = app.getMaster()
@@ -29,12 +29,12 @@ class Monitor {
     })
   }
 
-  start(cb) {
+  start (cb) {
     moduleUtil.registerDefaultModules(false, this.app, this.closeWatcher)
     this.startConsole(cb)
   }
 
-  startConsole(cb) {
+  startConsole (cb) {
     moduleUtil.loadModules(this, this.monitorConsole)
 
     this.monitorConsole.start((err) => {
@@ -54,7 +54,7 @@ class Monitor {
     })
   }
 
-  stop(cb) {
+  stop (cb) {
     this.monitorConsole.stop()
     this.modules = []
     process.nextTick(() => {
@@ -63,7 +63,7 @@ class Monitor {
   }
 
   // monitor reconnect to master
-  reconnect(masterInfo) {
+  reconnect (masterInfo) {
     this.stop(() => {
       this.monitorConsole = admin.createMonitorConsole({
         id: this.serverInfo.id,
@@ -74,7 +74,7 @@ class Monitor {
         env: this.app.get(Constants.RESERVED.ENV)
       })
       this.startConsole(() => {
-        logger.info('restart modules for server : %j finish.', self.app.serverId)
+        logger.info('restart modules for server: %j finish.', self.app.serverId)
       })
     })
   }
