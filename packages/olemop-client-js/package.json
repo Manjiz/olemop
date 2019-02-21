@@ -1,6 +1,6 @@
 {
   "name": "@olemop/client-js",
-  "version": "0.0.52",
+  "version": "0.0.54",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,8 +8,8 @@
     "build:wechat": "webpack --config build/webpack.wechat.conf.js"
   },
   "dependencies": {
-    "@olemop/protobuf": "^0.0.52",
-    "@olemop/protocol": "^0.0.52",
+    "@olemop/protobuf": "^0.0.54",
+    "@olemop/protocol": "^0.0.54",
     "wolfy87-eventemitter": "^5.2.5"
   },
   "devDependencies": {
