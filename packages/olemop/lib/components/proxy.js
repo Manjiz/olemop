@@ -5,8 +5,8 @@
 
 const { crc32 } = require('crc')
 const Client = require('@olemop/rpc').client
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const utils = require('../util/utils')
 const events = require('../util/events')
 const pathUtil = require('../util/pathUtil')
 const Constants = require('../util/constants')
@@ -110,7 +110,7 @@ const defaultRoute = (session, msg, app, cb) => {
 
   const uid = (session && session.uid) || ''
   const index = Math.abs(crc32(uid.toString())) % list.length
-  utils.invokeCallback(cb, null, list[index].id)
+  olemopUtils.invokeCallback(cb, null, list[index].id)
 }
 
 /**

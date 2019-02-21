@@ -1,4 +1,5 @@
 const async = require('async')
+const olemopUtils = require('@olemop/utils')
 const olemopLogger = require('@olemop/logger')
 const utils = require('../../util/utils')
 
@@ -114,12 +115,12 @@ const transaction = (name, conditions, handlers, retry = 1) => {
                 type: 'handler',
                 description: err.stack
               }))
-              utils.invokeCallback(callback)
+              olemopUtils.invokeCallback(callback)
             })
             return
           }
           flag = false
-          utils.invokeCallback(callback)
+          olemopUtils.invokeCallback(callback)
           process.nextTick(() => {
             transactionLogger.info(`[${name}] all conditions and handlers are executed successfully.`)
           })

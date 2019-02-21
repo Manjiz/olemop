@@ -1,39 +1,7 @@
+const olemopUtils = require('@olemop/utils')
 var utils = require('../../lib/util/utils')
-var should = require('should')
 
 describe('utils test', function () {
-  describe('#invokeCallback', function () {
-    it('should invoke the function with the parameters', function () {
-      var p1 = 1, p2 = 'str'
-
-      var func = function (arg1, arg2) {
-        p1.should.equal(arg1)
-        p2.should.equal(arg2)
-      }
-
-      utils.invokeCallback(func, p1, p2)
-    })
-
-    it('should ok if cb is null', function () {
-      var p1 = 1, p2 = 'str'
-      (function () {
-        utils.invokeCallback(null, p1, p2)
-      }).should.not.throw()
-    })
-  })
-
-  describe('#size', function () {
-    it('should return the own property count of the object', function () {
-      var obj = {
-        p1: 'str',
-        p2: 1,
-        m1: function () {}
-      }
-
-      utils.size(obj).should.equal(2)
-    })
-  })
-
   describe('#startsWith', function () {
     it('should return true if the string do start with the prefix', function () {
       var src = 'prefix with a string'
@@ -121,7 +89,7 @@ describe('utils test', function () {
       var serverMap = {}
       var app = {clusterSeq:{}}
       utils.loadCluster(app, clusterServer, serverMap)
-      utils.size(serverMap).should.equal(2)
+      olemopUtils.size(serverMap).should.equal(2)
     })
   })
 

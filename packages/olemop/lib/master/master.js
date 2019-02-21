@@ -1,7 +1,8 @@
+const admin = require('@olemop/admin')
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const crashLogger = require('@olemop/logger').getLogger('crash-log', __filename)
 const adminLogger = require('@olemop/logger').getLogger('admin-log', __filename)
-const admin = require('@olemop/admin')
 const starter = require('./starter')
 const utils = require('../util/utils')
 const moduleUtil = require('../util/moduleUtil')
@@ -32,14 +33,14 @@ class Server {
       }
       moduleUtil.startModules(this.modules, (err) => {
         if (err) {
-          utils.invokeCallback(cb, err)
+          olemopUtils.invokeCallback(cb, err)
           return
         }
 
         if (this.app.get(Constants.RESERVED.MODE) !== Constants.RESERVED.STAND_ALONE) {
           starter.runServers(this.app)
         }
-        utils.invokeCallback(cb)
+        olemopUtils.invokeCallback(cb)
       })
     })
 
@@ -67,13 +68,13 @@ class Server {
           clearTimeout(pingTimer)
           utils.checkPort(server, (status) => {
             if (status === 'error') {
-              utils.invokeCallback(cb, new Error('Check port command executed with error.'))
+              olemopUtils.invokeCallback(cb, new Error('Check port command executed with error.'))
               return
             } else if (status === 'busy') {
               if (server[Constants.RESERVED.RESTART_FORCE]) {
                 starter.kill([info.pid], [server])
               } else {
-                utils.invokeCallback(cb, new Error('Port occupied already, check your server to add.'))
+                olemopUtils.invokeCallback(cb, new Error('Port occupied already, check your server to add.'))
                 return
               }
             }

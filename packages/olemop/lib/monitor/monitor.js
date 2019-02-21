@@ -4,8 +4,8 @@
  */
 
 const admin = require('@olemop/admin')
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const utils = require('../util/utils')
 const moduleUtil = require('../util/moduleUtil')
 const Constants = require('../util/constants')
 
@@ -39,11 +39,11 @@ class Monitor {
 
     this.monitorConsole.start((err) => {
       if (err) {
-        utils.invokeCallback(cb, err)
+        olemopUtils.invokeCallback(cb, err)
         return
       }
       moduleUtil.startModules(this.modules, (err) => {
-        utils.invokeCallback(cb, err)
+        olemopUtils.invokeCallback(cb, err)
       })
     })
 
@@ -58,7 +58,7 @@ class Monitor {
     this.monitorConsole.stop()
     this.modules = []
     process.nextTick(() => {
-      utils.invokeCallback(cb)
+      olemopUtils.invokeCallback(cb)
     })
   }
 

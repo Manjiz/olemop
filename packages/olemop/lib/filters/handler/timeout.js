@@ -3,8 +3,8 @@
  * Print a warn information when request timeout.
  */
 
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const utils = require('../../util/utils')
 
 const DEFAULT_TIMEOUT = 3000
 const DEFAULT_SIZE = 500
@@ -18,7 +18,7 @@ class TimeoutFilter {
   }
 
   before (msg, session, next) {
-    const count = utils.size(this.timeouts)
+    const count = olemopUtils.size(this.timeouts)
     if (count > this.maxSize) {
       logger.warn(`timeout filter is out of range, current size is ${count}, max size is ${this.maxSize}`)
       next()

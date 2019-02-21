@@ -3,6 +3,7 @@
  */
 
 const { exec } = require('child_process')
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const countDownLatch = require('../util/countDownLatch')
 const utils = require('../util/utils')
@@ -36,13 +37,13 @@ Module.prototype.monitorHandler = function (agent, msg, cb) {
       const rss = (process.memoryUsage().rss / (1024 * 1024)).toFixed(2)
       const heapTotal = (process.memoryUsage().heapTotal / (1024 * 1024)).toFixed(2)
       const uptime = (process.uptime() / 60).toFixed(2)
-      utils.invokeCallback(cb, {
+      olemopUtils.invokeCallback(cb, {
         serverId,
         body: { serverId, serverType, pid, rss, heapTotal, heapUsed, uptime }
       })
       break
     case 'kill':
-      utils.invokeCallback(cb, serverId)
+      olemopUtils.invokeCallback(cb, serverId)
       if (agent.type !== 'master') {
         setTimeout(() => {
           process.exit(-1)
@@ -64,7 +65,7 @@ Module.prototype.monitorHandler = function (agent, msg, cb) {
     case 'restart':
       if (agent.type === Constants.RESERVED.MASTER) return
       const server = this.app.get(Constants.RESERVED.CURRENT_SERVER)
-      utils.invokeCallback(cb, server)
+      olemopUtils.invokeCallback(cb, server)
       process.nextTick(() => {
         this.app.stop(true)
       })
@@ -102,19 +103,19 @@ Module.prototype.clientHandler = function (agent, msg, cb) {
       restart(this.app, agent, msg, cb)
       break
     default:
-      utils.invokeCallback(cb, new Error('The command cannot be recognized, please check.'), null)
+      olemopUtils.invokeCallback(cb, new Error('The command cannot be recognized, please check.'), null)
       break
   }
 }
 
 const kill = (app, agent, msg, cb) => {
   const serverIds = []
-  const count = utils.size(agent.idMap)
+  const count = olemopUtils.size(agent.idMap)
   const latch = countDownLatch.createCountDownLatch(count, { timeout: Constants.TIME.TIME_WAIT_MASTER_KILL }, (isTimeout) => {
     if (!isTimeout) {
-      utils.invokeCallback(cb, null, { code: 'ok' })
+      olemopUtils.invokeCallback(cb, null, { code: 'ok' })
     } else {
-      utils.invokeCallback(cb, null, { code: 'remained', serverIds })
+      olemopUtils.invokeCallback(cb, null, { code: 'remained', serverIds })
     }
     setTimeout(() => {
       process.exit(-1)
@@ -145,19 +146,19 @@ const stop = (app, agent, msg, cb) => {
     app.set(Constants.RESERVED.STOP_SERVERS, serverIds)
     serverIds.forEach((serverId) => {
       if (!servers[serverId]) {
-        utils.invokeCallback(cb, new Error('Cannot find the server to stop.'), null)
+        olemopUtils.invokeCallback(cb, new Error('Cannot find the server to stop.'), null)
       } else {
         agent.notifyById(serverId, moduleId, { signal: msg.signal })
       }
     })
-    utils.invokeCallback(cb, null, { status: 'part' })
+    olemopUtils.invokeCallback(cb, null, { status: 'part' })
   } else {
     serverIds = Object.keys(servers).map((serverId) => serverId)
     app.set(Constants.RESERVED.STOP_SERVERS, serverIds)
     agent.notifyAll(moduleId, { signal: msg.signal })
     setTimeout(() => {
       app.stop(true)
-      utils.invokeCallback(cb, null, { status: 'all' })
+      olemopUtils.invokeCallback(cb, null, { status: 'all' })
     }, Constants.TIME.TIME_WAIT_STOP)
   }
 }
@@ -171,7 +172,7 @@ const restart = (app, agent, msg, cb) => {
   if (!serverIds.length && type) {
     servers = app.getServersByType(type)
     if (!servers) {
-      utils.invokeCallback(cb, new Error(`restart servers with unknown server type: ${type}`))
+      olemopUtils.invokeCallback(cb, new Error(`restart servers with unknown server type: ${type}`))
       return
     }
     servers.forEach((server) => {
@@ -186,16 +187,16 @@ const restart = (app, agent, msg, cb) => {
   const count = serverIds.length
   const latch = countDownLatch.createCountDownLatch(count, { timeout: Constants.TIME.TIME_WAIT_COUNTDOWN }, () => {
     if (!successFlag) {
-      utils.invokeCallback(cb, new Error('all servers start failed.'))
+      olemopUtils.invokeCallback(cb, new Error('all servers start failed.'))
       return
     }
-    utils.invokeCallback(cb, null, utils.arrayDiff(serverIds, successIds))
+    olemopUtils.invokeCallback(cb, null, utils.arrayDiff(serverIds, successIds))
   })
 
   const request = (id) => {
     return (() => {
       agent.request(id, moduleId, { signal: msg.signal }, (msg) => {
-        if (!utils.size(msg)) {
+        if (!olemopUtils.size(msg)) {
           latch.done()
           return
         }
@@ -221,9 +222,9 @@ const restart = (app, agent, msg, cb) => {
 
 const list = (agent, msg, cb) => {
   const serverInfo = {}
-  const count = utils.size(agent.idMap)
+  const count = olemopUtils.size(agent.idMap)
   const latch = countDownLatch.createCountDownLatch(count, { timeout: Constants.TIME.TIME_WAIT_COUNTDOWN }, () => {
-    utils.invokeCallback(cb, null, { msg: serverInfo })
+    olemopUtils.invokeCallback(cb, null, { msg: serverInfo })
   })
 
   const callback = (msg) => {
@@ -259,7 +260,7 @@ const blacklist = (agent, msg, cb) => {
   const ips = msg.args
   for (let i = 0; i < ips.length; i++) {
     if (!(new RegExp(/(\d+)\.(\d+)\.(\d+)\.(\d+)/g).test(ips[i]))) {
-      utils.invokeCallback(cb, new Error(`blacklist ip: ${ips[i]} is error format.`), null)
+      olemopUtils.invokeCallback(cb, new Error(`blacklist ip: ${ips[i]} is error format.`), null)
       return
     }
   }
@@ -271,7 +272,7 @@ const blacklist = (agent, msg, cb) => {
 
 const checkPort = (server, cb) => {
   if (!server.port && !server.clientPort) {
-    utils.invokeCallback(cb, 'leisure')
+    olemopUtils.invokeCallback(cb, 'leisure')
     return
   }
 
@@ -284,14 +285,14 @@ const checkPort = (server, cb) => {
 
   exec(cmd + port, (err, stdout, stderr) => {
     if (stdout || stderr) {
-      utils.invokeCallback(cb, 'busy')
+      olemopUtils.invokeCallback(cb, 'busy')
     } else {
       port = server.clientPort
       exec(cmd + port, (err, stdout, stderr) => {
         if (stdout || stderr) {
-          utils.invokeCallback(cb, 'busy')
+          olemopUtils.invokeCallback(cb, 'busy')
         } else {
-          utils.invokeCallback(cb, 'leisure')
+          olemopUtils.invokeCallback(cb, 'leisure')
         }
       })
     }
@@ -344,16 +345,16 @@ const startServer = (app, msg, cb) => {
 const runServer = (app, server, cb) => {
   checkPort(server, (status) => {
     if (status === 'busy') {
-      utils.invokeCallback(cb, new Error('Port occupied already, check your server to add.'))
+      olemopUtils.invokeCallback(cb, new Error('Port occupied already, check your server to add.'))
     } else {
       starter.run(app, server, (err) => {
         if (err) {
-          utils.invokeCallback(cb, new Error(err), null)
+          olemopUtils.invokeCallback(cb, new Error(err), null)
           return
         }
       })
       process.nextTick(() => {
-        utils.invokeCallback(cb, null, { status: 'ok' })
+        olemopUtils.invokeCallback(cb, null, { status: 'ok' })
       })
     }
   })
@@ -365,13 +366,13 @@ const startCluster = (app, msg, cb) => {
   let successFlag
   const serverInfo = parseArgs(msg, ClusterInfo, cb)
   utils.loadCluster(app, serverInfo, serverMap)
-  const count = utils.size(serverMap)
+  const count = olemopUtils.size(serverMap)
   const latch = countDownLatch.createCountDownLatch(count, () => {
     if (!successFlag) {
-      utils.invokeCallback(cb, new Error('all servers start failed.'))
+      olemopUtils.invokeCallback(cb, new Error('all servers start failed.'))
       return
     }
-    utils.invokeCallback(cb, null, fails)
+    olemopUtils.invokeCallback(cb, null, fails)
   })
 
   const start = (server) => {

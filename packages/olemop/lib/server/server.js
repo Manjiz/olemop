@@ -7,9 +7,9 @@ const fs = require('fs')
 const path = require('path')
 const Loader = require('@olemop/loader')
 const schedule = require('@olemop/scheduler')
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const pathUtil = require('../util/pathUtil')
-const utils = require('../util/utils')
 const events = require('../util/events')
 const Constants = require('../util/constants')
 const FilterService = require('../common/service/filterService')
@@ -81,13 +81,13 @@ class Server {
    */
   globalHandle (msg, session, cb) {
     if (this.state !== ST_STARTED) {
-      utils.invokeCallback(cb, new Error('server not started'))
+      olemopUtils.invokeCallback(cb, new Error('server not started'))
       return
     }
 
     const routeRecord = parseRoute(msg.route)
     if (!routeRecord) {
-      utils.invokeCallback(cb, new Error('meet unknown route message %j', msg.route))
+      olemopUtils.invokeCallback(cb, new Error('meet unknown route message %j', msg.route))
       return
     }
 
@@ -239,7 +239,7 @@ const beforeFilter = (isGlobal, server, msg, session, cb) => {
   if (fm) {
     fm.beforeFilter(msg, session, cb)
   } else {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
   }
 }
 
@@ -267,7 +267,7 @@ const handleError = (isGlobal, server, err, msg, session, resp, opts, cb) => {
   const handler = isGlobal ? server.app.get(Constants.RESERVED.GLOBAL_ERROR_HANDLER) : server.app.get(Constants.RESERVED.ERROR_HANDLER)
   if (!handler) {
     logger.debug(`no default error handler to resolve unknown exception. ${err.stack}`)
-    utils.invokeCallback(cb, err, resp, opts)
+    olemopUtils.invokeCallback(cb, err, resp, opts)
   } else {
     if (handler.length === 5) {
       handler(err, msg, resp, session, cb)
@@ -331,13 +331,13 @@ const doForward = (app, msg, session, routeRecord, cb) => {
           logger.error(`fail to process remote message: ${err.stack}`)
         }
         finished = true
-        utils.invokeCallback(cb, err, resp, opts)
+        olemopUtils.invokeCallback(cb, err, resp, opts)
       }
     )
   } catch (err) {
     if (!finished) {
       logger.error(`fail to forward message: ${err.stack}`)
-      utils.invokeCallback(cb, err)
+      olemopUtils.invokeCallback(cb, err)
     }
   }
 }

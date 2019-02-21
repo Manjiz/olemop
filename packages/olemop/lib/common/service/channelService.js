@@ -1,6 +1,6 @@
-var utils = require('../../util/utils')
-var ChannelRemote = require('../remote/frontend/channelRemote')
+const olemopUtils = require('@olemop/utils')
 var logger = require('@olemop/logger').getLogger('olemop', __filename)
+var ChannelRemote = require('../remote/frontend/channelRemote')
 
 /**
  * constant
@@ -107,7 +107,7 @@ ChannelService.prototype.pushMessageByUids = function (route, msg, uids, opts, c
   }
 
   if (!uids || uids.length === 0) {
-    utils.invokeCallback(cb, new Error('uids should not be empty'))
+    olemopUtils.invokeCallback(cb, new Error('uids should not be empty'))
     return
   }
 
@@ -141,7 +141,7 @@ ChannelService.prototype.broadcast = (stype, route, msg, opts = {}, cb) => {
 
   // server list is empty
   if (!servers || servers.length === 0) {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
     return
   }
 
@@ -172,9 +172,9 @@ ChannelService.prototype.broadcast = (stype, route, msg, opts = {}, cb) => {
     }
   }))).then(() => {
     if (successFlag) {
-      utils.invokeCallback(cb, null)
+      olemopUtils.invokeCallback(cb, null)
     } else {
-      utils.invokeCallback(cb, new Error('broadcast fails'))
+      olemopUtils.invokeCallback(cb, new Error('broadcast fails'))
     }
   })
 }
@@ -298,7 +298,7 @@ Channel.prototype.destroy = function () {
  */
 Channel.prototype.pushMessage = function (route, msg, opts, cb) {
   if (this.state !== ST_INITED) {
-    utils.invokeCallback(new Error('channel is not running now'))
+    olemopUtils.invokeCallback(new Error('channel is not running now'))
     return
   }
 
@@ -379,7 +379,7 @@ const sendMessageByGroup = (channelService, route, msg, groups, opts = {}, cb) =
 
   // group is empty
   if (Object.keys(groups).length === 0) {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
     return
   }
 
@@ -414,25 +414,25 @@ const sendMessageByGroup = (channelService, route, msg, groups, opts = {}, cb) =
     }
   }))).then(() => {
     if (successFlag) {
-      utils.invokeCallback(cb, null, failIds)
+      olemopUtils.invokeCallback(cb, null, failIds)
     } else {
-      utils.invokeCallback(cb, new Error('all uids push message fail'))
+      olemopUtils.invokeCallback(cb, new Error('all uids push message fail'))
     }
   })
 }
 
 var restoreChannel = function (self, cb) {
   if (!self.store) {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
     return
   } else {
     loadAllFromStore(self, genKey(self), function (err, list) {
       if (err) {
-        utils.invokeCallback(cb, err)
+        olemopUtils.invokeCallback(cb, err)
         return
       } else {
         if (!list.length || !Array.isArray(list)) {
-          utils.invokeCallback(cb)
+          olemopUtils.invokeCallback(cb)
           return
         }
         var load = function (key) {
@@ -457,7 +457,7 @@ var restoreChannel = function (self, cb) {
         self.channels[name] = new Channel(name, self)
         load(list[i])
       }
-      utils.invokeCallback(cb)
+      olemopUtils.invokeCallback(cb)
     }
   })
 }
@@ -488,9 +488,9 @@ var loadAllFromStore = function (self, key, cb) {
     self.store.load(key, function (err, list) {
       if (err) {
         logger.error('load key: %s from store, with err: %j', key, err.stack)
-        utils.invokeCallback(cb, err)
+        olemopUtils.invokeCallback(cb, err)
       } else {
-        utils.invokeCallback(cb, null, list)
+        olemopUtils.invokeCallback(cb, null, list)
       }
     })
   }

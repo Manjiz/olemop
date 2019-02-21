@@ -1,4 +1,4 @@
-const utils = require('../util/utils')
+const olemopUtils = require('@olemop/utils')
 
 const DEFAULT_FLUSH_INTERVAL = 20
 
@@ -19,7 +19,7 @@ module.exports = Service
 Service.prototype.start = function (cb) {
   this.tid = setInterval(flush.bind(null, this), this.flushInterval)
   process.nextTick(() => {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
   })
 }
 
@@ -29,7 +29,7 @@ Service.prototype.stop = function (force, cb) {
     this.tid = null
   }
   process.nextTick(() => {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
   })
 }
 
@@ -41,7 +41,7 @@ Service.prototype.schedule = function (reqId, route, msg, recvs, opts = {}, cb) 
   }
 
   process.nextTick(() => {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
   })
 }
 

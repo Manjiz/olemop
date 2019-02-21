@@ -1,4 +1,4 @@
-const utils = require('../util/utils')
+const olemopUtils = require('@olemop/utils')
 
 const Service = function (app, opts = {}) {
   if (!(this instanceof Service)) {
@@ -18,7 +18,7 @@ Service.prototype.schedule = function (reqId, route, msg, recvs, opts = {}, cb) 
 
   if (cb) {
     process.nextTick(() => {
-      utils.invokeCallback(cb)
+      olemopUtils.invokeCallback(cb)
     })
   }
 }

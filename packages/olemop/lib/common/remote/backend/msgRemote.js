@@ -1,5 +1,5 @@
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('forward-log', __filename)
-const utils = require('../../../util/utils')
 
 const Remote = function (app) {
   this.app = app
@@ -18,13 +18,13 @@ Remote.prototype.forwardMessage = function (msg, session, cb) {
 
   if (!server) {
     logger.error(`server component not enable on ${this.app.serverId}`)
-    utils.invokeCallback(cb, new Error('server component not enable'))
+    olemopUtils.invokeCallback(cb, new Error('server component not enable'))
     return
   }
 
   if (!sessionService) {
     logger.error(`backend session component not enable on ${this.app.serverId}`)
-    utils.invokeCallback(cb, new Error('backend sesssion component not enable'))
+    olemopUtils.invokeCallback(cb, new Error('backend sesssion component not enable'))
     return
   }
 
@@ -37,7 +37,7 @@ Remote.prototype.forwardMessage = function (msg, session, cb) {
 
   server.handle(msg, backendSession, (err, resp, opts) => {
     // cb && cb(err, resp, opts)
-    utils.invokeCallback(cb, err, resp, opts)
+    olemopUtils.invokeCallback(cb, err, resp, opts)
   })
 }
 
@@ -47,13 +47,13 @@ Remote.prototype.forwardMessage2 = function (route, body, aesPassword, compressG
 
   if (!server) {
     logger.error(`server component not enable on ${this.app.serverId}`)
-    utils.invokeCallback(cb, new Error('server component not enable'))
+    olemopUtils.invokeCallback(cb, new Error('server component not enable'))
     return
   }
 
   if (!sessionService) {
     logger.error(`backend session component not enable on ${this.app.serverId}`)
-    utils.invokeCallback(cb, new Error('backend sesssion component not enable'))
+    olemopUtils.invokeCallback(cb, new Error('backend sesssion component not enable'))
     return
   }
 
@@ -81,7 +81,7 @@ Remote.prototype.forwardMessage2 = function (route, body, aesPassword, compressG
     }
 
     server.handle(msg, backendSession, (err, resp, opts) => {
-      utils.invokeCallback(cb, err, resp, opts)
+      olemopUtils.invokeCallback(cb, err, resp, opts)
     })
   })
 }

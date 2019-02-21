@@ -1,5 +1,5 @@
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const utils = require('../util/utils')
 const events = require('../util/events')
 const Constants = require('../util/constants')
 
@@ -38,14 +38,14 @@ const subscribeRequest = (self, agent, id, cb) => {
   agent.request(Constants.KEYWORDS.MASTER_WATCHER, msg, (err, servers) => {
     if (err) {
       logger.error('subscribeRequest request to master with error: %j', err.stack)
-      utils.invokeCallback(cb, err)
+      olemopUtils.invokeCallback(cb, err)
     }
     const res = []
     for (let id in servers) {
       res.push(servers[id])
     }
     addServers(self, res)
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
   })
 }
 
@@ -55,33 +55,33 @@ const addServer = (self, agent, msg, cb) => {
   logger.debug('[%s] receive addServer signal: %j', self.app.serverId, msg)
   if (!msg || !msg.server) {
     logger.warn('monitorwatcher addServer receive empty message: %j', msg)
-    utils.invokeCallback(cb, Constants.SIGNAL.FAIL)
+    olemopUtils.invokeCallback(cb, Constants.SIGNAL.FAIL)
     return
   }
   addServers(self, [msg.server])
-  utils.invokeCallback(cb, Constants.SIGNAL.OK)
+  olemopUtils.invokeCallback(cb, Constants.SIGNAL.OK)
 }
 
 const removeServer = (self, agent, msg, cb) => {
   logger.debug('%s receive removeServer signal: %j', self.app.serverId, msg)
   if (!msg || !msg.id) {
     logger.warn('monitorwatcher removeServer receive empty message: %j', msg)
-    utils.invokeCallback(cb, Constants.SIGNAL.FAIL)
+    olemopUtils.invokeCallback(cb, Constants.SIGNAL.FAIL)
     return
   }
   removeServers(self, [msg.id])
-  utils.invokeCallback(cb, Constants.SIGNAL.OK)
+  olemopUtils.invokeCallback(cb, Constants.SIGNAL.OK)
 }
 
 const replaceServer = (self, agent, msg, cb) => {
   logger.debug('%s receive replaceServer signal: %j', self.app.serverId, msg)
   if (!msg || !msg.servers) {
     logger.warn('monitorwatcher replaceServer receive empty message: %j', msg)
-    utils.invokeCallback(cb, Constants.SIGNAL.FAIL)
+    olemopUtils.invokeCallback(cb, Constants.SIGNAL.FAIL)
     return
   }
   replaceServers(self, msg.servers)
-  utils.invokeCallback(cb, Constants.SIGNAL.OK)
+  olemopUtils.invokeCallback(cb, Constants.SIGNAL.OK)
 }
 
 const startOver = (self, agent, msg, cb) => {
@@ -90,7 +90,7 @@ const startOver = (self, agent, msg, cb) => {
     func.call(null, self.app)
   }
   self.app.event.emit(events.START_ALL)
-  utils.invokeCallback(cb, Constants.SIGNAL.OK)
+  olemopUtils.invokeCallback(cb, Constants.SIGNAL.OK)
 }
 
 // ----------------- common methods -------------------------

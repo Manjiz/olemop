@@ -1,4 +1,5 @@
 const rsa = require('node-bignumber')
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const taskManager = require('../common/manager/taskManager')
 const DefaultConnector = require('../connectors/sioconnector')
@@ -50,19 +51,19 @@ const hostFilter = function (cb, socket) {
     this.blacklistFun((err, list) => {
       if (err) {
         logger.error(`connector blacklist error: ${err.stack}`)
-        utils.invokeCallback(cb, this, socket)
+        olemopUtils.invokeCallback(cb, this, socket)
         return
       }
       if (!Array.isArray(list)) {
         logger.error('connector blacklist is not array: %j', list)
-        utils.invokeCallback(cb, this, socket)
+        olemopUtils.invokeCallback(cb, this, socket)
         return
       }
       if (check(list)) return
-      utils.invokeCallback(cb, this, socket)
+      olemopUtils.invokeCallback(cb, this, socket)
     })
   } else {
-    utils.invokeCallback(cb, this, socket)
+    olemopUtils.invokeCallback(cb, this, socket)
   }
 }
 
@@ -336,14 +337,14 @@ class Component {
     // check component dependencies
     if (!this.server) {
       process.nextTick(() => {
-        utils.invokeCallback(cb, new Error('fail to start connector component for no server component loaded'))
+        olemopUtils.invokeCallback(cb, new Error('fail to start connector component for no server component loaded'))
       })
       return
     }
 
     if (!this.session) {
       process.nextTick(() => {
-        utils.invokeCallback(cb, new Error('fail to start connector component for no session component loaded'))
+        olemopUtils.invokeCallback(cb, new Error('fail to start connector component for no session component loaded'))
       })
       return
     }

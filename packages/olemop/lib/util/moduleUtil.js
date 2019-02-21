@@ -1,94 +1,82 @@
-var os = require('os')
-var admin = require('@olemop/admin')
-var utils = require('./utils')
-var Constants = require('./constants')
-var pathUtil = require('./pathUtil')
-var starter = require('../master/starter')
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
-var pro = module.exports
+const os = require('os')
+const admin = require('@olemop/admin')
+const olemopUtils = require('@olemop/utils')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const starter = require('../master/starter')
+const Constants = require('./constants')
+const pathUtil = require('./pathUtil')
 
-/**
- * Load admin modules
- */
-pro.loadModules = function (self, consoleService) {
-  // load app register modules
-  var _modules = self.app.get(Constants.KEYWORDS.MODULE)
-
-  if (!_modules) return
-
-  var modules = []
-  for (var m in _modules) {
-    modules.push(_modules[m])
-  }
-
-  var record, moduleId, module
-  for (var i=0, l=modules.length; i<l; i++) {
-    record = modules[i]
-    if (typeof record.module === 'function') {
-      module = record.module(record.opts, consoleService)
-    } else {
-      module = record.module
-    }
-
-    moduleId = record.moduleId || module.moduleId
-
-    if (!moduleId) {
-      logger.warn('ignore an unknown module.')
-      continue
-    }
-
-    consoleService.register(moduleId, module)
-    self.modules.push(module)
-  }
-}
-
-pro.startModules = function (modules, cb) {
-  // invoke the start lifecycle method of modules
-
-  if (!modules) {
-    return
-  }
-  startModule(null, modules, 0, cb)
-}
-
-/**
- * Append the default system admin modules
- */
-pro.registerDefaultModules = function (isMaster, app, closeWatcher) {
-  if (!closeWatcher) {
-    if (isMaster) {
-      app.registerAdmin(require('../modules/masterwatcher'), { app })
-    } else {
-      app.registerAdmin(require('../modules/monitorwatcher'), { app })
-    }
-  }
-  app.registerAdmin(admin.modules.watchServer, { app })
-  app.registerAdmin(require('../modules/console'), { app, starter })
-  if (app.enabled('systemMonitor')) {
-    if (os.platform() !== Constants.PLATFORM.WIN) {
-      app.registerAdmin(admin.modules.systemInfo)
-      app.registerAdmin(admin.modules.nodeInfo)
-    }
-    app.registerAdmin(admin.modules.monitorLog, {path: pathUtil.getLogPath(app.getBase())})
-    app.registerAdmin(admin.modules.scripts, {app:app, path: pathUtil.getScriptPath(app.getBase())})
-    if (os.platform() !== Constants.PLATFORM.WIN) {
-      app.registerAdmin(admin.modules.profiler)
-    }
-  }
-}
-
-var startModule = function (err, modules, index, cb) {
+const startModule = (err, modules, index, cb) => {
   if (err || index >= modules.length) {
-    utils.invokeCallback(cb, err)
+    olemopUtils.invokeCallback(cb, err)
     return
   }
-
-  var module = modules[index]
+  const module = modules[index]
   if (module && typeof module.start === 'function') {
-    module.start(function (err) {
-      startModule(err, modules, index + 1, cb)
+    module.start((err) => {
+      startModule(err, modules, ++index, cb)
     })
   } else {
-    startModule(err, modules, index + 1, cb)
+    startModule(err, modules, ++index, cb)
+  }
+}
+
+module.exports = {
+  /**
+   * Load admin modules
+   */
+  loadModules (self, consoleService) {
+    // load app register modules
+    const _modules = self.app.get(Constants.KEYWORDS.MODULE)
+
+    if (!_modules) return
+
+    const modules = Object.values(_modules).map((m) => m)
+
+    for (let i = 0; i < modules.length; i++) {
+      const record = modules[i]
+      const module = typeof record.module === 'function' ? record.module(record.opts, consoleService) : record.module
+      const moduleId = record.moduleId || module.moduleId
+
+      if (!moduleId) {
+        logger.warn('ignore an unknown module.')
+        continue
+      }
+
+      consoleService.register(moduleId, module)
+      self.modules.push(module)
+    }
+  },
+
+  startModules (modules, cb) {
+    // invoke the start lifecycle method of modules
+    if (!modules) return
+    startModule(null, modules, 0, cb)
+  },
+
+  /**
+   * Append the default system admin modules
+   */
+  registerDefaultModules (isMaster, app, closeWatcher) {
+    if (!closeWatcher) {
+      if (isMaster) {
+        app.registerAdmin(require('../modules/masterwatcher'), { app })
+      } else {
+        app.registerAdmin(require('../modules/monitorwatcher'), { app })
+      }
+    }
+    app.registerAdmin(admin.modules.watchServer, { app })
+    app.registerAdmin(require('../modules/console'), { app, starter })
+    if (app.enabled('systemMonitor')) {
+      if (os.platform() !== Constants.PLATFORM.WIN) {
+        app.registerAdmin(admin.modules.systemInfo)
+        app.registerAdmin(admin.modules.nodeInfo)
+      }
+      app.registerAdmin(admin.modules.monitorLog, { path: pathUtil.getLogPath(app.getBase()) })
+      app.registerAdmin(admin.modules.scripts, { app, path: pathUtil.getScriptPath(app.getBase()) })
+      if (os.platform() !== Constants.PLATFORM.WIN) {
+        app.registerAdmin(admin.modules.profiler)
+      }
+    }
   }
 }

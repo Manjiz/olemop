@@ -1,7 +1,8 @@
 /**
  * backend session service for backend session
  */
-var utils = require('../../util/utils')
+
+const olemopUtils = require('@olemop/utils')
 
 var EXPORTED_FIELDS = ['id', 'frontendId', 'uid', 'settings']
 
@@ -235,7 +236,7 @@ BackendSession.prototype.bind = function (uid, cb) {
     if (!err) {
       self.uid = uid
     }
-    utils.invokeCallback(cb, err)
+    olemopUtils.invokeCallback(cb, err)
   })
 }
 
@@ -254,7 +255,7 @@ BackendSession.prototype.unbind = function (uid, cb) {
     if (!err) {
       self.uid = null
     }
-    utils.invokeCallback(cb, err)
+    olemopUtils.invokeCallback(cb, err)
   })
 }
 
@@ -312,12 +313,12 @@ BackendSession.prototype.export = function () {
 
 var BackendSessionCB = function (service, cb, err, sinfo) {
   if (err) {
-    utils.invokeCallback(cb, err)
+    olemopUtils.invokeCallback(cb, err)
     return
   }
 
   if (!sinfo) {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
     return
   }
   var sessions = []
@@ -331,5 +332,5 @@ var BackendSessionCB = function (service, cb, err, sinfo) {
       // #get
       sessions = service.create(sinfo)
   }
-  utils.invokeCallback(cb, null, sessions)
+  olemopUtils.invokeCallback(cb, null, sessions)
 }

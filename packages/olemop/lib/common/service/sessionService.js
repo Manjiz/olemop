@@ -1,4 +1,5 @@
 const EventEmitter = require('events')
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const utils = require('../../util/utils')
 
@@ -235,11 +236,11 @@ class SessionService {
   import (sid, key, value, cb) {
     const session = this.sessions[sid]
     if (!session) {
-      utils.invokeCallback(cb, new Error(`session does not exist, sid: ${sid}`))
+      olemopUtils.invokeCallback(cb, new Error(`session does not exist, sid: ${sid}`))
       return
     }
     session.set(key, value)
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
   }
 
   /**
@@ -251,14 +252,14 @@ class SessionService {
   importAll (sid, settings, cb) {
     const session = this.sessions[sid]
     if (!session) {
-      utils.invokeCallback(cb, new Error(`session does not exist, sid: ${sid}`))
+      olemopUtils.invokeCallback(cb, new Error(`session does not exist, sid: ${sid}`))
       return
     }
 
     for (let f in settings) {
       session.set(f, settings[f])
     }
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
   }
 
   /**
@@ -290,11 +291,11 @@ class SessionService {
       })
 
       process.nextTick(() => {
-        utils.invokeCallback(cb)
+        olemopUtils.invokeCallback(cb)
       })
     } else {
       process.nextTick(() => {
-        utils.invokeCallback(cb)
+        olemopUtils.invokeCallback(cb)
       })
     }
   }
@@ -319,11 +320,11 @@ class SessionService {
       // notify client
       session.closed(reason)
       process.nextTick(() => {
-        utils.invokeCallback(cb)
+        olemopUtils.invokeCallback(cb)
       })
     } else {
       process.nextTick(() => {
-        utils.invokeCallback(cb)
+        olemopUtils.invokeCallback(cb)
       })
     }
   }
@@ -415,7 +416,7 @@ class SessionService {
    * Get sessions' quantity in specified server.
    */
   getSessionsCount () {
-    return utils.size(this.sessions)
+    return olemopUtils.size(this.sessions)
   }
 }
 
@@ -567,7 +568,7 @@ class FrontendSession extends EventEmitter {
       if (!err) {
         self.uid = uid
       }
-      utils.invokeCallback(cb, err)
+      olemopUtils.invokeCallback(cb, err)
     })
   }
 
@@ -577,7 +578,7 @@ class FrontendSession extends EventEmitter {
       if (!err) {
         self.uid = null
       }
-      utils.invokeCallback(cb, err)
+      olemopUtils.invokeCallback(cb, err)
     })
   }
 

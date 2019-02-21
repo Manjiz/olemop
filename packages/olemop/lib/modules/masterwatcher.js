@@ -1,5 +1,5 @@
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const utils = require('../util/utils')
 const Constants = require('../util/constants')
 const MasterWatchdog = require('../master/watchdog')
 
@@ -51,7 +51,7 @@ const onServerLeave = (module, id, type) => {
 // ----------------- module methods -------------------------
 
 Module.prototype.start = function (cb) {
-  utils.invokeCallback(cb)
+  olemopUtils.invokeCallback(cb)
 }
 
 Module.prototype.masterHandler = function (agent, msg, cb) {
@@ -71,29 +71,29 @@ Module.prototype.masterHandler = function (agent, msg, cb) {
 
 const subscribe = (module, agent, msg, cb) => {
   if (!msg) {
-    utils.invokeCallback(cb, new Error('masterwatcher subscribe empty message.'))
+    olemopUtils.invokeCallback(cb, new Error('masterwatcher subscribe empty message.'))
     return
   }
   module.watchdog.subscribe(msg.id)
-  utils.invokeCallback(cb, null, module.watchdog.query())
+  olemopUtils.invokeCallback(cb, null, module.watchdog.query())
 }
 
 const unsubscribe = (module, agent, msg, cb) => {
   if (!msg) {
-    utils.invokeCallback(cb, new Error('masterwatcher unsubscribe empty message.'))
+    olemopUtils.invokeCallback(cb, new Error('masterwatcher unsubscribe empty message.'))
     return
   }
   module.watchdog.unsubscribe(msg.id)
-  utils.invokeCallback(cb)
+  olemopUtils.invokeCallback(cb)
 }
 
 const query = (module, agent, msg, cb) => {
-  utils.invokeCallback(cb, null, module.watchdog.query())
+  olemopUtils.invokeCallback(cb, null, module.watchdog.query())
 }
 
 const record = (module, agent, msg) => {
   if (!msg) {
-    utils.invokeCallback(cb, new Error('masterwatcher record empty message.'))
+    olemopUtils.invokeCallback(cb, new Error('masterwatcher record empty message.'))
     return
   }
   module.watchdog.record(msg.id)

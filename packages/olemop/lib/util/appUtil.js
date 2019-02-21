@@ -1,32 +1,34 @@
-var async = require('async')
+const fs = require('fs')
+const path = require('path')
+const async = require('async')
+const olemopUtils = require('@olemop/utils')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const olemop = require('../olemop')
+const starter = require('../master/starter')
 const logUtil = require('./logUtil')
-var utils = require('./utils')
-var path = require('path')
-var fs = require('fs')
-var Constants = require('./constants')
-var starter = require('../master/starter')
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
+const utils = require('./utils')
+const Constants = require('./constants')
 
 /**
  * Initialize application configuration.
  */
-exports.defaultConfiguration = function (app) {
-  var args = parseArgs(process.argv)
-  setupEnv(app, args)
-  loadMaster(app)
-  loadServers(app)
-  processArgs(app, args)
+exports.defaultConfiguration = (app) => {
+  const args = _parseArgs(process.argv)
+  _setupEnv(app, args)
+  _loadMaster(app)
+  _loadServers(app)
+  _processArgs(app, args)
   configLogger(app)
-  loadLifecycle(app)
+  _loadLifecycle(app)
 }
 
 /**
  * Start servers by type.
  */
-exports.startByType = function (app, cb) {
+exports.startByType = (app, cb) => {
   if (app.startId) {
     if (app.startId === Constants.RESERVED.MASTER) {
-      utils.invokeCallback(cb)
+      olemopUtils.invokeCallback(cb)
     } else {
       starter.runServers(app)
     }
@@ -34,7 +36,7 @@ exports.startByType = function (app, cb) {
     if (app.type && app.type !== Constants.RESERVED.ALL && app.type !== Constants.RESERVED.MASTER) {
       starter.runServers(app)
     } else {
-      utils.invokeCallback(cb)
+      olemopUtils.invokeCallback(cb)
     }
   }
 }
@@ -42,8 +44,7 @@ exports.startByType = function (app, cb) {
 /**
  * Load default components for application.
  */
-exports.loadDefaultComponents = function (app) {
-  var olemop = require('../olemop')
+exports.loadDefaultComponents = (app) => {
   // load system default components
   if (app.serverType === Constants.RESERVED.MASTER) {
     app.load(olemop.master, app.get('masterConfig'))
@@ -78,19 +79,19 @@ exports.loadDefaultComponents = function (app) {
  * @param  {Boolean}  force whether stop component immediately
  * @param  {Function} cb
  */
-exports.stopComps = function (comps, index, force, cb) {
+exports.stopComps = (comps, index, force, cb) => {
   if (index >= comps.length) {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
     return
   }
-  var comp = comps[index]
+  const comp = comps[index]
   if (typeof comp.stop === 'function') {
-    comp.stop(force, function () {
+    comp.stop(force, () => {
       // ignore any error
-      exports.stopComps(comps, index + 1, force, cb)
+      exports.stopComps(comps, ++index, force, cb)
     })
   } else {
-    exports.stopComps(comps, index + 1, force, cb)
+    exports.stopComps(comps, ++index, force, cb)
   }
 }
 
@@ -103,7 +104,7 @@ exports.stopComps = function (comps, index, force, cb) {
  * @param {string} method component lifecycle method name, such as: start, stop
  * @param {Function} cb
  */
-exports.optComponents = function (comps, method, cb) {
+exports.optComponents = (comps, method, cb) => {
   async.eachSeries(comps, (comp, done) => {
     if (typeof comp[method] === 'function') {
       comp[method](done)
@@ -118,21 +119,36 @@ exports.optComponents = function (comps, method, cb) {
         logger.error('fail to operate component, method: %s, err: %j',  method, err.stack)
       }
     }
-    utils.invokeCallback(cb, err)
+    olemopUtils.invokeCallback(cb, err)
   })
+}
+
+/**
+ * Setup enviroment.
+ */
+const _setupEnv = (app, args) => {
+  app.set(Constants.RESERVED.ENV, args.env || process.env.NODE_ENV || Constants.RESERVED.ENV_DEV, true)
+}
+
+/**
+ * Load master info from config/master.json.
+ */
+const _loadMaster = (app) => {
+  app.loadConfigBaseApp(Constants.RESERVED.MASTER, Constants.FILEPATH.MASTER)
+  app.master = app.get(Constants.RESERVED.MASTER)
 }
 
 /**
  * Load server info from config/servers.json.
  */
-var loadServers = function (app) {
+const _loadServers = (app) => {
   app.loadConfigBaseApp(Constants.RESERVED.SERVERS, Constants.FILEPATH.SERVER)
-  var servers = app.get(Constants.RESERVED.SERVERS)
-  var serverMap = {}, slist, i, l, server
-  for (var serverType in servers) {
-    slist = servers[serverType]
-    for (i = 0, l = slist.length; i < l; i++) {
-      server = slist[i]
+  const servers = app.get(Constants.RESERVED.SERVERS)
+  const serverMap = {}
+  for (let serverType in servers) {
+    const slist = servers[serverType]
+    for (let i = 0; i < slist.length; i++) {
+      const server = slist[i]
       server.serverType = serverType
       if (server[Constants.RESERVED.CLUSTER_COUNT]) {
         utils.loadCluster(app, server, serverMap)
@@ -148,23 +164,15 @@ var loadServers = function (app) {
 }
 
 /**
- * Load master info from config/master.json.
- */
-var loadMaster = function (app) {
-  app.loadConfigBaseApp(Constants.RESERVED.MASTER, Constants.FILEPATH.MASTER)
-  app.master = app.get(Constants.RESERVED.MASTER)
-}
-
-/**
  * Process server start command
  */
-var processArgs = function (app, args) {
-  var serverType = args.serverType || Constants.RESERVED.MASTER
-  var serverId = args.id || app.getMaster().id
-  var mode = args.mode || Constants.RESERVED.CLUSTER
-  var masterha = args.masterha || 'false'
-  var type = args.type || Constants.RESERVED.ALL
-  var startId = args.startId
+const _processArgs = (app, args) => {
+  const serverType = args.serverType || Constants.RESERVED.MASTER
+  const serverId = args.id || app.getMaster().id
+  const mode = args.mode || Constants.RESERVED.CLUSTER
+  const masterha = args.masterha || 'false'
+  const type = args.type || Constants.RESERVED.ALL
+  const startId = args.startId
 
   app.set(Constants.RESERVED.MAIN, args.main, true)
   app.set(Constants.RESERVED.SERVER_TYPE, serverType, true)
@@ -186,34 +194,42 @@ var processArgs = function (app, args) {
 }
 
 /**
- * Setup enviroment.
- */
-const setupEnv = (app, args) => {
-  app.set(Constants.RESERVED.ENV, args.env || process.env.NODE_ENV || Constants.RESERVED.ENV_DEV, true)
-}
-
-/**
  * Configure custom logger.
  */
-const configLogger = function (app, logger) {
-  if (process.env.OLEMOP_LOGGER !== 'off') {
-    var env = app.get(Constants.RESERVED.ENV)
-    var originPath = path.join(app.getBase(), Constants.FILEPATH.LOG)
-    var presentPath = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG))
-    var present2Path = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, `${path.basename(Constants.FILEPATH.LOG, '.json')}.${env}.json`)
-    if (fs.existsSync(originPath)) {
-      logUtil.configure(app, originPath, logger)
-    } else if (fs.existsSync(presentPath)) {
-      logUtil.configure(app, presentPath, logger)
-    } else if (fs.existsSync(present2Path)) {
-      logUtil.configure(app, present2Path, logger)
-    } else {
-      logger.error('logger file path configuration is error.')
-    }
+const configLogger = (app, logger) => {
+  if (process.env.OLEMOP_LOGGER === 'off') return
+  const env = app.get(Constants.RESERVED.ENV)
+  const originPath = path.join(app.getBase(), Constants.FILEPATH.LOG)
+  const presentPath = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(Constants.FILEPATH.LOG))
+  const present2Path = path.join(app.getBase(), Constants.FILEPATH.CONFIG_DIR, `${path.basename(Constants.FILEPATH.LOG, '.json')}.${env}.json`)
+  if (fs.existsSync(originPath)) {
+    logUtil.configure(app, originPath, logger)
+  } else if (fs.existsSync(presentPath)) {
+    logUtil.configure(app, presentPath, logger)
+  } else if (fs.existsSync(present2Path)) {
+    logUtil.configure(app, present2Path, logger)
+  } else {
+    logger.error('logger file path configuration is error.')
   }
 }
 
 exports.configLogger = configLogger
+
+/**
+ * Load lifecycle file.
+ */
+const _loadLifecycle = (app) => {
+  const filePath = path.join(app.getBase(), Constants.FILEPATH.SERVER_DIR, app.serverType, Constants.FILEPATH.LIFECYCLE)
+  if (!fs.existsSync(filePath)) return
+  const lifecycle = require(filePath)
+  for (let key in lifecycle) {
+    if (typeof lifecycle[key] === 'function') {
+      app.lifecycleCbs[key] = lifecycle[key]
+    } else {
+      logger.warn(`lifecycle.js in ${filePath} is error format.`)
+    }
+  }
+}
 
 /**
  * Parse command line arguments.
@@ -222,20 +238,20 @@ exports.configLogger = configLogger
  *
  * @returns Object argsMap map of arguments
  */
-var parseArgs = function (args) {
-  var argsMap = {}
-  var mainPos = 1
+const _parseArgs = (args) => {
+  const argsMap = {}
+  let mainPos = 1
 
   while (args[mainPos].indexOf('--') > 0) {
     mainPos++
   }
   argsMap.main = args[mainPos]
 
-  for (var i = (mainPos + 1); i < args.length; i++) {
-    var arg = args[i]
-    var sep = arg.indexOf('=')
-    var key = arg.slice(0, sep)
-    var value = arg.slice(sep + 1)
+  for (let i = mainPos + 1; i < args.length; i++) {
+    const arg = args[i]
+    const sep = arg.indexOf('=')
+    const key = arg.slice(0, sep)
+    let value = arg.slice(sep + 1)
     if (!isNaN(Number(value)) && (value.indexOf('.') < 0)) {
       value = Number(value)
     }
@@ -243,23 +259,4 @@ var parseArgs = function (args) {
   }
 
   return argsMap
-}
-
-/**
- * Load lifecycle file.
- *
- */
-var loadLifecycle = function (app) {
-  var filePath = path.join(app.getBase(), Constants.FILEPATH.SERVER_DIR, app.serverType, Constants.FILEPATH.LIFECYCLE)
-  if (!fs.existsSync(filePath)) {
-    return
-  }
-  var lifecycle = require(filePath)
-  for (var key in lifecycle) {
-    if (typeof lifecycle[key] === 'function') {
-      app.lifecycleCbs[key] = lifecycle[key]
-    } else {
-      logger.warn('lifecycle.js in %s is error format.', filePath)
-    }
-  }
 }

@@ -2,7 +2,8 @@
  * Remote session service for frontend server.
  * Set session info for backend servers.
  */
-const utils = require('../../../util/utils')
+
+const olemopUtils = require('@olemop/utils')
 
 const Remote = function (app) {
   this.app = app
@@ -33,10 +34,10 @@ Remote.prototype.pushAll = function (sid, settings, cb) {
 Remote.prototype.getBackendSessionBySid = function (sid, cb) {
   const session = this.app.get('sessionService').get(sid)
   if (!session) {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
     return
   }
-  utils.invokeCallback(cb, null, session.toFrontendSession().export())
+  olemopUtils.invokeCallback(cb, null, session.toFrontendSession().export())
 }
 
 /**
@@ -48,7 +49,7 @@ Remote.prototype.getBackendSessionBySid = function (sid, cb) {
 Remote.prototype.getBackendSessionsByUid = function (uid, cb) {
   var sessions = this.app.get('sessionService').getByUid(uid)
   if (!sessions) {
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
     return
   }
 
@@ -56,7 +57,7 @@ Remote.prototype.getBackendSessionsByUid = function (uid, cb) {
   for (var i=0; i < sessions.length; i++) {
     res.push(sessions[i].toFrontendSession().export())
   }
-  utils.invokeCallback(cb, null, res)
+  olemopUtils.invokeCallback(cb, null, res)
 }
 
 /**

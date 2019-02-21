@@ -3,8 +3,8 @@
  * Receive push request from backend servers and push it to clients.
  */
 
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const utils = require('../../../util/utils')
 
 const Remote = function (app) {
   this.app = app
@@ -22,7 +22,7 @@ const Remote = function (app) {
 Remote.prototype.pushMessage = function (route, msg, uids, opts, cb) {
   if (!msg) {
     logger.error('Can not send empty message! route : %j, compressed msg : %j', route, msg)
-    utils.invokeCallback(cb, new Error('can not send empty message.'))
+    olemopUtils.invokeCallback(cb, new Error('can not send empty message.'))
     return
   }
 
@@ -44,7 +44,7 @@ Remote.prototype.pushMessage = function (route, msg, uids, opts, cb) {
   }
   logger.debug('[%s] pushMessage uids: %j, msg: %j, sids: %j', this.app.serverId, uids, msg, sids)
   connector.send(null, route, msg, sids, opts, (err) => {
-    utils.invokeCallback(cb, err, fails)
+    olemopUtils.invokeCallback(cb, err, fails)
   })
 }
 

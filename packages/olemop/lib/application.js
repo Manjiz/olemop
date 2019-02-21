@@ -9,7 +9,6 @@ const path = require('path')
 const EventEmitter = require('events')
 const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const utils = require('./util/utils')
 const events = require('./util/events')
 const appUtil = require('./util/appUtil')
 const Constants = require('./util/constants')
@@ -364,7 +363,7 @@ Application.beforeStopHook = function (fun) {
  Application.start = function (cb) {
   this.startTime = Date.now()
   if (this.state > STATE_INITED) {
-    utils.invokeCallback(cb, new Error('application has already start.'))
+    olemopUtils.invokeCallback(cb, new Error('application has already start.'))
     return
   }
 
@@ -375,7 +374,7 @@ Application.beforeStopHook = function (fun) {
       appUtil.optComponents(self.loaded, Constants.RESERVED.START, function (err) {
         self.state = STATE_START
         if (err) {
-          utils.invokeCallback(cb, rr)
+          olemopUtils.invokeCallback(cb, rr)
         } else {
           logger.info('%j enter after start...', self.getServerId())
           self.afterStart(cb)
@@ -399,7 +398,7 @@ Application.beforeStopHook = function (fun) {
  */
 Application.afterStart = function (cb) {
   if (this.state !== STATE_START) {
-    utils.invokeCallback(cb, new Error('application is not running now.'))
+    olemopUtils.invokeCallback(cb, new Error('application is not running now.'))
     return
   }
 
@@ -413,10 +412,10 @@ Application.afterStart = function (cb) {
     }
     if (afterFun) {
       afterFun.call(null, self, function () {
-        utils.invokeCallback(cb, err)
+        olemopUtils.invokeCallback(cb, err)
       })
     } else {
-      utils.invokeCallback(cb, err)
+      olemopUtils.invokeCallback(cb, err)
     }
     var usedTime = Date.now() - self.startTime
     logger.info('%j startup in %s ms', id, usedTime)
@@ -459,7 +458,7 @@ Application.stop = function (force) {
   if (stopFun) {
     stopFun.call(null, this, shutDown, cancelShutDownTimer)
   } else if (fun) {
-    utils.invokeCallback(fun, self, shutDown, cancelShutDownTimer)
+    olemopUtils.invokeCallback(fun, self, shutDown, cancelShutDownTimer)
   } else {
     shutDown()
   }

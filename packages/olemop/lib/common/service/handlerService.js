@@ -1,9 +1,11 @@
 var fs = require('fs')
-var utils = require('../../util/utils')
 var Loader = require('@olemop/loader')
-var pathUtil = require('../../util/pathUtil')
+const olemopUtils = require('@olemop/utils')
 var logger = require('@olemop/logger').getLogger('olemop', __filename)
 var forwardLogger = require('@olemop/logger').getLogger('forward-log', __filename)
+var utils = require('../../util/utils')
+var pathUtil = require('../../util/pathUtil')
+
 /**
  * Handler service.
  * Dispatch request to the relactive handler.
@@ -32,7 +34,7 @@ Service.prototype.handle = async function (routeRecord, msg, session, cb) {
   const handler = this.getHandler(routeRecord)
   if (!handler) {
     logger.error(`[handleManager]: fail to find handler for ${msg.__route__}`)
-    utils.invokeCallback(cb, new Error('fail to find handler for ' + msg.__route__))
+    olemopUtils.invokeCallback(cb, new Error('fail to find handler for ' + msg.__route__))
     return
   }
   const start = Date.now()
@@ -49,7 +51,7 @@ Service.prototype.handle = async function (routeRecord, msg, session, cb) {
     }
 
     // resp = getResp(arguments)
-    utils.invokeCallback(cb, err, resp, opts)
+    olemopUtils.invokeCallback(cb, err, resp, opts)
   }
 
   const method = routeRecord.method
@@ -58,7 +60,7 @@ Service.prototype.handle = async function (routeRecord, msg, session, cb) {
     try {
       await handler[method](msg, session, callback)
     } catch (err) {
-      utils.invokeCallback(cb, err, null, null)
+      olemopUtils.invokeCallback(cb, err, null, null)
     }
   } else {
     msg.push(session)

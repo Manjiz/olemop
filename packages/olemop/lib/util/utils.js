@@ -1,59 +1,17 @@
-var os = require('os')
-var util = require('util')
-var exec = require('child_process').exec
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
-var Constants = require('./constants')
-var olemop = require('../olemop')
+const os = require('os')
+const util = require('util')
+const { exec } = require('child_process')
+const olemopUtils = require('@olemop/utils')
+const logger = require('@olemop/logger').getLogger('olemop', __filename)
+const Constants = require('./constants')
+const olemop = require('../olemop')
 
-var utils = module.exports
-
-/**
- * Invoke callback with check
- */
-utils.invokeCallback = function (cb) {
-  if (typeof cb === 'function') {
-    var len = arguments.length
-    if (len == 1) {
-      return cb()
-    }
-
-    if (len == 2) {
-      return cb(arguments[1])
-    }
-
-    if (len == 3) {
-      return cb(arguments[1], arguments[2])
-    }
-
-    if (len == 4) {
-      return cb(arguments[1], arguments[2], arguments[3])
-    }
-
-    var args = Array(len - 1)
-    for (i = 1; i < len; i++)
-        args[i - 1] = arguments[i]
-    cb.apply(null, args)
-    // cb.apply(null, Array.prototype.slice.call(arguments, 1))
-  }
-}
-
-/**
- * Get the count of elements of object
- */
-utils.size = function (obj) {
-  var count = 0
-  for (var i in obj) {
-    if (obj.hasOwnProperty(i) && typeof obj[i] !== 'function') {
-      count++
-    }
-  }
-  return count
-}
+const utils = module.exports
 
 /**
  * Check a string whether ends with another string
  */
-utils.endsWith = function (str, suffix) {
+utils.endsWith = (str, suffix) => {
   if (typeof str !== 'string' || typeof suffix !== 'string' ||
     suffix.length > str.length) {
     return false
@@ -64,39 +22,31 @@ utils.endsWith = function (str, suffix) {
 /**
  * Check a string whether starts with another string
  */
-utils.startsWith = function (str, prefix) {
-  if (typeof str !== 'string' || typeof prefix !== 'string' ||
-    prefix.length > str.length) {
+utils.startsWith = (str, prefix) => {
+  if (typeof str !== 'string' || typeof prefix !== 'string' || prefix.length > str.length) {
     return false
   }
-
   return str.indexOf(prefix) === 0
 }
 
 /**
  * Compare the two arrays and return the difference.
  */
-utils.arrayDiff = function (array1, array2) {
-  var o = {}
-  for (var i = 0, len = array2.length; i < len; i++) {
-    o[array2[i]] = true
-  }
-
-  var result = []
-  for (i = 0, len = array1.length; i < len; i++) {
-    var v = array1[i]
-    if (o[v]) continue
-    result.push(v)
-  }
-  return result
+utils.arrayDiff = (array1, array2) => {
+  const o = array2.reduce((prev, item) => {
+    prev[item] = true
+    return prev
+  }, {})
+  return array1.filter((item) => {
+    return !o[item]
+  })
 }
 
 /*
  * Date format
  */
-utils.format = function (date, format) {
-  format = format || 'MMddhhmm'
-  var o = {
+utils.format = (date, format = 'MMddhhmm') => {
+  const o = {
     'M+': date.getMonth() + 1,
     'd+': date.getDate(),
     'h+': date.getHours(),
@@ -122,71 +72,54 @@ utils.format = function (date, format) {
 /**
  * check if has Chinese characters.
  */
-utils.hasChineseChar = function (str) {
-  if (/.*[\u4e00-\u9fa5]+.*$/.test(str)) {
-    return true
-  } else {
-    return false
-  }
-}
+utils.hasChineseChar = (str) => /.*[\u4e00-\u9fa5]+.*$/.test(str)
 
 /**
  * transform unicode to utf8
  */
-utils.unicodeToUtf8 = function (str) {
-  var i, len, ch
-  var utf8Str = ''
-  len = str.length
-  for (i = 0; i < len; i++) {
-    ch = str.charCodeAt(i)
-
-    if ((ch >= 0x0) && (ch <= 0x7F)) {
+utils.unicodeToUtf8 = (str) => {
+  let utf8Str = ''
+  for (let i = 0; i < str.length; i++) {
+    const ch = str.charCodeAt(i)
+    if (ch >= 0x0 && ch <= 0x7F) {
       utf8Str += str.charAt(i)
-
-    } else if ((ch >= 0x80) && (ch <= 0x7FF)) {
-      utf8Str += String.fromCharCode(0xc0 | ((ch >> 6) & 0x1F))
-      utf8Str += String.fromCharCode(0x80 | (ch & 0x3F))
-
-    } else if ((ch >= 0x800) && (ch <= 0xFFFF)) {
-      utf8Str += String.fromCharCode(0xe0 | ((ch >> 12) & 0xF))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 6) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | (ch & 0x3F))
-
-    } else if ((ch >= 0x10000) && (ch <= 0x1FFFFF)) {
-      utf8Str += String.fromCharCode(0xF0 | ((ch >> 18) & 0x7))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 12) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 6) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | (ch & 0x3F))
-
-    } else if ((ch >= 0x200000) && (ch <= 0x3FFFFFF)) {
-      utf8Str += String.fromCharCode(0xF8 | ((ch >> 24) & 0x3))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 18) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 12) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 6) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | (ch & 0x3F))
-
-    } else if ((ch >= 0x4000000) && (ch <= 0x7FFFFFFF)) {
-      utf8Str += String.fromCharCode(0xFC | ((ch >> 30) & 0x1))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 24) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 18) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 12) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | ((ch >> 6) & 0x3F))
-      utf8Str += String.fromCharCode(0x80 | (ch & 0x3F))
-
+    } else if (ch >= 0x80 && ch <= 0x7FF) {
+      utf8Str += String.fromCharCode(0xc0 | ch >> 6 & 0x1F)
+      utf8Str += String.fromCharCode(0x80 | ch & 0x3F)
+    } else if (ch >= 0x800 && ch <= 0xFFFF) {
+      utf8Str += String.fromCharCode(0xe0 | ch >> 12 & 0xF)
+      utf8Str += String.fromCharCode(0x80 | ch >> 6 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch & 0x3F)
+    } else if (ch >= 0x10000 && ch <= 0x1FFFFF) {
+      utf8Str += String.fromCharCode(0xF0 | ch >> 18 & 0x7)
+      utf8Str += String.fromCharCode(0x80 | ch >> 12 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch >> 6 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch & 0x3F)
+    } else if (ch >= 0x200000 && ch <= 0x3FFFFFF) {
+      utf8Str += String.fromCharCode(0xF8 | ch >> 24 & 0x3)
+      utf8Str += String.fromCharCode(0x80 | ch >> 18 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch >> 12 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch >> 6 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch & 0x3F)
+    } else if (ch >= 0x4000000 && ch <= 0x7FFFFFFF) {
+      utf8Str += String.fromCharCode(0xFC | ch >> 30 & 0x1)
+      utf8Str += String.fromCharCode(0x80 | ch >> 24 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch >> 18 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch >> 12 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch >> 6 & 0x3F)
+      utf8Str += String.fromCharCode(0x80 | ch & 0x3F)
     }
-
   }
   return utf8Str
 }
 
 /**
  * Ping server to check if network is available
- *
  */
-utils.ping = function (host, cb) {
+utils.ping = (host, cb) => {
   if (!module.exports.isLocal(host)) {
-    var cmd = 'ping -w 15 ' + host
-    exec(cmd, function (err, stdout, stderr) {
+    const cmd = `ping -w 15 ${host}`
+    exec(cmd, (err, stdout, stderr) => {
       if (err) {
         cb(false)
         return
@@ -200,74 +133,59 @@ utils.ping = function (host, cb) {
 
 /**
  * Check if server is exsit.
- *
  */
 utils.checkPort = function (server, cb) {
   if (!server.port && !server.clientPort) {
-    this.invokeCallback(cb, 'leisure')
+    olemopUtils.invokeCallback(cb, 'leisure')
     return
   }
-  var self = this
-  var port = server.port || server.clientPort
-  var host = server.host
-  var generateCommand = function (self, host, port) {
-    var cmd
-    var ssh_params = olemop.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS)
-    if (ssh_params && Array.isArray(ssh_params)) {
-      ssh_params = ssh_params.join(' ')
-    }
-    else {
-      ssh_params = ''
-    }
-    if (!self.isLocal(host)) {
-      cmd = util.format('ssh %s %s "netstat -an|awk \'{print $4}\'|grep %s|wc -l"', host, ssh_params, port)
-    } else {
-      cmd = util.format('netstat -an|awk \'{print $4}\'|grep %s|wc -l', port)
-    }
+  const port = server.port || server.clientPort
+  const host = server.host
+  const generateCommand = (this, host, port) => {
+    let ssh_params = olemop.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS)
+    ssh_params = ssh_params && Array.isArray(ssh_params) ? ssh_params.join(' ') : ''
+    const cmd = !this.isLocal(host)
+      ? util.format(`ssh ${host} ${ssh_params} "netstat -an|awk \'{print $4}\'|grep ${port}|wc -l"`)
+      : util.format(`netstat -an|awk \'{print $4}\'|grep ${port}|wc -l`)
     return cmd
   }
-  var cmd1 = generateCommand(self, host, port)
-  var child = exec(cmd1, function (err, stdout, stderr) {
+  const cmd1 = generateCommand(this, host, port)
+  const child = exec(cmd1, (err, stdout, stderr) => {
     if (err) {
       logger.error('command %s execute with error: %j', cmd1, err.stack)
-      self.invokeCallback(cb, 'error')
+      olemopUtils.invokeCallback(cb, 'error')
     } else if (stdout.trim() !== '0') {
-      self.invokeCallback(cb, 'busy')
+      olemopUtils.invokeCallback(cb, 'busy')
     } else {
-      port = server.clientPort
-      var cmd2 = generateCommand(self, host, port)
-      exec(cmd2, function (err, stdout, stderr) {
+      const cmd2 = generateCommand(this, host, server.clientPort)
+      exec(cmd2, (err, stdout, stderr) => {
         if (err) {
           logger.error('command %s execute with error: %j', cmd2, err.stack)
-          self.invokeCallback(cb, 'error')
+          olemopUtils.invokeCallback(cb, 'error')
         } else if (stdout.trim() !== '0') {
-          self.invokeCallback(cb, 'busy')
+          olemopUtils.invokeCallback(cb, 'busy')
         } else {
-          self.invokeCallback(cb, 'leisure')
+          olemopUtils.invokeCallback(cb, 'leisure')
         }
       })
     }
   })
 }
 
-utils.isLocal = function (host) {
-  var app = require('../olemop').app
-  if (!app) {
-    return host === '127.0.0.1' || host === 'localhost' || host === '0.0.0.0' || inLocal(host)
-  } else {
-    return host === '127.0.0.1' || host === 'localhost' || host === '0.0.0.0' || inLocal(host) || host === app.master.host
-  }
+utils.isLocal = (host) => {
+  const hostList = ['127.0.0.1', 'localhost', '0.0.0.0']
+  olemop.app && (hostList.push(olemop.app.master.host))
+  return hostList.includes(host) || _inLocal(host)
 }
 
 /**
  * Load cluster server.
- *
  */
-utils.loadCluster = function (app, server, serverMap) {
-  var increaseFields = {}
-  var host = server.host
-  var count = parseInt(server[Constants.RESERVED.CLUSTER_COUNT])
-  var seq = app.clusterSeq[server.serverType]
+utils.loadCluster = (app, server, serverMap) => {
+  const increaseFields = {}
+  const host = server.host
+  const count = parseInt(server[Constants.RESERVED.CLUSTER_COUNT])
+  let seq = app.clusterSeq[server.serverType]
   if (!seq) {
     seq = 0
     app.clusterSeq[server.serverType] = count
@@ -275,26 +193,26 @@ utils.loadCluster = function (app, server, serverMap) {
     app.clusterSeq[server.serverType] = seq + count
   }
 
-  for (var key in server) {
-    var value = server[key].toString()
+  for (let key in server) {
+    const value = server[key].toString()
     if (value.indexOf(Constants.RESERVED.CLUSTER_SIGNAL) > 0) {
-      var base = server[key].slice(0, -2)
+      const base = server[key].slice(0, -2)
       increaseFields[key] = base
     }
   }
 
-  var clone = function (src) {
-    var rs = {}
-    for (var key in src) {
-      rs[key] = src[key]
-    }
-    return rs
+  const __clone = (src) => {
+    return Object.keys(src).reduce((prev, key) => {
+      prev[key] = src[key]
+      return prev
+    }, {})
   }
-  for (var i=0, l=seq; i<count; i++,l++) {
-    var cserver = clone(server)
-    cserver.id = Constants.RESERVED.CLUSTER_PREFIX + server.serverType + '-' + l
-    for (var k in increaseFields) {
-      var v = parseInt(increaseFields[k])
+
+  for (let i = 0, l = seq; i < count; i++, l++) {
+    const cserver = __clone(server)
+    cserver.id = `${Constants.RESERVED.CLUSTER_PREFIX}${server.serverType}-${l}`
+    for (let k in increaseFields) {
+      const v = parseInt(increaseFields[k])
       cserver[k] = v + i
     }
     serverMap[cserver.id] = cserver
@@ -302,19 +220,21 @@ utils.loadCluster = function (app, server, serverMap) {
 }
 
 utils.extends = function (origin, add) {
-  if (!add || !this.isObject(add)) return origin
+  if (!add || !this.isObject(add)) {
+    return origin
+  }
 
-  var keys = Object.keys(add)
-  var i = keys.length
+  const keys = Object.keys(add)
+  let i = keys.length
   while (i--) {
     origin[keys[i]] = add[keys[i]]
   }
   return origin
 }
 
-utils.headHandler = function (headBuffer) {
-  var len = 0
-  for (var i=1; i<4; i++) {
+utils.headHandler = (headBuffer) => {
+  let len = 0
+  for (let i = 1; i < 4; i++) {
     if (i > 1) {
       len <<= 8
     }
@@ -323,8 +243,8 @@ utils.headHandler = function (headBuffer) {
   return len
 }
 
-var inLocal = function (host) {
-  for (var index in localIps) {
+const _inLocal = (host) => {
+  for (let index in localIps) {
     if (host === localIps[index]) {
       return true
     }
@@ -332,20 +252,18 @@ var inLocal = function (host) {
   return false
 }
 
-var localIps = function () {
-  var ifaces = os.networkInterfaces()
-  var ips = []
-  var func = function (details) {
+const localIps = (() => {
+  const ifaces = os.networkInterfaces()
+  const ips = []
+  const __func = (details) => {
     if (details.family === 'IPv4') {
       ips.push(details.address)
     }
   }
   Object.values(ifaces).forEach((nisOfDevice) => {
-    nisOfDevice.forEach(func)
+    nisOfDevice.forEach(__func)
   })
   return ips
-}()
+})()
 
-utils.isObject = function (arg) {
-  return typeof arg === 'object' && arg !== null
-}
+utils.isObject = (arg) => typeof arg === 'object' && arg !== null

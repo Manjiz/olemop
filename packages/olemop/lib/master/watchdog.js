@@ -1,6 +1,5 @@
 const EventEmitter = require('events')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const utils = require('../util/utils')
 const Constants = require('../util/constants')
 const countDownLatch = require('../util/countDownLatch')
 
@@ -10,7 +9,7 @@ class Watchdog extends EventEmitter {
     this.app = app
     this.service = service
     this.isStarted = false
-    this.count = utils.size(app.getServersFromConfig())
+    this.count = olemopUtils.size(app.getServersFromConfig())
 
     this.servers = {}
     this.listeners = {}
@@ -78,7 +77,7 @@ class Watchdog extends EventEmitter {
     const fails = []
     const timeouts = []
     const requests = {}
-    const count = utils.size(this.listeners)
+    const count = olemopUtils.size(this.listeners)
     if (count === 0) {
       logger.warn('master watchdog listeners is none, msg: %j', msg)
       return

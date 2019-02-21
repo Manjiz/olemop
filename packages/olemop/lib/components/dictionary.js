@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const Loader = require('@olemop/loader')
-const utils = require('../util/utils')
+const olemopUtils = require('@olemop/utils')
 const pathUtil = require('../util/pathUtil')
 
 class Component {
@@ -71,7 +71,7 @@ class Component {
 
     this.version = crypto.createHash('md5').update(JSON.stringify(this.dict)).digest('base64')
 
-    utils.invokeCallback(cb)
+    olemopUtils.invokeCallback(cb)
   }
 
   getDict () {
