@@ -41,7 +41,7 @@ pro.offer = function (element) {
       queue[parentPos] = element
 
       pos = parentPos
-    }else{
+    } else {
       break
     }
   }
@@ -80,7 +80,7 @@ pro.pop = function () {
       queue[left] = tail
 
       pos = left
-    }else{
+    } else {
       break
     }
 

@@ -203,7 +203,7 @@
       }else if (bytes[offset] < 224) {
         code = ((bytes[offset] & 0x3f)<<6) + (bytes[offset+1] & 0x3f)
         offset += 2
-      }else{
+      } else {
         code = ((bytes[offset] & 0x0f)<<12) + ((bytes[offset+1] & 0x3f)<<6) + (bytes[offset+2] & 0x3f)
         offset += 3
       }
@@ -247,7 +247,7 @@
       return [charCode]
     }else if (charCode <= 0x7ff) {
       return [0xc0|(charCode>>6), 0x80|(charCode & 0x3f)]
-    }else{
+    } else {
       return [0xe0|(charCode>>12), 0x80|((charCode & 0xfc0)>>6), 0x80|(charCode & 0x3f)]
     }
   }
@@ -257,7 +257,7 @@
       return 1
     }else if (code <= 0x7ff) {
       return 2
-    }else{
+    } else {
       return 3
     }
   }
@@ -433,7 +433,7 @@
       for (i = 0; i < array.length; i++) {
         offset = encodeProp(array[i], proto.type, offset, buffer)
       }
-    }else{
+    } else {
       for (i = 0; i < array.length; i++) {
         offset = writeBytes(buffer, offset, encodeTag(proto.type, proto.tag))
         offset = encodeProp(array[i], proto.type, offset, buffer, protos)
@@ -589,7 +589,7 @@
       for (var i = 0; i < length; i++) {
         array.push(decodeProp(type))
       }
-    }else{
+    } else {
       array.push(decodeProp(type, protos))
     }
   }

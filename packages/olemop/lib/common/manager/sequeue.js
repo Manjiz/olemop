@@ -15,7 +15,7 @@ const EVENT_DRAINED = 'drained'
  * @param {Number} timeout a global timeout for new queue
  */
 class SeqQueue extends EventEmitter {
-  constructor(timeout) {
+  constructor (timeout) {
     super()
     this.timeout = timeout && timeout > 0 ? timeout : DEFAULT_TIMEOUT
     this.status = SeqQueueManager.STATUS_IDLE
@@ -31,7 +31,7 @@ class SeqQueue extends EventEmitter {
    * @param timeout timeout for current request. take the global timeout if this is invalid
    * @returns true or false
    */
-  push(fn, ontimeout, timeout) {
+  push (fn, ontimeout, timeout) {
     if (this.status !== SeqQueueManager.STATUS_IDLE && this.status !== SeqQueueManager.STATUS_BUSY) {
       //ignore invalid status
       return false
@@ -56,7 +56,7 @@ class SeqQueue extends EventEmitter {
    *
    * @param {Boolean} force if true will close the queue immediately else will execute the rest task in queue
    */
-  close(force) {
+  close (force) {
     if (this.status !== SeqQueueManager.STATUS_IDLE && this.status !== SeqQueueManager.STATUS_BUSY) return
 
     if (force) {
@@ -77,7 +77,7 @@ class SeqQueue extends EventEmitter {
    *
    * @param {String|Number} tid last executed task id
    */
-  _next(tid) {
+  _next (tid) {
     if (tid !== this.curId || this.status !== SeqQueueManager.STATUS_BUSY && this.status !== SeqQueueManager.STATUS_CLOSED) return
 
     if (this.timerId) {
@@ -119,7 +119,7 @@ class SeqQueue extends EventEmitter {
           return task.id === this.curId
         }
       })
-    } catch(err) {
+    } catch (err) {
       this.emit('error', err, task)
       process.nextTick(() => {
         this._next(task.id)
@@ -130,8 +130,6 @@ class SeqQueue extends EventEmitter {
 
 /**
  * Queue manager.
- *
- * @module
  */
 const SeqQueueManager = module.exports
 
@@ -147,7 +145,6 @@ SeqQueueManager.STATUS_IDLE = 0
 /**
  * Queue status: busy, queue is working for some tasks now
  *
- * @const
  * @type {Number}
  * @memberOf SeqQueueManager
  */

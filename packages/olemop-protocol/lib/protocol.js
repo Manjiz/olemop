@@ -49,7 +49,7 @@
           codes = [charCode]
         }else if (charCode <= 0x7ff) {
           codes = [0xc0|(charCode>>6), 0x80|(charCode & 0x3f)]
-        }else{
+        } else {
           codes = [0xe0|(charCode>>12), 0x80|((charCode & 0xfc0)>>6), 0x80|(charCode & 0x3f)]
         }
         for (var j = 0; j < codes.length; j++) {
@@ -85,7 +85,7 @@
         }else if (bytes[offset] < 224) {
           charCode = ((bytes[offset] & 0x1f)<<6) + (bytes[offset+1] & 0x3f)
           offset += 2
-        }else{
+        } else {
           charCode = ((bytes[offset] & 0x0f)<<12) + ((bytes[offset+1] & 0x3f)<<6) + (bytes[offset+2] & 0x3f)
           offset += 3
         }

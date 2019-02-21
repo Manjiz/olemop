@@ -18,14 +18,10 @@ const Constants = require('../util/constants')
  * @param {Object} opts contructor parameters for rpc client
  * @returns {Object} rpc client
  */
-const genRpcClient = (app, opts) => {
+const _genRpcClient = (app, opts) => {
   opts.context = app
   opts.routeContext = app
-  if (opts.rpcClient) {
-    return opts.rpcClient.create(opts)
-  } else {
-    return Client.create(opts)
-  }
+  return opts.rpcClient ? opts.rpcClient.create(opts) : Client.create(opts)
 }
 
 /**
@@ -35,13 +31,13 @@ const genRpcClient = (app, opts) => {
  * @param  {Object} app    application context
  * @param  {Array} sinfos server info list
  */
-const genProxies = (client, app, sinfos) => {
+const _genProxies = (client, app, sinfos) => {
   for (let i = 0; i < sinfos.length; i++) {
     const item = sinfos[i]
 
     if (hasProxy(client, item)) continue
 
-    client.addProxies(getProxyRecords(app, item))
+    client.addProxies(_getProxyRecords(app, item))
   }
 }
 
@@ -65,7 +61,7 @@ const hasProxy = (client, sinfo) => {
  * @param {Object} sinfo server info, format: {id, serverType, host, port}
  * @returns {Array}     remote path record array
  */
-const getProxyRecords = (app, sinfo) => {
+const _getProxyRecords = (app, sinfo) => {
   const records = []
   // sys remote service path record
   let record = app.isFrontend(sinfo) ? pathUtil.getSysRemotePath('frontend') : pathUtil.getSysRemotePath('backend')
@@ -124,7 +120,7 @@ class Component {
     this.name = '__proxy__'
     this.app = app
     this.opts = opts
-    this.client = genRpcClient(this.app, opts)
+    this.client = _genRpcClient(this.app, opts)
     this.app.event.on(events.ADD_SERVERS, this.addServers.bind(this))
     this.app.event.on(events.REMOVE_SERVERS, this.removeServers.bind(this))
     this.app.event.on(events.REPLACE_SERVERS, this.replaceServers.bind(this))
@@ -185,7 +181,7 @@ class Component {
   addServers (servers) {
     if (!servers || !servers.length) return
 
-    genProxies(this.client, this.app, servers)
+    _genProxies(this.client, this.app, servers)
     this.client.addServers(servers)
   }
 
@@ -208,7 +204,7 @@ class Component {
 
     // update proxies
     this.client.proxies = {}
-    genProxies(this.client, this.app, servers)
+    _genProxies(this.client, this.app, servers)
 
     this.client.replaceServers(servers)
   }

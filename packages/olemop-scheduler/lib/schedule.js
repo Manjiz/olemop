@@ -82,7 +82,7 @@ function excuteJob() {
 
     if (nextTime === null) {
       delete map[job.id]
-    }else{
+    } else {
       queue.offer({id:job.id, time: nextTime})
     }
     job = peekNextJob()

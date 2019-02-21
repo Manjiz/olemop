@@ -168,7 +168,7 @@ function encodeArray(array, proto, offset, buffer, protos) {
 		for (i = 0; i < array.length; i++) {
 			offset = encodeProp(array[i], proto.type, offset, buffer)
 		}
-	}else{
+	} else {
 		for (i = 0; i < array.length; i++) {
 			offset = writeBytes(buffer, offset, encodeTag(proto.type, proto.tag))
 			offset = encodeProp(array[i], proto.type, offset, buffer, protos)

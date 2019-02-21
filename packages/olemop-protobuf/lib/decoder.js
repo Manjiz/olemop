@@ -124,7 +124,7 @@ function decodeArray(array, type, protos) {
 		for (var i = 0; i < length; i++) {
 			array.push(decodeProp(type))
 		}
-	}else{
+	} else {
 		array.push(decodeProp(type, protos))
 	}
 }

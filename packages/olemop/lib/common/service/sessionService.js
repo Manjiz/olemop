@@ -3,8 +3,8 @@ const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const utils = require('../../util/utils')
 
-const FRONTEND_SESSION_FIELDS = [ 'id', 'frontendId', 'uid', '__sessionService__' ]
-const EXPORTED_SESSION_FIELDS = [ 'id', 'frontendId', 'uid', 'settings' ]
+const FRONTEND_SESSION_FIELDS = ['id', 'frontendId', 'uid', '__sessionService__']
+const EXPORTED_SESSION_FIELDS = ['id', 'frontendId', 'uid', 'settings']
 
 const ST_INITED = 0
 const ST_CLOSED = 1
@@ -59,9 +59,6 @@ class SessionService {
    * @param {Object} socket the underlying socket would be held by the internal session
    *
    * @returns {Session}
-   *
-   * @memberOf SessionService
-   * @api private
    */
   create (sid, frontendId, socket) {
     const session = new Session(sid, frontendId, socket, this)
@@ -71,9 +68,6 @@ class SessionService {
 
   /**
    * Bind the session with a user id.
-   *
-   * @memberOf SessionService
-   * @api private
    */
   bind (sid, uid, cb) {
     const session = this.sessions[sid]
@@ -130,9 +124,6 @@ class SessionService {
 
   /**
    * Unbind a session with the user id.
-   *
-   * @memberOf SessionService
-   * @api private
    */
   unbind (sid, uid, cb) {
     const session = this.sessions[sid]
@@ -177,9 +168,6 @@ class SessionService {
    *
    * @param {number} id The session id
    * @returns {Session}
-   *
-   * @memberOf SessionService
-   * @api private
    */
   get (sid) {
     return this.sessions[sid]
@@ -190,9 +178,6 @@ class SessionService {
    *
    * @param {number} uid User id associated with the session
    * @returns {Array} list of session binded with the uid
-   *
-   * @memberOf SessionService
-   * @api private
    */
   getByUid (uid) {
     return this.uidMap[uid]
@@ -202,36 +187,32 @@ class SessionService {
    * Remove session by key.
    *
    * @param {number} sid The session id
-   *
-   * @memberOf SessionService
-   * @api private
    */
   remove (sid) {
     const session = this.sessions[sid]
-    if (session) {
-      const uid = session.uid
-      delete this.sessions[session.id]
 
-      const sessionInstances = this.uidMap[uid]
+    if (!session) return
 
-      if (!sessionInstances) return
+    const uid = session.uid
+    delete this.sessions[session.id]
 
-      for (let i = 0; i < sessionInstances.length; i++) {
-        if (sessionInstances[i].id === sid) {
-          sessionInstances.splice(i, 1)
-          if (sessionInstances.length === 0) {
-            delete this.uidMap[uid]
-          }
-          break
+    const sessionInstances = this.uidMap[uid]
+
+    if (!sessionInstances) return
+
+    for (let i = 0; i < sessionInstances.length; i++) {
+      if (sessionInstances[i].id === sid) {
+        sessionInstances.splice(i, 1)
+        if (sessionInstances.length === 0) {
+          delete this.uidMap[uid]
         }
+        break
       }
     }
   }
 
   /**
    * Import the key/value into session.
-   *
-   * @api private
    */
   import (sid, key, value, cb) {
     const session = this.sessions[sid]
@@ -245,9 +226,6 @@ class SessionService {
 
   /**
    * Import new value for the existed session.
-   *
-   * @memberOf SessionService
-   * @api private
    */
   importAll (sid, settings, cb) {
     const session = this.sessions[sid]
@@ -267,8 +245,6 @@ class SessionService {
    *
    * @param {number}   uid user id asscociated with the session
    * @param {Function} cb  callback function
-   *
-   * @memberOf SessionService
    */
   kick (uid, reason, cb) {
     const self = this
@@ -305,8 +281,6 @@ class SessionService {
    *
    * @param {number}   sid session id
    * @param {Function} cb  callback function
-   *
-   * @memberOf SessionService
    */
   kickBySessionId (sid, reason, cb) {
     if (typeof reason === 'function') {
@@ -334,8 +308,6 @@ class SessionService {
    *
    * @param {number}   sid session id
    * @returns {Object} remote address of client
-   *
-   * @memberOf SessionService
    */
   getClientAddressBySessionId (sid) {
     const session = this.get(sid)
@@ -347,9 +319,6 @@ class SessionService {
    *
    * @param {string} sid session id
    * @param {Object} msg message to send
-   *
-   * @memberOf SessionService
-   * @api private
    */
   sendMessage (sid, msg) {
     const session = this.get(sid)
@@ -367,9 +336,6 @@ class SessionService {
    *
    * @param {string} uid userId
    * @param {Object} msg message to send
-   *
-   * @memberOf SessionService
-   * @api private
    */
   sendMessageByUid (uid, msg) {
     const sessionInstances = this.getByUid(uid)
@@ -390,7 +356,6 @@ class SessionService {
    * Iterate all the session in the session service.
    *
    * @param  {Function} cb callback function to fetch session
-   * @api private
    */
   forEachSession (cb) {
     for (let sid in this.sessions) {
@@ -453,7 +418,6 @@ class Session extends EventEmitter {
    * Bind the session with the the uid.
    *
    * @param {number} uid User id
-   * @api public
    */
   bind (uid) {
     this.uid = uid
@@ -464,7 +428,6 @@ class Session extends EventEmitter {
    * Unbind the session with the the uid.
    *
    * @param {number} uid User id
-   * @api private
    */
   unbind (uid) {
     this.uid = null
@@ -476,7 +439,6 @@ class Session extends EventEmitter {
    *
    * @param {String|Object} key session key
    * @param {Object} value session value
-   * @api public
    */
   set (key, value) {
     if (utils.isObject(key)) {
@@ -492,7 +454,6 @@ class Session extends EventEmitter {
    * Remove value from the session.
    *
    * @param {string} key session key
-   * @api public
    */
   remove (key) {
     delete this[key]
@@ -503,7 +464,6 @@ class Session extends EventEmitter {
    *
    * @param {string} key session key
    * @returns {Object} value associated with session key
-   * @api public
    */
   get (key) {
     return this.settings[key]
@@ -529,11 +489,8 @@ class Session extends EventEmitter {
 
   /**
    * Closed callback for the session which would disconnect client in next tick.
-   *
-   * @api public
    */
   closed (reason) {
-    const self = this
     logger.debug(`session on [${this.frontendId}] is closed with session id: ${this.id}`)
     if (this.__state__ === ST_CLOSED) {
       return
@@ -545,7 +502,7 @@ class Session extends EventEmitter {
 
     // give a chance to send disconnect message to client
     process.nextTick(() => {
-      self.__socket__.disconnect()
+      this.__socket__.disconnect()
     })
   }
 }
@@ -563,20 +520,18 @@ class FrontendSession extends EventEmitter {
   }
 
   bind (uid, cb) {
-    const self = this
     this.__sessionService__.bind(this.id, uid, (err) => {
       if (!err) {
-        self.uid = uid
+        this.uid = uid
       }
       olemopUtils.invokeCallback(cb, err)
     })
   }
 
   unbind (uid, cb) {
-    const self = this
     this.__sessionService__.unbind(this.id, uid, (err) => {
       if (!err) {
-        self.uid = null
+        this.uid = null
       }
       olemopUtils.invokeCallback(cb, err)
     })
@@ -606,8 +561,6 @@ class FrontendSession extends EventEmitter {
 
   /**
    * Export the key/values for serialization.
-   *
-   * @api private
    */
   export () {
     const res = {}

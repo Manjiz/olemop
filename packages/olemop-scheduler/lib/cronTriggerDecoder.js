@@ -188,7 +188,7 @@ function decodeTimeStr(timeStr) {
     decodeRangeTime(result, time)
   }else if (!isNaN(timeStr)) {
     result[timeStr] = timeStr
-  }else{
+  } else {
     return null
   }
 

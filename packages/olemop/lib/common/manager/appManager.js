@@ -1,7 +1,6 @@
 const async = require('async')
 const olemopUtils = require('@olemop/utils')
 const olemopLogger = require('@olemop/logger')
-const utils = require('../../util/utils')
 
 const logger = olemopLogger.getLogger('olemop', __filename)
 const transactionLogger = olemopLogger.getLogger('transaction-log', __filename)
