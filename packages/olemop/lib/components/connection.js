@@ -1,3 +1,4 @@
+const olemopUtils = require('@olemop/utils')
 const ConnectionService = require('../common/service/connectionService')
 
 class Component {
@@ -12,7 +13,7 @@ class Component {
       }
     }
 
-    for (let m in this.service) {
+    olemopUtils.listES6ClassMethods(this.service).forEach((m) => {
       if (m !== 'start' && m !== 'stop') {
         // proxy the service methods except the lifecycle interfaces of component
         const method = this.service[m]
@@ -20,7 +21,7 @@ class Component {
           this[m] = getFun(m)
         }
       }
-    }
+    })
   }
 }
 

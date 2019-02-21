@@ -1,4 +1,5 @@
 const EventEmitter = require('events')
+const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const Constants = require('../util/constants')
 const countDownLatch = require('../util/countDownLatch')

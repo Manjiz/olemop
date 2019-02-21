@@ -3,7 +3,8 @@ const path = require('path')
 const async = require('async')
 const olemopUtils = require('@olemop/utils')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
-const olemop = require('../olemop')
+// @warn olemop 不能在这里引用
+// const olemop = require('../olemop')
 const starter = require('../master/starter')
 const logUtil = require('./logUtil')
 const utils = require('./utils')
@@ -45,6 +46,7 @@ exports.startByType = (app, cb) => {
  * Load default components for application.
  */
 exports.loadDefaultComponents = (app) => {
+  const olemop = require('../olemop')
   // load system default components
   if (app.serverType === Constants.RESERVED.MASTER) {
     app.load(olemop.master, app.get('masterConfig'))
