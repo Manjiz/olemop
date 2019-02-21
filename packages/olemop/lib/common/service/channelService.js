@@ -50,7 +50,7 @@ class ChannelService {
    * Get channel by name.
    *
    * @param {string} name channel's name
-   * @param {Boolean} create if true, create channel
+   * @param {boolean} create if true, create channel
    * @returns {Channel}
    */
   getChannel (name, create) {

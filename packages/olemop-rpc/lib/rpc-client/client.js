@@ -242,8 +242,7 @@ Client.prototype.start = function (cb) {
 /**
  * Stop the rpc client.
  *
- * @param  {Boolean} force
- * @returns {Void}
+ * @param {boolean} force
  */
 Client.prototype.stop = function (force) {
   if (this.state !== STATE_STARTED) {

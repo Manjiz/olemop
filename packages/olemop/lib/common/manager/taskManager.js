@@ -24,7 +24,7 @@ const addTask = (key, fn, ontimeout, timeout) => {
  * Destroy task group
  *
  * @param {string} key   task key
- * @param  {Boolean} force whether close task group directly
+ * @param  {boolean} force whether close task group directly
  */
 const closeQueue = (key, force) => {
   // ignore illeagle key

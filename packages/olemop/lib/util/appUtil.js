@@ -76,7 +76,7 @@ exports.loadDefaultComponents = (app) => {
  *
  * @param  {Array}  comps component list
  * @param  {number}   index current component index
- * @param  {Boolean}  force whether stop component immediately
+ * @param  {boolean}  force whether stop component immediately
  * @param  {Function} cb
  */
 exports.stopComps = (comps, index, force, cb) => {

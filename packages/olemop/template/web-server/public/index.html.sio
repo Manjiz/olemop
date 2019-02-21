@@ -17,19 +17,19 @@
     <script src="js/lib/olemopclient.js">
     </script>
     <script type="text/javascript">
-      var olemop = window.olemop;
-      var host = "127.0.0.1";
-      var port = "3010";
+      var olemop = window.olemop
+      var host = '127.0.0.1'
+      var port = '3010'
       function show() {
         olemop.init({
           host: host,
           port: port,
           log: true
         }, function () {
-        olemop.request("connector.entryHandler.entry", "hello olemop", function (data) {
-            alert(data.msg);
-          });
-        });
+          olemop.request('connector.entryHandler.entry', 'hello olemop', function (data) {
+            alert(data.msg)
+          })
+        })
       }
     </script>
 

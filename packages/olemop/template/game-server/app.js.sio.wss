@@ -5,10 +5,11 @@ const olemop = require('@olemop/core')
  * Init app for client.
  */
 const app = olemop.createApp()
+
 app.set('name', '$')
 
 // app configuration
-app.configure('production|development', function () {
+app.configure('production|development', () => {
   app.set('connectorConfig', {
     connector: olemop.connectors.sioconnector,
     key: fs.readFileSync('../shared/server.key'),
@@ -19,6 +20,6 @@ app.configure('production|development', function () {
 // start app
 app.start()
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
   console.error(` Caught exception: ${err.stack}`)
 })

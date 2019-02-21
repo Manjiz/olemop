@@ -1,6 +1,5 @@
 /**
  * Olemop
- * MIT Licensed
  */
 
 const fs = require('fs')
@@ -21,7 +20,7 @@ const Olemop = {
   /**
    * Event definitions that would be emitted by app.event
    */
-  events: events,
+  events,
 
   /**
    * auto loaded components
@@ -51,20 +50,17 @@ Olemop.pushSchedulers = {
   get buffer() { return load('./pushSchedulers/buffer') }
 }
 
-var self = this
+const self = this
 
 /**
  * Create an olemop application.
  *
  * @returns {Application}
- * @memberOf Olemop
- * @api public
  */
 Olemop.createApp = function (opts) {
-  var app = application
-  app.init(opts)
-  self.app = app
-  return app
+  application.init(opts)
+  self.app = application
+  return application
 }
 
 /**
@@ -79,10 +75,10 @@ Object.defineProperty(Olemop, 'app', {
 /**
  * Auto-load bundled components with getters.
  */
-fs.readdirSync(__dirname + '/components').forEach(function (filename) {
+fs.readdirSync(__dirname + '/components').forEach((filename) => {
   if (!/\.js$/.test(filename)) return
-  var name = path.basename(filename, '.js')
-  var _load = load.bind(null, './components/', name)
+  const name = path.basename(filename, '.js')
+  const _load = load.bind(null, './components/', name)
 
   Object.defineProperty(Olemop.components, name, {
     get: _load
@@ -92,10 +88,10 @@ fs.readdirSync(__dirname + '/components').forEach(function (filename) {
   })
 })
 
-fs.readdirSync(__dirname + '/filters/handler').forEach(function (filename) {
+fs.readdirSync(__dirname + '/filters/handler').forEach((filename) => {
   if (!/\.js$/.test(filename)) return
-  var name = path.basename(filename, '.js')
-  var _load = load.bind(null, './filters/handler/', name)
+  const name = path.basename(filename, '.js')
+  const _load = load.bind(null, './filters/handler/', name)
 
   Object.defineProperty(Olemop.filters, name, {
     get: _load
@@ -115,7 +111,7 @@ fs.readdirSync(__dirname + '/filters/rpc').forEach((filename) => {
   })
 })
 
-function load(path, name) {
+function load (path, name) {
   if (name) {
     return require(path + name)
   }

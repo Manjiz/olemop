@@ -141,7 +141,7 @@ utils.checkPort = function (server, cb) {
   }
   const port = server.port || server.clientPort
   const host = server.host
-  const generateCommand = (this, host, port) => {
+  const generateCommand = (host, port) => {
     let ssh_params = olemop.app.get(Constants.RESERVED.SSH_CONFIG_PARAMS)
     ssh_params = ssh_params && Array.isArray(ssh_params) ? ssh_params.join(' ') : ''
     const cmd = !this.isLocal(host)
@@ -149,7 +149,7 @@ utils.checkPort = function (server, cb) {
       : util.format(`netstat -an|awk \'{print $4}\'|grep ${port}|wc -l`)
     return cmd
   }
-  const cmd1 = generateCommand(this, host, port)
+  const cmd1 = generateCommand(host, port)
   const child = exec(cmd1, (err, stdout, stderr) => {
     if (err) {
       logger.error('command %s execute with error: %j', cmd1, err.stack)
@@ -157,7 +157,7 @@ utils.checkPort = function (server, cb) {
     } else if (stdout.trim() !== '0') {
       olemopUtils.invokeCallback(cb, 'busy')
     } else {
-      const cmd2 = generateCommand(this, host, server.clientPort)
+      const cmd2 = generateCommand(host, server.clientPort)
       exec(cmd2, (err, stdout, stderr) => {
         if (err) {
           logger.error('command %s execute with error: %j', cmd2, err.stack)

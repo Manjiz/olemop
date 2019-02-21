@@ -9,7 +9,6 @@ class Handler {
    * @param  {Object}   msg     request message
    * @param  {Object}   session current session object
    * @param  {Function} next    next step callback
-   * @return {Void}
    */
   entry (msg, session, next) {
     next(null, { code: 200, msg: 'game server is ok.' })
@@ -21,7 +20,6 @@ class Handler {
    * @param  {Object}   msg     request message
    * @param  {Object}   session current session object
    * @param  {Function} next    next step callback
-   * @return {Void}
    */
   publish (msg, session, next) {
     const result = {
@@ -40,7 +38,6 @@ class Handler {
    * @param  {Object}   msg     request message
    * @param  {Object}   session current session object
    * @param  {Function} next    next step callback
-   * @return {Void}
    */
   subscribe (msg, session, next) {
     const result = {
@@ -55,6 +52,6 @@ class Handler {
 }
 
 // Must be module.exports.
-module.exports = function (app) {
+module.exports = (app) => {
   return new Handler(app)
 }

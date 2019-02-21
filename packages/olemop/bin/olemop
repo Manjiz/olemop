@@ -163,7 +163,7 @@ function init(path) {
  *
  * @param {string} ph
  */
-function createApplicationAt(ph, type) {
+function createApplicationAt (ph, type) {
   const name = path.basename(path.resolve(CUR_DIR, ph))
   copy(path.join(__dirname, '../template/'), ph)
   fse.ensureDir(path.join(ph, 'game-server/logs'), { mode: o755 })
@@ -328,7 +328,7 @@ function createApplicationAt(ph, type) {
  *
  * @param {Object} opts options for `start` operation
  */
-function start(opts) {
+function start (opts) {
   const absScript = path.resolve(opts.directory, 'app.js')
   if (!fs.existsSync(absScript)) {
     abort(SCRIPT_NOT_FOUND)
@@ -368,7 +368,7 @@ function start(opts) {
  *
  * @param {Object} opts options for `list` operation
  */
-function list(opts) {
+function list (opts) {
   const id = `olemop_list_${Date.now()}`
   connectToMaster(id, opts, (client) => {
     client.request(consoleModule.moduleId, { signal: 'list' }, (err, data) => {
@@ -392,9 +392,25 @@ function list(opts) {
       const rows = []
       rows.push(['serverId', 'serverType', 'pid', 'rss(M)', 'heapTotal(M)', 'heapUsed(M)', 'uptime(m)'])
       servers.forEach((server) => {
-        rows.push([server.serverId, server.serverType, server.pid, server.rss, server.heapTotal, server.heapUsed, server.uptime])
+        rows.push([
+          server.serverId,
+          server.serverType,
+          server.pid,
+          server.rss,
+          server.heapTotal,
+          server.heapUsed,
+          server.uptime
+        ])
       })
-      console.log(cliff.stringifyRows(rows, ['red', 'blue', 'green', 'cyan', 'magenta', 'white', 'yellow']))
+      console.log(cliff.stringifyRows(rows, [
+        'red',
+        'blue',
+        'green',
+        'cyan',
+        'magenta',
+        'white',
+        'yellow'
+      ]))
       process.exit(0)
     })
   })
@@ -405,7 +421,7 @@ function list(opts) {
  *
  * @param {Object} opts options for `add` operation
  */
-function add(opts) {
+function add (opts) {
   const id = `olemop_add_${Date.now()}`
   connectToMaster(id, opts, (client) => {
     client.request(consoleModule.moduleId, { signal: 'add', args: opts.args }, (err) => {
@@ -425,7 +441,7 @@ function add(opts) {
  * @param {string} signal stop/kill
  * @param {Object} opts options for `stop/kill` operation
  */
-function terminal(signal, opts) {
+function terminal (signal, opts) {
   console.info(CLOSEAPP_INFO)
   // option force just for `kill`
   if (opts.force) {
@@ -440,7 +456,8 @@ function terminal(signal, opts) {
   const id = `olemop_terminal_${Date.now()}`
   connectToMaster(id, opts, (client) => {
     client.request(consoleModule.moduleId, {
-      signal, ids: opts.serverIds
+      signal,
+      ids: opts.serverIds
     }, (err, msg) => {
       if (err) {
         console.error(err)
@@ -457,7 +474,7 @@ function terminal(signal, opts) {
   })
 }
 
-function restart(opts) {
+function restart (opts) {
   const id = `olemop_restart_${Date.now()}`
   const serverIds = []
   let type = null
@@ -477,8 +494,12 @@ function restart(opts) {
   })
 }
 
-function connectToMaster(id, opts, cb) {
-  const client = new adminClient({ username: opts.username, password: opts.password, md5: true })
+function connectToMaster (id, opts, cb) {
+  const client = new adminClient({
+    username: opts.username,
+    password: opts.password,
+    md5: true
+  })
   client.connect(id, opts.host, opts.port, (err) => {
     if (err) {
       abort(CONNECT_ERROR + err.red)
@@ -494,7 +515,7 @@ function connectToMaster(id, opts, cb) {
  *
  * @param {string} option for `startMasterha` operation
  */
-function startMasterha(opts) {
+function startMasterha (opts) {
   const configFile = path.join(opts.directory, constants.FILEPATH.MASTER_HA)
   if (!fs.existsSync(configFile)) {
     abort(MASTER_HA_NOT_FOUND)
@@ -514,7 +535,7 @@ function startMasterha(opts) {
  * @param {string} path
  * @param {Function} fn
  */
-function emptyDirectory(path, fn) {
+function emptyDirectory (path, fn) {
   fs.readdir(path, (err, files) => {
     if (err && 'ENOENT' !== err.code) {
       abort(FILEREAD_ERROR)
@@ -529,7 +550,7 @@ function emptyDirectory(path, fn) {
  * @param {string} msg
  * @param {Function} fn
  */
-function confirm(msg, fn) {
+function confirm (msg, fn) {
   prompt(msg, (val) => {
     fn(/^ *y(es)?/i.test(val))
   })
@@ -541,7 +562,7 @@ function confirm(msg, fn) {
  * @param {string} msg
  * @param {Function} fn
  */
-function prompt(msg, fn) {
+function prompt (msg, fn) {
   if (msg[msg.length - 1] === ' ') {
     process.stdout.write(msg)
   } else {
@@ -558,7 +579,7 @@ function prompt(msg, fn) {
  *
  * @param {string} str
  */
-function abort(str) {
+function abort (str) {
   console.error(str)
   process.exit(1)
 }
@@ -569,7 +590,7 @@ function abort(str) {
  * @param {string} origin
  * @param {string} target
  */
-function copy(origin, target) {
+function copy (origin, target) {
   if (!fs.existsSync(origin)) {
     abort(`${origin}does not exist.`)
   }
@@ -599,7 +620,7 @@ function copy(origin, target) {
  *
  * @param {Function} cb
  */
-function connectorType(cb) {
+function connectorType (cb) {
   prompt('Please select underly connector, 1 for websocket(native socket), 2 for socket.io, 3 for wss, 4 for socket.io(wss), 5 for udp, 6 for mqtt: [1]', (msg) => {
     switch (msg.trim()) {
       case '':
@@ -625,7 +646,7 @@ function connectorType(cb) {
  *
  * @param {Object} server server information
  */
-function runServer(server) {
+function runServer (server) {
   const main = path.resolve(server.home, 'app.js')
   if (utils.isLocal(server.host)) {
     const options = []

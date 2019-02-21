@@ -19,7 +19,6 @@ class Component {
    * Component lifecycle callback
    *
    * @param {Function} cb
-   * @returns {Void}
    */
   start (cb) {
     this.server.start()
@@ -30,7 +29,6 @@ class Component {
    * Component lifecycle callback
    *
    * @param {Function} cb
-   * @returns {Void}
    */
   afterStart (cb) {
     this.server.afterStart()
@@ -40,9 +38,8 @@ class Component {
   /**
    * Component lifecycle function
    *
-   * @param {Boolean}  force whether stop the component immediately
+   * @param {boolean}  force whether stop the component immediately
    * @param {Function}  cb
-   * @returns {Void}
    */
   stop (force, cb) {
     this.server.stop()

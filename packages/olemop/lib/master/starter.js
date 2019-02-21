@@ -17,7 +17,6 @@ const starter = module.exports
  * Run all servers
  *
  * @param {Object} app current application  context
- * @returns {Void}
  */
 starter.runServers = function (app) {
   let servers
@@ -49,7 +48,6 @@ starter.runServers = function (app) {
  *
  * @param {Object} app current application context
  * @param {Object} server
- * @returns {Void}
  */
 starter.run = (app, server, cb) => {
   env = app.get(Constants.RESERVED.ENV)
@@ -95,7 +93,6 @@ starter.run = (app, server, cb) => {
  * @param {string} sid server id
  * @param {string} pid process id
  * @param {string} host server host
- * @returns {Void}
  */
 starter.bindCpu = (sid, pid, host) => {
   if (os.platform() !== Constants.PLATFORM.LINUX || !cpus[sid]) return

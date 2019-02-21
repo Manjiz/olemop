@@ -1295,7 +1295,7 @@ KJUR.crypto.Signature = function (params) {
      * @memberOf KJUR.crypto.Signature
      * @function
      * @param {string} str string to final update
-     * @returns {Boolean} true if the signature was verified, otherwise false
+     * @returns {boolean} true if the signature was verified, otherwise false
      * @description
      * @example
      * var isValid = sig.verify('1fbcefdca4823a7(snip)')

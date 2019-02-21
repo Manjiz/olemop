@@ -158,7 +158,6 @@ util.inherits(MailStation, EventEmitter)
  * Init and start station. Connect all mailbox to remote servers.
  *
  * @param  {Function} cb(err) callback function
- * @returns {Void}
  */
 MailStation.prototype.start = function (cb) {
   if (this.state > STATE_INITED) {
@@ -175,8 +174,7 @@ MailStation.prototype.start = function (cb) {
 /**
  * Stop station and all its mailboxes
  *
- * @param  {Boolean} force whether stop station forcely
- * @returns {Void}
+ * @param {boolean} force whether stop station forcely
  */
 MailStation.prototype.stop = function (force) {
   if (this.state !== STATE_STARTED) {
@@ -303,7 +301,6 @@ MailStation.prototype.replaceServers = function (serverInfos) {
  * @param  {Object}   msg      rpc invoke message
  * @param  {Object}   opts     rpc invoke option args
  * @param  {Function} cb       callback function
- * @returns {Void}
  */
 MailStation.prototype.dispatch = function (tracer, serverId, msg, opts, cb) {
   tracer && tracer.info('client', __filename, 'dispatch', 'dispatch rpc message to the mailbox')

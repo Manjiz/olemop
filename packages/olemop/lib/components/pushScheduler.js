@@ -56,7 +56,6 @@ class PushScheduler {
    * Component lifecycle callback
    *
    * @param {Function} cb
-   * @returns {Void}
    */
   stop (force, cb) {
     if (this.isSelectable) {

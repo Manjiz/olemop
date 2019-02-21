@@ -1,7 +1,5 @@
 /*!
  * Olemop -- proto
- * Copyright(c) 2012 xiechengchao <xiecc@163.com>
- * MIT Licensed
  */
 
 const fs = require('fs')
@@ -16,22 +14,20 @@ const appManager = require('./common/manager/appManager')
 
 /**
  * Application prototype.
- *
- * @module
  */
-var Application = module.exports = {}
+const Application = module.exports = {}
 
 /**
  * Application states
  */
 // app has inited
-var STATE_INITED  = 1
+const STATE_INITED  = 1
 // app start
-var STATE_START = 2
+const STATE_START = 2
 // app has started
-var STATE_STARTED = 3
+const STATE_STARTED = 3
 // app has stoped
-var STATE_STOPED  = 4
+const STATE_STOPED  = 4
 
 /**
  * Initialize the server.
@@ -45,7 +41,7 @@ Application.init = function (opts = {}) {
   this.components = {}
   // collection keep set/get
   this.settings = {}
-  var base = opts.base || path.dirname(require.main.filename)
+  const base = opts.base || path.dirname(require.main.filename)
   this.set(Constants.RESERVED.BASE, base, true)
   // event object to sub/pub events
   this.event = new EventEmitter()
@@ -88,8 +84,6 @@ Application.init = function (opts = {}) {
  *  // app.getBase() -> /home/game
  *
  * @returns {string} application base path
- *
- * @memberOf Application
  */
 Application.getBase = function () {
   return this.get(Constants.RESERVED.BASE)
@@ -99,8 +93,6 @@ Application.getBase = function () {
  * Override require method in application
  *
  * @param {string} relative path of file
- *
- * @memberOf Application
  */
 Application.require = function (ph) {
   return require(path.join(Application.getBase(), ph))
@@ -110,10 +102,8 @@ Application.require = function (ph) {
  * Configure logger with {$base}/config/log4js.json
  *
  * @param {Object} logger @olemop/logger instance without configuration
- *
- * @memberOf Application
  */
-Application.configureLogger = (logger) => {
+Application.configureLogger = function (logger) {
   appUtil.configLogger(this, logger)
 }
 
@@ -122,7 +112,6 @@ Application.configureLogger = (logger) => {
  *
  * @param {Object} filter provide before and after filter method.
  *                        A filter should have two methods: before and after.
- * @memberOf Application
  */
 Application.filter = function (filter) {
   this.before(filter)
@@ -133,7 +122,6 @@ Application.filter = function (filter) {
  * Add before filter.
  *
  * @param {Object|Function} bf before fileter, bf(msg, session, next)
- * @memberOf Application
  */
 Application.before = function (bf) {
   addFilter(this, Constants.KEYWORDS.BEFORE_FILTER, bf)
@@ -143,7 +131,6 @@ Application.before = function (bf) {
  * Add after filter.
  *
  * @param {Object|Function} af after filter, `af(err, msg, session, resp, next)`
- * @memberOf Application
  */
 Application.after = function (af) {
   addFilter(this, Constants.KEYWORDS.AFTER_FILTER, af)
@@ -154,7 +141,6 @@ Application.after = function (af) {
  *
  * @param {Object} filter provide before and after filter method.
  *                        A filter should have two methods: before and after.
- * @memberOf Application
  */
 Application.globalFilter = function (filter) {
   this.globalBefore(filter)
@@ -165,7 +151,6 @@ Application.globalFilter = function (filter) {
  * Add global before filter.
  *
  * @param {Object|Function} bf before fileter, bf(msg, session, next)
- * @memberOf Application
  */
 Application.globalBefore = function (bf) {
   addFilter(this, Constants.KEYWORDS.GLOBAL_BEFORE_FILTER, bf)
@@ -175,7 +160,6 @@ Application.globalBefore = function (bf) {
  * Add global after filter.
  *
  * @param {Object|Function} af after filter, `af(err, msg, session, resp, next)`
- * @memberOf Application
  */
 Application.globalAfter = function (af) {
   addFilter(this, Constants.KEYWORDS.GLOBAL_AFTER_FILTER, af)
@@ -185,7 +169,6 @@ Application.globalAfter = function (af) {
  * Add rpc before filter.
  *
  * @param {Object|Function} bf before fileter, bf(serverId, msg, opts, next)
- * @memberOf Application
  */
 Application.rpcBefore = function (bf) {
   addFilter(this, Constants.KEYWORDS.RPC_BEFORE_FILTER, bf)
@@ -195,7 +178,6 @@ Application.rpcBefore = function (bf) {
  * Add rpc after filter.
  *
  * @param {Object|Function} af after filter, `af(serverId, msg, opts, next)`
- * @memberOf Application
  */
 Application.rpcAfter = function (af) {
   addFilter(this, Constants.KEYWORDS.RPC_AFTER_FILTER, af)
@@ -206,7 +188,6 @@ Application.rpcAfter = function (af) {
  *
  * @param {Object} filter provide before and after filter method.
  *                        A filter should have two methods: before and after.
- * @memberOf Application
  */
 Application.rpcFilter = function (filter) {
   this.rpcBefore(filter)
@@ -220,7 +201,6 @@ Application.rpcFilter = function (filter) {
  * @param  {Object} component component instance or factory function of the component
  * @param  {[type]} opts    (optional) construct parameters for the factory function
  * @returns {Object}     app instance for chain invoke
- * @memberOf Application
  */
 Application.load = function (name, component, opts) {
   if (typeof name !== 'string') {
@@ -260,36 +240,34 @@ Application.load = function (name, component, opts) {
  *
  * @param {string} key environment key
  * @param {string} val environment value
- * @param {Boolean} reload whether reload after change default false
+ * @param {boolean} reload whether reload after change default false
  * @returns {Server|Mixed} for chaining, or the setting value
- * @memberOf Application
  */
 Application.loadConfigBaseApp = function (key, val, reload) {
-  var self = this
-  var env = this.get(Constants.RESERVED.ENV)
-  var originPath = path.join(Application.getBase(), val)
-  var presentPath = path.join(Application.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(val))
-  var realPath
+  const env = this.get(Constants.RESERVED.ENV)
+  const originPath = path.join(Application.getBase(), val)
+  const presentPath = path.join(Application.getBase(), Constants.FILEPATH.CONFIG_DIR, env, path.basename(val))
+  let realPath
   if (fs.existsSync(originPath)) {
      realPath = originPath
-     var file = require(originPath)
+     let file = require(originPath)
      if (file[env]) {
        file = file[env]
      }
      this.set(key, file)
   } else if (fs.existsSync(presentPath)) {
     realPath = presentPath
-    var pfile = require(presentPath)
+    const pfile = require(presentPath)
     this.set(key, pfile)
   } else {
     logger.error('invalid configuration with file path: %s', key)
   }
 
   if (realPath && reload) {
-    fs.watch(realPath, function (event, filename) {
+    fs.watch(realPath, (event, filename) => {
       if (event === 'change') {
         delete require.cache[require.resolve(realPath)]
-        self.loadConfigBaseApp(key, val)
+        this.loadConfigBaseApp(key, val)
       }
     })
   }
@@ -301,10 +279,9 @@ Application.loadConfigBaseApp = function (key, val, reload) {
  * @param {string} key environment key
  * @param {string} val environment value
  * @returns {Server|Mixed} for chaining, or the setting value
- * @memberOf Application
  */
 Application.loadConfig = function (key, val) {
-  var env = this.get(Constants.RESERVED.ENV)
+  const env = this.get(Constants.RESERVED.ENV)
   val = require(val)
   if (val[env]) {
     val = val[env]
@@ -328,10 +305,9 @@ Application.loadConfig = function (key, val) {
  * @param {string} serverType server type string
  * @param  {Function} routeFunc  route function. routeFunc(session, msg, app, cb)
  * @returns {Object}     current application instance for chain invoking
- * @memberOf Application
  */
 Application.route = function (serverType, routeFunc) {
-  var routes = this.get(Constants.KEYWORDS.ROUTE)
+  let routes = this.get(Constants.KEYWORDS.ROUTE)
   if (!routes) {
     routes = {}
     this.set(Constants.KEYWORDS.ROUTE, routes)
@@ -344,8 +320,6 @@ Application.route = function (serverType, routeFunc) {
  * Set before stop function. It would perform before servers stop.
  *
  * @param  {Function} fun before close function
- * @returns {Void}
- * @memberOf Application
  */
 Application.beforeStopHook = function (fun) {
   logger.warn('this method was deprecated in olemop 0.8')
@@ -358,7 +332,6 @@ Application.beforeStopHook = function (fun) {
  * Start application. It would load the default components and start all the loaded components.
  *
  * @param  {Function} cb callback function
- * @memberOf Application
  */
  Application.start = function (cb) {
   this.startTime = Date.now()
@@ -367,23 +340,22 @@ Application.beforeStopHook = function (fun) {
     return
   }
 
-  var self = this
-  appUtil.startByType(self, function () {
-    appUtil.loadDefaultComponents(self)
-    var startUp = function () {
-      appUtil.optComponents(self.loaded, Constants.RESERVED.START, function (err) {
-        self.state = STATE_START
+  appUtil.startByType(this, () => {
+    appUtil.loadDefaultComponents(this)
+    const startUp = () => {
+      appUtil.optComponents(this.loaded, Constants.RESERVED.START, (err) => {
+        this.state = STATE_START
         if (err) {
           olemopUtils.invokeCallback(cb, rr)
         } else {
-          logger.info('%j enter after start...', self.getServerId())
-          self.afterStart(cb)
+          logger.info('%j enter after start...', this.getServerId())
+          this.afterStart(cb)
         }
       })
     }
-    var beforeFun = self.lifecycleCbs[Constants.LIFECYCLE.BEFORE_STARTUP]
+    const beforeFun = this.lifecycleCbs[Constants.LIFECYCLE.BEFORE_STARTUP]
     if (beforeFun) {
-      beforeFun.call(null, self, startUp)
+      beforeFun.call(null, this, startUp)
     } else {
       startUp()
     }
@@ -394,7 +366,6 @@ Application.beforeStopHook = function (fun) {
  * Lifecycle callback for after start.
  *
  * @param  {Function} cb callback function
- * @returns {Void}
  */
 Application.afterStart = function (cb) {
   if (this.state !== STATE_START) {
@@ -402,31 +373,29 @@ Application.afterStart = function (cb) {
     return
   }
 
-  var afterFun = this.lifecycleCbs[Constants.LIFECYCLE.AFTER_STARTUP]
-  var self = this
-  appUtil.optComponents(this.loaded, Constants.RESERVED.AFTER_START, function (err) {
-    self.state = STATE_STARTED
-    var id = self.getServerId()
+  const afterFun = this.lifecycleCbs[Constants.LIFECYCLE.AFTER_STARTUP]
+  appUtil.optComponents(this.loaded, Constants.RESERVED.AFTER_START, (err) => {
+    this.state = STATE_STARTED
+    const id = this.getServerId()
     if (!err) {
       logger.info('%j finish start', id)
     }
     if (afterFun) {
-      afterFun.call(null, self, function () {
+      afterFun.call(null, this, () => {
         olemopUtils.invokeCallback(cb, err)
       })
     } else {
       olemopUtils.invokeCallback(cb, err)
     }
-    var usedTime = Date.now() - self.startTime
-    logger.info('%j startup in %s ms', id, usedTime)
-    self.event.emit(events.START_SERVER, id)
+    logger.info('%j startup in %s ms', id, Date.now() - this.startTime)
+    this.event.emit(events.START_SERVER, id)
   })
 }
 
 /**
  * Stop components.
  *
- * @param  {Boolean} force whether stop the app immediately
+ * @param {boolean} force whether stop the app immediately
  */
 Application.stop = function (force) {
   if (this.state > STATE_STARTED) {
@@ -434,31 +403,30 @@ Application.stop = function (force) {
     return
   }
   this.state = STATE_STOPED
-  var self = this
 
-  this.stopTimer = setTimeout(function () {
+  this.stopTimer = setTimeout(() => {
     process.exit(0)
   }, Constants.TIME.TIME_WAIT_STOP)
 
-  var cancelShutDownTimer =function () {
-      if (self.stopTimer) {
-        clearTimeout(self.stopTimer)
-      }
+  const cancelShutDownTimer = () => {
+    if (this.stopTimer) {
+      clearTimeout(this.stopTimer)
+    }
   }
-  var shutDown = function () {
-    appUtil.stopComps(self.loaded, 0, force, function () {
+  const shutDown = () => {
+    appUtil.stopComps(this.loaded, 0, force, () => {
       cancelShutDownTimer()
       if (force) {
         process.exit(0)
       }
     })
   }
-  var fun = this.get(Constants.KEYWORDS.BEFORE_STOP_HOOK)
-  var stopFun = this.lifecycleCbs[Constants.LIFECYCLE.BEFORE_SHUTDOWN]
+  const fun = this.get(Constants.KEYWORDS.BEFORE_STOP_HOOK)
+  const stopFun = this.lifecycleCbs[Constants.LIFECYCLE.BEFORE_SHUTDOWN]
   if (stopFun) {
     stopFun.call(null, this, shutDown, cancelShutDownTimer)
   } else if (fun) {
-    olemopUtils.invokeCallback(fun, self, shutDown, cancelShutDownTimer)
+    olemopUtils.invokeCallback(fun, this, shutDown, cancelShutDownTimer)
   } else {
     shutDown()
   }
@@ -483,9 +451,8 @@ Application.stop = function (force) {
  *
  * @param {string} setting the setting of application
  * @param {string} val the setting's value
- * @param {Boolean} attach whether attach the settings to application
+ * @param {boolean} attach whether attach the settings to application
  * @returns {Server|Mixed} for chaining, or the setting value
- * @memberOf Application
  */
 Application.set = function (setting, val, attach) {
   if (arguments.length === 1) {
@@ -503,7 +470,6 @@ Application.set = function (setting, val, attach) {
  *
  * @param {string} setting application setting
  * @returns {string} val
- * @memberOf Application
  */
 Application.get = function (setting) {
   return this.settings[setting]
@@ -513,8 +479,7 @@ Application.get = function (setting) {
  * Check if `setting` is enabled.
  *
  * @param {string} setting application setting
- * @returns {Boolean}
- * @memberOf Application
+ * @returns {boolean}
  */
 Application.enabled = function (setting) {
   return this.get(setting)
@@ -524,8 +489,7 @@ Application.enabled = function (setting) {
  * Check if `setting` is disabled.
  *
  * @param {string} setting application setting
- * @returns {Boolean}
- * @memberOf Application
+ * @returns {boolean}
  */
 Application.disabled = function (setting) {
   return !this.get(setting)
@@ -536,7 +500,6 @@ Application.disabled = function (setting) {
  *
  * @param {string} setting application setting
  * @returns {app} for chaining
- * @memberOf Application
  */
 Application.enable = function (setting) {
   return this.set(setting, true)
@@ -547,7 +510,6 @@ Application.enable = function (setting) {
  *
  * @param {string} setting application setting
  * @returns {app} for chaining
- * @memberOf Application
  */
 Application.disable = function (setting) {
   return this.set(setting, false)
@@ -577,10 +539,9 @@ Application.disable = function (setting) {
  * @param {Function} fn callback function
  * @param {string} type server type
  * @returns {Application} for chaining
- * @memberOf Application
  */
 Application.configure = function (env, type, fn) {
-  var args = [].slice.call(arguments)
+  const args = [].slice.call(arguments)
   fn = args.pop()
   env = type = Constants.RESERVED.ALL
 
@@ -605,7 +566,6 @@ Application.configure = function (env, type, fn) {
  * @param {string} moduleId (optional) module id or provoided by module.moduleId
  * @param {Object} _module module object or factory function for module
  * @param {Object} opts construct parameter for module
- * @memberOf Application
  */
 Application.registerAdmin = function (moduleId, _module, opts) {
   let modules = this.get(Constants.KEYWORDS.MODULE)
@@ -636,7 +596,6 @@ Application.registerAdmin = function (moduleId, _module, opts) {
  *
  * @param  {Object} plugin plugin instance
  * @param  {[type]} opts    (optional) construct parameters for the factory function
- * @memberOf Application
  */
 Application.use = function (plugin, opts = {}) {
   if (!plugin.components) {
@@ -644,25 +603,22 @@ Application.use = function (plugin, opts = {}) {
     return
   }
 
-  var self = this
-  var dir = path.dirname(plugin.components)
+  const dir = path.dirname(plugin.components)
 
   if (!fs.existsSync(plugin.components)) {
-    logger.error('fail to find components, find path: %s', plugin.components)
+    logger.error(`fail to find components, find path: ${plugin.components}`)
     return
   }
 
-  fs.readdirSync(plugin.components).forEach(function (filename) {
-    if (!/\.js$/.test(filename)) {
-      return
-    }
-    var name = path.basename(filename, '.js')
-    var param = opts[name] || {}
-    var absolutePath = path.join(dir, Constants.DIR.COMPONENT, filename)
+  fs.readdirSync(plugin.components).forEach((filename) => {
+    if (!/\.js$/.test(filename)) return
+    const name = path.basename(filename, '.js')
+    const param = opts[name] || {}
+    const absolutePath = path.join(dir, Constants.DIR.COMPONENT, filename)
     if (!fs.existsSync(absolutePath)) {
-      logger.error('component %s not exist at %s', name, absolutePath)
+      logger.error(`component ${name} not exist at ${absolutePath}`)
     } else {
-      self.load(require(absolutePath), param)
+      this.load(require(absolutePath), param)
     }
   })
 
@@ -679,7 +635,7 @@ Application.use = function (plugin, opts = {}) {
     if (!fs.existsSync(absolutePath)) {
       logger.error(`events ${filename} not exist at ${absolutePath}`)
     } else {
-      bindEvents(require(absolutePath), self)
+      bindEvents(require(absolutePath), this)
     }
   })
 }
@@ -695,7 +651,6 @@ Application.transaction = function (name, conditions, handlers, retry) {
  * Get master server info.
  *
  * @returns {Object} master server info, {id, host, port}
- * @memberOf Application
  */
 Application.getMaster = function () {
   return this.master
@@ -705,7 +660,6 @@ Application.getMaster = function () {
  * Get current server info.
  *
  * @returns {Object} current server info, {id, serverType, host, port}
- * @memberOf Application
  */
 Application.getCurServer = function () {
   return this.curServer
@@ -715,7 +669,6 @@ Application.getCurServer = function () {
  * Get current server id.
  *
  * @returns {String|Number} current server id from servers.json
- * @memberOf Application
  */
 Application.getServerId = function () {
   return this.serverId
@@ -725,7 +678,6 @@ Application.getServerId = function () {
  * Get current server type.
  *
  * @returns {String|Number} current server type from servers.json
- * @memberOf Application
  */
 Application.getServerType = function () {
   return this.serverType
@@ -735,7 +687,6 @@ Application.getServerType = function () {
  * Get all the current server infos.
  *
  * @returns {Object} server info map, key: server id, value: server info
- * @memberOf Application
  */
 Application.getServers = function () {
   return this.servers
@@ -745,7 +696,6 @@ Application.getServers = function () {
  * Get all server infos from servers.json.
  *
  * @returns {Object} server info map, key: server id, value: server info
- * @memberOf Application
  */
 Application.getServersFromConfig = function () {
   return this.get(Constants.KEYWORDS.SERVER_MAP)
@@ -755,7 +705,6 @@ Application.getServersFromConfig = function () {
  * Get all the server type.
  *
  * @returns {Array} server type list
- * @memberOf Application
  */
 Application.getServerTypes = function () {
   return this.serverTypes
@@ -766,7 +715,6 @@ Application.getServerTypes = function () {
  *
  * @param {string} serverId server id
  * @returns {Object} server info or undefined
- * @memberOf Application
  */
 Application.getServerById = function (serverId) {
   return this.servers[serverId]
@@ -777,7 +725,6 @@ Application.getServerById = function (serverId) {
  *
  * @param {string} serverId server id
  * @returns {Object} server info or undefined
- * @memberOf Application
  */
 
 Application.getServerFromConfig = function (serverId) {
@@ -789,7 +736,6 @@ Application.getServerFromConfig = function (serverId) {
  *
  * @param {string} serverType server type
  * @returns {Array}      server info list
- * @memberOf Application
  */
 Application.getServersByType = function (serverType) {
   return this.serverTypeMaps[serverType]
@@ -800,12 +746,10 @@ Application.getServersByType = function (serverType) {
  *
  * @param  {server}  server server info. it would check current server
  *            if server not specified
- * @returns {Boolean}
+ * @returns {boolean}
  *
- * @memberOf Application
  */
-Application.isFrontend = function (server) {
-  server = server || this.getCurServer()
+Application.isFrontend = function (server = this.getCurServer()) {
   return server && server.frontend === 'true'
 }
 
@@ -814,19 +758,16 @@ Application.isFrontend = function (server) {
  *
  * @param  {server}  server server info. it would check current server
  *            if server not specified
- * @returns {Boolean}
- * @memberOf Application
+ * @returns {boolean}
  */
-Application.isBackend = function (server) {
-  server = server || this.getCurServer()
+Application.isBackend = function (server = this.getCurServer()) {
   return server && !server.frontend
 }
 
 /**
  * Check whether current server is a master server
  *
- * @returns {Boolean}
- * @memberOf Application
+ * @returns {boolean}
  */
 Application.isMaster = function () {
   return this.serverType === Constants.RESERVED.MASTER
@@ -836,7 +777,6 @@ Application.isMaster = function () {
  * Add new server info to current application in runtime.
  *
  * @param {Array} servers new server info list
- * @memberOf Application
  */
 Application.addServers = function (servers) {
   if (!servers || !servers.length) return
@@ -865,7 +805,6 @@ Application.addServers = function (servers) {
  * Remove server info from current application at runtime.
  *
  * @param  {Array} ids server id list
- * @memberOf Application
  */
 Application.removeServers = function (ids) {
   if (!ids || !ids.length) return
@@ -880,7 +819,7 @@ Application.removeServers = function (ids) {
     // clean global server type map
     const slist = this.serverTypeMaps[item.serverType]
     removeServer(slist, id)
-    // TODO: should remove the server type if the slist is empty?
+    // @todo: should remove the server type if the slist is empty?
   }
   this.event.emit(events.REMOVE_SERVERS, ids)
 }
@@ -889,21 +828,17 @@ Application.removeServers = function (ids) {
  * Replace server info from current application at runtime.
  *
  * @param  {Object} server id map
- * @memberOf Application
  */
 Application.replaceServers = function (servers) {
-  if (!servers) {
-    return
-  }
-
+  if (!servers) return
   this.servers = servers
   this.serverTypeMaps = {}
   this.serverTypes = []
-  var serverArray = []
-  for (var id in servers) {
-    var server = servers[id]
-    var serverType = server[Constants.RESERVED.SERVER_TYPE]
-    var slist = this.serverTypeMaps[serverType]
+  const serverArray = []
+  for (let id in servers) {
+    const server = servers[id]
+    const serverType = server[Constants.RESERVED.SERVER_TYPE]
+    const slist = this.serverTypeMaps[serverType]
     if (!slist) {
       this.serverTypeMaps[serverType] = slist = []
     }
@@ -921,7 +856,6 @@ Application.replaceServers = function (servers) {
  * Add crons from current application at runtime.
  *
  * @param  {Array} crons new crons would be added in application
- * @memberOf Application
  */
 Application.addCrons = function (crons) {
   if (!crons || !crons.length) {
@@ -935,7 +869,6 @@ Application.addCrons = function (crons) {
  * Remove crons from current application at runtime.
  *
  * @param  {Array} crons old crons would be removed in application
- * @memberOf Application
  */
 Application.removeCrons = function (crons) {
   if (!crons || !crons.length) {
@@ -945,8 +878,8 @@ Application.removeCrons = function (crons) {
   this.event.emit(events.REMOVE_CRONS, crons)
 }
 
-var replaceServer = function (slist, serverInfo) {
-  for (var i=0, l=slist.length; i<l; i++) {
+const replaceServer = (slist, serverInfo) => {
+  for (let i = 0; i < slist.length; i++) {
     if (slist[i].id === serverInfo.id) {
       slist[i] = serverInfo
       return
@@ -955,12 +888,10 @@ var replaceServer = function (slist, serverInfo) {
   slist.push(serverInfo)
 }
 
-var removeServer = function (slist, id) {
-  if (!slist || !slist.length) {
-    return
-  }
+const removeServer = (slist, id) => {
+  if (!slist || !slist.length) return
 
-  for (var i=0, l=slist.length; i<l; i++) {
+  for (let i = 0; i < slist.length; i++) {
     if (slist[i].id === id) {
       slist.splice(i, 1)
       return
@@ -968,13 +899,11 @@ var removeServer = function (slist, id) {
   }
 }
 
-var contains = function (str, settings) {
-  if (!settings) {
-    return false
-  }
+const contains = (str, settings) => {
+  if (!settings) return false
 
-  var ts = settings.split("|")
-  for (var i=0, l=ts.length; i<l; i++) {
+  const ts = settings.split('|')
+  for (let i = 0; i < ts.length; i++) {
     if (str === ts[i]) {
       return true
     }
@@ -989,8 +918,8 @@ const bindEvents = (Event, app) => {
   })
 }
 
-var addFilter = function (app, type, filter) {
- var filters = app.get(type)
+const addFilter = (app, type, filter) => {
+ let filters = app.get(type)
   if (!filters) {
     filters = []
     app.set(type, filters)

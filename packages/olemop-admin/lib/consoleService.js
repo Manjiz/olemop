@@ -18,8 +18,8 @@ var MS_OF_SECOND = 1000
  *                 opts.type 	{string} server type, 'master', 'connector', etc.
  *                 opts.id 		{string} server id
  *                 opts.host 	{string} (monitor only) master server host
- *                 opts.port 	{String | Number} listen port for master or master port for monitor
- *                 opts.master  {Boolean} current service is master or monitor
+ *                 opts.port 	{string | number} listen port for master or master port for monitor
+ *                 opts.master  {boolean} current service is master or monitor
  *                 opts.info 	{Object} more server info for current server, {id, serverType, host, port}
  */
 var ConsoleService = function (opts) {
@@ -452,7 +452,7 @@ var aclControl = function (agent, action, method, moduleId, msg) {
  * Create master ConsoleService
  *
  * @param {Object} opts construct parameter
- *                      opts.port {String | Number} listen port for master console
+ *                      opts.port {string | number} listen port for master console
  */
 module.exports.createMasterConsole = function (opts = {}) {
 	opts.master = true
@@ -466,7 +466,7 @@ module.exports.createMasterConsole = function (opts = {}) {
  *                      opts.type {string} server type, 'master', 'connector', etc.
  *                      opts.id {string} server id
  *                      opts.host {string} master server host
- *                      opts.port {String | Number} master port
+ *                      opts.port {string | number} master port
  */
 module.exports.createMonitorConsole = function (opts) {
 	return new ConsoleService(opts)

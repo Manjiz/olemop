@@ -46,7 +46,7 @@ const _genProxies = (client, app, sinfos) => {
  *
  * @param  {Object}  client rpc client instance
  * @param  {Object}  sinfo  server info
- * @returns {Boolean}        true or false
+ * @returns {boolean}        true or false
  */
 const hasProxy = (client, sinfo) => {
   const proxy = client.proxies
@@ -130,7 +130,6 @@ class Component {
    * Proxy component lifecycle function
    *
    * @param {Function} cb
-   * @returns {Void}
    */
   start (cb) {
     if (this.opts.enableRpcLog) {
@@ -156,7 +155,6 @@ class Component {
    * Component lifecycle callback
    *
    * @param {Function} cb
-   * @returns {Void}
    */
   afterStart (cb) {
     Object.defineProperty(this.app, 'rpc', {

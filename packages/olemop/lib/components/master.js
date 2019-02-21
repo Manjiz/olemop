@@ -19,7 +19,6 @@ class Component {
    * Component lifecycle function
    *
    * @param  {Function} cb
-   * @returns {Void}
    */
   start (cb) {
     this.master.start(cb)
@@ -28,9 +27,8 @@ class Component {
   /**
    * Component lifecycle function
    *
-   * @param  {Boolean}   force whether stop the component immediately
+   * @param  {boolean}   force whether stop the component immediately
    * @param  {Function}  cb
-   * @returns {Void}
    */
   stop (force, cb) {
     this.master.stop(cb)

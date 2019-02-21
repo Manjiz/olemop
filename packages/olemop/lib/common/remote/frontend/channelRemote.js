@@ -54,7 +54,7 @@ class ChannelRemote {
    *
    * @param {string}    route  route string
    * @param  {Object}    msg    message
-   * @param  {Boolean}   opts   broadcast options.
+   * @param  {boolean}   opts   broadcast options.
    * @param  {Function}  cb     callback function
    */
   broadcast (route, msg, opts, cb) {

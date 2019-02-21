@@ -59,7 +59,6 @@ class Component {
    * Remote component lifecycle function
    *
    * @param {Function} cb
-   * @returns {Void}
    */
   start (cb) {
     this.opts.port = this.app.getCurServer().port
@@ -71,9 +70,8 @@ class Component {
   /**
    * Remote component lifecycle function
    *
-   * @param {Boolean}  force whether stop the component immediately
+   * @param {boolean}  force whether stop the component immediately
    * @param {Function}  cb
-   * @returns {Void}
    */
   stop (force, cb) {
     this.remote.stop(force)

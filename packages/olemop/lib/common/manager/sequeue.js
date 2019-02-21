@@ -12,7 +12,7 @@ const EVENT_DRAINED = 'drained'
 /**
  * Instance a new queue
  *
- * @param {Number} timeout a global timeout for new queue
+ * @param {number} timeout a global timeout for new queue
  */
 class SeqQueue extends EventEmitter {
   constructor (timeout) {
@@ -54,7 +54,7 @@ class SeqQueue extends EventEmitter {
   /**
    * Close queue
    *
-   * @param {Boolean} force if true will close the queue immediately else will execute the rest task in queue
+   * @param {boolean} force if true will close the queue immediately else will execute the rest task in queue
    */
   close (force) {
     if (this.status !== SeqQueueManager.STATUS_IDLE && this.status !== SeqQueueManager.STATUS_BUSY) return
@@ -137,7 +137,7 @@ const SeqQueueManager = module.exports
  * Queue status: idle, welcome new tasks
  *
  * @const
- * @type {Number}
+ * @type {number}
  * @memberOf SeqQueueManager
  */
 SeqQueueManager.STATUS_IDLE = 0
@@ -145,7 +145,7 @@ SeqQueueManager.STATUS_IDLE = 0
 /**
  * Queue status: busy, queue is working for some tasks now
  *
- * @type {Number}
+ * @type {number}
  * @memberOf SeqQueueManager
  */
 SeqQueueManager.STATUS_BUSY = 1
@@ -155,7 +155,7 @@ SeqQueueManager.STATUS_BUSY = 1
  * 					and is processing the remaining tasks now.
  *
  * @const
- * @type {Number}
+ * @type {number}
  * @memberOf SeqQueueManager
  */
 SeqQueueManager.STATUS_CLOSED = 2
@@ -164,7 +164,7 @@ SeqQueueManager.STATUS_CLOSED = 2
  * Queue status: drained, queue is ready to be destroy
  *
  * @const
- * @type {Number}
+ * @type {number}
  * @memberOf SeqQueueManager
  */
 SeqQueueManager.STATUS_DRAINED = 3
@@ -172,7 +172,7 @@ SeqQueueManager.STATUS_DRAINED = 3
 /**
  * Create Sequence queue
  *
- * @param  {Number} timeout a global timeout for the new queue instance
+ * @param  {number} timeout a global timeout for the new queue instance
  * @return {Object}         new queue instance
  * @memberOf SeqQueueManager
  */
