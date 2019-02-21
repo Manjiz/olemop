@@ -1,7 +1,7 @@
 const olemopUtils = require('@olemop/utils')
 const ConnectionService = require('../common/service/connectionService')
 
-class Component {
+class ConnectionComponent {
   constructor(app) {
     this.name = '__connection__'
     this.app = app
@@ -29,5 +29,5 @@ class Component {
  * Connection component for statistics connection status of frontend servers
  */
 module.exports = (app) => {
-  return new Component(app)
+  return new ConnectionComponent(app)
 }

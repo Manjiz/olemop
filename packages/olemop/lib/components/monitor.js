@@ -5,7 +5,7 @@
 
 const Monitor = require('../monitor/monitor')
 
-class Component {
+class MonitorComponent {
   constructor(app, opts) {
     this.name = '__monitor__'
     this.monitor = new Monitor(app, opts)
@@ -31,5 +31,5 @@ class Component {
  * @returns {Object}      component instances
  */
 module.exports = (app, opts) => {
-  return new Component(app, opts)
+  return new MonitorComponent(app, opts)
 }

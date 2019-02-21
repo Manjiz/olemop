@@ -7,7 +7,7 @@ const SessionService = require('../common/service/sessionService')
  * @param {Object} app  current application context
  * @param {Object} opts attach parameters
  */
-class Component {
+class SessionComponent {
   constructor (app, opts = {}) {
     this.name = '__session__'
     this.app = app
@@ -40,7 +40,7 @@ class Component {
 }
 
 module.exports = (app, opts) => {
-  const cmp = new Component(app, opts)
+  const cmp = new SessionComponent(app, opts)
   app.set('sessionService', cmp, true)
   return cmp
 }

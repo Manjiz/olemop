@@ -5,7 +5,7 @@ const protobuf = require('@olemop/protobuf')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
 const Constants = require('../util/constants')
 
-class Component {
+class ProtobufComponent {
   constructor(app, opts = {}) {
     this.name = '__protobuf__'
     this.app = app
@@ -109,5 +109,5 @@ class Component {
 }
 
 module.exports = (app, opts) => {
-  return new Component(app, opts)
+  return new ProtobufComponent(app, opts)
 }

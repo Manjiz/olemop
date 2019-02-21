@@ -44,7 +44,7 @@ const genRemote = (app, opts) => {
   return opts.rpcServer ? opts.rpcServer.create(opts) : RemoteServer.create(opts)
 }
 
-class Component {
+class RemoteComponent {
   /**
    * @param {Object} app  current application context
    * @param {Object} opts construct parameters
@@ -95,5 +95,5 @@ module.exports = (app, opts = {}) => {
     opts.rpcDebugLog = true
     opts.rpcLogger = require('@olemop/logger').getLogger('rpc-debug', __filename)
   }
-  return new Component(app, opts)
+  return new RemoteComponent(app, opts)
 }

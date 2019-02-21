@@ -115,7 +115,7 @@ const defaultRoute = (session, msg, app, cb) => {
  * @param {Object} app  current application context
  * @param {Object} opts construct parameters
  */
-class Component {
+class ProxyComponent {
   constructor(app, opts) {
     this.name = '__proxy__'
     this.app = app
@@ -241,5 +241,5 @@ module.exports = (app, opts = {}) => {
     opts.rpcLogger = require('@olemop/logger').getLogger('rpc-debug', __filename)
   }
 
-  return new Component(app, opts)
+  return new ProxyComponent(app, opts)
 }

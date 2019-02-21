@@ -5,7 +5,7 @@ const Loader = require('@olemop/loader')
 const olemopUtils = require('@olemop/utils')
 const pathUtil = require('../util/pathUtil')
 
-class Component {
+class DictionaryComponent {
   constructor(app, opts) {
     this.name = '__dictionary__'
     this.app = app
@@ -88,5 +88,5 @@ class Component {
 }
 
 module.exports = (app, opts) => {
-  return new Component(app, opts)
+  return new DictionaryComponent(app, opts)
 }

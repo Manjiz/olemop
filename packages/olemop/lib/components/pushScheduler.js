@@ -24,7 +24,7 @@ const getScheduler = (pushSchedulerComp, app, opts) => {
   return scheduler
 }
 
-class PushScheduler {
+class PushSchedulerComponent {
   constructor(app, opts = {}) {
     this.name = '__pushScheduler__'
     this.app = app
@@ -107,5 +107,5 @@ class PushScheduler {
 }
 
 module.exports = (app, opts) => {
-  return new PushScheduler(app, opts)
+  return new PushSchedulerComponent(app, opts)
 }

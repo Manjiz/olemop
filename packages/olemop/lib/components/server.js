@@ -9,7 +9,7 @@ const Server = require('../server/server')
  *
  * @param {Object} app  current application context
  */
-class Component {
+class ServerComponent {
   constructor(app, opts) {
     this.name = '__server__'
     this.server = Server.create(app, opts)
@@ -68,5 +68,5 @@ class Component {
  * @returns {Object}     component instance
  */
 module.exports = (app, opts) => {
-	return new Component(app, opts)
+	return new ServerComponent(app, opts)
 }

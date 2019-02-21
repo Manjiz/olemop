@@ -9,7 +9,7 @@ const Master = require('../master/master')
  *
  * @param {Object} app  current application context
  */
-class Component {
+class MasterComponent {
   constructor(app, opts) {
     this.name = '__master__'
     this.master = new Master(app, opts)
@@ -42,5 +42,5 @@ class Component {
  * @returns {Object}      component instances
  */
 module.exports = (app, opts) => {
-	return new Component(app, opts)
+	return new MasterComponent(app, opts)
 }

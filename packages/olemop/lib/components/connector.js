@@ -301,7 +301,7 @@ const verifyMessage = (self, session, msg) => {
  * @param {Object} opts attach parameters
  *                      opts.connector {Object} provides low level network and protocol details implementation between server and clients.
  */
-class Component {
+class ConnectorComponent {
   constructor(app, opts = {}) {
     this.name = '__connector__'
     this.app = app
@@ -435,5 +435,5 @@ class Component {
 }
 
 module.exports = (app, opts) => {
-  return new Component(app, opts)
+  return new ConnectorComponent(app, opts)
 }
