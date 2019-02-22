@@ -54,7 +54,7 @@ class SessionRemote {
       return
     }
     const res = sessions.map((item) => {
-      res.push(item.toFrontendSession().export())
+      return item.toFrontendSession().export()
     })
     olemopUtils.invokeCallback(cb, null, res)
   }

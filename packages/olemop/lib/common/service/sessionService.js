@@ -264,7 +264,6 @@ class SessionService {
    * @param {Function} cb  callback function
    */
   kick (uid, reason, cb) {
-    const self = this
     // compatible for old kick(uid, cb)
     if (typeof reason === 'function') {
       cb = reason
@@ -280,7 +279,7 @@ class SessionService {
       })
 
       sids.forEach((sid) => {
-        self.sessions[sid].closed(reason)
+        this.sessions[sid].closed(reason)
       })
 
       process.nextTick(() => {
@@ -516,9 +515,9 @@ class Session extends EventEmitter {
    */
   closed (reason) {
     logger.debug(`session on [${this.frontendId}] is closed with session id: ${this.id}`)
-    if (this.__state__ === ST_CLOSED) {
-      return
-    }
+
+    if (this.__state__ === ST_CLOSED) return
+
     this.__state__ = ST_CLOSED
     this.__sessionService__.remove(this.id)
     this.emit('closed', this.toFrontendSession(), reason)

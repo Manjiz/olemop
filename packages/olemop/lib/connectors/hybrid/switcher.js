@@ -18,7 +18,7 @@ const DEFAULT_TIMEOUT = 90
  * @param {Object} server tcp server instance from node.js net module
  */
 class Switcher extends EventEmitter {
-  constructor(server, opts) {
+  constructor (server, opts) {
     super()
     this.server = server
     this.wsprocessor = new WSProcessor()
@@ -43,7 +43,7 @@ class Switcher extends EventEmitter {
     this.state = ST_STARTED
   }
 
-  static isHttp(data) {
+  static isHttp (data) {
     const head = data.toString('utf8', 0, 4)
 
     for (let i = 0; i < HTTP_METHODS.length; i++) {
@@ -55,15 +55,15 @@ class Switcher extends EventEmitter {
     return false
   }
 
-  static processHttp(switcher, processor, socket, data) {
+  static processHttp (switcher, processor, socket, data) {
     processor.add(socket, data)
   }
 
-  static processTcp(switcher, processor, socket, data) {
+  static processTcp (switcher, processor, socket, data) {
     processor.add(socket, data)
   }
 
-  newSocket(socket) {
+  newSocket (socket) {
     if (this.state !== ST_STARTED) return
 
     socket.setTimeout(this.timeout, () => {
@@ -85,7 +85,7 @@ class Switcher extends EventEmitter {
     })
   }
 
-  close() {
+  close () {
     if (this.state !== ST_STARTED) return
 
     this.state = ST_CLOSED
