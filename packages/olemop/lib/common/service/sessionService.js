@@ -11,6 +11,8 @@ const ST_CLOSED = 1
 
 /**
  * Send message to the client that associated with the session.
+ *
+ * @api private
  */
 const send = (service, session, msg) => {
   session.send(msg)
@@ -57,8 +59,9 @@ class SessionService {
    * @param {Integer} sid uniqe id for the internal session
    * @param {string} frontendId frontend server in which the internal session is created
    * @param {Object} socket the underlying socket would be held by the internal session
-   *
    * @returns {Session}
+   *
+   * @api private
    */
   create (sid, frontendId, socket) {
     const session = new Session(sid, frontendId, socket, this)
@@ -68,6 +71,8 @@ class SessionService {
 
   /**
    * Bind the session with a user id.
+   *
+   * @api private
    */
   bind (sid, uid, cb) {
     const session = this.sessions[sid]
@@ -124,6 +129,8 @@ class SessionService {
 
   /**
    * Unbind a session with the user id.
+   *
+   * @api private
    */
   unbind (sid, uid, cb) {
     const session = this.sessions[sid]
@@ -168,6 +175,8 @@ class SessionService {
    *
    * @param {number} id The session id
    * @returns {Session}
+   *
+   * @api private
    */
   get (sid) {
     return this.sessions[sid]
@@ -178,6 +187,8 @@ class SessionService {
    *
    * @param {number} uid User id associated with the session
    * @returns {Array} list of session binded with the uid
+   *
+   * @api private
    */
   getByUid (uid) {
     return this.uidMap[uid]
@@ -187,6 +198,8 @@ class SessionService {
    * Remove session by key.
    *
    * @param {number} sid The session id
+   *
+   * @api private
    */
   remove (sid) {
     const session = this.sessions[sid]
@@ -213,6 +226,8 @@ class SessionService {
 
   /**
    * Import the key/value into session.
+   *
+   * @api private
    */
   import (sid, key, value, cb) {
     const session = this.sessions[sid]
@@ -226,6 +241,8 @@ class SessionService {
 
   /**
    * Import new value for the existed session.
+   *
+   * @api private
    */
   importAll (sid, settings, cb) {
     const session = this.sessions[sid]
@@ -319,6 +336,8 @@ class SessionService {
    *
    * @param {string} sid session id
    * @param {Object} msg message to send
+   *
+   * @api private
    */
   sendMessage (sid, msg) {
     const session = this.get(sid)
@@ -336,6 +355,8 @@ class SessionService {
    *
    * @param {string} uid userId
    * @param {Object} msg message to send
+   *
+   * @api private
    */
   sendMessageByUid (uid, msg) {
     const sessionInstances = this.getByUid(uid)
@@ -356,6 +377,8 @@ class SessionService {
    * Iterate all the session in the session service.
    *
    * @param  {Function} cb callback function to fetch session
+   *
+   * @api private
    */
   forEachSession (cb) {
     for (let sid in this.sessions) {
@@ -367,6 +390,7 @@ class SessionService {
    * Iterate all the binded session in the session service.
    *
    * @param  {Function} cb callback function to fetch session
+   *
    * @api private
    */
   forEachBindedSession (cb) {
@@ -561,6 +585,8 @@ class FrontendSession extends EventEmitter {
 
   /**
    * Export the key/values for serialization.
+   *
+   * @api private
    */
   export () {
     const res = {}

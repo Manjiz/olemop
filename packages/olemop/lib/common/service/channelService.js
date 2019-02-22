@@ -13,9 +13,6 @@ const ST_DESTROYED = 1
  *
  * ChannelService is created by channel component which is a default loaded
  * component of olemop and channel service would be accessed by `app.get('channelService')`.
- *
- * @class
- * @constructor
  */
 class ChannelService {
   constructor (app, opts = {}) {
@@ -359,6 +356,8 @@ const _deleteFrom = (uid, sid, group) => {
  * @param groups {Object} grouped uids, , key: sid, value: [uid]
  * @param opts {Object} push options
  * @param cb {Function} cb(err)
+ *
+ * @api private
  */
 const _sendMessageByGroup = (channelService, route, msg, groups, opts = {}, cb) => {
   const app = channelService.app
