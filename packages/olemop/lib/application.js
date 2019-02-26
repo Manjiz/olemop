@@ -838,7 +838,7 @@ Application.replaceServers = function (servers) {
   for (let id in servers) {
     const server = servers[id]
     const serverType = server[Constants.RESERVED.SERVER_TYPE]
-    const slist = this.serverTypeMaps[serverType]
+    let slist = this.serverTypeMaps[serverType]
     if (!slist) {
       this.serverTypeMaps[serverType] = slist = []
     }

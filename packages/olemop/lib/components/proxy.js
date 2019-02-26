@@ -100,7 +100,7 @@ const genRouteFun = () => {
 const defaultRoute = (session, msg, app, cb) => {
   const list = app.getServersByType(msg.serverType)
   if (!list || !list.length) {
-    cb(new Error('can not find server info for type:' + msg.serverType))
+    cb(new Error(`can not find server info for type: ${msg.serverType}`))
     return
   }
 
