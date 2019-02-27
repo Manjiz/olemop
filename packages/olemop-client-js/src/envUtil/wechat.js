@@ -31,10 +31,15 @@ exports.initSocket = (uri, onopen, onmessage, onerror, onclose) => {
   return socketTask
 }
 
-exports.closeConnection = (socket) => {
+/**
+ * @param {Object} socket
+ * @param {number} [code] 默认会是 1000，跟 browser 不一样 @see https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Status_codes
+ * @param {string} [reason] 关闭原因
+ */
+exports.closeConnection = (socket, code, reason) => {
   if (!socket) return
   // wx.closeSocket()
-  socket.close()
+  socket.close({ code, reason })
 }
 
 exports.send = (socket, arrayBuf) => {
