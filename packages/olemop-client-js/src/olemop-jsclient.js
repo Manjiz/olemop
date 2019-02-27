@@ -210,7 +210,7 @@ olemop.preventReconnect = () => {
 
 olemop.disconnect = () => {
   if (socket) {
-    envUtil.closeConnection()
+    envUtil.closeConnection(socket)
     console.log('disconnect')
     socket = null
   }
