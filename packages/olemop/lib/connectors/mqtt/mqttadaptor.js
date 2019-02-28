@@ -1,5 +1,5 @@
 class MQTTAdaptor {
-  constructor(opts = {}) {
+  constructor (opts = {}) {
     this.subReqs = {}
     this.publishRoute = opts.publishRoute
     this.subscribeRoute = opts.subscribeRoute

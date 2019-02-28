@@ -7,23 +7,23 @@ const olemop = require('../olemop')
 const events = require('../util/events')
 const utils = require('../util/utils')
 
-const getConnector = (app, opts) => {
-  const connector = opts.connector
-  if (!connector) {
-    return getDefaultConnector(app, opts)
-  }
-
-  if (typeof connector !== 'function') {
-    return connector
-  }
-
-  const curServer = app.getCurServer()
-  return connector(curServer.clientPort, curServer.host, opts)
-}
-
 const getDefaultConnector = (app, opts) => {
   const curServer = app.getCurServer()
   return new DefaultConnector(curServer.clientPort, curServer.host, opts)
+}
+
+const getConnector = (app, opts) => {
+  const Connector = opts.connector
+  if (!Connector) {
+    return getDefaultConnector(app, opts)
+  }
+
+  if (typeof Connector !== 'function') {
+    return Connector
+  }
+
+  const curServer = app.getCurServer()
+  return new Connector(curServer.clientPort, curServer.host, opts)
 }
 
 const hostFilter = function (cb, socket) {
@@ -302,7 +302,7 @@ const verifyMessage = (self, session, msg) => {
  *                      opts.connector {Object} provides low level network and protocol details implementation between server and clients.
  */
 class ConnectorComponent {
-  constructor(app, opts = {}) {
+  constructor (app, opts = {}) {
     this.name = '__connector__'
     this.app = app
     this.connector = getConnector(app, opts)
