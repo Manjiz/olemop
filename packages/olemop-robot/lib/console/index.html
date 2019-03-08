@@ -1,0 +1,159 @@
+<html>
+<head>
+<title>Olemop Robot Console</title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css">
+<link rel="stylesheet" type="text/css" href="css/web_client.css">
+<link rel="stylesheet" type="text/css" href="css/colors.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/1.4.2/jquery.scrollTo.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div id="right">
+      <div id="screens"></div>
+
+      <!-- s Config -->
+			<div class="screen history">
+				<div class="bar">
+					<span class="screen-label">Config</span>
+					<div class="bar-top-right">
+						<div class="screen-buttons">
+							<a class="button" href="#"></a>
+						</div>
+						<div class="screen-search">
+							<a href="#" class="result-count"></a>
+						</div>
+					</div>
+				</div>
+				<div class="console">
+					<div class='dspan'>
+						<div style="float: left; width: 600px;">
+							<div style="float: left;">Agents/Client: </div>
+							<div><input type='text' value='1' id="agentinput"></div>
+						</div>
+						<div>
+              <div style="float: left">Users/Agent: </div>
+              <div><input type='text' style="width:120px" value='1' id="maxuserinput"></div>
+						</div>
+					</div>
+					<div class='dspan'>
+						<div style="float: left; width: 100%;">
+							<div  style="float: left">Run Script: </div>
+							<div style="width: 90%;">
+								<textarea style="width: 380px;" value='' id="robotinput"></textarea>
+                <input type="button" class="add-button" style="float: none" id="btn-ready" value='Ready?'>
+                <input type="button" class="add-button" id="btn-run" style="float: none; display: none;" value='Go'>
+								<span style="width: 180px; margin: 0px 0px 45px 15px;" id='hitdiv'></span>
+							</div>
+						</div>
+						<div style="clear: both"></div>
+					</div>
+					<div class='dspan'>
+						<div>
+							<div style="float: left">Current Agents: </div>
+							<div style="width: 100%; height: 60px; overflow-x: no; overflow-y: auto;" id='conndiv'></div>
+						</div>
+						<div style="clear: both;"></div>
+					</div>
+					<div class='dspan'>
+            <textarea style="width: 100%;" readonly="true" id="errorinput" ></textarea>
+            <div style="clear: both"></div>
+					</div>
+				</div>
+      </div>
+      <!-- e Config -->
+
+      <!-- s Summary -->
+			<div class="screen history" id="summary_div2">
+				<div class="bar">
+					<span class="screen-label">Summary</span>
+					<div class="bar-top-right">
+						<div class="screen-buttons"></div>
+						<div class="screen-search">
+							<a href="#" class="result-count"></a>
+						</div>
+					</div>
+				</div>
+				<div class="console" >
+					<table style="width: 100%" class='table'>
+						<thead>
+							<tr class='table'>
+                <th>Request</th>
+                <th>Max</th>
+                <th>Min</th>
+                <th>Avg</th>
+                <th>Qps</th>
+                <th>Count</th>
+							</tr>
+		 				</thead>
+						<tbody id='reportSummary'></tbody>
+					</table>
+				</div>
+      </div>
+      <!-- e Summary -->
+
+      <!-- s Charts Field -->
+      <div id='graph_div'></div>
+      <!-- e Charts Field -->
+
+			<div id="bottom">
+        <div id="bottom2">
+          <div id="stats">
+            <div class="stat nodes"><b>0</b> agents</div>
+            <div class="stat elapsed"><b>0:00</b> elapsed</div>
+          </div>
+        </div>
+		  </div>
+    </div>
+
+		<div id="templates">
+			<div class="screen history agentsummary" id="table_template">
+				<div class="bar">
+					<span class="screen-label">Summary</span>
+					<div class="bar-top-right">
+						<div class="screen-buttons"></div>
+						<div class="screen-search"><a href="#" class="result-count"></a></div>
+					</div>
+				</div>
+				<div class="console" >
+					<table style="width: 100%" class='table'>
+						<thead>
+							<tr class='table'>
+							<td>Request</td>
+							<td>Max</td>
+							<td>Min</td>
+							<td>Avg</td>
+							<td>Qps</td>
+							<td>Count</td>
+							</tr>
+		 				</thead>
+						<tbody class='summary'></tbody>
+					</table>
+				</div>
+      </div>
+
+ 			<div class="screen history" id="avg_template">
+				<div class="bar">
+					<span class="screen-label">Response Time Graph</span>
+					<div class="bar-top-right">
+						<div class="screen-buttons">
+              <img class='closebtn' id='vtest' src="/images/icons/cross.png" title="Close Screen">
+						</div>
+						<div class="screen-search"><a href="#" class="result-count"></a></div>
+					</div>
+				</div>
+				<div class="console heightf">
+					<div class='cgraphdiv'></div>
+				</div>
+			</div>
+		</div>
+  </div>
+
+  <script src="/js/webclient.js"></script>
+  <script src="/js/webclient.jquery.js"></script>
+  <script src="/js/graph.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "env": "development",
+  "script": "/Users/zhangtaizhen/git/olemop/packages/olemop-robot/example/script.js",
+  "conf": {
+    "development": {
+      "master": {
+        "host": "127.0.0.1",
+        "port": 8888,
+        "webport": 8889,
+        "interval": 500
+      },
+      "apps": [{"playerId":3}, {"playerId":4}, {"playerId":5}, {"playerId":6}, {"playerId":7}, {"playerId":8}, {"playerId":9}, {"playerId":10}, {"playerId":11}, {"playerId":12}, {"playerId":13}, {"playerId":14}, {"playerId":15}, {"playerId":16}, {"playerId":17}, {"playerId":18}, {"playerId":19}, {"playerId":20}, {"playerId":21}, {"playerId":22}, {"playerId":23}, {"playerId":24}, {"playerId":25}, {"playerId":26}, {"playerId":27}, {"playerId":28}, {"playerId":29}, {"playerId":30}, {"playerId":31}, {"playerId":32}, {"playerId":33}, {"playerId":34}, {"playerId":35}, {"playerId":36}, {"playerId":37}, {"playerId":38}, {"playerId":39}, {"playerId":40}, {"playerId":41}, {"playerId":42}, {"playerId":43}, {"playerId":44}, {"playerId":45}, {"playerId":46}, {"playerId":47}, {"playerId":48}, {"playerId":49}, {"playerId":50}, {"playerId":51}, {"playerId":52}, {"playerId":53}, {"playerId":54}, {"playerId":55}, {"playerId":56}, {"playerId":57}, {"playerId":58}, {"playerId":59}, {"playerId":60}, {"playerId":61}, {"playerId":62}, {"playerId":63}, {"playerId":64}, {"playerId":65}, {"playerId":66}, {"playerId":67}, {"playerId":68}, {"playerId":69}, {"playerId":70}, {"playerId":71}, {"playerId":72}, {"playerId":73}, {"playerId":74}, {"playerId":75}, {"playerId":76}, {"playerId":77}, {"playerId":78}, {"playerId":79}, {"playerId":80}, {"playerId":81}, {"playerId":82}, {"playerId":83}, {"playerId":84}, {"playerId":86}, {"playerId":87}, {"playerId":88}, {"playerId":89}, {"playerId":90}, {"playerId":91}, {"playerId":92}, {"playerId":93}, {"playerId":94}, {"playerId":95}, {"playerId":96}, {"playerId":97}, {"playerId":98}, {"playerId":99}, {"playerId":100}, {"playerId":101}, {"playerId":102}, {"playerId":103}, {"playerId":104}, {"playerId":105}, {"playerId":106}, {"playerId":107}, {"playerId":108}, {"playerId":109}, {"playerId":110}, {"playerId":111}, {"playerId":112}, {"playerId":113}, {"playerId":114}, {"playerId":115}, {"playerId":116}, {"playerId":117}, {"playerId":118}, {"playerId":119}, {"playerId":120}, {"playerId":121}, {"playerId":122}, {"playerId":123}, {"playerId":124}, {"playerId":125}, {"playerId":126}, {"playerId":127}, {"playerId":128}, {"playerId":129}, {"playerId":130}, {"playerId":131}, {"playerId":132}, {"playerId":146}, {"playerId":149}, {"playerId":1}, {"playerId":203}, {"playerId":171}, {"playerId":2}, {"playerId":199}, {"playerId":180}, {"playerId":189}, {"playerId":188}, {"playerId":181}, {"playerId":174}, {"playerId":196}, {"playerId":187}, {"playerId":179}, {"playerId":177}, {"playerId":173}, {"playerId":205}, {"playerId":202}, {"playerId":194}, {"playerId":197}, {"playerId":184}, {"playerId":175}, {"playerId":206}, {"playerId":172}, {"playerId":176}, {"playerId":183}, {"playerId":182}, {"playerId":192}, {"playerId":178}, {"playerId":190}, {"playerId":193}, {"playerId":201}, {"playerId":195}, {"playerId":185}, {"playerId":191}, {"playerId":186}, {"playerId":204}, {"playerId":200}]
+    },
+    "production": {
+      "master": {
+        "host": "127.0.0.1",
+        "port": 8888,
+        "webport": 8889,
+        "interval": 500
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@olemop/robot",
+  "version": "0.0.1",
+  "description": "@olemop/robot is a simple tool to benchmark the socket.io server's performance.",
+  "main": "index.js",
+  "dependencies": {
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "underscore": "^1.9.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
