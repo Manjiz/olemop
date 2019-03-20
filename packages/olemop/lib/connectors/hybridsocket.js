@@ -53,7 +53,7 @@ module.exports = Socket
 /**
  * Send raw byte data.
  *
- * @api private
+ * @private
  */
 Socket.prototype.sendRaw = function (msg) {
   if (this.state !== ST_WORKING) return
@@ -96,7 +96,7 @@ Socket.prototype.sendBatch = function (msgs) {
 /**
  * Send message to client no matter whether handshake.
  *
- * @api private
+ * @private
  */
 Socket.prototype.sendForce = function (msg) {
   if (this.state === ST_CLOSED) return
@@ -106,7 +106,7 @@ Socket.prototype.sendForce = function (msg) {
 /**
  * Response handshake request
  *
- * @api private
+ * @private
  */
 Socket.prototype.handshakeResponse = function (resp) {
   if (this.state !== ST_INITED) return
@@ -117,12 +117,12 @@ Socket.prototype.handshakeResponse = function (resp) {
 /**
  * Close the connection.
  *
- * @api private
+ * @private
  */
-Socket.prototype.disconnect = function () {
+Socket.prototype.disconnect = function (code, reason) {
   if (this.state === ST_CLOSED) return
 
   this.state = ST_CLOSED
   this.socket.emit('close')
-  this.socket.close()
+  this.socket.close(code, reason)
 }

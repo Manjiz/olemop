@@ -1,14 +1,17 @@
-var Package = require('@olemop/protocol').Package
-var logger = require('@olemop/logger').getLogger('olemop', __filename)
-
 /**
  * Process heartbeat request.
  *
  * @param {Object} opts option request
  *                      opts.heartbeat heartbeat interval
  */
+
+const Package = require('@olemop/protocol').Package
+const olemopLogger = require('@olemop/logger')
+
+const logger = olemopLogger.getLogger('olemop', __filename)
+
 class Heartbeat {
-  constructor(opts = {}) {
+  constructor (opts = {}) {
     this.heartbeat = null
     this.timeout = null
     this.disconnectOnTimeout = opts.disconnectOnTimeout
@@ -25,7 +28,7 @@ class Heartbeat {
     this.clients = {}
   }
 
-  static clearTimers(self, id) {
+  static clearTimers (self, id) {
     delete self.clients[id]
     const tid = self.timeouts[id]
     if (!tid) return
@@ -33,7 +36,7 @@ class Heartbeat {
     delete self.timeouts[id]
   }
 
-  handle(socket) {
+  handle (socket) {
     if (!this.heartbeat) return
 
     if (!this.clients[socket.id]) {
@@ -53,12 +56,12 @@ class Heartbeat {
     if (this.disconnectOnTimeout) {
       this.timeouts[socket.id] = setTimeout(() => {
         logger.info('client %j heartbeat timeout.', socket.id)
-        socket.disconnect()
+        socket.disconnect(1001, 'server side heartbeat timeout')
       }, this.timeout)
     }
   }
 
-  clear(id) {
+  clear (id) {
     const tid = this.timeouts[id]
     if (!tid) return
     clearTimeout(tid)

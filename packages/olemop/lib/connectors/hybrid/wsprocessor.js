@@ -9,7 +9,7 @@ const ST_CLOSED = 2
  * websocket protocol processor
  */
 class WSProcessor extends EventEmitter {
-  constructor() {
+  constructor () {
     super()
     this.httpServer = http.createServer()
 
@@ -23,7 +23,7 @@ class WSProcessor extends EventEmitter {
     this.state = ST_STARTED
   }
 
-  add(socket, data) {
+  add (socket, data) {
     if (this.state !== ST_STARTED) return
     this.httpServer.emit('connection', socket)
     if (typeof socket.ondata === 'function') {
@@ -35,10 +35,10 @@ class WSProcessor extends EventEmitter {
     }
   }
 
-  close() {
+  close (code, reason) {
     if (this.state !== ST_STARTED) return
     this.state = ST_CLOSED
-    this.wsServer.close()
+    this.wsServer.close(code, reason)
     this.wsServer = null
     this.httpServer = null
   }
