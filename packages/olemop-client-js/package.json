@@ -1,6 +1,6 @@
 {
   "name": "@olemop/client-js",
-  "version": "0.0.56",
+  "version": "0.0.57",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@olemop/protobuf": "^0.0.54",
-    "@olemop/protocol": "^0.0.56",
+    "@olemop/protocol": "^0.0.57",
     "wolfy87-eventemitter": "^5.2.5",
     "ws": "^6.1.4"
   },
