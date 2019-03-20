@@ -1,9 +1,9 @@
 {
 	"name": "@olemop/rpc",
-	"version": "0.0.54",
+	"version": "0.0.56",
 	"dependencies": {
 		"@olemop/loader": "^0.0.49",
-		"@olemop/logger": "^0.0.52",
+		"@olemop/logger": "^0.0.56",
 		"@olemop/utils": "^0.0.40",
 		"async": "^2.6.1",
 		"crc": "^3.8.0",

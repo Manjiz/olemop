@@ -1,6 +1,6 @@
 {
   "name": "@olemop/robot",
-  "version": "0.0.1",
+  "version": "0.0.56",
   "description": "@olemop/robot is a simple tool to benchmark the socket.io server's performance.",
   "main": "index.js",
   "dependencies": {

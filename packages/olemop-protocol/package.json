@@ -1,6 +1,6 @@
 {
   "name": "@olemop/protocol",
-  "version": "0.0.54",
+  "version": "0.0.56",
   "private": false,
   "devDependencies": {
     "jscoverage": ">=0.0.1",
