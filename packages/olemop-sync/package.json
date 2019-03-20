@@ -1,6 +1,6 @@
 {
   "name": "@olemop/sync",
-  "version": "0.0.57",
+  "version": "0.0.58",
   "main": "dist/dbsync.js",
   "scripts": {
     "build": "tsc"

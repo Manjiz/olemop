@@ -1,9 +1,9 @@
 {
   "name": "@olemop/plugin-sync",
-  "version": "0.0.57",
+  "version": "0.0.58",
   "private": false,
   "dependencies": {
-    "@olemop/sync": "^0.0.57"
+    "@olemop/sync": "^0.0.58"
   },
   "publishConfig": {
     "access": "public"
