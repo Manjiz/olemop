@@ -28,7 +28,7 @@ const ST_CLOSED = 3
 class TCPSocket extends Stream {
   constructor(socket, opts) {
     if (!(this instanceof Socket)) {
-      return new Socket(socket, opts)
+      return new TCPSocket(socket, opts)
     }
 
     if (!socket || !opts) {

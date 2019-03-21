@@ -1,5 +1,13 @@
+/**
+ * Connector that manager low level connection and protocol bewteen server and client.
+ * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
+ *
+ * if (!(this instanceof Connector)) {
+ *   return new Connector(port, host, opts)
+ * }
+ */
+
 const net = require('net')
-const util = require('util')
 const EventEmitter = require('events')
 const mqttCon = require('mqtt-connection')
 const logger = require('@olemop/logger').getLogger('olemop', __filename)
@@ -23,75 +31,66 @@ const composePush = (route, msgBody) => {
   return msg
 }
 
-/**
- * Connector that manager low level connection and protocol bewteen server and client.
- * Develper can provide their own connector to switch the low level prototol, such as tcp or probuf.
- */
-const Connector = function (port, host, opts = {}) {
-  if (!(this instanceof Connector)) {
-    return new Connector(port, host, opts)
+class MQTTConnector extends EventEmitter {
+  constructor (port, host, opts = {}) {
+    super()
+    this.port = port
+    this.host = host
+    this.opts = opts
+    this.adaptor = new Adaptor(this.opts)
   }
 
-  EventEmitter.call(this)
-  this.port = port
-  this.host = host
-  this.opts = opts
+  /**
+   * Start connector to listen the specified port
+   */
+  start (cb) {
+    this.mqttServer = new net.Server()
+    this.mqttServer.on('connection', (stream) => {
+      const client = mqttCon(stream)
 
-  this.adaptor = new Adaptor(this.opts)
-}
-
-util.inherits(Connector, EventEmitter)
-
-/**
- * Start connector to listen the specified port
- */
-Connector.prototype.start = function (cb) {
-  this.mqttServer = new net.Server()
-  this.mqttServer.on('connection', (stream) => {
-    const client = mqttCon(stream)
-
-    client.on('error', (err) => {
-      client.stream.destroy()
-    })
-
-    client.on('close', () => {
-      client.stream.destroy()
-    })
-
-    client.on('disconnect', (packet) => {
-      client.stream.destroy()
-    })
-
-    if (this.opts.disconnectOnTimeout) {
-      const timeout = this.opts.timeout * 1000 || constants.TIME.DEFAULT_MQTT_HEARTBEAT_TIMEOUT
-      client.stream.setTimeout(timeout, () => {
-        client.emit('close')
+      client.on('error', (err) => {
+        client.stream.destroy()
       })
-    }
 
-    client.on('connect', (packet) => {
-      CloseEventient.connack({returnCode: 0})
-      const mqttsocket = new MQTTSocket(curId++, client, this.adaptor)
-      this.emit('connection', mqttsocket)
+      client.on('close', () => {
+        client.stream.destroy()
+      })
+
+      client.on('disconnect', (packet) => {
+        client.stream.destroy()
+      })
+
+      if (this.opts.disconnectOnTimeout) {
+        const timeout = this.opts.timeout * 1000 || constants.TIME.DEFAULT_MQTT_HEARTBEAT_TIMEOUT
+        client.stream.setTimeout(timeout, () => {
+          client.emit('close')
+        })
+      }
+
+      client.on('connect', (packet) => {
+        CloseEventient.connack({returnCode: 0})
+        const mqttsocket = new MQTTSocket(curId++, client, this.adaptor)
+        this.emit('connection', mqttsocket)
+      })
     })
-  })
 
-  this.mqttServer.listen(this.port)
+    this.mqttServer.listen(this.port)
 
-  process.nextTick(cb)
+    process.nextTick(cb)
+  }
+
+  stop () {
+    this.mqttServer.close()
+    process.exit(0)
+  }
+
+  encode (reqId, route, msgBody) {
+    return reqId ? composeResponse(reqId, route, msgBody) : composePush(route, msgBody)
+  }
+
+  close () {
+    this.mqttServer.close()
+  }
 }
 
-Connector.prototype.stop = function () {
-	this.mqttServer.close()
-	process.exit(0)
-}
-
-Connector.prototype.encode = function (reqId, route, msgBody) {
-  return reqId ? composeResponse(reqId, route, msgBody) : composePush(route, msgBody)
-}
-
-Connector.prototype.close = function () {
-  this.mqttServer.close()
-}
-
-module.exports = Connector
+module.exports = MQTTConnector

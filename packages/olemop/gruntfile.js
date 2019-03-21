@@ -5,7 +5,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-test')
   grunt.loadNpmTasks('grunt-contrib-clean')
 
-  var src = ['test/manager/taskManager.js', 'test/filters/*.js',
+  const src = ['test/manager/taskManager.js', 'test/filters/*.js',
   'test/remote/*.js', 'test/service/*.js', 'test/modules/*.js', 'test/util/*.js', 'test/*.js']
 
   // Project configuration.
@@ -17,7 +17,7 @@ module.exports = function (grunt) {
           timeout: 5000,
           require: 'coverage/blanket'
         },
-        src: src
+        src
       },
       coverage: {
         options: {
@@ -25,7 +25,7 @@ module.exports = function (grunt) {
           quiet: true,
           captureFile: 'coverage.html'
         },
-        src: src
+        src
       }
     },
     clean: {

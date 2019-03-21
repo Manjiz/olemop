@@ -12,7 +12,7 @@ const ST_CLOSED = 1
 /**
  * Send message to the client that associated with the session.
  *
- * @api private
+ * @private
  */
 const send = (service, session, msg) => {
   session.send(msg)
@@ -41,8 +41,6 @@ const dclone = (src) => {
  * `app.get('sessionService')` or `app.sessionService` in frontend servers.
  *
  * @param {Object} opts constructor parameters
- * @class
- * @constructor
  */
 class SessionService {
   constructor (opts = {}) {
@@ -61,7 +59,7 @@ class SessionService {
    * @param {Object} socket the underlying socket would be held by the internal session
    * @returns {Session}
    *
-   * @api private
+   * @private
    */
   create (sid, frontendId, socket) {
     const session = new Session(sid, frontendId, socket, this)
@@ -72,7 +70,7 @@ class SessionService {
   /**
    * Bind the session with a user id.
    *
-   * @api private
+   * @private
    */
   bind (sid, uid, cb) {
     const session = this.sessions[sid]
@@ -130,7 +128,7 @@ class SessionService {
   /**
    * Unbind a session with the user id.
    *
-   * @api private
+   * @private
    */
   unbind (sid, uid, cb) {
     const session = this.sessions[sid]
@@ -176,7 +174,7 @@ class SessionService {
    * @param {number} id The session id
    * @returns {Session}
    *
-   * @api private
+   * @private
    */
   get (sid) {
     return this.sessions[sid]
@@ -188,7 +186,7 @@ class SessionService {
    * @param {number} uid User id associated with the session
    * @returns {Array} list of session binded with the uid
    *
-   * @api private
+   * @private
    */
   getByUid (uid) {
     return this.uidMap[uid]
@@ -199,7 +197,7 @@ class SessionService {
    *
    * @param {number} sid The session id
    *
-   * @api private
+   * @private
    */
   remove (sid) {
     const session = this.sessions[sid]
@@ -227,7 +225,7 @@ class SessionService {
   /**
    * Import the key/value into session.
    *
-   * @api private
+   * @private
    */
   import (sid, key, value, cb) {
     const session = this.sessions[sid]
@@ -242,7 +240,7 @@ class SessionService {
   /**
    * Import new value for the existed session.
    *
-   * @api private
+   * @private
    */
   importAll (sid, settings, cb) {
     const session = this.sessions[sid]
@@ -336,7 +334,7 @@ class SessionService {
    * @param {string} sid session id
    * @param {Object} msg message to send
    *
-   * @api private
+   * @private
    */
   sendMessage (sid, msg) {
     const session = this.get(sid)
@@ -355,7 +353,7 @@ class SessionService {
    * @param {string} uid userId
    * @param {Object} msg message to send
    *
-   * @api private
+   * @private
    */
   sendMessageByUid (uid, msg) {
     const sessionInstances = this.getByUid(uid)
@@ -377,7 +375,7 @@ class SessionService {
    *
    * @param  {Function} cb callback function to fetch session
    *
-   * @api private
+   * @private
    */
   forEachSession (cb) {
     for (let sid in this.sessions) {
@@ -390,7 +388,7 @@ class SessionService {
    *
    * @param  {Function} cb callback function to fetch session
    *
-   * @api private
+   * @private
    */
   forEachBindedSession (cb) {
     for (let uid in this.uidMap) {
@@ -585,7 +583,7 @@ class FrontendSession extends EventEmitter {
   /**
    * Export the key/values for serialization.
    *
-   * @api private
+   * @private
    */
   export () {
     const res = {}

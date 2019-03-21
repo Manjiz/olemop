@@ -22,7 +22,7 @@ var STATUS_INTERVAL = 5 * 1000
  *                 opts.id             {string} server id
  *                 opts.type           {string} server type, 'master', 'connector', etc.
  *                 opts.info           {Object} more server info for current server, {id, serverType, host, port}
- * @api public
+ * @public
  */
 var MonitorAgent = function (opts) {
   EventEmitter.call(this)
@@ -45,7 +45,7 @@ Util.inherits(MonitorAgent, EventEmitter)
  * @param {string} port
  * @param {string} host
  * @param {Function} cb callback function
- * @api public
+ * @public
  */
 MonitorAgent.prototype.connect = function (port, host, cb) {
   if (this.state > ST_INITED) {
@@ -173,7 +173,7 @@ MonitorAgent.prototype.connect = function (port, host, cb) {
 /**
  * close monitor agent
  *
- * @api public
+ * @public
  */
 MonitorAgent.prototype.close = function () {
   if (this.state >= ST_CLOSED) {
@@ -188,7 +188,7 @@ MonitorAgent.prototype.close = function () {
  *
  * @param {string} moduleId module id/name
  * @param {Object} value module object
- * @api public
+ * @public
  */
 MonitorAgent.prototype.set = function (moduleId, value) {
   this.consoleService.set(moduleId, value)
@@ -198,7 +198,7 @@ MonitorAgent.prototype.set = function (moduleId, value) {
  * get module
  *
  * @param {string} moduleId module id/name
- * @api public
+ * @public
  */
 MonitorAgent.prototype.get = function (moduleId) {
   return this.consoleService.get(moduleId)
@@ -209,7 +209,7 @@ MonitorAgent.prototype.get = function (moduleId) {
  *
  * @param {string} moduleId module id/name
  * @param {Object} msg message
- * @api public
+ * @public
  */
 MonitorAgent.prototype.notify = function (moduleId, msg) {
   if (this.state !== ST_REGISTERED) {

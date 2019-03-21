@@ -22,7 +22,7 @@ module.exports.moduleId = 'monitorLog'
  * @class Module
  * @constructor
  * @param {Object} opts
- * @api public
+ * @public
  */
 var Module = function (opts = {}) {
 	this.root = opts.path
@@ -35,7 +35,7 @@ var Module = function (opts = {}) {
  * @param {Object} agent monitorAgent object
  * @param {Object} msg client message
  * @param {Function} cb callback function
- * @api public
+ * @public
  */
 Module.prototype.monitorHandler = function (agent, msg, cb) {
 	if (!msg.logfile) {
@@ -55,7 +55,7 @@ Module.prototype.monitorHandler = function (agent, msg, cb) {
  * @param {Object} agent masterAgent object
  * @param {Object} msg client message
  * @param {Function} cb callback function
- * @api public
+ * @public
  */
 Module.prototype.clientHandler = function (agent, msg, cb) {
 	agent.request(msg.serverId, module.exports.moduleId, msg, function (err, res) {

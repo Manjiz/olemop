@@ -171,7 +171,7 @@
    * @param  {number} id            message id
    * @param  {number} type          message type
    * @param  {number} compressRoute whether compress route
-   * @param  {Number|String} route  route code or route string
+   * @param  {number|string} route  route code or route string
    * @param  {Buffer} msg           message body bytes
    * @returns {Buffer}               encode result
    */

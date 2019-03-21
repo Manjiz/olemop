@@ -67,9 +67,8 @@ class Switcher extends EventEmitter {
     if (this.state !== ST_STARTED) return
 
     socket.setTimeout(this.timeout, () => {
-       logger.warn('connection is timeout without communication, the remote ip is %s && port is %s',
-         socket.remoteAddress, socket.remotePort)
-       socket.destroy()
+      logger.warn(`connection is timeout without communication, the remote ip is ${socket.remoteAddress} && port is ${socket.remotePort}`)
+      socket.destroy()
     })
 
     socket.once('data', (data) => {

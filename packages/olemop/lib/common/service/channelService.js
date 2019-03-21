@@ -357,7 +357,7 @@ const _deleteFrom = (uid, sid, group) => {
  * @param opts {Object} push options
  * @param cb {Function} cb(err)
  *
- * @api private
+ * @private
  */
 const _sendMessageByGroup = (channelService, route, msg, groups, opts = {}, cb) => {
   const app = channelService.app

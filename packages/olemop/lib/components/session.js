@@ -19,10 +19,9 @@ class SessionComponent {
       }
     }
     // proxy the service methods except the lifecycle interfaces of component
-    // var method, self = this
-    // for (var m in this.service) {
+    // for (let m in this.service) {
     //   if (m !== 'start' && m !== 'stop') {
-    //     method = this.service[m]
+    //     const method = this.service[m]
     //     if (typeof method === 'function') {
     //       this[m] = getFun(m)
     //     }

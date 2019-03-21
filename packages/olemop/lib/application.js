@@ -296,9 +296,9 @@ Application.loadConfig = function (key, val) {
  *
  *  app.route('area', routeFunc)
  *
- *  var routeFunc = function (session, msg, app, cb) {
+ *  const routeFunc = function (session, msg, app, cb) {
  *    // all request to area would be route to the first area server
- *    var areas = app.getServersByType('area')
+ *    const areas = app.getServersByType('area')
  *    cb(null, areas[0].id)
  *  }
  *

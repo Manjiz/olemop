@@ -1,267 +1,253 @@
-var logger = require('@olemop/logger').getLogger('olemop-admin', 'MasterSocket')
-var Constants = require('../util/constants')
-var protocol = require('../util/protocol')
+/**
+ * MasterSocket
+ *
+ * onRegister
+ * onMonitor
+ * onClient
+ * onReconnect
+ * onDisconnect
+ * repushQosMessage
+ * onError
+ */
 
-var MasterSocket = function () {
-	this.id = null
-	this.type = null
-	this.info = null
-	this.agent = null
-	this.socket = null
-	this.username = null
-	this.registered = false
-}
+const logger = require('@olemop/logger').getLogger('olemop-admin', 'MasterSocket')
+const Constants = require('../util/constants')
+const protocol = require('../util/protocol')
 
-MasterSocket.prototype.onRegister = function (msg) {
-	if (!msg || !msg.type) {
-		return
-	}
+class MasterSocket {
+  constructor() {
+    this.id = null
+    this.type = null
+    this.info = null
+    this.agent = null
+    this.socket = null
+    this.username = null
+    this.registered = false
+  }
 
-	var self = this
-	var serverId = msg.id
-	var serverType = msg.type
-	var socket = this.socket
+  onRegister(msg) {
+    if (!msg || !msg.type) return
 
-	if (serverType == Constants.TYPE_CLIENT) {
-		// client connection not join the map
-		this.id = serverId
-		this.type = serverType
-		this.info = 'client'
-		this.agent.doAuthUser(msg, socket, function (err) {
-			if (err) {
-				return socket.disconnect()
-			}
+    const { id: serverId, type: serverType } = msg
 
-			self.username = msg.username
-			self.registered = true
-		})
-		return
-	}
+    if (serverType == Constants.TYPE_CLIENT) {
+      // client connection not join the map
+      this.id = serverId
+      this.type = serverType
+      this.info = 'client'
+      this.agent.doAuthUser(msg, this.socket, (err) => {
+        if (err) {
+          return this.socket.disconnect()
+        }
 
-	if (serverType == Constants.TYPE_MONITOR) {
-		if (!serverId) {
-			return
-		}
+        this.username = msg.username
+        this.registered = true
+      })
+      return
+    }
 
-		// if is a normal server
-		this.id = serverId
-		this.type = msg.serverType
-		this.info = msg.info
-		this.agent.doAuthServer(msg, socket, function (err) {
-			if (err) {
-				return socket.disconnect()
-			}
+    if (serverType == Constants.TYPE_MONITOR) {
+      if (!serverId) return
 
-			self.registered = true
-		})
+      // if is a normal server
+      this.id = serverId
+      this.type = msg.serverType
+      this.info = msg.info
+      this.agent.doAuthServer(msg, this.socket, (err) => {
+        if (err) {
+          return this.socket.disconnect()
+        }
 
-		this.repushQosMessage(serverId)
-		return
-	}
+        this.registered = true
+      })
 
-	this.agent.doSend(socket, 'register', {
-		code: protocol.PRO_FAIL,
-		msg: 'unknown auth master type'
-	})
+      this.repushQosMessage(serverId)
+      return
+    }
 
-	socket.disconnect()
-}
+    this.agent.doSend(this.socket, 'register', {
+      code: protocol.PRO_FAIL,
+      msg: 'unknown auth master type'
+    })
 
-MasterSocket.prototype.onMonitor = function (msg) {
-	var socket = this.socket
-	if (!this.registered) {
-		// not register yet, ignore any message
-		// kick connections
-		socket.disconnect()
-		return
-	}
+    this.socket.disconnect()
+  }
 
-	var self = this
-	var type = this.type
-	if (type === Constants.TYPE_CLIENT) {
-		logger.error('invalid message from monitor, but current connect type is client.')
-		return
-	}
+  onMonitor(msg) {
+    if (!this.registered) {
+      // not register yet, ignore any message
+      // kick connections
+      this.socket.disconnect()
+      return
+    }
 
-	msg = protocol.parse(msg)
-	var respId = msg.respId
-	if (respId) {
-		// a response from monitor
-		var cb = self.agent.callbacks[respId]
-		if (!cb) {
-			logger.warn('unknown resp id:' + respId)
-			return
-		}
+    if (this.type === Constants.TYPE_CLIENT) {
+      logger.error('invalid message from monitor, but current connect type is client.')
+      return
+    }
 
-		var id = this.id
-		if (self.agent.msgMap[id]) {
-			delete self.agent.msgMap[id][respId]
-		}
-		delete self.agent.callbacks[respId]
-		return cb(msg.error, msg.body)
-	}
+    msg = protocol.parse(msg)
+    const respId = msg.respId
 
-	// a request or a notify from monitor
-	self.agent.consoleService.execute(msg.moduleId, 'masterHandler', msg.body, function (err, res) {
-		if (protocol.isRequest(msg)) {
-			var resp = protocol.composeResponse(msg, err, res)
-			if (resp) {
-				self.agent.doSend(socket, 'monitor', resp)
-			}
-		} else {
-			// notify should not have a callback
-			logger.warn('notify should not have a callback.')
-		}
-	})
-}
+    if (respId) {
+      // a response from monitor
+      const cb = this.agent.callbacks[respId]
+      if (!cb) {
+        logger.warn('unknown resp id:' + respId)
+        return
+      }
 
-MasterSocket.prototype.onClient = function (msg) {
-	var socket = this.socket
-	if (!this.registered) {
-		// not register yet, ignore any message
-		// kick connections
-		return socket.disconnect()
-	}
+      if (this.agent.msgMap[this.id]) {
+        delete this.agent.msgMap[this.id][respId]
+      }
+      delete this.agent.callbacks[respId]
+      return cb(msg.error, msg.body)
+    }
 
-	var type = this.type
-	if (type !== Constants.TYPE_CLIENT) {
-		logger.error('invalid message to client, but current connect type is ' + type)
-		return
-	}
+    // a request or a notify from monitor
+    this.agent.consoleService.execute(msg.moduleId, 'masterHandler', msg.body, (err, res) => {
+      if (protocol.isRequest(msg)) {
+        const resp = protocol.composeResponse(msg, err, res)
+        if (resp) {
+          this.agent.doSend(this.socket, 'monitor', resp)
+        }
+      } else {
+        // notify should not have a callback
+        logger.warn('notify should not have a callback.')
+      }
+    })
+  }
 
-	msg = protocol.parse(msg)
+  onClient(msg) {
+    if (!this.registered) {
+      // not register yet, ignore any message
+      // kick connections
+      return this.socket.disconnect()
+    }
 
-	var msgCommand = msg.command
-	var msgModuleId = msg.moduleId
-	var msgBody = msg.body
+    if (this.type !== Constants.TYPE_CLIENT) {
+      logger.error('invalid message to client, but current connect type is ' + this.type)
+      return
+    }
 
-	var self = this
+    msg = protocol.parse(msg)
 
-	if (msgCommand) {
-		// a command from client
-		self.agent.consoleService.command(msgCommand, msgModuleId, msgBody, function (err, res) {
-			if (protocol.isRequest(msg)) {
-				var resp = protocol.composeResponse(msg, err, res)
-				if (resp) {
-					self.agent.doSend(socket, 'client', resp)
-				}
-			} else {
-				// notify should not have a callback
-				logger.warn('notify should not have a callback.')
-			}
-		})
-	} else {
-		// a request or a notify from client
-		// and client should not have any response to master for master would not request anything from client
-		self.agent.consoleService.execute(msgModuleId, 'clientHandler', msgBody, function (err, res) {
-			if (protocol.isRequest(msg)) {
-				var resp = protocol.composeResponse(msg, err, res)
-				if (resp) {
-					self.agent.doSend(socket, 'client', resp)
-				}
-			} else {
-				// notify should not have a callback
-				logger.warn('notify should not have a callback.')
-			}
-		})
-	}
-}
+    const { command: msgCommand, moduleId: msgModuleId, body: msgBody } = msg
 
-MasterSocket.prototype.onReconnect = function (msg, pid) {
-	// reconnect a new connection
-	if (!msg || !msg.type) {
-		return
-	}
+    if (msgCommand) {
+      // a command from client
+      this.agent.consoleService.command(msgCommand, msgModuleId, msgBody, (err, res) => {
+        if (protocol.isRequest(msg)) {
+          const resp = protocol.composeResponse(msg, err, res)
+          if (resp) {
+            this.agent.doSend(this.socket, 'client', resp)
+          }
+        } else {
+          // notify should not have a callback
+          logger.warn('notify should not have a callback.')
+        }
+      })
+    } else {
+      // a request or a notify from client
+      // and client should not have any response to master for master would not request anything from client
+      this.agent.consoleService.execute(msgModuleId, 'clientHandler', msgBody, (err, res) => {
+        if (protocol.isRequest(msg)) {
+          const resp = protocol.composeResponse(msg, err, res)
+          if (resp) {
+            this.agent.doSend(this.socket, 'client', resp)
+          }
+        } else {
+          // notify should not have a callback
+          logger.warn('notify should not have a callback.')
+        }
+      })
+    }
+  }
 
-	var serverId = msg.id
-	if (!serverId) {
-		return
-	}
+  onReconnect(msg, pid) {
+    // reconnect a new connection
+    if (!msg || !msg.type) return
 
-	var socket = this.socket
+    const serverId = msg.id
 
-	// if is a normal server
-	if (this.agent.idMap[serverId]) {
-		// id has been registered
-		this.agent.doSend(socket, 'reconnect_ok', {
-			code: protocol.PRO_FAIL,
-			msg: 'id has been registered. id:' + serverId
-		})
-		return
-	}
+    if (!serverId) return
 
-	var msgServerType = msg.serverType
-	var record = this.agent.addConnection(this.agent, serverId, msgServerType, msg.pid, msg.info, socket)
+    // if is a normal server
+    if (this.agent.idMap[serverId]) {
+      // id has been registered
+      this.agent.doSend(this.socket, 'reconnect_ok', {
+        code: protocol.PRO_FAIL,
+        msg: 'id has been registered. id:' + serverId
+      })
+      return
+    }
 
-	this.id = serverId
-	this.type = msgServerType
-	this.registered = true
-	msg.info.pid = pid
-	this.info = msg.info
-	this.agent.doSend(socket, 'reconnect_ok', {
-		code: protocol.PRO_OK,
-		msg: 'ok'
-	})
+    const msgServerType = msg.serverType
+    const record = this.agent.addConnection(this.agent, serverId, msgServerType, msg.pid, msg.info, this.socket)
 
-	this.agent.emit('reconnect', msg.info)
+    this.id = serverId
+    this.type = msgServerType
+    this.registered = true
+    msg.info.pid = pid
+    this.info = msg.info
+    this.agent.doSend(this.socket, 'reconnect_ok', {
+      code: protocol.PRO_OK,
+      msg: 'ok'
+    })
 
-	this.repushQosMessage(serverId)
-}
+    this.agent.emit('reconnect', msg.info)
 
-MasterSocket.prototype.onDisconnect = function () {
-	var socket = this.socket
-	if (socket) {
-		delete this.agent.sockets[socket.id]
-	}
+    this.repushQosMessage(serverId)
+  }
 
-	var registered = this.registered
-	if (!registered) {
-		return
-	}
+  onDisconnect() {
+    if (this.socket) {
+      delete this.agent.sockets[this.socket.id]
+    }
 
-	var id = this.id
-	var type = this.type
-	var info = this.info
-	var username = this.username
+    if (!this.registered) return
 
-	logger.debug('disconnect %s %s %j', id, type, info)
-	if (registered) {
-		this.agent.removeConnection(this.agent, id, type, info)
-		this.agent.emit('disconnect', id, type, info)
-	}
+    const id = this.id
+    const type = this.type
+    const info = this.info
+    const username = this.username
 
-	if (type === Constants.TYPE_CLIENT && registered) {
-		logger.info('client user ' + username + ' exit')
-	}
+    logger.debug('disconnect %s %s %j', id, type, info)
+    if (this.registered) {
+      this.agent.removeConnection(this.agent, id, type, info)
+      this.agent.emit('disconnect', id, type, info)
+    }
 
-	this.registered = false
-	this.id = null
-	this.type = null
-}
+    if (type === Constants.TYPE_CLIENT && this.registered) {
+      logger.info(`client user ${username} exit`)
+    }
 
-MasterSocket.prototype.repushQosMessage = function (serverId) {
-	var socket = this.socket
-	// repush qos message
-	var qosMsgs = this.agent.msgMap[serverId]
+    this.registered = false
+    this.id = null
+    this.type = null
+  }
 
-	if (!qosMsgs) {
-		return
-	}
+  repushQosMessage(serverId) {
+    // repush qos message
+    const qosMsgs = this.agent.msgMap[serverId]
 
-	logger.debug('repush qos message %j', qosMsgs)
+    if (!qosMsgs) return
 
-	for (var reqId in qosMsgs) {
-		var qosMsg = qosMsgs[reqId]
-		var moduleId = qosMsg['moduleId']
-		var tmsg = qosMsg['msg']
+    logger.debug('repush qos message %j', qosMsgs)
 
-		this.agent.sendToMonitor(socket, reqId, moduleId, tmsg)
-	}
-}
+    for (let reqId in qosMsgs) {
+      const qosMsg = qosMsgs[reqId]
+      const moduleId = qosMsg['moduleId']
+      const tmsg = qosMsg['msg']
 
-MasterSocket.prototype.onError = function (err) {
-	// logger.error('server %s error %s', this.id, err.stack)
-	// this.onDisconnect()
+      this.agent.sendToMonitor(this.socket, reqId, moduleId, tmsg)
+    }
+  }
+
+  onError(err) {
+    // logger.error('server %s error %s', this.id, err.stack)
+    // this.onDisconnect()
+  }
 }
 
 module.exports = MasterSocket

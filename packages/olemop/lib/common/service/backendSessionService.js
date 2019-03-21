@@ -103,9 +103,9 @@ class BackendSessionService {
    * Kick sessions by user id.
    *
    * @param {string}          frontendId cooperating frontend server id
-   * @param  {Number|String}   uid        user id
+   * @param {number|string}   uid        user id
    * @param {string}          reason     kick reason
-   * @param  {Function}        cb         callback function
+   * @param {Function}        cb         callback function
    */
   kickByUid (frontendId, uid, reason, cb) {
     const namespace = 'sys'
@@ -128,7 +128,7 @@ class BackendSessionService {
    * @param  {number}   sid        session id
    * @param {string}   uid        user id
    * @param  {Function} cb         callback function
-   * @api private
+   * @private
    */
   bind (frontendId, sid, uid, cb) {
     const namespace = 'sys'
@@ -146,7 +146,7 @@ class BackendSessionService {
    * @param  {number}   sid        session id
    * @param {string}   uid        user id
    * @param  {Function} cb         callback function
-   * @api private
+   * @private
    */
   unbind (frontendId, sid, uid, cb) {
     const namespace = 'sys'
@@ -164,7 +164,7 @@ class BackendSessionService {
    * @param {string}   key        key in session that should be push
    * @param  {Object}   value      value in session, primitive js object
    * @param  {Function} cb         callback function
-   * @api private
+   * @private
    */
   push (frontendId, sid, key, value, cb) {
     const namespace = 'sys'
@@ -181,7 +181,7 @@ class BackendSessionService {
    * @param  {number}   sid        session id
    * @param  {Object}   settings   key/values in session that should be push
    * @param  {Function} cb         callback function
-   * @api private
+   * @private
    */
   pushAll (frontendId, sid, settings, cb) {
     const namespace = 'sys'
@@ -220,7 +220,7 @@ class BackendSession {
    * Bind current session with the user id. It would push the uid to frontend
    * server and bind  uid to the frontend internal session.
    *
-   * @param  {Number|String}   uid user id
+   * @param  {number|string}   uid user id
    * @param  {Function} cb  callback function
    */
   bind (uid, cb) {
@@ -236,7 +236,7 @@ class BackendSession {
    * Unbind current session with the user id. It would push the uid to frontend
    * server and unbind uid from the frontend internal session.
    *
-   * @param  {Number|String}   uid user id
+   * @param  {number|string}   uid user id
    * @param  {Function} cb  callback function
    */
   unbind (uid, cb) {
@@ -290,7 +290,7 @@ class BackendSession {
   /**
    * Export the key/values for serialization.
    *
-   * @api private
+   * @private
    */
   export () {
     return EXPORTED_FIELDS.reduce((prev, field) => {

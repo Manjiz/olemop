@@ -73,7 +73,7 @@ class SessionRemote {
   /**
    * Kick sessions by user id.
    *
-   * @param  {Number|String}   uid user id
+   * @param  {number|string}   uid user id
    * @param {string}          reason     kick reason
    * @param  {Function} cb     callback function
    */

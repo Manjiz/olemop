@@ -78,7 +78,7 @@ export default class DataSync extends Commands {
   /**
    * Select database at the given `index`.
    *
-   * @api private
+   * @private
    * @param {number} index
    */
   selectDB (index) {
@@ -94,7 +94,7 @@ export default class DataSync extends Commands {
   /**
    * return the first used db
    *
-   * @api private
+   * @private
    */
   use () {
     this.selectDB(0)

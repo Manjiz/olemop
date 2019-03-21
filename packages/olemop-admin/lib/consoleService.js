@@ -1,13 +1,12 @@
-var logger = require('@olemop/logger').getLogger('olemop-admin', 'ConsoleService')
-var MonitorAgent = require('./monitor/monitorAgent')
-var EventEmitter = require('events').EventEmitter
-var MasterAgent = require('./master/masterAgent')
-var schedule = require('@olemop/scheduler')
-var protocol = require('./util/protocol')
-var utils = require('./util/utils')
-var util = require('util')
+const EventEmitter = require('events')
+const schedule = require('@olemop/scheduler')
+const logger = require('@olemop/logger').getLogger('olemop-admin', 'ConsoleService')
+const MonitorAgent = require('./monitor/monitorAgent')
+const MasterAgent = require('./master/masterAgent')
+const protocol = require('./util/protocol')
+const utils = require('./util/utils')
 
-var MS_OF_SECOND = 1000
+const MS_OF_SECOND = 1000
 
 /**
  * ConsoleService Constructor
@@ -22,232 +21,226 @@ var MS_OF_SECOND = 1000
  *                 opts.master  {boolean} current service is master or monitor
  *                 opts.info 	{Object} more server info for current server, {id, serverType, host, port}
  */
-var ConsoleService = function (opts) {
-	EventEmitter.call(this)
-	this.port = opts.port
-	this.env = opts.env
-	this.values = {}
-	this.master = opts.master
+class ConsoleService extends EventEmitter {
+  constructor(opts) {
+    super()
+    this.port = opts.port
+    this.env = opts.env
+    this.values = {}
+    this.master = opts.master
 
-	this.modules = {}
-	this.commands = {
-		'list': listCommand,
-		'enable': enableCommand,
-		'disable': disableCommand
-	}
+    this.modules = {}
+    this.commands = {
+      list: listCommand,
+      enable: enableCommand,
+      disable: disableCommand
+    }
 
-	if (this.master) {
-		this.authUser = opts.authUser || utils.defaultAuthUser
-		this.authServer = opts.authServer || utils.defaultAuthServerMaster
-		this.agent = new MasterAgent(this, opts)
-	} else {
-		this.type = opts.type
-		this.id = opts.id
-		this.host = opts.host
-		this.authServer = opts.authServer || utils.defaultAuthServerMonitor
-		this.agent = new MonitorAgent({
-			consoleService: this,
-			id: this.id,
-			type: this.type,
-			info: opts.info
-		})
-	}
-}
+    if (this.master) {
+      this.authUser = opts.authUser || utils.defaultAuthUser
+      this.authServer = opts.authServer || utils.defaultAuthServerMaster
+      this.agent = new MasterAgent(this, opts)
+    } else {
+      this.type = opts.type
+      this.id = opts.id
+      this.host = opts.host
+      this.authServer = opts.authServer || utils.defaultAuthServerMonitor
+      this.agent = new MonitorAgent({
+        consoleService: this,
+        id: this.id,
+        type: this.type,
+        info: opts.info
+      })
+    }
+  }
 
-util.inherits(ConsoleService, EventEmitter)
+  /**
+   * start master or monitor
+   *
+   * @param {Function} cb
+   * @public
+   */
+  start(cb) {
+    if (this.master) {
+      this.agent.listen(this.port, (err) => {
+        if (err) {
+          utils.invokeCallback(cb, err)
+          return
+        }
 
-/**
- * start master or monitor
- *
- * @param {Function} cb callback function
- * @api public
- */
-ConsoleService.prototype.start = function (cb) {
-	if (this.master) {
-		var self = this
-		this.agent.listen(this.port, function (err) {
-			if (err) {
-				utils.invokeCallback(cb, err)
-				return
-			}
+        exportEvent(this, this.agent, 'register')
+        exportEvent(this, this.agent, 'disconnect')
+        exportEvent(this, this.agent, 'reconnect')
+        process.nextTick(() => utils.invokeCallback(cb))
+      })
+    } else {
+      logger.info('try to connect master: %j, %j, %j', this.type, this.host, this.port)
+      this.agent.connect(this.port, this.host, cb)
+      exportEvent(this, this.agent, 'close')
+    }
 
-			exportEvent(self, self.agent, 'register')
-			exportEvent(self, self.agent, 'disconnect')
-			exportEvent(self, self.agent, 'reconnect')
-			process.nextTick(function () {
-				utils.invokeCallback(cb)
-			})
-		})
-	} else {
-		logger.info('try to connect master: %j, %j, %j', this.type, this.host, this.port)
-		this.agent.connect(this.port, this.host, cb)
-		exportEvent(this, this.agent, 'close')
-	}
+    exportEvent(this, this.agent, 'error')
 
-	exportEvent(this, this.agent, 'error')
+    for (let mid in this.modules) {
+      this.enable(mid)
+    }
+  }
 
-	for (var mid in this.modules) {
-		this.enable(mid)
-	}
-}
+  /**
+   * stop console modules and stop master server
+   *
+   * @public
+   */
+  stop() {
+    for (let mid in this.modules) {
+      this.disable(mid)
+    }
+    this.agent.close()
+  }
 
-/**
- * stop console modules and stop master server
- *
- * @api public
- */
-ConsoleService.prototype.stop = function () {
-	for (var mid in this.modules) {
-		this.disable(mid)
-	}
-	this.agent.close()
-}
+  /**
+   * register a new adminConsole module
+   *
+   * @param {string} moduleId adminConsole id/name
+   * @param {Object} module module object
+   * @public
+   */
+  register(moduleId, module) {
+    this.modules[moduleId] = registerRecord(this, moduleId, module)
+  }
 
-/**
- * register a new adminConsole module
- *
- * @param {string} moduleId adminConsole id/name
- * @param {Object} module module object
- * @api public
- */
-ConsoleService.prototype.register = function (moduleId, module) {
-	this.modules[moduleId] = registerRecord(this, moduleId, module)
-}
+  /**
+   * enable adminConsole module
+   *
+   * @param {string} moduleId adminConsole id/name
+   * @public
+   */
+  enable(moduleId) {
+    const record = this.modules[moduleId]
+    if (record && !record.enable) {
+      record.enable = true
+      addToSchedule(this, record)
+      return true
+    }
+    return false
+  }
 
-/**
- * enable adminConsole module
- *
- * @param {string} moduleId adminConsole id/name
- * @api public
- */
-ConsoleService.prototype.enable = function (moduleId) {
-	var record = this.modules[moduleId]
-	if (record && !record.enable) {
-		record.enable = true
-		addToSchedule(this, record)
-		return true
-	}
-	return false
-}
+  /**
+   * disable adminConsole module
+   *
+   * @param {string} moduleId adminConsole id/name
+   * @public
+   */
+  disable(moduleId) {
+    const record = this.modules[moduleId]
+    if (record && record.enable) {
+      record.enable = false
+      if (record.schedule && record.jobId) {
+        schedule.cancelJob(record.jobId)
+        schedule.jobId = null
+      }
+      return true
+    }
+    return false
+  }
 
-/**
- * disable adminConsole module
- *
- * @param {string} moduleId adminConsole id/name
- * @api public
- */
-ConsoleService.prototype.disable = function (moduleId) {
-	var record = this.modules[moduleId]
-	if (record && record.enable) {
-		record.enable = false
-		if (record.schedule && record.jobId) {
-			schedule.cancelJob(record.jobId)
-			schedule.jobId = null
-		}
-		return true
-	}
-	return false
-}
+  /**
+   * call concrete module and handler(monitorHandler,masterHandler,clientHandler)
+   *
+   * @param {string} moduleId adminConsole id/name
+   * @param {string} method handler
+   * @param {Object} msg message
+   * @param {Function} cb
+   * @public
+   */
+  execute(moduleId, method, msg, cb) {
+    const m = this.modules[moduleId]
+    if (!m) {
+      logger.error('unknown module: %j.', moduleId)
+      cb(`unknown moduleId: ${moduleId}`)
+      return
+    }
 
-/**
- * call concrete module and handler(monitorHandler,masterHandler,clientHandler)
- *
- * @param {string} moduleId adminConsole id/name
- * @param {string} method handler
- * @param {Object} msg message
- * @param {Function} cb callback function
- * @api public
- */
-ConsoleService.prototype.execute = function (moduleId, method, msg, cb) {
-	var self = this
-	var m = this.modules[moduleId]
-	if (!m) {
-		logger.error('unknown module: %j.', moduleId)
-		cb('unknown moduleId:' + moduleId)
-		return
-	}
+    if (!m.enable) {
+      logger.error('module %j is disable.', moduleId)
+      cb(`module ${moduleId} is disable`)
+      return
+    }
 
-	if (!m.enable) {
-		logger.error('module %j is disable.', moduleId)
-		cb('module ' + moduleId + ' is disable')
-		return
-	}
+    const module = m.module
+    if (!module || typeof module[method] !== 'function') {
+      logger.error('module %j dose not have a method called %j.', moduleId, method)
+      cb(`module ${moduleId} dose not have a method called ${method}`)
+      return
+    }
 
-	var module = m.module
-	if (!module || typeof module[method] !== 'function') {
-		logger.error('module %j dose not have a method called %j.', moduleId, method)
-		cb('module ' + moduleId + ' dose not have a method called ' + method)
-		return
-	}
+    const log = {
+      action: 'execute',
+      moduleId,
+      method,
+      msg
+    }
 
-	var log = {
-		action: 'execute',
-		moduleId: moduleId,
-		method: method,
-		msg: msg
-	}
+    const aclMsg = aclControl(this.agent, 'execute', method, moduleId, msg)
+    if (aclMsg !== 0 && aclMsg !== 1) {
+      log['error'] = aclMsg
+      this.emit('admin-log', log, aclMsg)
+      cb(new Error(aclMsg), null)
+      return
+    }
 
-	var aclMsg = aclControl(self.agent, 'execute', method, moduleId, msg)
-	if (aclMsg !== 0 && aclMsg !== 1) {
-		log['error'] = aclMsg
-		self.emit('admin-log', log, aclMsg)
-		cb(new Error(aclMsg), null)
-		return
-	}
+    if (method === 'clientHandler') {
+      this.emit('admin-log', log)
+    }
 
-	if (method === 'clientHandler') {
-		self.emit('admin-log', log)
-	}
+    module[method](this.agent, msg, cb)
+  }
 
-	module[method](this.agent, msg, cb)
-}
+  command(command, moduleId, msg, cb) {
+    const fun = this.commands[command]
+    if (!fun || typeof fun !== 'function') {
+      cb('unknown command: ' + command)
+      return
+    }
 
-ConsoleService.prototype.command = function (command, moduleId, msg, cb) {
-	var self = this
-	var fun = this.commands[command]
-	if (!fun || typeof fun !== 'function') {
-		cb('unknown command:' + command)
-		return
-	}
+    const log = {
+      action: 'command',
+      moduleId,
+      msg
+    }
 
-	var log = {
-		action: 'command',
-		moduleId: moduleId,
-		msg: msg
-	}
+    const aclMsg = aclControl(this.agent, 'command', null, moduleId, msg)
+    if (aclMsg !== 0 && aclMsg !== 1) {
+      log['error'] = aclMsg
+      this.emit('admin-log', log, aclMsg)
+      cb(new Error(aclMsg), null)
+      return
+    }
 
-	var aclMsg = aclControl(self.agent, 'command', null, moduleId, msg)
-	if (aclMsg !== 0 && aclMsg !== 1) {
-		log['error'] = aclMsg
-		self.emit('admin-log', log, aclMsg)
-		cb(new Error(aclMsg), null)
-		return
-	}
+    this.emit('admin-log', log)
+    fun(this, moduleId, msg, cb)
+  }
 
-	self.emit('admin-log', log)
-	fun(this, moduleId, msg, cb)
-}
+  /**
+   * set module data to a map
+   *
+   * @param {string} moduleId adminConsole id/name
+   * @param {Object} value module data
+   * @public
+   */
+  set(moduleId, value) {
+    this.values[moduleId] = value
+  }
 
-/**
- * set module data to a map
- *
- * @param {string} moduleId adminConsole id/name
- * @param {Object} value module data
- * @api public
- */
-
-ConsoleService.prototype.set = function (moduleId, value) {
-	this.values[moduleId] = value
-}
-
-/**
- * get module data from map
- *
- * @param {string} moduleId adminConsole id/name
- * @api public
- */
-ConsoleService.prototype.get = function (moduleId) {
-	return this.values[moduleId]
+  /**
+   * get module data from map
+   *
+   * @param {string} moduleId adminConsole id/name
+   * @public
+   */
+  get(moduleId) {
+    return this.values[moduleId]
+  }
 }
 
 /**
@@ -256,12 +249,12 @@ ConsoleService.prototype.get = function (moduleId) {
  * @param {Object} service consoleService object
  * @param {string} moduleId adminConsole id/name
  * @param {Object} module module object
- * @api private
+ * @private
  */
-var registerRecord = function (service, moduleId, module) {
-	var record = {
-		moduleId: moduleId,
-		module: module,
+const registerRecord = (service, moduleId, module) => {
+	const record = {
+		moduleId,
+		module,
 		enable: false
 	}
 
@@ -292,40 +285,30 @@ var registerRecord = function (service, moduleId, module) {
  *
  * @param {Object} service consoleService object
  * @param {Object} record  module object
- * @api private
+ * @private
  */
-var addToSchedule = function (service, record) {
-	if (record && record.schedule) {
-		record.jobId = schedule.scheduleJob({
-				start: Date.now() + record.delay,
-				period: record.interval
-			},
-			doScheduleJob, {
-				service: service,
-				record: record
-			})
-	}
+const addToSchedule = (service, record) => {
+  if (!record || !record.schedule) return
+  const start = Date.now() + record.delay
+  const period = record.interval
+  record.jobId = schedule.scheduleJob({ start, period }, doScheduleJob, { service, record })
 }
 
 /**
  * run schedule job
  *
  * @param {Object} args argments
- * @api private
+ * @private
  */
-var doScheduleJob = function (args) {
-	var service = args.service
-	var record = args.record
-	if (!service || !record || !record.module || !record.enable) {
-		return
-	}
+const doScheduleJob = ({ service, record }) => {
+	if (!service || !record || !record.module || !record.enable) return
 
 	if (service.master) {
-		record.module.masterHandler(service.agent, null, function (err) {
+		record.module.masterHandler(service.agent, null, (err) => {
 			logger.error('interval push should not have a callback.')
 		})
 	} else {
-		record.module.monitorHandler(service.agent, null, function (err) {
+		record.module.monitorHandler(service.agent, null, (err) => {
 			logger.error('interval push should not have a callback.')
 		})
 	}
@@ -337,47 +320,40 @@ var doScheduleJob = function (args) {
  * @param {Function} outer outer function
  * @param {Function} inner inner function
  * @param {Object} event
- * @api private
+ * @private
  */
-var exportEvent = function (outer, inner, event) {
-	inner.on(event, function () {
-		var args = Array.prototype.slice.call(arguments, 0)
-		args.unshift(event)
-		outer.emit.apply(outer, args)
+const exportEvent = (outer, inner, event) => {
+	inner.on(event, (...args) => {
+		outer.emit.apply(outer, [event, ...args])
 	})
 }
 
 /**
  * List current modules
  */
-var listCommand = function (consoleService, moduleId, msg, cb) {
-	var modules = consoleService.modules
+const listCommand = (consoleService, moduleId, msg, cb) => {
+	const modules = consoleService.modules
 
-	var result = []
-	for (var moduleId in modules) {
-		if (/^__\w+__$/.test(moduleId)) {
-			continue
-		}
-
+	const result = []
+	for (let moduleId in modules) {
+		if (/^__\w+__$/.test(moduleId)) continue
 		result.push(moduleId)
 	}
 
-	cb(null, {
-		modules: result
-	})
+	cb(null, { modules: result })
 }
 
 /**
  * enable module in current server
  */
-var enableCommand = function (consoleService, moduleId, msg, cb) {
+const enableCommand = (consoleService, moduleId, msg, cb) => {
 	if (!moduleId) {
 		logger.error('fail to enable admin module for ' + moduleId)
 		cb('empty moduleId')
 		return
 	}
 
-	var modules = consoleService.modules
+	const modules = consoleService.modules
 	if (!modules[moduleId]) {
 		cb(null, protocol.PRO_FAIL)
 		return
@@ -385,7 +361,7 @@ var enableCommand = function (consoleService, moduleId, msg, cb) {
 
 	if (consoleService.master) {
 		consoleService.enable(moduleId)
-		consoleService.agent.notifyCommand("enable", moduleId, msg)
+		consoleService.agent.notifyCommand('enable', moduleId, msg)
 		cb(null, protocol.PRO_OK)
 	} else {
 		consoleService.enable(moduleId)
@@ -396,14 +372,14 @@ var enableCommand = function (consoleService, moduleId, msg, cb) {
 /**
  * disable module in current server
  */
-var disableCommand = function (consoleService, moduleId, msg, cb) {
+const disableCommand = (consoleService, moduleId, msg, cb) => {
 	if (!moduleId) {
 		logger.error('fail to enable admin module for ' + moduleId)
 		cb('empty moduleId')
 		return
 	}
 
-	var modules = consoleService.modules
+	const modules = consoleService.modules
 	if (!modules[moduleId]) {
 		cb(null, protocol.PRO_FAIL)
 		return
@@ -411,7 +387,7 @@ var disableCommand = function (consoleService, moduleId, msg, cb) {
 
 	if (consoleService.master) {
 		consoleService.disable(moduleId)
-		consoleService.agent.notifyCommand("disable", moduleId, msg)
+		consoleService.agent.notifyCommand('disable', moduleId, msg)
 		cb(null, protocol.PRO_OK)
 	} else {
 		consoleService.disable(moduleId)
@@ -419,26 +395,26 @@ var disableCommand = function (consoleService, moduleId, msg, cb) {
 	}
 }
 
-var aclControl = function (agent, action, method, moduleId, msg) {
+const aclControl = (agent, action, method, moduleId, msg) => {
 	if (action === 'execute') {
 		if (method !== 'clientHandler' || moduleId !== '__console__') {
 			return 0
 		}
 
-		var signal = msg.signal
+		const signal = msg.signal
 		if (!signal || !(signal === 'stop' || signal === 'add' || signal === 'kill')) {
 			return 0
 		}
 	}
 
-	var clientId = msg.clientId
+	const clientId = msg.clientId
 	if (!clientId) {
 		return 'Unknow clientId'
 	}
 
-	var _client = agent.getClientById(clientId)
+	const _client = agent.getClientById(clientId)
 	if (_client && _client.info && _client.info.level) {
-		var level = _client.info.level
+		const level = _client.info.level
 		if (level > 1) {
 			return 'Command permission denied'
 		}
@@ -454,7 +430,7 @@ var aclControl = function (agent, action, method, moduleId, msg) {
  * @param {Object} opts construct parameter
  *                      opts.port {string | number} listen port for master console
  */
-module.exports.createMasterConsole = function (opts = {}) {
+exports.createMasterConsole = (opts = {}) => {
 	opts.master = true
 	return new ConsoleService(opts)
 }
@@ -468,6 +444,6 @@ module.exports.createMasterConsole = function (opts = {}) {
  *                      opts.host {string} master server host
  *                      opts.port {string | number} master port
  */
-module.exports.createMonitorConsole = function (opts) {
+exports.createMonitorConsole = (opts) => {
 	return new ConsoleService(opts)
 }

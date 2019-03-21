@@ -115,7 +115,7 @@ class SIOConnector extends EventEmitter {
       const siosocket = new SioSocket(curId++, socket)
       this.emit('connection', siosocket)
       siosocket.on('closing', (reason) => {
-        siosocket.send({route: 'onKick', reason: reason})
+        siosocket.send({ route: 'onKick', reason })
       })
     })
 

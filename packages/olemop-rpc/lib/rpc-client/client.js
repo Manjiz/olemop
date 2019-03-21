@@ -357,7 +357,7 @@ Client.prototype.rpcInvoke = function (serverId, msg, cb) {
  *
  * @param filter {Function} rpc before filter function.
  *
- * @api public
+ * @public
  */
 Client.prototype.before = function (filter) {
   this._station.before(filter)
@@ -368,7 +368,7 @@ Client.prototype.before = function (filter) {
  *
  * @param filter {Function} rpc after filter function.
  *
- * @api public
+ * @public
  */
 Client.prototype.after = function (filter) {
   this._station.after(filter)
@@ -379,7 +379,7 @@ Client.prototype.after = function (filter) {
  *
  * @param filter {Function} rpc filter function.
  *
- * @api public
+ * @public
  */
 Client.prototype.filter = function (filter) {
   this._station.filter(filter)
@@ -390,7 +390,7 @@ Client.prototype.filter = function (filter) {
  *
  * @param handler {Function} rpc filter error handler function.
  *
- * @api public
+ * @public
  */
 Client.prototype.setErrorHandler = function (handler) {
   this._station.handleError = handler

@@ -1,14 +1,16 @@
-var logger = require('@olemop/logger').getLogger('olemop-admin', 'MasterAgent')
-var MqttServer = require('../protocol/mqtt/mqttServer')
-var EventEmitter = require('events').EventEmitter
-var MasterSocket = require('./masterSocket')
-var protocol = require('../util/protocol')
-var utils = require('../util/utils')
-var Util = require('util')
+const EventEmitter = require('events')
+const Util = require('util')
+const logger = require('@olemop/logger').getLogger('olemop-admin', 'MasterAgent')
+const MqttServer = require('../protocol/mqtt/mqttServer')
+const MasterSocket = require('./masterSocket')
+const protocol = require('../util/protocol')
+const utils = require('../util/utils')
 
-var ST_INITED = 1
-var ST_STARTED = 2
-var ST_CLOSED = 3
+const ST_INITED = 1
+const ST_STARTED = 2
+const ST_CLOSED = 3
+
+const noop = () => {}
 
 /**
  * MasterAgent Constructor
@@ -23,366 +25,407 @@ var ST_CLOSED = 3
  *                 opts.reqId          {number} reqId add by 1
  *                 opts.callbacks      {Object} callbacks
  *                 opts.state          {number} MasterAgent state
- * @api public
+ * @public
  */
-var MasterAgent = function (consoleService, opts) {
-  EventEmitter.call(this)
-  this.reqId = 1
-  this.idMap = {}
-  this.msgMap = {}
-  this.typeMap = {}
-  this.clients = {}
-  this.sockets = {}
-  this.slaveMap = {}
-  this.server = null
-  this.callbacks = {}
-  this.state = ST_INITED
-  this.whitelist = opts.whitelist
-  this.consoleService = consoleService
-}
-
-Util.inherits(MasterAgent, EventEmitter)
-
-/**
- * master listen to a port and handle register and request
- *
- * @param {string} port
- * @api public
- */
-MasterAgent.prototype.listen = function (port, cb) {
-  if (this.state > ST_INITED) {
-    logger.error('master agent has started or closed.')
-    return
+class MasterAgent extends EventEmitter {
+  constructor(consoleService, { whitelist }) {
+    super()
+    this.reqId = 1
+    this.idMap = {}
+    this.msgMap = {}
+    this.typeMap = {}
+    this.clients = {}
+    this.sockets = {}
+    this.slaveMap = {}
+    this.server = null
+    this.callbacks = {}
+    this.state = ST_INITED
+    this.whitelist = whitelist
+    this.consoleService = consoleService
   }
 
-  this.state = ST_STARTED
-  this.server = new MqttServer()
-  this.server.listen(port)
-  // this.server = sio.listen(port)
-  // this.server.set('log level', 0)
+  /**
+   * master listen to a port and handle register and request
+   *
+   * @param {string} port
+   * @public
+   */
+  listen(port, cb = noop) {
+    if (this.state > ST_INITED) {
+      logger.error('master agent has started or closed.')
+      return
+    }
 
-  cb = cb || function () {}
+    this.state = ST_STARTED
+    this.server = new MqttServer()
+    this.server.listen(port)
+    // this.server = sio.listen(port)
+    // this.server.set('log level', 0)
 
-  var self = this
-  this.server.on('error', function (err) {
-    self.emit('error', err)
-    cb(err)
-  })
+    this.server.on('error', (err) => {
+      this.emit('error', err)
+      cb(err)
+    })
 
-  this.server.once('listening', function () {
-    setImmediate(function () {
+    this.server.once('listening', () => {
+      setImmediate(() => cb())
+    })
+
+    this.server.on('connection', (socket) => {
+      // var id, type, info, registered, username
+      const masterSocket = new MasterSocket()
+      masterSocket['agent'] = this
+      masterSocket['socket'] = socket
+
+      this.sockets[socket.id] = socket
+
+      // register a new connection
+      socket.on('register', (msg) => masterSocket.onRegister(msg))
+
+      // message from monitor
+      socket.on('monitor', (msg) => masterSocket.onMonitor(msg))
+
+      // message from client
+      socket.on('client', (msg) => masterSocket.onClient(msg))
+      socket.on('reconnect', (msg) => masterSocket.onReconnect(msg))
+      socket.on('disconnect', () => masterSocket.onDisconnect())
+      socket.on('close', () => masterSocket.onDisconnect())
+      socket.on('error', (err) => masterSocket.onError(err))
+    })
+  }
+
+  /**
+   * close master agent
+   *
+   * @public
+   */
+  close() {
+    if (this.state > ST_STARTED) return
+    this.state = ST_CLOSED
+    this.server.close()
+  }
+
+  /**
+   * set module
+   *
+   * @param {string} moduleId module id/name
+   * @param {Object} value module object
+   * @public
+   */
+  set(moduleId, value) {
+    this.consoleService.set(moduleId, value)
+  }
+
+  /**
+   * get module
+   *
+   * @param {string} moduleId module id/name
+   * @public
+   */
+  get(moduleId) {
+    return this.consoleService.get(moduleId)
+  }
+
+  /**
+   * getClientById
+   *
+   * @param {string} clientId
+   * @public
+   */
+  getClientById(clientId) {
+    return this.clients[clientId]
+  }
+
+  /**
+   * request monitor{master node} data from monitor
+   *
+   * @param {string} serverId
+   * @param {string} moduleId module id/name
+   * @param {Object} msg
+   * @param {Function} cb
+   * @public
+   */
+  request(serverId, moduleId, msg, cb = noop) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+
+    const curId = this.reqId++
+    this.callbacks[curId] = cb
+
+    if (!this.msgMap[serverId]) {
+      this.msgMap[serverId] = {}
+    }
+
+    this.msgMap[serverId][curId] = { moduleId, msg }
+
+    const record = this.idMap[serverId]
+    if (!record) {
+      cb(new Error('unknown server id: ' + serverId))
+      return false
+    }
+
+    sendToMonitor(record.socket, curId, moduleId, msg)
+
+    return true
+  }
+
+  /**
+   * request server data from monitor by serverInfo{host:port}
+   *
+   * @param {string} serverId
+   * @param {Object} serverInfo
+   * @param {string} moduleId module id/name
+   * @param {Object} msg
+   * @param {Function} cb
+   * @public
+   */
+  requestServer(serverId, serverInfo, moduleId, msg, cb) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+
+    const record = this.idMap[serverId]
+    if (!record) {
+      utils.invokeCallback(cb, new Error('unknown server id: ' + serverId))
+      return false
+    }
+
+    const curId = this.reqId++
+    this.callbacks[curId] = cb
+
+    if (utils.compareServer(record, serverInfo)) {
+      sendToMonitor(record.socket, curId, moduleId, msg)
+    } else {
+      const slaves = this.slaveMap[serverId]
+      for (let i = 0; i < slaves.length; i++) {
+        if (utils.compareServer(slaves[i], serverInfo)) {
+          sendToMonitor(slaves[i].socket, curId, moduleId, msg)
+          break
+        }
+      }
+    }
+
+    return true
+  }
+
+  /**
+   * notify a monitor{master node} by id without callback
+   *
+   * @param {string} serverId
+   * @param {string} moduleId module id/name
+   * @param {Object} msg
+   * @public
+   */
+  notifyById(serverId, moduleId, msg) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+
+    const record = this.idMap[serverId]
+    if (!record) {
+      logger.error('fail to notifyById for unknown server id: ' + serverId)
+      return false
+    }
+
+    sendToMonitor(record.socket, null, moduleId, msg)
+
+    return true
+  }
+
+  /**
+   * notify a monitor by server{host:port} without callback
+   *
+   * @param {string} serverId
+   * @param {Object} serverInfo{host:port}
+   * @param {string} moduleId module id/name
+   * @param {Object} msg
+   * @public
+   */
+  notifyByServer(serverId, serverInfo, moduleId, msg) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+
+    const record = this.idMap[serverId]
+    if (!record) {
+      logger.error('fail to notifyByServer for unknown server id: ' + serverId)
+      return false
+    }
+
+    if (utils.compareServer(record, serverInfo)) {
+      sendToMonitor(record.socket, null, moduleId, msg)
+    } else {
+      const slaves = this.slaveMap[serverId]
+      for (let i = 0; i < slaves.length; i++) {
+        if (utils.compareServer(slaves[i], serverInfo)) {
+          sendToMonitor(slaves[i].socket, null, moduleId, msg)
+          break
+        }
+      }
+    }
+    return true
+  }
+
+  /**
+   * notify slaves by id without callback
+   *
+   * @param {string} serverId
+   * @param {string} moduleId module id/name
+   * @param {Object} msg
+   * @public
+   */
+  notifySlavesById(serverId, moduleId, msg) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+
+    const slaves = this.slaveMap[serverId]
+    if (!slaves || slaves.length === 0) {
+      logger.error('fail to notifySlavesById for unknown server id: ' + serverId)
+      return false
+    }
+
+    broadcastMonitors(slaves, moduleId, msg)
+    return true
+  }
+
+  /**
+   * notify monitors by type without callback
+   *
+   * @param {string} type serverType
+   * @param {string} moduleId module id/name
+   * @param {Object} msg
+   * @public
+   */
+  notifyByType(type, moduleId, msg) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+
+    const list = this.typeMap[type]
+    if (!list || list.length === 0) {
+      logger.error('fail to notifyByType for unknown server type: ' + type)
+      return false
+    }
+    broadcastMonitors(list, moduleId, msg)
+    return true
+  }
+
+  /**
+   * notify all the monitors without callback
+   *
+   * @param {string} moduleId module id/name
+   * @param {Object} msg
+   * @public
+   */
+  notifyAll(moduleId, msg) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+    broadcastMonitors(this.idMap, moduleId, msg)
+    return true
+  }
+
+  /**
+   * notify a client by id without callback
+   *
+   * @param {string} clientId
+   * @param {string} moduleId module id/name
+   * @param {Object} msg
+   * @public
+   */
+  notifyClient(clientId, moduleId, msg) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+
+    const record = this.clients[clientId]
+    if (!record) {
+      logger.error('fail to notifyClient for unknown client id: ' + clientId)
+      return false
+    }
+    sendToClient(record.socket, null, moduleId, msg)
+  }
+
+  notifyCommand(command, moduleId, msg) {
+    if (this.state > ST_STARTED) {
+      return false
+    }
+    broadcastCommand(this.idMap, command, moduleId, msg)
+    return true
+  }
+
+  doAuthUser(msg, socket, cb) {
+    if (!msg.id) {
+      // client should has a client id
+      return cb(new Error('client should has a client id'))
+    }
+
+    const username = msg.username
+    if (!username) {
+      // client should auth with username
+      doSend(socket, 'register', {
+        code: protocol.PRO_FAIL,
+        msg: 'client should auth with username'
+      })
+      return cb(new Error('client should auth with username'))
+    }
+
+    const { authUser, env } = this.consoleService.authUser
+    authUser(msg, env, (user) => {
+      if (!user) {
+        // client should auth with username
+        doSend(socket, 'register', {
+          code: protocol.PRO_FAIL,
+          msg: 'client auth failed with username or password error'
+        })
+        return cb(new Error('client auth failed with username or password error'))
+      }
+
+      if (this.clients[msg.id]) {
+        doSend(socket, 'register', {
+          code: protocol.PRO_FAIL,
+          msg: 'id has been registered. id: ' + msg.id
+        })
+        return cb(new Error('id has been registered. id: ' + msg.id))
+      }
+
+      logger.info(`client user: ${username} login to master`)
+      addConnection(this, msg.id, msg.type, null, user, socket)
+      doSend(socket, 'register', {
+        code: protocol.PRO_OK,
+        msg: 'ok'
+      })
+
       cb()
     })
-  })
-
-  this.server.on('connection', function (socket) {
-    // var id, type, info, registered, username
-    var masterSocket = new MasterSocket()
-    masterSocket['agent'] = self
-    masterSocket['socket'] = socket
-
-    self.sockets[socket.id] = socket
-
-    socket.on('register', function (msg) {
-      // register a new connection
-      masterSocket.onRegister(msg)
-    })
-
-    // message from monitor
-    socket.on('monitor', function (msg) {
-      masterSocket.onMonitor(msg)
-    })
-
-    // message from client
-    socket.on('client', function (msg) {
-      masterSocket.onClient(msg)
-    })
-
-    socket.on('reconnect', function (msg) {
-      masterSocket.onReconnect(msg)
-    })
-
-    socket.on('disconnect', function () {
-      masterSocket.onDisconnect()
-    })
-
-    socket.on('close', function () {
-      masterSocket.onDisconnect()
-    })
-
-    socket.on('error', function (err) {
-      masterSocket.onError(err)
-    })
-  })
-}
-
-/**
- * close master agent
- *
- * @api public
- */
-MasterAgent.prototype.close = function () {
-  if (this.state > ST_STARTED) {
-    return
-  }
-  this.state = ST_CLOSED
-  this.server.close()
-}
-
-/**
- * set module
- *
- * @param {string} moduleId module id/name
- * @param {Object} value module object
- * @api public
- */
-MasterAgent.prototype.set = function (moduleId, value) {
-  this.consoleService.set(moduleId, value)
-}
-
-/**
- * get module
- *
- * @param {string} moduleId module id/name
- * @api public
- */
-MasterAgent.prototype.get = function (moduleId) {
-  return this.consoleService.get(moduleId)
-}
-
-/**
- * getClientById
- *
- * @param {string} clientId
- * @api public
- */
-MasterAgent.prototype.getClientById = function (clientId) {
-  return this.clients[clientId]
-}
-
-/**
- * request monitor{master node} data from monitor
- *
- * @param {string} serverId
- * @param {string} moduleId module id/name
- * @param {Object} msg
- * @param {Function} callback function
- * @api public
- */
-MasterAgent.prototype.request = function (serverId, moduleId, msg, cb) {
-  if (this.state > ST_STARTED) {
-    return false
   }
 
-  cb = cb || function () {}
-
-  var curId = this.reqId++
-  this.callbacks[curId] = cb
-
-  if (!this.msgMap[serverId]) {
-    this.msgMap[serverId] = {}
-  }
-
-  this.msgMap[serverId][curId] = {
-    moduleId: moduleId,
-    msg: msg
-  }
-
-  var record = this.idMap[serverId]
-  if (!record) {
-    cb(new Error('unknown server id:' + serverId))
-    return false
-  }
-
-  sendToMonitor(record.socket, curId, moduleId, msg)
-
-  return true
-}
-
-/**
- * request server data from monitor by serverInfo{host:port}
- *
- * @param {string} serverId
- * @param {Object} serverInfo
- * @param {string} moduleId module id/name
- * @param {Object} msg
- * @param {Function} callback function
- * @api public
- */
-MasterAgent.prototype.requestServer = function (serverId, serverInfo, moduleId, msg, cb) {
-  if (this.state > ST_STARTED) {
-    return false
-  }
-
-  var record = this.idMap[serverId]
-  if (!record) {
-    utils.invokeCallback(cb, new Error('unknown server id:' + serverId))
-    return false
-  }
-
-  var curId = this.reqId++
-  this.callbacks[curId] = cb
-
-  if (utils.compareServer(record, serverInfo)) {
-    sendToMonitor(record.socket, curId, moduleId, msg)
-  } else {
-    var slaves = this.slaveMap[serverId]
-    for (var i = 0, l = slaves.length; i < l; i++) {
-      if (utils.compareServer(slaves[i], serverInfo)) {
-        sendToMonitor(slaves[i].socket, curId, moduleId, msg)
-        break
+  doAuthServer(msg, socket, cb) {
+    const { authServer, env } = this.consoleService
+    authServer(msg, env, (status) => {
+      if (status !== 'ok') {
+        doSend(socket, 'register', {
+          code: protocol.PRO_FAIL,
+          msg: 'server auth failed'
+        })
+        cb(new Error('server auth failed'))
+        return
       }
-    }
+
+      const record = addConnection(this, msg.id, msg.serverType, msg.pid, msg.info, socket)
+
+      doSend(socket, 'register', {
+        code: protocol.PRO_OK,
+        msg: 'ok'
+      })
+      msg.info = msg.info || {}
+      msg.info.pid = msg.pid
+      this.emit('register', msg.info)
+      cb(null)
+    })
   }
-
-  return true
-}
-
-/**
- * notify a monitor{master node} by id without callback
- *
- * @param {string} serverId
- * @param {string} moduleId module id/name
- * @param {Object} msg
- * @api public
- */
-MasterAgent.prototype.notifyById = function (serverId, moduleId, msg) {
-  if (this.state > ST_STARTED) {
-    return false
-  }
-
-  var record = this.idMap[serverId]
-  if (!record) {
-    logger.error('fail to notifyById for unknown server id:' + serverId)
-    return false
-  }
-
-  sendToMonitor(record.socket, null, moduleId, msg)
-
-  return true
-}
-
-/**
- * notify a monitor by server{host:port} without callback
- *
- * @param {string} serverId
- * @param {Object} serverInfo{host:port}
- * @param {string} moduleId module id/name
- * @param {Object} msg
- * @api public
- */
-MasterAgent.prototype.notifyByServer = function (serverId, serverInfo, moduleId, msg) {
-  if (this.state > ST_STARTED) {
-    return false
-  }
-
-  var record = this.idMap[serverId]
-  if (!record) {
-    logger.error('fail to notifyByServer for unknown server id:' + serverId)
-    return false
-  }
-
-  if (utils.compareServer(record, serverInfo)) {
-    sendToMonitor(record.socket, null, moduleId, msg)
-  } else {
-    var slaves = this.slaveMap[serverId]
-    for (var i = 0, l = slaves.length; i < l; i++) {
-      if (utils.compareServer(slaves[i], serverInfo)) {
-        sendToMonitor(slaves[i].socket, null, moduleId, msg)
-        break
-      }
-    }
-  }
-  return true
-}
-
-/**
- * notify slaves by id without callback
- *
- * @param {string} serverId
- * @param {string} moduleId module id/name
- * @param {Object} msg
- * @api public
- */
-MasterAgent.prototype.notifySlavesById = function (serverId, moduleId, msg) {
-  if (this.state > ST_STARTED) {
-    return false
-  }
-
-  var slaves = this.slaveMap[serverId]
-  if (!slaves || slaves.length === 0) {
-    logger.error('fail to notifySlavesById for unknown server id:' + serverId)
-    return false
-  }
-
-  broadcastMonitors(slaves, moduleId, msg)
-  return true
-}
-
-/**
- * notify monitors by type without callback
- *
- * @param {string} type serverType
- * @param {string} moduleId module id/name
- * @param {Object} msg
- * @api public
- */
-MasterAgent.prototype.notifyByType = function (type, moduleId, msg) {
-  if (this.state > ST_STARTED) {
-    return false
-  }
-
-  var list = this.typeMap[type]
-  if (!list || list.length === 0) {
-    logger.error('fail to notifyByType for unknown server type:' + type)
-    return false
-  }
-  broadcastMonitors(list, moduleId, msg)
-  return true
-}
-
-/**
- * notify all the monitors without callback
- *
- * @param {string} moduleId module id/name
- * @param {Object} msg
- * @api public
- */
-MasterAgent.prototype.notifyAll = function (moduleId, msg) {
-  if (this.state > ST_STARTED) {
-    return false
-  }
-  broadcastMonitors(this.idMap, moduleId, msg)
-  return true
-}
-
-/**
- * notify a client by id without callback
- *
- * @param {string} clientId
- * @param {string} moduleId module id/name
- * @param {Object} msg
- * @api public
- */
-MasterAgent.prototype.notifyClient = function (clientId, moduleId, msg) {
-  if (this.state > ST_STARTED) {
-    return false
-  }
-
-  var record = this.clients[clientId]
-  if (!record) {
-    logger.error('fail to notifyClient for unknown client id:' + clientId)
-    return false
-  }
-  sendToClient(record.socket, null, moduleId, msg)
-}
-
-MasterAgent.prototype.notifyCommand = function (command, moduleId, msg) {
-  if (this.state > ST_STARTED) {
-    return false
-  }
-  broadcastCommand(this.idMap, command, moduleId, msg)
-  return true
 }
 
 /**
@@ -392,25 +435,19 @@ MasterAgent.prototype.notifyCommand = function (command, moduleId, msg) {
  * @param {string} id
  * @param {string} type serverType
  * @param {Object} socket socket-io object
- * @api private
+ * @private
  */
-var addConnection = function (agent, id, type, pid, info, socket) {
-  var record = {
-    id: id,
-    type: type,
-    pid: pid,
-    info: info,
-    socket: socket
-  }
+const addConnection = (agent, id, type, pid, info, socket) => {
+  const record = { id, type, pid, info, socket }
   if (type === 'client') {
     agent.clients[id] = record
   } else {
     if (!agent.idMap[id]) {
       agent.idMap[id] = record
-      var list = agent.typeMap[type] = agent.typeMap[type] || []
+      const list = agent.typeMap[type] = agent.typeMap[type] || []
       list.push(record)
     } else {
-      var slaves = agent.slaveMap[id] = agent.slaveMap[id] || []
+      const slaves = agent.slaveMap[id] = agent.slaveMap[id] || []
       slaves.push(record)
     }
   }
@@ -423,24 +460,22 @@ var addConnection = function (agent, id, type, pid, info, socket) {
  * @param {Object} agent agent object
  * @param {string} id
  * @param {string} type serverType
- * @api private
+ * @private
  */
-var removeConnection = function (agent, id, type, info) {
+const removeConnection = (agent, id, type, info) => {
   if (type === 'client') {
     delete agent.clients[id]
   } else {
     // remove master node in idMap and typeMap
-    var record = agent.idMap[id]
-    if (!record) {
-      return
-    }
-    // info {host, port}
-    var _info = record['info']
+    const record = agent.idMap[id]
+    if (!record) return
+    // info { host, port }
+    const _info = record['info']
     if (utils.compareServer(_info, info)) {
       delete agent.idMap[id]
-      var list = agent.typeMap[type]
+      const list = agent.typeMap[type]
       if (list) {
-        for (var i = 0, l = list.length; i < l; i++) {
+        for (let i = 0; i < list.length; i++) {
           if (list[i].id === id) {
             list.splice(i, 1)
             break
@@ -452,9 +487,9 @@ var removeConnection = function (agent, id, type, info) {
       }
     } else {
       // remove slave node in slaveMap
-      var slaves = agent.slaveMap[id]
+      const slaves = agent.slaveMap[id]
       if (slaves) {
-        for (var i = 0, l = slaves.length; i < l; i++) {
+        for (let i = 0; i < slaves.length; i++) {
           if (utils.compareServer(slaves[i]['info'], info)) {
             slaves.splice(i, 1)
             break
@@ -475,9 +510,9 @@ var removeConnection = function (agent, id, type, info) {
  * @param {number} reqId request id
  * @param {string} moduleId module id/name
  * @param {Object} msg message
- * @api private
+ * @private
  */
-var sendToMonitor = function (socket, reqId, moduleId, msg) {
+const sendToMonitor = (socket, reqId, moduleId, msg) => {
   doSend(socket, 'monitor', protocol.composeRequest(reqId, moduleId, msg))
 }
 
@@ -488,13 +523,13 @@ var sendToMonitor = function (socket, reqId, moduleId, msg) {
  * @param {number} reqId request id
  * @param {string} moduleId module id/name
  * @param {Object} msg message
- * @api private
+ * @private
  */
-var sendToClient = function (socket, reqId, moduleId, msg) {
+const sendToClient = (socket, reqId, moduleId, msg) => {
   doSend(socket, 'client', protocol.composeRequest(reqId, moduleId, msg))
 }
 
-var doSend = function (socket, topic, msg) {
+const doSend = (socket, topic, msg) => {
   socket.send(topic, msg)
 }
 
@@ -504,9 +539,9 @@ var doSend = function (socket, topic, msg) {
  * @param {Object} record registered modules
  * @param {string} moduleId module id/name
  * @param {Object} msg message
- * @api private
+ * @private
  */
-var broadcastMonitors = function (records, moduleId, msg) {
+const broadcastMonitors = (records, moduleId, msg) => {
   msg = protocol.composeRequest(null, moduleId, msg)
 
   if (records instanceof Array) {
@@ -536,81 +571,6 @@ var broadcastCommand = function (records, command, moduleId, msg) {
       doSend(socket, 'monitor', msg)
     }
   }
-}
-
-MasterAgent.prototype.doAuthUser = function (msg, socket, cb) {
-  if (!msg.id) {
-    // client should has a client id
-    return cb(new Error('client should has a client id'))
-  }
-
-  var self = this
-  var username = msg.username
-  if (!username) {
-    // client should auth with username
-    doSend(socket, 'register', {
-      code: protocol.PRO_FAIL,
-      msg: 'client should auth with username'
-    })
-    return cb(new Error('client should auth with username'))
-  }
-
-  var authUser = self.consoleService.authUser
-  var env = self.consoleService.env
-  authUser(msg, env, function (user) {
-    if (!user) {
-      // client should auth with username
-      doSend(socket, 'register', {
-        code: protocol.PRO_FAIL,
-        msg: 'client auth failed with username or password error'
-      })
-      return cb(new Error('client auth failed with username or password error'))
-    }
-
-    if (self.clients[msg.id]) {
-      doSend(socket, 'register', {
-        code: protocol.PRO_FAIL,
-        msg: 'id has been registered. id:' + msg.id
-      })
-      return cb(new Error('id has been registered. id:' + msg.id))
-    }
-
-    logger.info('client user : ' + username + ' login to master')
-    addConnection(self, msg.id, msg.type, null, user, socket)
-    doSend(socket, 'register', {
-      code: protocol.PRO_OK,
-      msg: 'ok'
-    })
-
-    cb()
-  })
-}
-
-MasterAgent.prototype.doAuthServer = function (msg, socket, cb) {
-  var self = this
-  var authServer = self.consoleService.authServer
-  var env = self.consoleService.env
-  authServer(msg, env, function (status) {
-    if (status !== 'ok') {
-      doSend(socket, 'register', {
-        code: protocol.PRO_FAIL,
-        msg: 'server auth failed'
-      })
-      cb(new Error('server auth failed'))
-      return
-    }
-
-    var record = addConnection(self, msg.id, msg.serverType, msg.pid, msg.info, socket)
-
-    doSend(socket, 'register', {
-      code: protocol.PRO_OK,
-      msg: 'ok'
-    })
-    msg.info = msg.info || {}
-    msg.info.pid = msg.pid
-    self.emit('register', msg.info)
-    cb(null)
-  })
 }
 
 MasterAgent.prototype.doSend = doSend

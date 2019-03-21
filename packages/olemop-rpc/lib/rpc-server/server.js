@@ -27,7 +27,7 @@ const createNamespace = (namespace, proxies) => {
  * Create rpc server.
  *
  * @param  {Object}      opts construct parameters
- *                       opts.port {Number|String} rpc server listen port
+ *                       opts.port {number|string} rpc server listen port
  *                       opts.paths {Array} remote service code paths, [{namespace, path}, ...]
  *                       opts.context {Object} context for remote service
  *                       opts.acceptorFactory {Object} (optionals)acceptorFactory.create(opts, cb)

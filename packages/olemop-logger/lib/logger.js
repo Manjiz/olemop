@@ -226,9 +226,9 @@ const getLine = () => {
   }
 }
 
-const colorizeStart = (style) => style ? '\x1B[' + styles[style][0] + 'm' : ''
+const colorizeStart = (style) => style ? `\x1B[${styles[style][0]}m` : ''
 
-const colorizeEnd = (style) => style ? '\x1B[' + styles[style][1] + 'm' : ''
+const colorizeEnd = (style) => style ? `\x1B[${styles[style][1]}m` : ''
 
 /**
  * Taken from masylum's fork (https://github.com/masylum/log4js-node)
