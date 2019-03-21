@@ -21,7 +21,6 @@ class Heartbeat {
       this.heartbeat = opts.heartbeat * 1000
       // max heartbeat message timeout
       this.timeout = opts.timeout * 1000 || this.heartbeat * 2
-      this.disconnectOnTimeout = true
     }
 
     this.timeouts = {}
