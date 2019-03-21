@@ -13,42 +13,26 @@ const JS_WS_CLIENT_VERSION = '0.0.1'
 const Package = Protocol.Package
 const Message = Protocol.Message
 
-if (typeof window !== 'undefined' && typeof sys !== 'undefined' && sys.localStorage) {
-  window.localStorage = sys.localStorage
-}
-
 const RES_OK = 200
-const RES_FAIL = 500
+// const RES_FAIL = 500
 const RES_OLD_CLIENT = 501
-
-if (typeof Object.create !== 'function') {
-  Object.create = function (o) {
-    function F() {}
-    F.prototype = o
-    return new F()
-  }
-}
 
 const root = window
 
-// object extend from object
 const olemop = Object.create(EventEmitter.prototype)
 root.olemop = olemop
 
 let socket = null
-let reqId = 0
 const callbacks = {}
 const handlers = {}
 
 // Map from request id to route
 const routeMap = {}
 
-// route string to code
-let dict = {}
-
-// code to route string
-let abbrs = {}
-
+// // route string to code
+// olemop.dict = {}
+// // code to route string
+// olemop.abbrs = {}
 let serverProtos = {}
 let clientProtos = {}
 let protoVersion = 0
@@ -134,8 +118,8 @@ const defaultEncode = olemop.encode = (reqId, route, msg) => {
   }
 
   let compressRoute = 0
-  if (dict && dict[route]) {
-    route = dict[route]
+  if (olemop.dict && olemop.dict[route]) {
+    route = olemop.dict[route]
     compressRoute = 1
   }
 
@@ -186,7 +170,7 @@ const connect = (params, url, cb) => {
     console.error('socket error: ', event)
   }
   const onclose = (event) => {
-    olemop.emit('close',event)
+    olemop.emit('close', event)
     olemop.emit('disconnect', event)
     if (event.code !== 1000) {
       console.error('socket close: ', event)
@@ -233,6 +217,7 @@ const reset = () => {
   clearTimeout(reconncetTimer)
 }
 
+let reqId = 0
 olemop.request = function (route, msg, cb) {
   if (arguments.length === 2 && typeof msg === 'function') {
     cb = msg
@@ -240,10 +225,9 @@ olemop.request = function (route, msg, cb) {
   } else {
     msg = msg || {}
   }
+
   route = route || msg.route
-  if (!route) {
-    return
-  }
+  if (!route) return
 
   reqId++
   sendMessage(reqId, route, msg)
@@ -252,8 +236,7 @@ olemop.request = function (route, msg, cb) {
   routeMap[reqId] = route
 }
 
-olemop.notify = (route, msg) => {
-  msg = msg || {}
+olemop.notify = (route, msg = {}) => {
   sendMessage(0, route, msg)
 }
 
@@ -275,38 +258,6 @@ const send = (packet) => {
   envUtil.send(socket, packet.buffer)
 }
 
-const heartbeat = (data) => {
-  // no heartbeat
-  if (!heartbeatInterval) return
-
-  if (heartbeatTimeoutId) {
-    clearTimeout(heartbeatTimeoutId)
-    heartbeatTimeoutId = null
-  }
-
-  // already in a heartbeat interval
-  if (heartbeatId) return
-
-  heartbeatId = setTimeout(() => {
-    heartbeatId = null
-    send(Package.encode(Package.TYPE_HEARTBEAT))
-
-    nextHeartbeatTimeout = Date.now() + heartbeatTimeout
-    heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, heartbeatTimeout)
-  }, heartbeatInterval)
-}
-
-const heartbeatTimeoutCb = () => {
-  const gap = nextHeartbeatTimeout - Date.now()
-  if (gap > gapThreshold) {
-    heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, gap)
-  } else {
-    console.error('server heartbeat timeout')
-    olemop.emit('heartbeat timeout')
-    olemop.disconnect()
-  }
-}
-
 const handshake = (data) => {
   data = JSON.parse(Protocol.strdecode(data))
   if (data.code === RES_OLD_CLIENT) {
@@ -326,6 +277,37 @@ const handshake = (data) => {
   if (initCallback) {
     initCallback(socket)
   }
+}
+
+const heartbeatTimeoutCb = () => {
+  const gap = nextHeartbeatTimeout - Date.now()
+  if (gap > gapThreshold) {
+    heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, gap)
+  } else {
+    olemop.emit('heartbeat timeout')
+    olemop.disconnect(1001, 'client side heartbeat timeout')
+  }
+}
+
+const heartbeat = (data) => {
+  // no heartbeat
+  if (!heartbeatInterval) return
+
+  if (heartbeatTimeoutId) {
+    clearTimeout(heartbeatTimeoutId)
+    heartbeatTimeoutId = null
+  }
+
+  // already in a heartbeat interval
+  if (heartbeatId) return
+
+  heartbeatId = setTimeout(() => {
+    heartbeatId = null
+    send(Package.encode(Package.TYPE_HEARTBEAT))
+
+    nextHeartbeatTimeout = Date.now() + heartbeatTimeout
+    heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, heartbeatTimeout)
+  }, heartbeatInterval)
 }
 
 const onData = (msg) => {
@@ -382,11 +364,11 @@ const deCompose = (msg) => {
 
   // Decompose route from dict
   if (msg.compressRoute) {
-    if (!abbrs[route]) {
+    if (!olemop.abbrs[route]) {
       return {}
     }
 
-    route = msg.route = abbrs[route]
+    route = msg.route = olemop.abbrs[route]
   }
   if (protobuf && serverProtos[route]) {
     return protobuf.decodeStr(route, msg.body)
@@ -416,14 +398,15 @@ const handshakeInit = (data) => {
 // Initilize data used in olemop client
 const initData = (data) => {
   if (!data || !data.sys) return
-  dict = data.sys.dict
+  const dict = data.sys.dict
   const protos = data.sys.protos
 
   // Init compress dict
   if (dict) {
-    abbrs = {}
+    olemop.dict = dict
+    olemop.abbrs = {}
     for (let route in dict) {
-      abbrs[dict[route]] = route
+      olemop.abbrs[dict[route]] = route
     }
   }
 
@@ -433,11 +416,11 @@ const initData = (data) => {
     serverProtos = protos.server || {}
     clientProtos = protos.client || {}
 
-    // Save protobuf protos to localStorage
+    // Save protobuf protos as key-value somewhere
     envUtil.setStorageProtos(JSON.stringify(protos))
 
     if (protobuf) {
-      protobuf.init({encoderProtos: protos.client, decoderProtos: protos.server})
+      protobuf.init({ encoderProtos: protos.client, decoderProtos: protos.server })
     }
   }
 }
