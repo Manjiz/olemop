@@ -17,7 +17,7 @@
     "mqtt-connection": "^4.0.0",
     "node-bignumber": "1.2.1",
     "socket.io": "^2.2.0",
-    "ws": "^6.1.3"
+    "ws": "^7.4.6"
   },
   "bin": {
     "olemop": "./bin/olemop"
