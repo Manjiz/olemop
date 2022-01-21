@@ -6,7 +6,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "log4js": "^3.0.3"
+    "log4js": "^6.4.0"
   },
   "devDependencies": {
     "jest": "^24.0.0"
