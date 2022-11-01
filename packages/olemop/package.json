@@ -23,9 +23,9 @@
     "olemop": "./bin/olemop"
   },
   "devDependencies": {
-    "grunt": "~0.4.2",
+    "grunt": "~1.5.3",
     "grunt-contrib-clean": "0.5.x",
-    "grunt-mocha-test": "0.8.x",
+    "grunt-mocha-test": "0.13.x",
     "mocha": ">=0.0.1",
     "muk": ">=0.0.1",
     "should": "3.3.1"
